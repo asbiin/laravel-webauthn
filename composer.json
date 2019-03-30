@@ -1,0 +1,56 @@
+{
+    "name": "asbiin/laravel-webauthn",
+    "description": "Laravel Webauthn support",
+    "keywords": [
+        "laravel",
+        "php",
+        "webauthn",
+        "security"
+    ],
+    "type": "library",
+    "license": "MIT",
+    "support": {
+        "issues": "https://github.com/asbiin/laravel-webauthn/issues",
+        "source": "https://github.com/asbiin/laravel-webauthn"
+    },
+    "authors": [
+        {
+            "name": "Alexis Saettler",
+            "email": "alexis@saettler.org"
+        }
+    ],
+    "require": {
+        "laravel/framework": "^5.8",
+        "web-auth/u2f-lib": "^1.0",
+        "web-auth/webauthn-lib": "^1.0",
+        "zendframework/zend-diactoros": "^2.1"
+    },
+    "require-dev": {
+        "nunomaduro/larastan": "^0.3.15",
+        "orchestra/testbench": "^3.8",
+        "phpunit/phpunit": "^8.0",
+        "vimeo/psalm": "^3.2"
+    },
+    "autoload": {
+        "psr-4": {
+            "LaravelWebauthn\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "LaravelWebauthn\\Tests\\": "tests"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "LaravelWebauthn\\LaravelWebauthnServiceProvider"
+            ]
+        }
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}
