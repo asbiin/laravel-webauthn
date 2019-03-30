@@ -3,12 +3,12 @@
 namespace LaravelWebauthn\Services\Webauthn;
 
 use CBOR\Decoder;
-use Illuminate\Foundation\Auth\User;
 use Zend\Diactoros\ServerRequestFactory;
 use Illuminate\Contracts\Config\Repository;
 use Webauthn\AuthenticatorAssertionResponse;
 use Webauthn\PublicKeyCredentialRequestOptions;
 use Webauthn\AuthenticatorAssertionResponseValidator;
+use Illuminate\Contracts\Auth\Authenticatable as User;
 use LaravelWebauthn\Exceptions\ResponseMismatchException;
 use Webauthn\TokenBinding\TokenBindingNotSupportedHandler;
 use Webauthn\AuthenticationExtensions\ExtensionOutputCheckerHandler;

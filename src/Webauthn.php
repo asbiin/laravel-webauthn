@@ -2,16 +2,15 @@
 
 namespace LaravelWebauthn;
 
-use Illuminate\Foundation\Auth\User;
 use Illuminate\Support\Facades\Event;
 use LaravelWebauthn\Models\WebauthnKey;
 use Illuminate\Contracts\Session\Session;
 use LaravelWebauthn\Events\WebauthnLogin;
-use Illuminate\Contracts\Auth\Authenticatable;
 use Webauthn\PublicKeyCredentialRequestOptions;
 use Illuminate\Contracts\Foundation\Application;
 use Webauthn\PublicKeyCredentialCreationOptions;
 use Illuminate\Contracts\Config\Repository as Config;
+use Illuminate\Contracts\Auth\Authenticatable as User;
 use LaravelWebauthn\Services\Webauthn\PublicKeyCredentialRequestOptionsFactory;
 use LaravelWebauthn\Services\Webauthn\PublicKeyCredentialCreationOptionsFactory;
 use LaravelWebauthn\Services\Webauthn\PublicKeyCredentialRequestValidatorFactory;
@@ -124,7 +123,7 @@ class Webauthn
     }
 
     /**
-     * @param \Illuminate\Foundation\Auth\User $user
+     * @param User $user
      */
     public function forceAuthenticate(User $user)
     {

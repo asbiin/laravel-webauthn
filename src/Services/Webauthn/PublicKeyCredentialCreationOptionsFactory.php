@@ -2,7 +2,6 @@
 
 namespace LaravelWebauthn\Services\Webauthn;
 
-use Illuminate\Foundation\Auth\User;
 use Illuminate\Support\Facades\Request;
 use Webauthn\PublicKeyCredentialRpEntity;
 use Webauthn\PublicKeyCredentialDescriptor;
@@ -10,15 +9,16 @@ use Webauthn\PublicKeyCredentialParameters;
 use Webauthn\PublicKeyCredentialUserEntity;
 use Webauthn\AuthenticatorSelectionCriteria;
 use Webauthn\PublicKeyCredentialCreationOptions;
+use Illuminate\Contracts\Auth\Authenticatable as User;
 
 final class PublicKeyCredentialCreationOptionsFactory extends AbstractOptions
 {
     public function create(User $user, array $excludeCredentials = []): PublicKeyCredentialCreationOptions
     {
         $userEntity = new PublicKeyCredentialUserEntity(
-            $user->getEmailForPasswordReset(),
+            $user->email ?: '',
             $user->getAuthIdentifier(),
-            $user->getEmailForPasswordReset(),
+            $user->email ?: '',
             null
         );
 
