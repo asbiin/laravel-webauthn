@@ -146,7 +146,7 @@ class Webauthn
      * @param \Illuminate\Contracts\Auth\Authenticatable  $user
      * @return void
      */
-    public function fireLoginEvent(Authenticatable $user)
+    public function fireLoginEvent(User $user)
     {
         Event::dispatch(new WebauthnLogin($user));
     }
