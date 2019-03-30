@@ -8,6 +8,15 @@ use Illuminate\Support\ServiceProvider;
 class LaravelWebauthnServiceProvider extends ServiceProvider
 {
     /**
+     * All of the container singletons that should be registered.
+     *
+     * @var array
+     */
+    public $singletons = [
+        Webauthn::class => Webauthn::class,
+    ];
+
+    /**
      * Bootstrap any package services.
      *
      * @return void
@@ -62,7 +71,7 @@ class LaravelWebauthnServiceProvider extends ServiceProvider
     private function routeConfiguration()
     {
         return [
-            'middleware' => 'laravelwebauthn',
+            'middleware' => 'webauthn',
             'domain' => config('webauthn.domain', null),
             'namespace' => 'LaravelWebauthn\Http\Controllers',
             'prefix' => config('webauthn.prefix', 'webauthn'),
@@ -96,8 +105,6 @@ class LaravelWebauthnServiceProvider extends ServiceProvider
 
         /** @var \Illuminate\Contracts\Foundation\Application */
         $app = $this->app;
-
-        $app->singleton(Webauthn::class, Webauthn::class);
 
         if ($app->runningInConsole()) {
             $this->commands([
