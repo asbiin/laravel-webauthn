@@ -9,9 +9,9 @@ use Webauthn\PublicKeyCredentialLoader;
 use CBOR\OtherObject\OtherObjectManager;
 use Illuminate\Contracts\Config\Repository as Config;
 use Webauthn\AttestationStatement\AttestationObjectLoader;
-use Webauthn\AttestationStatement\AttestationStatementSupportManager;
 use Webauthn\AttestationStatement\NoneAttestationStatementSupport;
 use Webauthn\AttestationStatement\PackedAttestationStatementSupport;
+use Webauthn\AttestationStatement\AttestationStatementSupportManager;
 use Webauthn\AttestationStatement\FidoU2FAttestationStatementSupport;
 
 abstract class AbstractValidator
@@ -29,7 +29,7 @@ abstract class AbstractValidator
     }
 
     /**
-     * Create a CBOR Decoder object
+     * Create a CBOR Decoder object.
      *
      * @return Decoder
      */
@@ -42,7 +42,7 @@ abstract class AbstractValidator
     }
 
     /**
-     * Attestation Statement Support Manager
+     * Attestation Statement Support Manager.
      *
      * @param Decoder $decoder
      * @return AttestationStatementSupportManager
@@ -62,7 +62,7 @@ abstract class AbstractValidator
     }
 
     /**
-     * Get the Public Key Credential Loader
+     * Get the Public Key Credential Loader.
      *
      * @param AttestationStatementSupportManager $attestationStatementSupportManager
      * @param Decoder $decoder

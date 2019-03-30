@@ -5,12 +5,12 @@ namespace LaravelWebauthn;
 use Illuminate\Foundation\Auth\User;
 use Illuminate\Support\Facades\Event;
 use LaravelWebauthn\Models\WebauthnKey;
-use LaravelWebauthn\Events\WebauthnLogin;
 use Illuminate\Contracts\Session\Session;
+use LaravelWebauthn\Events\WebauthnLogin;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Webauthn\PublicKeyCredentialRequestOptions;
-use Webauthn\PublicKeyCredentialCreationOptions;
 use Illuminate\Contracts\Foundation\Application;
+use Webauthn\PublicKeyCredentialCreationOptions;
 use Illuminate\Contracts\Config\Repository as Config;
 use LaravelWebauthn\Services\Webauthn\PublicKeyCredentialRequestOptionsFactory;
 use LaravelWebauthn\Services\Webauthn\PublicKeyCredentialCreationOptionsFactory;
@@ -41,7 +41,7 @@ class Webauthn
     protected $session;
 
     /**
-     * Create a new instance of Webauthn
+     * Create a new instance of Webauthn.
      *
      * @param \Illuminate\Contracts\Foundation\Application $app
      * @param \Illuminate\Contracts\Config\Repository $config
@@ -84,9 +84,9 @@ class Webauthn
             'name' => $keyName,
             'publicKeyCredentialDescriptor' => $publicKeyCredentialDescriptor,
             'attestedCredentialData' => $attestedCredentialData,
-            'credentialId' => $publicKeyCredentialDescriptor->getId()
+            'credentialId' => $publicKeyCredentialDescriptor->getId(),
         ]);
-}
+    }
 
     /**
      * @param User $user
@@ -97,8 +97,7 @@ class Webauthn
         // List of registered PublicKeyCredentialDescriptor classes associated to the user
         $registeredPublicKeyCredentialDescriptors = [];
         $webAuthns = WebauthnKey::where('user_id', $user->getAuthIdentifier())->get();
-        foreach ($webAuthns as $webAuthn)
-        {
+        foreach ($webAuthns as $webAuthn) {
             $registeredPublicKeyCredentialDescriptors[] = $webAuthn->publicKeyCredentialDescriptor;
         }
 
@@ -132,10 +131,9 @@ class Webauthn
         if (config('webauthn.enable') && WebauthnKey::where('user_id', $user->getAuthIdentifier())->count() > 0) {
             $this->session->put([$this->config->get('webauthn.sessionName') => true]);
         }
-}
+    }
 
     /**
-     *
      * @return bool
      */
     public function check() : bool

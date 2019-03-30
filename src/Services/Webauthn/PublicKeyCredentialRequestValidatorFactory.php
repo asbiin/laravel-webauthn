@@ -3,9 +3,7 @@
 namespace LaravelWebauthn\Services\Webauthn;
 
 use CBOR\Decoder;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Foundation\Auth\User;
-use Webauthn\PublicKeyCredentialLoader;
 use Zend\Diactoros\ServerRequestFactory;
 use Illuminate\Contracts\Config\Repository;
 use Webauthn\AuthenticatorAssertionResponse;
@@ -13,12 +11,7 @@ use Webauthn\PublicKeyCredentialRequestOptions;
 use Webauthn\AuthenticatorAssertionResponseValidator;
 use LaravelWebauthn\Exceptions\ResponseMismatchException;
 use Webauthn\TokenBinding\TokenBindingNotSupportedHandler;
-use Webauthn\AttestationStatement\AttestationObjectLoader;
-use Webauthn\AttestationStatement\NoneAttestationStatementSupport;
 use Webauthn\AuthenticationExtensions\ExtensionOutputCheckerHandler;
-use Webauthn\AttestationStatement\PackedAttestationStatementSupport;
-use Webauthn\AttestationStatement\AttestationStatementSupportManager;
-use Webauthn\AttestationStatement\FidoU2FAttestationStatementSupport;
 
 final class PublicKeyCredentialRequestValidatorFactory extends AbstractValidator
 {
@@ -61,7 +54,7 @@ final class PublicKeyCredentialRequestValidatorFactory extends AbstractValidator
     }
 
     /**
-     * Get the Authenticator Attestation Response Validator
+     * Get the Authenticator Attestation Response Validator.
      * @param Decoder $decoder
      * @return AuthenticatorAssertionResponseValidator
      */

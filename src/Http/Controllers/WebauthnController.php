@@ -4,7 +4,6 @@ namespace LaravelWebauthn\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
-use Illuminate\Support\Facades\App;
 use LaravelWebauthn\Facades\Webauthn;
 use LaravelWebauthn\Models\WebauthnKey;
 use Illuminate\Support\Facades\Redirect;
@@ -14,14 +13,14 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 class WebauthnController extends Controller
 {
     /**
-     * PublicKey Creation session name
+     * PublicKey Creation session name.
      *
      * @var string
      */
     private const SESSION_PUBLICKEY_CREATION = 'webauthn.publicKeyCreation';
 
     /**
-     * PublicKey Request session name
+     * PublicKey Request session name.
      *
      * @var string
      */
@@ -152,8 +151,7 @@ class WebauthnController extends Controller
      */
     public function remove(Request $request, int $webauthnKeyId)
     {
-        try
-        {
+        try {
             WebauthnKey::where('user_id', $request->user()->getAuthIdentifier())
                 ->findOrFail($webauthnKeyId)
                 ->delete();
@@ -182,6 +180,7 @@ class WebauthnController extends Controller
     private function input(Request $request, string $name, string $default = ''): string
     {
         $result = $request->input($name);
+
         return is_string($result) ? $result : $default;
     }
 }

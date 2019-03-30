@@ -32,24 +32,24 @@ class LaravelWebauthnServiceProvider extends ServiceProvider
         Route::group($this->routeConfiguration(), function (\Illuminate\Routing\Router $router) : void {
             $router->get('auth', [
                 'uses' => 'WebauthnController@login',
-                'middleware' => 'auth'
+                'middleware' => 'auth',
             ]);
             $router->post('auth', [
                 'uses' => 'WebauthnController@auth',
-                'middleware' => 'auth'
+                'middleware' => 'auth',
             ]);
 
             $router->get('register', [
                 'uses' => 'WebauthnController@register',
-                'middleware' => 'auth'
+                'middleware' => 'auth',
             ]);
             $router->post('register', [
                 'uses' => 'WebauthnController@create',
-                'middleware' => 'auth'
+                'middleware' => 'auth',
             ]);
             $router->delete('{id}', [
                 'uses' => 'WebauthnController@remove',
-                'middleware' => 'auth'
+                'middleware' => 'auth',
             ]);
         });
     }
@@ -100,7 +100,6 @@ class LaravelWebauthnServiceProvider extends ServiceProvider
         $app->singleton(Webauthn::class, function ($app) {
             return $app->make(Webauthn::class);
         });
-
 
         if ($app->runningInConsole()) {
             $this->commands([

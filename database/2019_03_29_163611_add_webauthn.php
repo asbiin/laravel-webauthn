@@ -22,7 +22,7 @@ class AddWebauthn extends Migration
             $table->text('attestedCredentialData');
             $table->integer('counter');
             $table->timestamps();
-            
+
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->index('credentialId');
         });

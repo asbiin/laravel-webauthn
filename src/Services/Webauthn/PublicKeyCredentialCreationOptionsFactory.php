@@ -5,14 +5,11 @@ namespace LaravelWebauthn\Services\Webauthn;
 use Illuminate\Foundation\Auth\User;
 use Illuminate\Support\Facades\Request;
 use Webauthn\PublicKeyCredentialRpEntity;
-use Illuminate\Contracts\Config\Repository;
 use Webauthn\PublicKeyCredentialDescriptor;
 use Webauthn\PublicKeyCredentialParameters;
 use Webauthn\PublicKeyCredentialUserEntity;
 use Webauthn\AuthenticatorSelectionCriteria;
 use Webauthn\PublicKeyCredentialCreationOptions;
-use Webauthn\AuthenticationExtensions\AuthenticationExtension;
-use Webauthn\AuthenticationExtensions\AuthenticationExtensionsClientInputs;
 
 final class PublicKeyCredentialCreationOptionsFactory extends AbstractOptions
 {
@@ -70,7 +67,7 @@ final class PublicKeyCredentialCreationOptionsFactory extends AbstractOptions
 
         return array_map($callback, $this->config->get('public_key_credential_parameters') ?: [
             PublicKeyCredentialParameters::ALGORITHM_ES256,
-            PublicKeyCredentialParameters::ALGORITHM_RS256
+            PublicKeyCredentialParameters::ALGORITHM_RS256,
         ]);
     }
 }
