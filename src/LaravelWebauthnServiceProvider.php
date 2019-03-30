@@ -97,9 +97,7 @@ class LaravelWebauthnServiceProvider extends ServiceProvider
         /** @var \Illuminate\Contracts\Foundation\Application */
         $app = $this->app;
 
-        $app->singleton(Webauthn::class, function ($app) {
-            return new Webauthn($app, $app->make('config'), $app->make('session.store'));
-        });
+        $app->singleton(Webauthn::class, Webauthn::class);
 
         if ($app->runningInConsole()) {
             $this->commands([
