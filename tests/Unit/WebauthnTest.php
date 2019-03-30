@@ -22,5 +22,4 @@ class WebauthnTest extends FeatureTestCase
         $this->assertEquals('auth-identifier', $publicKey->getUser()->getId());
         $this->assertEquals('john@doe.com', $publicKey->getUser()->getDisplayName());
     }
-
 }
