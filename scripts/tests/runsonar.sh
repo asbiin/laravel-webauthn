@@ -35,7 +35,7 @@ echo "GIT_COMMIT=$GIT_COMMIT"
 set -euo pipefail
 
 REPOSITORY_OWNER=asbiin/laravel-webauthn
-SONAR_ORGANIZATION=asbiin
+SONAR_ORGANIZATION=asbiin-github
 
 function installSonar {
   echo '== Setup sonar scanner'
