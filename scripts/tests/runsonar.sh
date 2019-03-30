@@ -73,7 +73,7 @@ function CommonParams {
   if [ "$REPO" != "$REPOSITORY_OWNER" ]; then
     # Avoid forks to send reports to the same project
     project="${REPO/\//_}"
-    extra="$extra -Dsonar.projectKey=monicahq_laravel-sabre:$project -Dsonar.projectName=$project"
+    extra="$extra -Dsonar.projectKey=asbiin_laravel-webauthn:$project -Dsonar.projectName=$project"
   fi
 
   echo -Dsonar.host.url=$SONAR_HOST_URL \
