@@ -89,6 +89,10 @@ class LaravelWebauthnServiceProvider extends ServiceProvider
             $this->publishes([
                 __DIR__.'/../config/webauthn.php' => config_path('webauthn.php'),
             ], 'webauthn-config');
+
+            $this->publishes([
+                __DIR__ . '/../database/migrations/' => base_path('/database/migrations')
+            ], 'webauthn-migrations');
         }
     }
 

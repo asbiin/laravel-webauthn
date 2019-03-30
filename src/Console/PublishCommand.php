@@ -28,7 +28,11 @@ class PublishCommand extends Command
     public function handle()
     {
         $this->call('vendor:publish', [
-            '--tag' => 'laravelwebauthn-config',
+            '--tag' => 'webauthn-config',
+            '--force' => $this->option('force'),
+        ]);
+        $this->call('vendor:publish', [
+            '--tag' => 'webauthn-migrations',
             '--force' => $this->option('force'),
         ]);
     }
