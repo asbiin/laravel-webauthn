@@ -127,7 +127,7 @@ class Webauthn
      */
     public function forceAuthenticate(User $user)
     {
-        if (config('webauthn.enable') && WebauthnKey::where('user_id', $user->getAuthIdentifier())->count() > 0) {
+        if ($this->config->get('webauthn.enable') && $this->enabled($uder)) {
             $this->session->put([$this->config->get('webauthn.sessionName') => true]);
         }
     }
@@ -149,5 +149,17 @@ class Webauthn
     public function fireLoginEvent(User $user)
     {
         Event::dispatch(new WebauthnLogin($user));
+    }
+
+    /**
+     * Test if the user has one webauthn key set or more.
+     *
+     * @param \Illuminate\Contracts\Auth\Authenticatable  $user
+     * @return bool
+     */
+    public function enabled(User $user): bool
+    {
+        return $this->config->get('webauthn.enable') &&
+            WebauthnKey::where('user_id', $user->getAuthIdentifier())->count() > 0;
     }
 }
