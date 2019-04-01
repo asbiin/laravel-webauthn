@@ -23,9 +23,17 @@ abstract class AbstractValidator
      */
     protected $config;
 
-    public function __construct(Config $config)
+    /**
+     * Public Key Credential Source Repository
+     * @var PublicKeyCredentialSourceRepository
+     */
+    protected $credentialRepository;
+
+    public function __construct(Config $config, PublicKeyCredentialSourceRepository $credentialRepository = null)
     {
         $this->config = $config;
+        // Credential Repository
+        $this->credentialRepository = $credentialRepository ?: new CredentialRepository();
     }
 
     /**
@@ -50,12 +58,21 @@ abstract class AbstractValidator
     protected function getAttestationStatementSupportManager(Decoder $decoder) : AttestationStatementSupportManager
     {
         $coseAlgorithmManager = new Manager();
+
         $coseAlgorithmManager->add(new \Cose\Algorithm\Signature\ECDSA\ES256());
+        $coseAlgorithmManager->add(new \Cose\Algorithm\Signature\ECDSA\ES512());
+        $coseAlgorithmManager->add(new \Cose\Algorithm\Signature\EdDSA\EdDSA());
+        $coseAlgorithmManager->add(new \Cose\Algorithm\Signature\RSA\RS1());
         $coseAlgorithmManager->add(new \Cose\Algorithm\Signature\RSA\RS256());
+        $coseAlgorithmManager->add(new \Cose\Algorithm\Signature\RSA\RS512());
 
         $attestationStatementSupportManager = new AttestationStatementSupportManager();
+
         $attestationStatementSupportManager->add(new NoneAttestationStatementSupport());
         $attestationStatementSupportManager->add(new FidoU2FAttestationStatementSupport($decoder));
+        $attestationStatementSupportManager->add(new AndroidSafetyNetAttestationStatementSupport($httpClient, 'GOOGLE_SAFETYNET_API_KEY'));
+        $attestationStatementSupportManager->add(new AndroidKeyAttestationStatementSupport($decoder));
+        $attestationStatementSupportManager->add(new TPMAttestationStatementSupport());
         $attestationStatementSupportManager->add(new PackedAttestationStatementSupport($decoder, $coseAlgorithmManager));
 
         return $attestationStatementSupportManager;

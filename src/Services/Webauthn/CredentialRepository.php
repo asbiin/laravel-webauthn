@@ -5,9 +5,9 @@ namespace LaravelWebauthn\Services\Webauthn;
 use Illuminate\Support\Facades\Auth;
 use Webauthn\AttestedCredentialData;
 use LaravelWebauthn\Models\WebauthnKey;
-use Webauthn\CredentialRepository as WebauthnCredentialRepository;
+use Webauthn\PublicKeyCredentialSourceRepository;
 
-class CredentialRepository implements WebauthnCredentialRepository
+class CredentialRepository implements PublicKeyCredentialSourceRepository
 {
     public function has(string $credentialId): bool
     {
@@ -48,6 +48,49 @@ class CredentialRepository implements WebauthnCredentialRepository
         $webAuthn = $this->model($credentialId);
         $webAuthn->counter = $newCounter;
         $webAuthn->save();
+    }
+
+
+
+
+    /**
+     *
+     */
+    public function findOneByCredentialId(string $publicKeyCredentialId): ?PublicKeyCredentialSource
+    {
+        try {
+            $webauthnKey = $this->model($publicKeyCredentialId);
+            if ($webauthnKey) {
+                return $webauthnKey->publicKeyCredentialSource;
+            }
+        } catch (ModelNotFoundException $e) {
+            // No result
+        }
+    }
+
+    /**
+     * @return PublicKeyCredentialSource[]
+     */
+    public function findAllForUserEntity(PublicKeyCredentialUserEntity $publicKeyCredentialUserEntity): array
+    {
+        return WebauthnKey::where('user_id', $publicKeyCredentialUserEntity->getId())
+            ->get()
+            ->map(function ($webauthnKey) {
+                return $webauthnKey->publicKeyCredentialSource;
+            });
+    }
+
+    /**
+     * @throws ModelNotFoundException
+     */
+    public function saveCredentialSource(PublicKeyCredentialSource $publicKeyCredentialSource): void
+    {
+        $webauthnKey = $this->model($publicKeyCredentialSource->getPublicKeyCredentialId());
+        if (! $webauthnKey) {
+            $webauthnKey = new WebauthnKey();
+        }
+        $webauthnKey->setPublicKeyCredentialSource($publicKeyCredentialSource);
+        $webauthnKey->save();
     }
 
     private function model(string $credentialId)

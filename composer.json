@@ -21,8 +21,9 @@
     ],
     "require": {
         "laravel/framework": "^5.8",
+        "web-auth/cose-lib": "^1.1",
         "web-auth/u2f-lib": "^1.0",
-        "web-auth/webauthn-lib": "^1.0",
+        "web-auth/webauthn-lib": "^1.1",
         "zendframework/zend-diactoros": "^2.1"
     },
     "require-dev": {

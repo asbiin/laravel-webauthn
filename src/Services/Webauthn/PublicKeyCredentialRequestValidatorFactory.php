@@ -39,12 +39,12 @@ final class PublicKeyCredentialRequestValidatorFactory extends AbstractValidator
         }
 
         // Authenticator Assertion Response Validator
-        $authenticatorAssertionResponseValidator = $this->getAuthenticatorAttestationResponseValidator($decoder);
+        $authenticatorAssertionResponseValidator = $this->getAuthenticatorAttestationResponseValidator($this->credentialRepository, $decoder);
 
         // Check the response against the request
         $authenticatorAssertionResponseValidator->check(
             $publicKeyCredential->getRawId(),
-            $response,
+            $publicKeyCredential->getResponse(),
             $publicKeyCredentialRequestOptions,
             ServerRequestFactory::fromGlobals(),
             $user->getAuthIdentifier()
@@ -55,14 +55,13 @@ final class PublicKeyCredentialRequestValidatorFactory extends AbstractValidator
 
     /**
      * Get the Authenticator Attestation Response Validator.
+     *
+     * @param PublicKeyCredentialSourceRepository $credentialRepository
      * @param Decoder $decoder
      * @return AuthenticatorAssertionResponseValidator
      */
-    private function getAuthenticatorAttestationResponseValidator(Decoder $decoder) : AuthenticatorAssertionResponseValidator
+    private function getAuthenticatorAttestationResponseValidator(PublicKeyCredentialSourceRepository $credentialRepository, Decoder $decoder) : AuthenticatorAssertionResponseValidator
     {
-        // Credential Repository
-        $credentialRepository = new CredentialRepository();
-
         // The token binding handler
         $tokenBindnigHandler = new TokenBindingNotSupportedHandler();
 

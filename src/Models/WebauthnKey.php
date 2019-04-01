@@ -2,9 +2,8 @@
 
 namespace LaravelWebauthn\Models;
 
-use Webauthn\AttestedCredentialData;
+use Webauthn\PublicKeyCredentialSource;
 use Illuminate\Database\Eloquent\Model;
-use Webauthn\PublicKeyCredentialDescriptor;
 
 class WebauthnKey extends Model
 {
@@ -26,8 +25,13 @@ class WebauthnKey extends Model
         'user_id',
         'name',
         'credentialId',
-        'publicKeyCredentialDescriptor',
-        'attestedCredentialData',
+        'type',
+        'transports',
+        'attestationType',
+        'trustPath',
+        'aaguid',
+        'credentialPublicKey',
+        'userHandle',
         'counter',
         'timestamp',
     ];
@@ -39,10 +43,21 @@ class WebauthnKey extends Model
      */
     protected $casts = [
         'counter' => 'integer',
+        'transports' => 'array',
     ];
 
     /**
-     * Mutator credentialId.
+     * Get the credentialId.
+     *
+     * @param string|null $value
+     */
+    public function getCredentialIdAttribute($value)
+    {
+        return ! is_null($value) ? base64_decode($value) : $value;
+    }
+
+    /**
+     * Set the credentialId.
      *
      * @param string|null $value
      */
@@ -52,46 +67,62 @@ class WebauthnKey extends Model
     }
 
     /**
-     * Get the publicKeyCredentialDescriptor.
+     * Get the TrustPath.
      *
-     * @return PublicKeyCredentialDescriptor
+     * @return TrustPath
      */
-    public function getPublicKeyCredentialDescriptorAttribute($value)
+    public function getTrustPath($value)
     {
-        $json = \Safe\json_decode($value, true);
+        $json = \Safe\json_decode($value);
 
-        return PublicKeyCredentialDescriptor::createFromJson($json);
+        return \Webauthn\TrustPath\AbstractTrustPath::createFromJson($json);
     }
 
     /**
-     * Mutator publicKeyCredentialDescriptor.
+     * Set the TrustPath.
      *
-     * @param string|null $value
+     * @param TrustPath|null $value
      */
-    public function setPublicKeyCredentialDescriptorAttribute($value)
+    public function setTrustPath($value)
     {
-        $this->attributes['publicKeyCredentialDescriptor'] = json_encode($value);
+        $this->attributes['trustPath'] = json_encode($value);
     }
 
     /**
-     * Get the attestedCredentialData.
+     * Get PublicKeyCredentialSource object.
      *
-     * @return AttestedCredentialData
+     * @return PublicKeyCredentialSource
      */
-    public function getAttestedCredentialDataAttribute($value)
+    public function getPublicKeyCredentialSource() : PublicKeyCredentialSource
     {
-        $json = \Safe\json_decode($value, true);
-
-        return AttestedCredentialData::createFromJson($json);
+        return new PublicKeyCredentialSource(
+            $this->credentialId,
+            $this->type,
+            $this->transports,
+            $this->attestationType,
+            $this->trustPath,
+            $this->aaguid,
+            $this->credentialPublicKey,
+            $this->userHandle,
+            $this->counter
+        );
     }
 
     /**
-     * Mutator attestedCredentialData.
+     * Create a WebauthnKey from a PublicKeyCredentialSource object.
      *
-     * @param string|null $value
+     * @param self
      */
-    public function setAttestedCredentialDataAttribute($value)
+    public function setPublicKeyCredentialSource(PublicKeyCredentialSource $value)
     {
-        $this->attributes['attestedCredentialData'] = json_encode($value);
+        $this->credentialId = $value->getPublicKeyCredentialId();
+        $this->type = $value->getType();
+        $this->transports = $value->getTransports();
+        $this->attestationType = $value->getAttestationType();
+        $this->trustPath = $value->getTrustPath();
+        $this->aaguid = $value->getAaguid();
+        $this->credentialPublicKey = $value->getCredentialPublicKey();
+        $this->userHandle = $value->getUserHandle();
+        $this->counter = $value->getCounter();
     }
 }

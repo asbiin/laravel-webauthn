@@ -78,19 +78,12 @@ class Webauthn
      */
     public function doRegister(User $user, PublicKeyCredentialCreationOptions $publicKey, string $data, string $keyName) : WebauthnKey
     {
-        list(
-            $publicKeyCredentialDescriptor,
-            $attestedCredentialData
-         ) = $this->app->make(PublicKeyCredentialCreationValidatorFactory::class)
+        $publicKeyCredentialSource = $this->app->make(PublicKeyCredentialCreationValidatorFactory::class)
             ->validate($publicKey, $data);
 
-        $webauthnKey = WebauthnKey::create([
-            'user_id' => $user->getAuthIdentifier(),
-            'name' => $keyName,
-            'publicKeyCredentialDescriptor' => $publicKeyCredentialDescriptor,
-            'attestedCredentialData' => $attestedCredentialData,
-            'credentialId' => $publicKeyCredentialDescriptor->getId(),
-        ]);
+        $webauthnKey = new WebauthnKey();
+        $webauthnKey->setPublicKeyCredentialSource($publicKeyCredentialSource);
+        $webauthnKey->save();
 
         Event::dispatch(new WebauthnRegister($webauthnKey));
 
@@ -116,7 +109,7 @@ class Webauthn
         return WebauthnKey::where('user_id', $user->getAuthIdentifier())
             ->get()
             ->map(function ($webauthnKey) {
-                return $webAuthn->publicKeyCredentialDescriptor;
+                return $webauthnKey->getPublicKeyCredentialSource()->getPublicKeyCredentialDescriptor();
             });
     }
 
