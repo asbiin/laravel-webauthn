@@ -51,6 +51,7 @@ class WebauthnController extends Controller
         $request->session()->put(self::SESSION_PUBLICKEY_REQUEST, $publicKey);
 
         return view($this->config->get('webauthn.authenticate.view'))
+            ->withCallback($this->query($request, 'callback', url()->current()))
             ->withPublicKey($publicKey);
     }
 
@@ -71,7 +72,6 @@ class WebauthnController extends Controller
                 $publicKey,
                 $this->input($request, 'data')
             );
-            Webauthn::fireLoginEvent($request->user());
 
             return $this->redirectAfterSuccessAuth($result);
         } catch (\Exception $e) {

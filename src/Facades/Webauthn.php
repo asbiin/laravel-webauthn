@@ -13,7 +13,6 @@ use Webauthn\PublicKeyCredentialCreationOptions;
  * @method static bool doAuthenticate(\Illuminate\Contracts\Auth\Authenticatable $user, PublicKeyCredentialRequestOptions $publicKey, string $data)
  * @method static void forceAuthenticate(\Illuminate\Contracts\Auth\Authenticatable $user)
  * @method static bool check()
- * @method static void fireLoginEvent(\Illuminate\Contracts\Auth\Authenticatable $user)
  * @method statuc bool enabled(\Illuminate\Contracts\Auth\Authenticatable $user)
  *
  * @see \LaravelWebauthn\Webauthn

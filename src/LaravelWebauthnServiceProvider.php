@@ -46,27 +46,12 @@ class LaravelWebauthnServiceProvider extends ServiceProvider
     private function registerRoutes()
     {
         Route::group($this->routeConfiguration(), function (\Illuminate\Routing\Router $router) : void {
-            $router->get('auth', [
-                'uses' => 'WebauthnController@login',
-                'middleware' => 'auth',
-            ]);
-            $router->post('auth', [
-                'uses' => 'WebauthnController@auth',
-                'middleware' => 'auth',
-            ]);
+            $router->get('auth', 'WebauthnController@login')->name('webauthn.login');
+            $router->post('auth', 'WebauthnController@auth');
 
-            $router->get('register', [
-                'uses' => 'WebauthnController@register',
-                'middleware' => 'auth',
-            ]);
-            $router->post('register', [
-                'uses' => 'WebauthnController@create',
-                'middleware' => 'auth',
-            ]);
-            $router->delete('{id}', [
-                'uses' => 'WebauthnController@remove',
-                'middleware' => 'auth',
-            ]);
+            $router->get('register', 'WebauthnController@register')->name('webauthn.register');
+            $router->post('register', 'WebauthnController@create');
+            $router->delete('{id}', 'WebauthnController@remove');
         });
     }
 

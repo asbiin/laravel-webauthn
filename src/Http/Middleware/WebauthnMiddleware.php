@@ -43,8 +43,8 @@ class WebauthnMiddleware
             ! Webauthn::check()) {
             abort_if(Auth::guest(), 401, 'You need to log in before doing a Webauthn authentication');
 
-            if (WebauthnKey::where('user_id', $request->user()->getAuthIdentifier())->count() !== 0) {
-                return Redirect::guest(Str::finish($this->config->get('webauthn.prefix'), '/').'auth');
+            if (WebauthnKey::enabled($request->user())) {
+                return Redirect::guest(route('webauthn.login').'?callback='.urlencode(url()->current()));
             }
         }
 
