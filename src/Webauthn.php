@@ -8,8 +8,8 @@ use Illuminate\Contracts\Session\Session;
 use LaravelWebauthn\Events\WebauthnLogin;
 use LaravelWebauthn\Events\WebauthnRegister;
 use Webauthn\PublicKeyCredentialRequestOptions;
-use LaravelWebauthn\Events\WebauthnRegisterData;
 use Illuminate\Contracts\Foundation\Application;
+use LaravelWebauthn\Events\WebauthnRegisterData;
 use Webauthn\PublicKeyCredentialCreationOptions;
 use Illuminate\Contracts\Config\Repository as Config;
 use Illuminate\Contracts\Auth\Authenticatable as User;
@@ -108,7 +108,7 @@ class Webauthn
     }
 
     /**
-     * List of registered PublicKeyCredentialDescriptor classes associated to the user
+     * List of registered PublicKeyCredentialDescriptor classes associated to the user.
      * @param User $user
      */
     private function getRegisteredKeys(User $user): array
