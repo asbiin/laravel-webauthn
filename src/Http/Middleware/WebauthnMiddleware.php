@@ -3,7 +3,6 @@
 namespace LaravelWebauthn\Http\Middleware;
 
 use Closure;
-use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
 use LaravelWebauthn\Facades\Webauthn;
 use LaravelWebauthn\Models\WebauthnKey;
