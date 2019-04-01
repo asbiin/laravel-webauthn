@@ -147,9 +147,7 @@ class Webauthn
      */
     public function forceAuthenticate(User $user)
     {
-        if ($this->config->get('webauthn.enable') && $this->enabled($user)) {
-            $this->session->put([$this->config->get('webauthn.sessionName') => true]);
-        }
+        $this->session->put([$this->config->get('webauthn.sessionName') => true]);
     }
 
     /**

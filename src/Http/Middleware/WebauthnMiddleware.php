@@ -3,10 +3,8 @@
 namespace LaravelWebauthn\Http\Middleware;
 
 use Closure;
-use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
 use LaravelWebauthn\Facades\Webauthn;
-use LaravelWebauthn\Models\WebauthnKey;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Contracts\Config\Repository as Config;
 
@@ -43,7 +41,7 @@ class WebauthnMiddleware
             ! Webauthn::check()) {
             abort_if(Auth::guest(), 401, 'You need to log in before doing a Webauthn authentication');
 
-            if (WebauthnKey::enabled($request->user())) {
+            if (Webauthn::enabled($request->user())) {
                 return Redirect::guest(route('webauthn.login').'?callback='.urlencode(url()->current()));
             }
         }

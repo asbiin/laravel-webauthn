@@ -19,7 +19,7 @@ class WebauthnLogin
     /**
      * Create a new event instance.
      *
-     * @param  \Illuminate\Contracts\Auth\Authenticatable  $user
+     * @param \Illuminate\Contracts\Auth\Authenticatable  $user
      */
     public function __construct(User $user)
     {

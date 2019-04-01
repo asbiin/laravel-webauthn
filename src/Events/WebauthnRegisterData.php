@@ -26,7 +26,8 @@ class WebauthnRegisterData
     /**
      * Create a new event instance.
      *
-     * @param  \Illuminate\Contracts\Auth\Authenticatable  $user
+     * @param \Illuminate\Contracts\Auth\Authenticatable  $user
+     * @param PublicKeyCredentialCreationOptions  $publicKey
      */
     public function __construct(User $user, PublicKeyCredentialCreationOptions $publicKey)
     {
