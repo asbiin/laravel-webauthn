@@ -2,6 +2,7 @@
 
 namespace LaravelWebauthn\Models;
 
+use Webauthn\TrustPath\TrustPath;
 use Illuminate\Database\Eloquent\Model;
 use Webauthn\PublicKeyCredentialSource;
 
@@ -111,7 +112,7 @@ class WebauthnKey extends Model
     /**
      * Create a WebauthnKey from a PublicKeyCredentialSource object.
      *
-     * @param self
+     * @param PublicKeyCredentialSource $value
      */
     public function setPublicKeyCredentialSource(PublicKeyCredentialSource $value)
     {

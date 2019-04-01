@@ -15,7 +15,7 @@ final class PublicKeyCredentialCreationOptionsFactory extends AbstractOptions
 {
     /**
      * @param User $user
-     * @param array[AuthenticationExtensionsClientInputs] $excludeCredentials
+     * @param PublicKeyCredentialDescriptor[] $excludeCredentials
      */
     public function create(User $user, array $excludeCredentials = []): PublicKeyCredentialCreationOptions
     {

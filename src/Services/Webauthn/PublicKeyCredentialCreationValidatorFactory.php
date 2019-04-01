@@ -7,6 +7,7 @@ use Webauthn\PublicKeyCredentialSource;
 use Zend\Diactoros\ServerRequestFactory;
 use Webauthn\AuthenticatorAttestationResponse;
 use Webauthn\PublicKeyCredentialCreationOptions;
+use Webauthn\PublicKeyCredentialSourceRepository;
 use Webauthn\AuthenticatorAttestationResponseValidator;
 use LaravelWebauthn\Exceptions\ResponseMismatchException;
 use Webauthn\TokenBinding\TokenBindingNotSupportedHandler;
@@ -50,12 +51,10 @@ final class PublicKeyCredentialCreationValidatorFactory extends AbstractValidato
         );
 
         // Everything is OK here. You can get the PublicKeyCredentialDescriptor.
-        $publicKeyCredentialSource = PublicKeyCredentialSource::createFromPublicKeyCredential(
+        return PublicKeyCredentialSource::createFromPublicKeyCredential(
             $publicKeyCredential,
             $publicKeyCredentialCreationOptions->getUser()->getId()
         );
-
-        return $publicKeyCredentialSource;
     }
 
     /**

@@ -5,7 +5,10 @@ namespace LaravelWebauthn\Services\Webauthn;
 use Illuminate\Support\Facades\Auth;
 use Webauthn\AttestedCredentialData;
 use LaravelWebauthn\Models\WebauthnKey;
+use Webauthn\PublicKeyCredentialSource;
+use Webauthn\PublicKeyCredentialUserEntity;
 use Webauthn\PublicKeyCredentialSourceRepository;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class CredentialRepository implements PublicKeyCredentialSourceRepository
 {
@@ -55,11 +58,12 @@ class CredentialRepository implements PublicKeyCredentialSourceRepository
         try {
             $webauthnKey = $this->model($publicKeyCredentialId);
             if ($webauthnKey) {
-                return $webauthnKey->publicKeyCredentialSource;
+                return $webauthnKey->getPublicKeyCredentialSource();
             }
         } catch (ModelNotFoundException $e) {
             // No result
         }
+        return null;
     }
 
     /**
@@ -70,8 +74,9 @@ class CredentialRepository implements PublicKeyCredentialSourceRepository
         return WebauthnKey::where('user_id', $publicKeyCredentialUserEntity->getId())
             ->get()
             ->map(function ($webauthnKey) {
-                return $webauthnKey->publicKeyCredentialSource;
-            });
+                return $webauthnKey->getPublicKeyCredentialSource();
+            })
+            ->toArray();
     }
 
     /**

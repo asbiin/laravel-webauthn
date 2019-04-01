@@ -20,7 +20,10 @@
         }
     ],
     "require": {
+        "guzzlehttp/guzzle": "^6.3",
         "laravel/framework": "^5.8",
+        "php-http/guzzle6-adapter": "^1.0",
+        "php-http/httplug": "^1.0",
         "web-auth/cose-lib": "^1.1",
         "web-auth/u2f-lib": "^1.0",
         "web-auth/webauthn-lib": "^1.1",

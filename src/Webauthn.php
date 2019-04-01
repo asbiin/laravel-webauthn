@@ -81,7 +81,10 @@ class Webauthn
         $publicKeyCredentialSource = $this->app->make(PublicKeyCredentialCreationValidatorFactory::class)
             ->validate($publicKey, $data);
 
-        $webauthnKey = new WebauthnKey();
+        $webauthnKey = WebauthnKey::create([
+            'user_id' => $user->id,
+            'name' => $keyName,
+        ]);
         $webauthnKey->setPublicKeyCredentialSource($publicKeyCredentialSource);
         $webauthnKey->save();
 
@@ -110,7 +113,8 @@ class Webauthn
             ->get()
             ->map(function ($webauthnKey) {
                 return $webauthnKey->getPublicKeyCredentialSource()->getPublicKeyCredentialDescriptor();
-            });
+            })
+            ->toArray();
     }
 
     /**

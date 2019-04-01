@@ -4,6 +4,7 @@ namespace LaravelWebauthn\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\URL;
 use LaravelWebauthn\Facades\Webauthn;
 use LaravelWebauthn\Models\WebauthnKey;
 use Illuminate\Support\Facades\Redirect;
@@ -51,7 +52,7 @@ class WebauthnController extends Controller
         $request->session()->put(self::SESSION_PUBLICKEY_REQUEST, $publicKey);
 
         return view($this->config->get('webauthn.authenticate.view'))
-            ->withCallback($this->query($request, 'callback', url()->current()))
+            ->withCallback($request->query('callback', URL::current()))
             ->withPublicKey($publicKey);
     }
 

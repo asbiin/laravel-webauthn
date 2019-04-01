@@ -6,6 +6,7 @@ use CBOR\Decoder;
 use Zend\Diactoros\ServerRequestFactory;
 use Webauthn\AuthenticatorAssertionResponse;
 use Webauthn\PublicKeyCredentialRequestOptions;
+use Webauthn\PublicKeyCredentialSourceRepository;
 use Webauthn\AuthenticatorAssertionResponseValidator;
 use Illuminate\Contracts\Auth\Authenticatable as User;
 use LaravelWebauthn\Exceptions\ResponseMismatchException;
@@ -43,7 +44,7 @@ final class PublicKeyCredentialRequestValidatorFactory extends AbstractValidator
         // Check the response against the request
         $authenticatorAssertionResponseValidator->check(
             $publicKeyCredential->getRawId(),
-            $publicKeyCredential->getResponse(),
+            $response,
             $publicKeyCredentialRequestOptions,
             ServerRequestFactory::fromGlobals(),
             $user->getAuthIdentifier()
