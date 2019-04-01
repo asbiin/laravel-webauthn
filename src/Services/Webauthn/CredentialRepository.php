@@ -63,6 +63,7 @@ class CredentialRepository implements PublicKeyCredentialSourceRepository
         } catch (ModelNotFoundException $e) {
             // No result
         }
+
         return null;
     }
 
