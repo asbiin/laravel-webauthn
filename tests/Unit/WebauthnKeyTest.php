@@ -2,8 +2,8 @@
 
 namespace LaravelWebauthn\Tests\Unit;
 
-use Webauthn\PublicKeyCredentialSource;
 use LaravelWebauthn\Models\WebauthnKey;
+use Webauthn\PublicKeyCredentialSource;
 use LaravelWebauthn\Tests\FeatureTestCase;
 
 class WebauthnKeyTest extends FeatureTestCase
@@ -49,6 +49,5 @@ class WebauthnKeyTest extends FeatureTestCase
         $this->assertEquals(0, $publicKeyCredentialSource->getCounter());
         $this->assertEquals('c', $publicKeyCredentialSource->getAttestationType());
         $this->assertInstanceOf(\Webauthn\TrustPath\EmptyTrustPath::class, $publicKeyCredentialSource->getTrustPath());
-
     }
 }

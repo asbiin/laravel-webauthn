@@ -50,12 +50,6 @@ class CredentialRepository implements PublicKeyCredentialSourceRepository
         $webAuthn->save();
     }
 
-
-
-
-    /**
-     *
-     */
     public function findOneByCredentialId(string $publicKeyCredentialId): ?PublicKeyCredentialSource
     {
         try {

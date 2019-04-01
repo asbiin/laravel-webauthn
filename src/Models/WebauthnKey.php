@@ -2,8 +2,8 @@
 
 namespace LaravelWebauthn\Models;
 
-use Webauthn\PublicKeyCredentialSource;
 use Illuminate\Database\Eloquent\Model;
+use Webauthn\PublicKeyCredentialSource;
 
 class WebauthnKey extends Model
 {

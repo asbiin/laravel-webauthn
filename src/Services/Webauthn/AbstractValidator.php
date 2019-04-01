@@ -24,7 +24,7 @@ abstract class AbstractValidator
     protected $config;
 
     /**
-     * Public Key Credential Source Repository
+     * Public Key Credential Source Repository.
      * @var PublicKeyCredentialSourceRepository
      */
     protected $credentialRepository;

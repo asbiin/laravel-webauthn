@@ -4,7 +4,6 @@ namespace LaravelWebauthn\Services\Webauthn;
 
 use CBOR\Decoder;
 use Zend\Diactoros\ServerRequestFactory;
-use Illuminate\Contracts\Config\Repository;
 use Webauthn\AuthenticatorAssertionResponse;
 use Webauthn\PublicKeyCredentialRequestOptions;
 use Webauthn\AuthenticatorAssertionResponseValidator;
