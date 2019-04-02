@@ -143,7 +143,6 @@ class Webauthn
     }
 
     /**
-     * @param User $user
      */
     public function forceAuthenticate()
     {

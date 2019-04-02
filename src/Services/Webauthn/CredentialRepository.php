@@ -74,10 +74,12 @@ class CredentialRepository implements PublicKeyCredentialSourceRepository
     {
         $userId = Auth::id();
         if ($userId) {
-            return WebauthnKey::where([
+            /** @var WebauthnKey */
+            $webauthnKey = WebauthnKey::where([
                 'user_id' => $userId,
                 'credentialId' => base64_encode($credentialId),
             ])->firstOrFail();
+            return $webauthnKey;
         }
     }
 
