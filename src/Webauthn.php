@@ -88,7 +88,7 @@ class Webauthn
         $webauthnKey->setPublicKeyCredentialSource($publicKeyCredentialSource);
         $webauthnKey->save();
 
-        $this->forceAuthenticate();
+        $this->forceAuthenticate($user);
 
         Event::dispatch(new WebauthnRegister($webauthnKey));
 
@@ -108,6 +108,7 @@ class Webauthn
     /**
      * List of registered PublicKeyCredentialDescriptor classes associated to the user.
      * @param User $user
+     * @return PublicKeyCredentialRequestOptions[]
      */
     private function getRegisteredKeys(User $user): array
     {
