@@ -12,47 +12,12 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class CredentialRepository implements PublicKeyCredentialSourceRepository
 {
-    public function has(string $credentialId): bool
-    {
-        $userId = Auth::id();
-        if ($userId) {
-            return WebauthnKey::where([
-                'user_id' => $userId,
-                'credentialId' => base64_encode($credentialId),
-            ])->count() !== 0;
-        }
-
-        return false;
-    }
-
-    public function get(string $credentialId): AttestedCredentialData
-    {
-        $webAuthn = $this->model($credentialId);
-
-        return $webAuthn->attestedCredentialData;
-    }
-
-    public function getUserHandleFor(string $credentialId): string
-    {
-        $webAuthn = $this->model($credentialId);
-
-        return $webAuthn->user_id;
-    }
-
-    public function getCounterFor(string $credentialId): int
-    {
-        $webAuthn = $this->model($credentialId);
-
-        return $webAuthn->counter;
-    }
-
-    public function updateCounterFor(string $credentialId, int $newCounter): void
-    {
-        $webAuthn = $this->model($credentialId);
-        $webAuthn->counter = $newCounter;
-        $webAuthn->save();
-    }
-
+    /**
+     * Return a PublicKeyCredentialSource object.
+     *
+     * @param string $publicKeyCredentialId
+     * @return null|PublicKeyCredentialSource
+     */
     public function findOneByCredentialId(string $publicKeyCredentialId): ?PublicKeyCredentialSource
     {
         try {
@@ -68,6 +33,9 @@ class CredentialRepository implements PublicKeyCredentialSourceRepository
     }
 
     /**
+     * Return a list of PublicKeyCredentialSource objects.
+     *
+     * @param PublicKeyCredentialUserEntity $publicKeyCredentialUserEntity
      * @return PublicKeyCredentialSource[]
      */
     public function findAllForUserEntity(PublicKeyCredentialUserEntity $publicKeyCredentialUserEntity): array
@@ -81,18 +49,27 @@ class CredentialRepository implements PublicKeyCredentialSourceRepository
     }
 
     /**
+     * Save a PublicKeyCredentialSource object.
+     *
+     * @param PublicKeyCredentialSource $publicKeyCredentialSource
      * @throws ModelNotFoundException
      */
     public function saveCredentialSource(PublicKeyCredentialSource $publicKeyCredentialSource): void
     {
         $webauthnKey = $this->model($publicKeyCredentialSource->getPublicKeyCredentialId());
-        if (! $webauthnKey) {
-            $webauthnKey = new WebauthnKey();
+        if ($webauthnKey) {
+            $webauthnKey->setPublicKeyCredentialSource($publicKeyCredentialSource);
+            $webauthnKey->save();
         }
-        $webauthnKey->setPublicKeyCredentialSource($publicKeyCredentialSource);
-        $webauthnKey->save();
     }
 
+    /**
+     * Get one WebauthnKey.
+     *
+     * @param string $credentialId
+     * @return WebauthnKey|null
+     * @throws ModelNotFoundException
+     */
     private function model(string $credentialId)
     {
         $userId = Auth::id();
@@ -102,5 +79,31 @@ class CredentialRepository implements PublicKeyCredentialSourceRepository
                 'credentialId' => base64_encode($credentialId),
             ])->firstOrFail();
         }
+    }
+
+    public function has(string $credentialId): bool
+    {
+        return $this->findOneByCredentialId($credentialId) !== null;
+    }
+
+    public function get(string $credentialId): AttestedCredentialData
+    {
+        return $this->findOneByCredentialId($credentialId)->getAttestedCredentialData();
+    }
+
+    public function getUserHandleFor(string $credentialId): string
+    {
+        return $this->findOneByCredentialId($credentialId)->getUserHandle();
+    }
+
+    public function getCounterFor(string $credentialId): int
+    {
+        return $this->findOneByCredentialId($credentialId)->getCounter();
+    }
+
+    public function updateCounterFor(string $credentialId, int $newCounter): void
+    {
+        $publicKeyCredentialSource = $this->findOneByCredentialId($credentialId);
+        $publicKeyCredentialSource->setCounter($newCounter);
     }
 }

@@ -133,6 +133,7 @@ class WebauthnKey extends Model
      * Create a WebauthnKey from a PublicKeyCredentialSource object.
      *
      * @param PublicKeyCredentialSource $value
+     * @return self
      */
     public function setPublicKeyCredentialSource(PublicKeyCredentialSource $value)
     {
@@ -145,5 +146,7 @@ class WebauthnKey extends Model
         $this->credentialPublicKey = $value->getCredentialPublicKey();
         $this->userHandle = $value->getUserHandle();
         $this->counter = $value->getCounter();
+
+        return $this;
     }
 }

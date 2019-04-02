@@ -82,13 +82,13 @@ class Webauthn
             ->validate($publicKey, $data);
 
         $webauthnKey = WebauthnKey::create([
-            'user_id' => $user->id,
+            'user_id' => $user->getAuthIdentifier(),
             'name' => $keyName,
         ]);
         $webauthnKey->setPublicKeyCredentialSource($publicKeyCredentialSource);
         $webauthnKey->save();
 
-        $this->forceAuthenticate($user);
+        $this->forceAuthenticate();
 
         Event::dispatch(new WebauthnRegister($webauthnKey));
 
@@ -145,7 +145,7 @@ class Webauthn
     /**
      * @param User $user
      */
-    public function forceAuthenticate(User $user)
+    public function forceAuthenticate()
     {
         $this->session->put([$this->config->get('webauthn.sessionName') => true]);
     }
