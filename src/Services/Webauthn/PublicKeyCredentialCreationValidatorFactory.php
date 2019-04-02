@@ -3,10 +3,11 @@
 namespace LaravelWebauthn\Services\Webauthn;
 
 use CBOR\Decoder;
+use Webauthn\PublicKeyCredentialSource;
 use Zend\Diactoros\ServerRequestFactory;
-use Illuminate\Contracts\Config\Repository;
 use Webauthn\AuthenticatorAttestationResponse;
 use Webauthn\PublicKeyCredentialCreationOptions;
+use Webauthn\PublicKeyCredentialSourceRepository;
 use Webauthn\AuthenticatorAttestationResponseValidator;
 use LaravelWebauthn\Exceptions\ResponseMismatchException;
 use Webauthn\TokenBinding\TokenBindingNotSupportedHandler;
@@ -16,9 +17,10 @@ use Webauthn\AttestationStatement\AttestationStatementSupportManager;
 final class PublicKeyCredentialCreationValidatorFactory extends AbstractValidator
 {
     /**
+     * @return PublicKeyCredentialSource
      * @throws ResponseMismatchException
      */
-    public function validate(PublicKeyCredentialCreationOptions $publicKeyCredentialCreationOptions, string $data): array
+    public function validate(PublicKeyCredentialCreationOptions $publicKeyCredentialCreationOptions, string $data): PublicKeyCredentialSource
     {
         // Create a CBOR Decoder object
         $decoder = $this->createCBORDecoder();
@@ -39,7 +41,7 @@ final class PublicKeyCredentialCreationValidatorFactory extends AbstractValidato
         }
 
         // Authenticator Attestation Response Validator
-        $authenticatorAttestationResponseValidator = $this->getAuthenticatorAttestationResponseValidator($attestationStatementSupportManager);
+        $authenticatorAttestationResponseValidator = $this->getAuthenticatorAttestationResponseValidator($this->credentialRepository, $attestationStatementSupportManager);
 
         // Check the response against the request
         $authenticatorAttestationResponseValidator->check(
@@ -49,18 +51,10 @@ final class PublicKeyCredentialCreationValidatorFactory extends AbstractValidato
         );
 
         // Everything is OK here. You can get the PublicKeyCredentialDescriptor.
-        $publicKeyCredentialDescriptor = $publicKeyCredential->getPublicKeyCredentialDescriptor();
-
-        // Normally this condition should be true. Just make sure you received the credential data
-        $attestedCredentialData = null;
-        if ($response->getAttestationObject()->getAuthData()->hasAttestedCredentialData()) {
-            $attestedCredentialData = $response->getAttestationObject()->getAuthData()->getAttestedCredentialData();
-        }
-
-        return [
-            $publicKeyCredentialDescriptor,
-            $attestedCredentialData,
-        ];
+        return PublicKeyCredentialSource::createFromPublicKeyCredential(
+            $publicKeyCredential,
+            $publicKeyCredentialCreationOptions->getUser()->getId()
+        );
     }
 
     /**
@@ -68,11 +62,8 @@ final class PublicKeyCredentialCreationValidatorFactory extends AbstractValidato
      * @param AttestationStatementSupportManager $attestationStatementSupportManager
      * @return AuthenticatorAttestationResponseValidator
      */
-    private function getAuthenticatorAttestationResponseValidator(AttestationStatementSupportManager $attestationStatementSupportManager) : AuthenticatorAttestationResponseValidator
+    private function getAuthenticatorAttestationResponseValidator(PublicKeyCredentialSourceRepository $credentialRepository, AttestationStatementSupportManager $attestationStatementSupportManager) : AuthenticatorAttestationResponseValidator
     {
-        // Credential Repository
-        $credentialRepository = new CredentialRepository();
-
         // The token binding handler
         $tokenBindnigHandler = new TokenBindingNotSupportedHandler();
 

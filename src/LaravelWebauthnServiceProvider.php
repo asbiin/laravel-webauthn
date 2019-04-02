@@ -8,6 +8,13 @@ use Illuminate\Support\ServiceProvider;
 class LaravelWebauthnServiceProvider extends ServiceProvider
 {
     /**
+     * Name of the middleware group.
+     *
+     * @var string
+     */
+    private const MIDDLEWARE_GROUP = 'laravel-webauthn';
+
+    /**
      * All of the container singletons that should be registered.
      *
      * @var array
@@ -23,7 +30,7 @@ class LaravelWebauthnServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        Route::middlewareGroup('webauthn', config('webauthn.middleware', ['web', 'auth']));
+        Route::middlewareGroup(self::MIDDLEWARE_GROUP, config('webauthn.middleware', []));
 
         $this->registerRoutes();
         $this->registerPublishing();
@@ -39,27 +46,12 @@ class LaravelWebauthnServiceProvider extends ServiceProvider
     private function registerRoutes()
     {
         Route::group($this->routeConfiguration(), function (\Illuminate\Routing\Router $router) : void {
-            $router->get('auth', [
-                'uses' => 'WebauthnController@login',
-                'middleware' => 'auth',
-            ]);
-            $router->post('auth', [
-                'uses' => 'WebauthnController@auth',
-                'middleware' => 'auth',
-            ]);
+            $router->get('auth', 'WebauthnController@login')->name('webauthn.login');
+            $router->post('auth', 'WebauthnController@auth');
 
-            $router->get('register', [
-                'uses' => 'WebauthnController@register',
-                'middleware' => 'auth',
-            ]);
-            $router->post('register', [
-                'uses' => 'WebauthnController@create',
-                'middleware' => 'auth',
-            ]);
-            $router->delete('{id}', [
-                'uses' => 'WebauthnController@remove',
-                'middleware' => 'auth',
-            ]);
+            $router->get('register', 'WebauthnController@register')->name('webauthn.register');
+            $router->post('register', 'WebauthnController@create');
+            $router->delete('{id}', 'WebauthnController@remove');
         });
     }
 
@@ -71,7 +63,7 @@ class LaravelWebauthnServiceProvider extends ServiceProvider
     private function routeConfiguration()
     {
         return [
-            'middleware' => 'webauthn',
+            'middleware' => self::MIDDLEWARE_GROUP,
             'domain' => config('webauthn.domain', null),
             'namespace' => 'LaravelWebauthn\Http\Controllers',
             'prefix' => config('webauthn.prefix', 'webauthn'),
@@ -109,6 +101,11 @@ class LaravelWebauthnServiceProvider extends ServiceProvider
 
         /** @var \Illuminate\Contracts\Foundation\Application */
         $app = $this->app;
+
+        $app->bind(
+            \Webauthn\PublicKeyCredentialSourceRepository::class,
+            \LaravelWebauthn\Services\Webauthn\CredentialRepository::class
+        );
 
         if ($app->runningInConsole()) {
             $this->commands([

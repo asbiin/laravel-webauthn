@@ -5,59 +5,126 @@ namespace LaravelWebauthn\Services\Webauthn;
 use Illuminate\Support\Facades\Auth;
 use Webauthn\AttestedCredentialData;
 use LaravelWebauthn\Models\WebauthnKey;
-use Webauthn\CredentialRepository as WebauthnCredentialRepository;
+use Webauthn\PublicKeyCredentialSource;
+use Webauthn\PublicKeyCredentialUserEntity;
+use Webauthn\PublicKeyCredentialSourceRepository;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
-class CredentialRepository implements WebauthnCredentialRepository
+class CredentialRepository implements PublicKeyCredentialSourceRepository
 {
-    public function has(string $credentialId): bool
+    /**
+     * Return a PublicKeyCredentialSource object.
+     *
+     * @param string $publicKeyCredentialId
+     * @return null|PublicKeyCredentialSource
+     */
+    public function findOneByCredentialId(string $publicKeyCredentialId): ?PublicKeyCredentialSource
     {
-        $userId = Auth::id();
-        if ($userId) {
-            return WebauthnKey::where([
-                'user_id' => $userId,
-                'credentialId' => base64_encode($credentialId),
-            ])->count() !== 0;
+        try {
+            $webauthnKey = $this->model($publicKeyCredentialId);
+            if ($webauthnKey) {
+                return $webauthnKey->getPublicKeyCredentialSource();
+            }
+        } catch (ModelNotFoundException $e) {
+            // No result
         }
 
-        return false;
+        return null;
     }
 
-    public function get(string $credentialId): AttestedCredentialData
+    /**
+     * Return a list of PublicKeyCredentialSource objects.
+     *
+     * @param PublicKeyCredentialUserEntity $publicKeyCredentialUserEntity
+     * @return PublicKeyCredentialSource[]
+     */
+    public function findAllForUserEntity(PublicKeyCredentialUserEntity $publicKeyCredentialUserEntity): array
     {
-        $webAuthn = $this->model($credentialId);
-
-        return $webAuthn->attestedCredentialData;
+        return WebauthnKey::where('user_id', $publicKeyCredentialUserEntity->getId())
+            ->get()
+            ->map(function ($webauthnKey) {
+                return $webauthnKey->getPublicKeyCredentialSource();
+            })
+            ->toArray();
     }
 
-    public function getUserHandleFor(string $credentialId): string
+    /**
+     * Save a PublicKeyCredentialSource object.
+     *
+     * @param PublicKeyCredentialSource $publicKeyCredentialSource
+     * @throws ModelNotFoundException
+     */
+    public function saveCredentialSource(PublicKeyCredentialSource $publicKeyCredentialSource): void
     {
-        $webAuthn = $this->model($credentialId);
-
-        return $webAuthn->user_id;
+        $webauthnKey = $this->model($publicKeyCredentialSource->getPublicKeyCredentialId());
+        if ($webauthnKey) {
+            $webauthnKey->setPublicKeyCredentialSource($publicKeyCredentialSource);
+            $webauthnKey->save();
+        }
     }
 
-    public function getCounterFor(string $credentialId): int
-    {
-        $webAuthn = $this->model($credentialId);
-
-        return $webAuthn->counter;
-    }
-
-    public function updateCounterFor(string $credentialId, int $newCounter): void
-    {
-        $webAuthn = $this->model($credentialId);
-        $webAuthn->counter = $newCounter;
-        $webAuthn->save();
-    }
-
+    /**
+     * Get one WebauthnKey.
+     *
+     * @param string $credentialId
+     * @return WebauthnKey|null
+     * @throws ModelNotFoundException
+     */
     private function model(string $credentialId)
     {
         $userId = Auth::id();
         if ($userId) {
-            return WebauthnKey::where([
+            /** @var WebauthnKey */
+            $webauthnKey = WebauthnKey::where([
                 'user_id' => $userId,
                 'credentialId' => base64_encode($credentialId),
             ])->firstOrFail();
+
+            return $webauthnKey;
         }
+    }
+
+    public function has(string $credentialId): bool
+    {
+        return $this->findOneByCredentialId($credentialId) !== null;
+    }
+
+    public function get(string $credentialId): AttestedCredentialData
+    {
+        $publicKeyCredentialSource = $this->findOneByCredentialId($credentialId);
+        if (! $publicKeyCredentialSource) {
+            throw new ModelNotFoundException('Wrong credentialId');
+        }
+
+        return $publicKeyCredentialSource->getAttestedCredentialData();
+    }
+
+    public function getUserHandleFor(string $credentialId): string
+    {
+        $publicKeyCredentialSource = $this->findOneByCredentialId($credentialId);
+        if (! $publicKeyCredentialSource) {
+            throw new ModelNotFoundException('Wrong credentialId');
+        }
+
+        return $publicKeyCredentialSource->getUserHandle();
+    }
+
+    public function getCounterFor(string $credentialId): int
+    {
+        $publicKeyCredentialSource = $this->findOneByCredentialId($credentialId);
+        if (! $publicKeyCredentialSource) {
+            throw new ModelNotFoundException('Wrong credentialId');
+        }
+
+        return $publicKeyCredentialSource->getCounter();
+    }
+
+    public function updateCounterFor(string $credentialId, int $newCounter): void
+    {
+        $publicKeyCredentialSource = $this->findOneByCredentialId($credentialId);
+        if (! $publicKeyCredentialSource) {
+            throw new ModelNotFoundException('Wrong credentialId');
+        }
+        $publicKeyCredentialSource->setCounter($newCounter);
     }
 }

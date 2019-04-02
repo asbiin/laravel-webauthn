@@ -24,5 +24,6 @@
     <php>
         <env name="APP_ENV" value="testing"/>
         <env name="APP_KEY" value="base64:uA/XEme0vpegJz/rKSk3ys2uzEfXZA0Ca2P0e1M8vRU="/>
+        <env name="DB_CONNECTION" value="testbench"/>
     </php>
 </phpunit>

@@ -13,6 +13,10 @@ use Illuminate\Contracts\Auth\Authenticatable as User;
 
 final class PublicKeyCredentialCreationOptionsFactory extends AbstractOptions
 {
+    /**
+     * @param User $user
+     * @param PublicKeyCredentialDescriptor[] $excludeCredentials
+     */
     public function create(User $user, array $excludeCredentials = []): PublicKeyCredentialCreationOptions
     {
         $userEntity = new PublicKeyCredentialUserEntity(

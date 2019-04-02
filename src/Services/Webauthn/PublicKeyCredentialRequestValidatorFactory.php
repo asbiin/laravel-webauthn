@@ -4,9 +4,9 @@ namespace LaravelWebauthn\Services\Webauthn;
 
 use CBOR\Decoder;
 use Zend\Diactoros\ServerRequestFactory;
-use Illuminate\Contracts\Config\Repository;
 use Webauthn\AuthenticatorAssertionResponse;
 use Webauthn\PublicKeyCredentialRequestOptions;
+use Webauthn\PublicKeyCredentialSourceRepository;
 use Webauthn\AuthenticatorAssertionResponseValidator;
 use Illuminate\Contracts\Auth\Authenticatable as User;
 use LaravelWebauthn\Exceptions\ResponseMismatchException;
@@ -39,7 +39,7 @@ final class PublicKeyCredentialRequestValidatorFactory extends AbstractValidator
         }
 
         // Authenticator Assertion Response Validator
-        $authenticatorAssertionResponseValidator = $this->getAuthenticatorAttestationResponseValidator($decoder);
+        $authenticatorAssertionResponseValidator = $this->getAuthenticatorAttestationResponseValidator($this->credentialRepository, $decoder);
 
         // Check the response against the request
         $authenticatorAssertionResponseValidator->check(
@@ -55,14 +55,13 @@ final class PublicKeyCredentialRequestValidatorFactory extends AbstractValidator
 
     /**
      * Get the Authenticator Attestation Response Validator.
+     *
+     * @param PublicKeyCredentialSourceRepository $credentialRepository
      * @param Decoder $decoder
      * @return AuthenticatorAssertionResponseValidator
      */
-    private function getAuthenticatorAttestationResponseValidator(Decoder $decoder) : AuthenticatorAssertionResponseValidator
+    private function getAuthenticatorAttestationResponseValidator(PublicKeyCredentialSourceRepository $credentialRepository, Decoder $decoder) : AuthenticatorAssertionResponseValidator
     {
-        // Credential Repository
-        $credentialRepository = new CredentialRepository();
-
         // The token binding handler
         $tokenBindnigHandler = new TokenBindingNotSupportedHandler();
 
