@@ -102,6 +102,11 @@ class LaravelWebauthnServiceProvider extends ServiceProvider
         /** @var \Illuminate\Contracts\Foundation\Application */
         $app = $this->app;
 
+        $app->bind(
+            \Webauthn\PublicKeyCredentialSourceRepository::class,
+            \LaravelWebauthn\Services\Webauthn\CredentialRepository::class
+        );
+
         if ($app->runningInConsole()) {
             $this->commands([
                 Console\PublishCommand::class,

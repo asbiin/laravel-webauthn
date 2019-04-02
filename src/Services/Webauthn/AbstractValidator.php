@@ -7,9 +7,7 @@ use Cose\Algorithm\Manager;
 use CBOR\Tag\TagObjectManager;
 use Http\Adapter\Guzzle6\Client;
 use Webauthn\PublicKeyCredentialLoader;
-use Webauthn\PublicKeyCredentialSource;
 use CBOR\OtherObject\OtherObjectManager;
-use Webauthn\PublicKeyCredentialSourceUserEntity;
 use Webauthn\PublicKeyCredentialSourceRepository;
 use Illuminate\Contracts\Config\Repository as Config;
 use Webauthn\AttestationStatement\AttestationObjectLoader;
@@ -77,9 +75,9 @@ abstract class AbstractValidator
 
         $attestationStatementSupportManager->add(new NoneAttestationStatementSupport());
         $attestationStatementSupportManager->add(new FidoU2FAttestationStatementSupport($decoder));
-        $attestationStatementSupportManager->add(new AndroidSafetyNetAttestationStatementSupport(new Client(), 'GOOGLE_SAFETYNET_API_KEY'));
-        $attestationStatementSupportManager->add(new AndroidKeyAttestationStatementSupport($decoder));
-        $attestationStatementSupportManager->add(new TPMAttestationStatementSupport());
+        //$attestationStatementSupportManager->add(new AndroidSafetyNetAttestationStatementSupport(new Client(), 'GOOGLE_SAFETYNET_API_KEY'));
+        //$attestationStatementSupportManager->add(new AndroidKeyAttestationStatementSupport($decoder));
+        //$attestationStatementSupportManager->add(new TPMAttestationStatementSupport());
         $attestationStatementSupportManager->add(new PackedAttestationStatementSupport($decoder, $coseAlgorithmManager));
 
         return $attestationStatementSupportManager;

@@ -88,6 +88,8 @@ class Webauthn
         $webauthnKey->setPublicKeyCredentialSource($publicKeyCredentialSource);
         $webauthnKey->save();
 
+        $this->forceAuthenticate();
+
         Event::dispatch(new WebauthnRegister($webauthnKey));
 
         return $webauthnKey;
@@ -129,7 +131,7 @@ class Webauthn
             ->check($user, $publicKey, $data);
 
         if ($result) {
-            $this->session->put([$this->config->get('webauthn.sessionName') => true]);
+            $this->forceAuthenticate();
 
             Event::dispatch(new WebauthnLogin($user));
 

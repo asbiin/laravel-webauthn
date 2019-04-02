@@ -68,13 +68,33 @@ class WebauthnKey extends Model
     }
 
     /**
+     * Get the CredentialPublicKey.
+     *
+     * @param string|null $value
+     */
+    public function getCredentialPublicKeyAttribute($value)
+    {
+        return ! is_null($value) ? base64_decode($value) : $value;
+    }
+
+    /**
+     * Set the CredentialPublicKey.
+     *
+     * @param string|null $value
+     */
+    public function setCredentialPublicKeyAttribute($value)
+    {
+        $this->attributes['credentialPublicKey'] = ! is_null($value) ? base64_encode($value) : $value;
+    }
+
+    /**
      * Get the TrustPath.
      *
      * @return TrustPath
      */
-    public function getTrustPath($value)
+    public function getTrustPathAttribute($value)
     {
-        $json = \Safe\json_decode($value);
+        $json = \Safe\json_decode($value, true);
 
         return \Webauthn\TrustPath\AbstractTrustPath::createFromJson($json);
     }
@@ -84,7 +104,7 @@ class WebauthnKey extends Model
      *
      * @param TrustPath|null $value
      */
-    public function setTrustPath($value)
+    public function setTrustPathAttribute($value)
     {
         $this->attributes['trustPath'] = json_encode($value);
     }
@@ -98,13 +118,13 @@ class WebauthnKey extends Model
     {
         return new PublicKeyCredentialSource(
             $this->credentialId,
-            $this->type,
-            $this->transports,
-            $this->attestationType,
+            $this->type ?: '',
+            $this->transports ?: [],
+            $this->attestationType ?: '',
             $this->trustPath,
-            $this->aaguid,
-            $this->credentialPublicKey,
-            $this->userHandle,
+            $this->aaguid ?: '',
+            $this->credentialPublicKey ?: '',
+            $this->userHandle ?: '',
             $this->counter
         );
     }
