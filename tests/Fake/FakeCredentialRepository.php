@@ -6,17 +6,17 @@ use Webauthn\AttestedCredentialData;
 use Webauthn\PublicKeyCredentialSource;
 use Webauthn\PublicKeyCredentialUserEntity;
 use Webauthn\PublicKeyCredentialSourceRepository;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class FakeCredentialRepository implements PublicKeyCredentialSourceRepository
 {
-    private $publicKeyCredentialSources = array();
+    private $publicKeyCredentialSources = [];
 
     public function findOneByCredentialId(string $publicKeyCredentialId): ?PublicKeyCredentialSource
     {
         if (array_has($this->publicKeyCredentialSources, $publicKeyCredentialId)) {
             return $this->publicKeyCredentialSources[$publicKeyCredentialId];
         }
+
         return null;
     }
 
