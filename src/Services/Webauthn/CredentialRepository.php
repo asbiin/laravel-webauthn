@@ -91,22 +91,37 @@ class CredentialRepository implements PublicKeyCredentialSourceRepository
 
     public function get(string $credentialId): AttestedCredentialData
     {
-        return $this->findOneByCredentialId($credentialId)->getAttestedCredentialData();
+        $publicKeyCredentialSource = $this->findOneByCredentialId($credentialId);
+        if (! $publicKeyCredentialSource) {
+            throw new ModelNotFoundException('Wrong credentialId');
+        }
+        return $publicKeyCredentialSource->getAttestedCredentialData();
     }
 
     public function getUserHandleFor(string $credentialId): string
     {
-        return $this->findOneByCredentialId($credentialId)->getUserHandle();
+        $publicKeyCredentialSource = $this->findOneByCredentialId($credentialId);
+        if (! $publicKeyCredentialSource) {
+            throw new ModelNotFoundException('Wrong credentialId');
+        }
+        return $publicKeyCredentialSource->getUserHandle();
     }
 
     public function getCounterFor(string $credentialId): int
     {
-        return $this->findOneByCredentialId($credentialId)->getCounter();
+        $publicKeyCredentialSource = $this->findOneByCredentialId($credentialId);
+        if (! $publicKeyCredentialSource) {
+            throw new ModelNotFoundException('Wrong credentialId');
+        }
+        return $publicKeyCredentialSource->getCounter();
     }
 
     public function updateCounterFor(string $credentialId, int $newCounter): void
     {
         $publicKeyCredentialSource = $this->findOneByCredentialId($credentialId);
+        if (! $publicKeyCredentialSource) {
+            throw new ModelNotFoundException('Wrong credentialId');
+        }
         $publicKeyCredentialSource->setCounter($newCounter);
     }
 }
