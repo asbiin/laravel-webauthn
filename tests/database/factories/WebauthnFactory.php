@@ -22,6 +22,6 @@ $factory->define(\LaravelWebauthn\Models\WebauthnKey::class, function (Faker\Gen
         'trustPath' => new \Webauthn\TrustPath\EmptyTrustPath,
         'aaguid' => '',
         'credentialPublicKey' => '',
-        'userHandle' => 0
+        'userHandle' => 0,
 ];
 });

@@ -142,8 +142,6 @@ class Webauthn
         return false;
     }
 
-    /**
-     */
     public function forceAuthenticate()
     {
         $this->session->put([$this->config->get('webauthn.sessionName') => true]);

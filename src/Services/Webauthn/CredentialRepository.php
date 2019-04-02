@@ -79,6 +79,7 @@ class CredentialRepository implements PublicKeyCredentialSourceRepository
                 'user_id' => $userId,
                 'credentialId' => base64_encode($credentialId),
             ])->firstOrFail();
+
             return $webauthnKey;
         }
     }
