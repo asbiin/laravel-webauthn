@@ -29,4 +29,17 @@ class WebauthnTest extends FeatureTestCase
         $this->assertEquals('0', $publicKey->getUser()->getId());
         $this->assertEquals('john@doe.com', $publicKey->getUser()->getDisplayName());
     }
+
+    public function test_do_register_data()
+    {
+        $user = $this->signIn();
+        factory(WebauthnKey::class)->create([
+            'user_id' => $user->getAuthIdentifier(),
+        ]);
+
+        $publicKey = $this->app->make(Webauthn::class)->getRegisterData($user);
+        $this->assertInstanceOf(\Webauthn\PublicKeyCredentialCreationOptions::class, $publicKey);
+
+        $this->app->make(Webauthn::class)->doRegister($user, $publicKey, '[]', 'name');
+    }
 }

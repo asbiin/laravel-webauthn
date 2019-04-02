@@ -75,9 +75,9 @@ abstract class AbstractValidator
 
         $attestationStatementSupportManager->add(new NoneAttestationStatementSupport());
         $attestationStatementSupportManager->add(new FidoU2FAttestationStatementSupport($decoder));
-        //$attestationStatementSupportManager->add(new AndroidSafetyNetAttestationStatementSupport(new Client(), 'GOOGLE_SAFETYNET_API_KEY'));
-        //$attestationStatementSupportManager->add(new AndroidKeyAttestationStatementSupport($decoder));
-        //$attestationStatementSupportManager->add(new TPMAttestationStatementSupport());
+        $attestationStatementSupportManager->add(new AndroidSafetyNetAttestationStatementSupport(new Client(), 'GOOGLE_SAFETYNET_API_KEY'));
+        $attestationStatementSupportManager->add(new AndroidKeyAttestationStatementSupport($decoder));
+        $attestationStatementSupportManager->add(new TPMAttestationStatementSupport());
         $attestationStatementSupportManager->add(new PackedAttestationStatementSupport($decoder, $coseAlgorithmManager));
 
         return $attestationStatementSupportManager;
