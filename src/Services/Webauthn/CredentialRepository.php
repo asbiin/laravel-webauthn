@@ -95,6 +95,7 @@ class CredentialRepository implements PublicKeyCredentialSourceRepository
         if (! $publicKeyCredentialSource) {
             throw new ModelNotFoundException('Wrong credentialId');
         }
+
         return $publicKeyCredentialSource->getAttestedCredentialData();
     }
 
@@ -104,6 +105,7 @@ class CredentialRepository implements PublicKeyCredentialSourceRepository
         if (! $publicKeyCredentialSource) {
             throw new ModelNotFoundException('Wrong credentialId');
         }
+
         return $publicKeyCredentialSource->getUserHandle();
     }
 
@@ -113,6 +115,7 @@ class CredentialRepository implements PublicKeyCredentialSourceRepository
         if (! $publicKeyCredentialSource) {
             throw new ModelNotFoundException('Wrong credentialId');
         }
+
         return $publicKeyCredentialSource->getCounter();
     }
 
