@@ -27,10 +27,13 @@ aliases:
     run:
       name: Run phpstan
       command: vendor/bin/phpstan analyse src
-  - &remove-xdebug
+  - &prepare
     run:
-      name: Remove xdebug
-      command: sudo rm -f /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
+      name: Prepare environment
+      command: |
+        sudo rm -f /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
+        sudo apt-get install libgmp-dev
+        sudo docker-php-ext-install -j$(nproc) gmp
 
   - &restore_composer
     restore_cache:
@@ -70,7 +73,7 @@ jobs:
       - checkout
       - attach_workspace:
           at: *root
-      - *remove-xdebug
+      - *prepare
       - *unit-tests
       - store_test_results:
           path: results
@@ -79,6 +82,22 @@ jobs:
       - persist_to_workspace:
           root: *root
           paths: results
+
+  tests-7.3:
+    <<: *defaults
+    docker:
+      - image: circleci/php:7.3
+
+    steps:
+      - checkout
+      - attach_workspace:
+          at: *root
+      - *prepare
+      - *unit-tests
+      - store_test_results:
+          path: results
+      - store_artifacts:
+          path: results
 
   psalm:
     <<: *defaults
@@ -136,6 +155,9 @@ workflows:
     jobs:
       - build
       - tests-7.2:
+          requires:
+            - build
+      - tests-7.3:
           requires:
             - build
       - psalm:
