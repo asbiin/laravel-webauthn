@@ -8,7 +8,7 @@ use Webauthn\PublicKeyCredentialSource;
 
 class WebauthnKey extends Model
 {
-    protected $table = 'webauthn';
+    protected $table = 'webauthn_keys';
 
     /**
      * The attributes that aren't mass assignable.
@@ -110,11 +110,11 @@ class WebauthnKey extends Model
     }
 
     /**
-     * Get PublicKeyCredentialSource object.
+     * Get PublicKeyCredentialSource object from WebauthnKey attributes.
      *
      * @return PublicKeyCredentialSource
      */
-    public function getPublicKeyCredentialSource() : PublicKeyCredentialSource
+    public function getPublicKeyCredentialSourceAttribute(): PublicKeyCredentialSource
     {
         return new PublicKeyCredentialSource(
             $this->credentialId,
@@ -130,12 +130,11 @@ class WebauthnKey extends Model
     }
 
     /**
-     * Create a WebauthnKey from a PublicKeyCredentialSource object.
+     * Set WebauthnKey attributes from a PublicKeyCredentialSource object.
      *
      * @param PublicKeyCredentialSource $value
-     * @return self
      */
-    public function setPublicKeyCredentialSource(PublicKeyCredentialSource $value)
+    public function setPublicKeyCredentialSourceAttribute(PublicKeyCredentialSource $value)
     {
         $this->credentialId = $value->getPublicKeyCredentialId();
         $this->type = $value->getType();
@@ -146,7 +145,5 @@ class WebauthnKey extends Model
         $this->credentialPublicKey = $value->getCredentialPublicKey();
         $this->userHandle = $value->getUserHandle();
         $this->counter = $value->getCounter();
-
-        return $this;
     }
 }

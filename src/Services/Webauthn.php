@@ -1,6 +1,6 @@
 <?php
 
-namespace LaravelWebauthn;
+namespace LaravelWebauthn\Services;
 
 use Illuminate\Support\Facades\Event;
 use LaravelWebauthn\Models\WebauthnKey;
@@ -13,12 +13,11 @@ use LaravelWebauthn\Events\WebauthnRegisterData;
 use Webauthn\PublicKeyCredentialCreationOptions;
 use Illuminate\Contracts\Config\Repository as Config;
 use Illuminate\Contracts\Auth\Authenticatable as User;
+use LaravelWebauthn\Services\Webauthn\PublicKeyCredentialValidator;
 use LaravelWebauthn\Services\Webauthn\PublicKeyCredentialRequestOptionsFactory;
 use LaravelWebauthn\Services\Webauthn\PublicKeyCredentialCreationOptionsFactory;
-use LaravelWebauthn\Services\Webauthn\PublicKeyCredentialRequestValidatorFactory;
-use LaravelWebauthn\Services\Webauthn\PublicKeyCredentialCreationValidatorFactory;
 
-class Webauthn
+class Webauthn extends WebauthnRepository
 {
     /**
      * Laravel application.
@@ -62,7 +61,7 @@ class Webauthn
     public function getRegisterData(User $user) : PublicKeyCredentialCreationOptions
     {
         $publicKey = $this->app->make(PublicKeyCredentialCreationOptionsFactory::class)
-            ->create($user, $this->getRegisteredKeys($user));
+            ->create($user);
 
         Event::dispatch(new WebauthnRegisterData($user, $publicKey));
 
@@ -78,15 +77,10 @@ class Webauthn
      */
     public function doRegister(User $user, PublicKeyCredentialCreationOptions $publicKey, string $data, string $keyName) : WebauthnKey
     {
-        $publicKeyCredentialSource = $this->app->make(PublicKeyCredentialCreationValidatorFactory::class)
+        $publicKeyCredentialSource = $this->app->make(PublicKeyCredentialValidator::class)
             ->validate($publicKey, $data);
 
-        $webauthnKey = WebauthnKey::create([
-            'user_id' => $user->getAuthIdentifier(),
-            'name' => $keyName,
-        ]);
-        $webauthnKey->setPublicKeyCredentialSource($publicKeyCredentialSource);
-        $webauthnKey->save();
+        $webauthnKey = $this->create($user, $keyName, $publicKeyCredentialSource);
 
         $this->forceAuthenticate();
 
@@ -102,22 +96,7 @@ class Webauthn
     public function getAuthenticateData(User $user) : PublicKeyCredentialRequestOptions
     {
         return $this->app->make(PublicKeyCredentialRequestOptionsFactory::class)
-            ->create($this->getRegisteredKeys($user));
-    }
-
-    /**
-     * List of registered PublicKeyCredentialDescriptor classes associated to the user.
-     * @param User $user
-     * @return PublicKeyCredentialRequestOptions[]
-     */
-    private function getRegisteredKeys(User $user): array
-    {
-        return WebauthnKey::where('user_id', $user->getAuthIdentifier())
-            ->get()
-            ->map(function ($webauthnKey) {
-                return $webauthnKey->getPublicKeyCredentialSource()->getPublicKeyCredentialDescriptor();
-            })
-            ->toArray();
+            ->create($user);
     }
 
     /**
@@ -128,7 +107,7 @@ class Webauthn
      */
     public function doAuthenticate(User $user, PublicKeyCredentialRequestOptions $publicKey, string $data): bool
     {
-        $result = $this->app->make(PublicKeyCredentialRequestValidatorFactory::class)
+        $result = $this->app->make(PublicKeyCredentialValidator::class)
             ->check($user, $publicKey, $data);
 
         if ($result) {
@@ -163,7 +142,6 @@ class Webauthn
      */
     public function enabled(User $user): bool
     {
-        return $this->config->get('webauthn.enable') &&
-            WebauthnKey::where('user_id', $user->getAuthIdentifier())->count() > 0;
+        return $this->config->get('webauthn.enable') && $this->hasKey($user);
     }
 }

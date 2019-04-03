@@ -43,6 +43,12 @@ class FeatureTestCase extends TestCase
         ]);
     }
 
+    /**
+     * Resolve application Core implementation.
+     *
+     * @param  \Illuminate\Foundation\Application  $app
+     * @return void
+     */
     protected function resolveApplicationCore($app)
     {
         parent::resolveApplicationCore($app);
@@ -50,6 +56,20 @@ class FeatureTestCase extends TestCase
         $app->detectEnvironment(function () {
             return 'testing';
         });
+    }
+
+    /**
+     * Resolve application HTTP Kernel implementation.
+     *
+     * @param  \Illuminate\Foundation\Application  $app
+     * @return void
+     */
+    protected function resolveApplicationHttpKernel($app)
+    {
+        $app->singleton(
+            \LaravelWebauthn\Services\Webauthn\CredentialRepository::class,
+            \LaravelWebauthn\Tests\Fake\FakeCredentialRepository::class
+        );
     }
 
     /**

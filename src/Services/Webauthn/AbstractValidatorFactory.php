@@ -19,28 +19,8 @@ use Webauthn\AttestationStatement\FidoU2FAttestationStatementSupport;
 use Webauthn\AttestationStatement\AndroidKeyAttestationStatementSupport;
 use Webauthn\AttestationStatement\AndroidSafetyNetAttestationStatementSupport;
 
-abstract class AbstractValidator
+abstract class AbstractValidatorFactory extends AbstractFactory
 {
-    /**
-     * The config repository instance.
-     *
-     * @var \Illuminate\Contracts\Config\Repository
-     */
-    protected $config;
-
-    /**
-     * Public Key Credential Source Repository.
-     * @var PublicKeyCredentialSourceRepository
-     */
-    protected $credentialRepository;
-
-    public function __construct(Config $config, PublicKeyCredentialSourceRepository $credentialRepository = null)
-    {
-        $this->config = $config;
-        // Credential Repository
-        $this->credentialRepository = $credentialRepository ?: new CredentialRepository();
-    }
-
     /**
      * Create a CBOR Decoder object.
      *

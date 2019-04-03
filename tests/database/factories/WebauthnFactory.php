@@ -15,13 +15,13 @@ $factory->define(\LaravelWebauthn\Models\WebauthnKey::class, function (Faker\Gen
     return [
         'name' => $faker->word,
         'counter' => 0,
-        'credentialId' => 'xA',
-        'type' => 'none',
-        'transports' => [],
-        'attestationType' => '',
-        'trustPath' => new \Webauthn\TrustPath\EmptyTrustPath,
-        'aaguid' => '',
-        'credentialPublicKey' => '',
         'userHandle' => 0,
-];
+        'credentialId' => 'MA==',
+        'type' => 'public-key',
+        'transports' => [],
+        'attestationType' => 'none',
+        'trustPath' => new \Webauthn\TrustPath\EmptyTrustPath,
+        'aaguid' => '0000000000000000',
+        'credentialPublicKey' => 'oA==',
+    ];
 });
