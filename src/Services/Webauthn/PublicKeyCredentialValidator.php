@@ -9,7 +9,6 @@ use Webauthn\AuthenticatorAssertionResponse;
 use Webauthn\AuthenticatorAttestationResponse;
 use Webauthn\PublicKeyCredentialRequestOptions;
 use Webauthn\PublicKeyCredentialCreationOptions;
-use Webauthn\PublicKeyCredentialSourceRepository;
 use Webauthn\AuthenticatorAssertionResponseValidator;
 use Illuminate\Contracts\Auth\Authenticatable as User;
 use Webauthn\AuthenticatorAttestationResponseValidator;
@@ -22,7 +21,7 @@ final class PublicKeyCredentialValidator extends AbstractValidatorFactory
 {
     /**
      * Validate a creation request.
-     * 
+     *
      * @param PublicKeyCredentialCreationOptions $publicKeyCredentialCreationOptions
      * @param string $data
      * @return PublicKeyCredentialSource
@@ -67,7 +66,7 @@ final class PublicKeyCredentialValidator extends AbstractValidatorFactory
 
     /**
      * Validate an authentication request.
-     * 
+     *
      * @param User $user
      * @param PublicKeyCredentialRequestOptions $publicKeyCredentialRequestOptions
      * @param string $data
@@ -133,7 +132,7 @@ final class PublicKeyCredentialValidator extends AbstractValidatorFactory
 
     /**
      * Get the Authenticator Attestation Response Validator.
-     * 
+     *
      * @param AttestationStatementSupportManager $attestationStatementSupportManager
      * @return AuthenticatorAttestationResponseValidator
      */

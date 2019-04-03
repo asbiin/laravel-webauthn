@@ -6,15 +6,11 @@ use Webauthn\AttestedCredentialData;
 use LaravelWebauthn\Models\WebauthnKey;
 use Webauthn\PublicKeyCredentialSource;
 use Webauthn\PublicKeyCredentialUserEntity;
-use Webauthn\PublicKeyCredentialSourceRepository;
 use Illuminate\Contracts\Auth\Authenticatable as User;
 use LaravelWebauthn\Services\Webauthn\CredentialRepository;
 
 class FakeCredentialRepository extends CredentialRepository
 {
-    /**
-     *
-     */
     public function create(User $user, string $keyName, PublicKeyCredentialSource $publicKeyCredentialSource)
     {
         $webauthnKey = factory(WebauthnKey::class)->create([

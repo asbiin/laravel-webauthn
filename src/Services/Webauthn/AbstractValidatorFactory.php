@@ -8,8 +8,6 @@ use CBOR\Tag\TagObjectManager;
 use Http\Adapter\Guzzle6\Client;
 use Webauthn\PublicKeyCredentialLoader;
 use CBOR\OtherObject\OtherObjectManager;
-use Webauthn\PublicKeyCredentialSourceRepository;
-use Illuminate\Contracts\Config\Repository as Config;
 use Webauthn\AttestationStatement\AttestationObjectLoader;
 use Webauthn\AttestationStatement\TPMAttestationStatementSupport;
 use Webauthn\AttestationStatement\NoneAttestationStatementSupport;

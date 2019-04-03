@@ -7,7 +7,6 @@ use CBOR\MapObject;
 use CBOR\ListObject;
 use Base64Url\Base64Url;
 use CBOR\TextStringObject;
-use Webauthn\CollectedClientData;
 use LaravelWebauthn\Services\Webauthn;
 use LaravelWebauthn\Models\WebauthnKey;
 use Webauthn\TokenBinding\TokenBinding;
@@ -64,7 +63,7 @@ class WebauthnTest extends FeatureTestCase
                             pack('N', 1).'0'.
                             '000000000000000'.
                             pack('n', 1).'0'.
-                            ((string)new MapObject([]))
+                            ((string) new MapObject([]))
                         )
                     ),
                     new MapItem(new TextStringObject('fmt'), new TextStringObject('none')),
@@ -86,7 +85,7 @@ class WebauthnTest extends FeatureTestCase
             'aaguid' => '0000000000000000',
             'credentialPublicKey' => 'oA==',
             'userHandle' => '0',
-            'counter' => '1',    
+            'counter' => '1',
         ]);
     }
 }

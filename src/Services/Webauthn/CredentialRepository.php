@@ -8,7 +8,6 @@ use LaravelWebauthn\Models\WebauthnKey;
 use Webauthn\PublicKeyCredentialSource;
 use Webauthn\PublicKeyCredentialDescriptor;
 use Webauthn\PublicKeyCredentialUserEntity;
-use Webauthn\PublicKeyCredentialRequestOptions;
 use Webauthn\PublicKeyCredentialSourceRepository;
 use Illuminate\Contracts\Auth\Authenticatable as User;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -112,7 +111,6 @@ class CredentialRepository implements PublicKeyCredentialSourceRepository
             return $webauthnKey;
         }
     }
-
 
     // deprecated CredentialRepository interface :
 

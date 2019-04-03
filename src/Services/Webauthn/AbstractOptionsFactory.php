@@ -2,7 +2,6 @@
 
 namespace LaravelWebauthn\Services\Webauthn;
 
-use Illuminate\Contracts\Config\Repository as Config;
 use Webauthn\AuthenticationExtensions\AuthenticationExtension;
 use Webauthn\AuthenticationExtensions\AuthenticationExtensionsClientInputs;
 
