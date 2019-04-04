@@ -118,13 +118,13 @@ class WebauthnKey extends Model
     {
         return new PublicKeyCredentialSource(
             $this->credentialId,
-            $this->type ?: '',
-            $this->transports ?: [],
-            $this->attestationType ?: '',
+            $this->type,
+            $this->transports,
+            $this->attestationType,
             $this->trustPath,
-            $this->aaguid ?: '',
-            $this->credentialPublicKey ?: '',
-            $this->userHandle ?: '',
+            $this->aaguid,
+            $this->credentialPublicKey,
+            $this->userHandle,
             $this->counter
         );
     }
