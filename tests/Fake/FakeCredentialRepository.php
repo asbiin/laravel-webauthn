@@ -3,12 +3,53 @@
 namespace LaravelWebauthn\Tests\Fake;
 
 use Webauthn\AttestedCredentialData;
+use LaravelWebauthn\Models\WebauthnKey;
 use Webauthn\PublicKeyCredentialSource;
 use Webauthn\PublicKeyCredentialUserEntity;
-use Webauthn\PublicKeyCredentialSourceRepository;
+use Illuminate\Contracts\Auth\Authenticatable as User;
+use LaravelWebauthn\Services\Webauthn\CredentialRepository;
 
-class FakeCredentialRepository implements PublicKeyCredentialSourceRepository
+class FakeCredentialRepository extends CredentialRepository
 {
+    public function create(User $user, string $keyName, PublicKeyCredentialSource $publicKeyCredentialSource)
+    {
+        $webauthnKey = factory(WebauthnKey::class)->create([
+            'user_id' => $user->getAuthIdentifier(),
+            'name' => $keyName,
+        ]);
+        $webauthnKey->publicKeyCredentialSource = $publicKeyCredentialSource;
+        $webauthnKey->save();
+
+        $this->saveCredentialSource($publicKeyCredentialSource);
+
+        return $webauthnKey;
+    }
+
+    /**
+     * List of registered PublicKeyCredentialDescriptor classes associated to the user.
+     * @param User $user
+     * @return PublicKeyCredentialDescriptor[]
+     */
+    public function getRegisteredKeys(User $user): array
+    {
+        return collect($this->publicKeyCredentialSources)
+            ->map(function ($publicKey) {
+                return $publicKey->getPublicKeyCredentialDescriptor();
+            })
+            ->toArray();
+    }
+
+    /**
+     * Detect if user has a key.
+     *
+     * @param User $user
+     * @return bool
+     */
+    public function hasKey(User $user): bool
+    {
+        return $this->has($user->getAuthIdentifier());
+    }
+
     private $publicKeyCredentialSources = [];
 
     public function findOneByCredentialId(string $publicKeyCredentialId): ?PublicKeyCredentialSource

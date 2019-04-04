@@ -4,8 +4,9 @@ namespace LaravelWebauthn;
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Contracts\Support\DeferrableProvider;
 
-class LaravelWebauthnServiceProvider extends ServiceProvider
+class LaravelWebauthnServiceProvider extends ServiceProvider implements DeferrableProvider
 {
     /**
      * Name of the middleware group.
@@ -13,15 +14,6 @@ class LaravelWebauthnServiceProvider extends ServiceProvider
      * @var string
      */
     private const MIDDLEWARE_GROUP = 'laravel-webauthn';
-
-    /**
-     * All of the container singletons that should be registered.
-     *
-     * @var array
-     */
-    public $singletons = [
-        Webauthn::class => Webauthn::class,
-    ];
 
     /**
      * Bootstrap any package services.
@@ -102,9 +94,13 @@ class LaravelWebauthnServiceProvider extends ServiceProvider
         /** @var \Illuminate\Contracts\Foundation\Application */
         $app = $this->app;
 
-        $app->bind(
-            \Webauthn\PublicKeyCredentialSourceRepository::class,
+        $app->singleton(
+            \LaravelWebauthn\Services\Webauthn\CredentialRepository::class,
             \LaravelWebauthn\Services\Webauthn\CredentialRepository::class
+        );
+        $app->singleton(
+            \LaravelWebauthn\Services\Webauthn::class,
+            \LaravelWebauthn\Services\Webauthn::class
         );
 
         if ($app->runningInConsole()) {
@@ -112,5 +108,18 @@ class LaravelWebauthnServiceProvider extends ServiceProvider
                 Console\PublishCommand::class,
             ]);
         }
+    }
+
+    /**
+     * Get the services provided by the provider.
+     *
+     * @return array
+     */
+    public function provides()
+    {
+        return [
+            \LaravelWebauthn\Services\Webauthn\CredentialRepository::class,
+            \LaravelWebauthn\Services\Webauthn::class,
+        ];
     }
 }

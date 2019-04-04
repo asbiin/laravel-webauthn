@@ -11,13 +11,15 @@ use Webauthn\AuthenticatorSelectionCriteria;
 use Webauthn\PublicKeyCredentialCreationOptions;
 use Illuminate\Contracts\Auth\Authenticatable as User;
 
-final class PublicKeyCredentialCreationOptionsFactory extends AbstractOptions
+final class PublicKeyCredentialCreationOptionsFactory extends AbstractOptionsFactory
 {
     /**
+     * Create a new PublicKeyCredentialCreationOptions object.
+     *
      * @param User $user
-     * @param PublicKeyCredentialDescriptor[] $excludeCredentials
+     * @return PublicKeyCredentialCreationOptions
      */
-    public function create(User $user, array $excludeCredentials = []): PublicKeyCredentialCreationOptions
+    public function create(User $user): PublicKeyCredentialCreationOptions
     {
         $userEntity = new PublicKeyCredentialUserEntity(
             $user->email ?: '',
@@ -32,7 +34,7 @@ final class PublicKeyCredentialCreationOptionsFactory extends AbstractOptions
             random_bytes($this->config->get('webauthn.challenge_length')),
             $this->createCredentialParameters(),
             $this->config->get('webauthn.timeout'),
-            $excludeCredentials,
+            $this->repository->getRegisteredKeys($user),
             $this->createAuthenticatorSelectionCriteria(),
             $this->config->get('webauthn.attestation_conveyance') ?: PublicKeyCredentialCreationOptions::ATTESTATION_CONVEYANCE_PREFERENCE_NONE,
             $this->createExtensions()

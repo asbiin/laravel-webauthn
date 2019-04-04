@@ -11,7 +11,7 @@ class WebauthnKeyTest extends FeatureTestCase
     public function test_serialize_data()
     {
         $webauthnKey = new WebauthnKey();
-        $webauthnKey->setPublicKeyCredentialSource(new PublicKeyCredentialSource('a', 'b', [], 'c', new \Webauthn\TrustPath\EmptyTrustPath(), 'd', 'e', 'f', 0));
+        $webauthnKey->publicKeyCredentialSource = new PublicKeyCredentialSource('a', 'b', [], 'c', new \Webauthn\TrustPath\EmptyTrustPath(), 'd', 'e', 'f', 0);
 
         $this->assertEquals('a', $webauthnKey->credentialId);
         $this->assertEquals('b', $webauthnKey->type);
@@ -38,7 +38,7 @@ class WebauthnKeyTest extends FeatureTestCase
         $webauthnKey->attestationType = 'c';
         $webauthnKey->trustPath = new \Webauthn\TrustPath\EmptyTrustPath();
 
-        $publicKeyCredentialSource = $webauthnKey->getPublicKeyCredentialSource();
+        $publicKeyCredentialSource = $webauthnKey->publicKeyCredentialSource;
 
         $this->assertEquals('a', $publicKeyCredentialSource->getPublicKeyCredentialId());
         $this->assertEquals('b', $publicKeyCredentialSource->getType());

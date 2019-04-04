@@ -2,24 +2,11 @@
 
 namespace LaravelWebauthn\Services\Webauthn;
 
-use Illuminate\Contracts\Config\Repository as Config;
 use Webauthn\AuthenticationExtensions\AuthenticationExtension;
 use Webauthn\AuthenticationExtensions\AuthenticationExtensionsClientInputs;
 
-abstract class AbstractOptions
+abstract class AbstractOptionsFactory extends AbstractFactory
 {
-    /**
-     * The config repository instance.
-     *
-     * @var \Illuminate\Contracts\Config\Repository
-     */
-    protected $config;
-
-    public function __construct(Config $config)
-    {
-        $this->config = $config;
-    }
-
     protected function createExtensions(): AuthenticationExtensionsClientInputs
     {
         $extensions = new AuthenticationExtensionsClientInputs();

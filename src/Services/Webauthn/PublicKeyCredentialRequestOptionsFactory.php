@@ -5,16 +5,23 @@ namespace LaravelWebauthn\Services\Webauthn;
 use Illuminate\Support\Facades\Request;
 use Webauthn\AuthenticatorSelectionCriteria;
 use Webauthn\PublicKeyCredentialRequestOptions;
+use Illuminate\Contracts\Auth\Authenticatable as User;
 
-final class PublicKeyCredentialRequestOptionsFactory extends AbstractOptions
+final class PublicKeyCredentialRequestOptionsFactory extends AbstractOptionsFactory
 {
-    public function create(array $allowCredentials): PublicKeyCredentialRequestOptions
+    /**
+     * Create a new PublicKeyCredentialCreationOptions object.
+     *
+     * @param User $user
+     * @return PublicKeyCredentialRequestOptions
+     */
+    public function create(User $user): PublicKeyCredentialRequestOptions
     {
         return new PublicKeyCredentialRequestOptions(
             random_bytes($this->config->get('webauthn.challenge_length')),
             $this->config->get('webauthn.timeout'),
             Request::getHttpHost(),
-            $allowCredentials,
+            $this->repository->getRegisteredKeys($user),
             $this->config->get('webauthn.authenticator_selection_criteria.user_verification') ?: AuthenticatorSelectionCriteria::USER_VERIFICATION_REQUIREMENT_PREFERRED,
             $this->createExtensions()
         );
