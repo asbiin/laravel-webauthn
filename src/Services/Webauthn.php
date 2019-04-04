@@ -55,6 +55,8 @@ class Webauthn extends WebauthnRepository
     }
 
     /**
+     * Get datas to register a new key.
+     *
      * @param User $user
      * @return PublicKeyCredentialCreationOptions
      */
@@ -69,6 +71,8 @@ class Webauthn extends WebauthnRepository
     }
 
     /**
+     * Register a new key.
+     *
      * @param User $user
      * @param PublicKeyCredentialCreationOptions $publicKey
      * @param string $data
@@ -90,6 +94,8 @@ class Webauthn extends WebauthnRepository
     }
 
     /**
+     * Get datas to authenticate a user.
+     *
      * @param User $user
      * @return PublicKeyCredentialRequestOptions
      */
@@ -100,6 +106,8 @@ class Webauthn extends WebauthnRepository
     }
 
     /**
+     * Authenticate a user.
+     *
      * @param User $user
      * @param PublicKeyCredentialRequestOptions $publicKey
      * @param string $data
@@ -121,12 +129,19 @@ class Webauthn extends WebauthnRepository
         return false;
     }
 
+    /**
+     * Force authentication in session.
+     *
+     * @return void
+     */
     public function forceAuthenticate()
     {
         $this->session->put([$this->config->get('webauthn.sessionName') => true]);
     }
 
     /**
+     * Check authentication of the user in session.
+     *
      * @return bool
      */
     public function check() : bool

@@ -9,6 +9,8 @@ use Illuminate\Contracts\Auth\Authenticatable as User;
 abstract class WebauthnRepository
 {
     /**
+     * Create a new key.
+     *
      * @param User $user
      * @param string $keyName
      * @param PublicKeyCredentialSource $publicKeyCredentialSource

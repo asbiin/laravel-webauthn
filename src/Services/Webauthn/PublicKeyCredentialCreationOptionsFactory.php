@@ -14,6 +14,8 @@ use Illuminate\Contracts\Auth\Authenticatable as User;
 final class PublicKeyCredentialCreationOptionsFactory extends AbstractOptionsFactory
 {
     /**
+     * Create a new PublicKeyCredentialCreationOptions object.
+     *
      * @param User $user
      * @return PublicKeyCredentialCreationOptions
      */
