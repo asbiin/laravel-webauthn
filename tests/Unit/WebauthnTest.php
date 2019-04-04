@@ -124,7 +124,6 @@ class WebauthnTest extends FeatureTestCase
         $this->assertTrue($result);
     }
 
-
     public function test_wrong_do_authenticate()
     {
         $user = $this->signIn();
