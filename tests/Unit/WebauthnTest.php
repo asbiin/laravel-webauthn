@@ -160,7 +160,7 @@ class WebauthnTest extends FeatureTestCase
                     'origin' => 'https://localhost',
                     'tokenBinding' => [
                         'status' => 'supported',
-                        'id' => 'id'
+                        'id' => 'id',
                     ],
                 ])),
                 'attestationObject' => Base64Url::encode((string) (new MapObject([
