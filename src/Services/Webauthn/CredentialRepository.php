@@ -100,11 +100,10 @@ class CredentialRepository implements PublicKeyCredentialSourceRepository
      */
     private function model(string $credentialId)
     {
-        $userId = Auth::id();
-        if ($userId) {
+        if (! Auth::guest()) {
             /** @var WebauthnKey */
             $webauthnKey = WebauthnKey::where([
-                'user_id' => $userId,
+                'user_id' => Auth::id(),
                 'credentialId' => base64_encode($credentialId),
             ])->firstOrFail();
 

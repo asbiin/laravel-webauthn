@@ -82,11 +82,11 @@ class WebauthnTest extends FeatureTestCase
         $this->assertCount(0, $publicKey->getExtensions());
     }
 
-/*
+
     public function test_do_authenticate()
     {
         $user = $this->signIn();
-        factory(WebauthnKey::class)->create([
+        $webauthnKey = factory(WebauthnKey::class)->create([
             'user_id' => $user->getAuthIdentifier(),
         ]);
 
@@ -94,32 +94,27 @@ class WebauthnTest extends FeatureTestCase
         $this->assertInstanceOf(\Webauthn\PublicKeyCredentialRequestOptions::class, $publicKey);
 
         $data = [
-            'id' => Base64Url::encode('0'),
-            'rawId' => Base64Url::encode('0'),
+            'id' => Base64Url::encode($webauthnKey->credentialId),
+            'rawId' => Base64Url::encode($webauthnKey->credentialId),
             'type' => 'public-key',
             'response' => [
                 'clientDataJSON' => Base64Url::encode(json_encode([
-                    'type' => 'webauthn.create',
+                    'type' => '',
                     'challenge' => Base64Url::encode($publicKey->getChallenge()),
                     'origin' => 'https://localhost',
                     'tokenBinding' => ['status' => 'supported', 'id' => 'id'],
                 ])),
-                'authenticatorData' => Base64Url::encode((string) (new MapObject([
-                    new MapItem(
-                        new TextStringObject('authData'),
-                        new TextStringObject(
-                            hash('sha256', 'localhost', true).
-                            pack('C', 65).
-                            pack('N', 1).'0'.
-                            '000000000000000'.
-                            pack('n', 1).'0'.
+                'authenticatorData' => Base64Url::encode(
+
+                            hash('sha256', 'localhost', true). // rp_id_hash
+                            pack('C', 65). // flags
+                            pack('N', 1). // signCount
+                            '0000000000000000'. // aaguid
+                            pack('n', 1).'0'. // credentialLength
                             ((string) new MapObject([]))
-                        )
-                    ),
-                    new MapItem(new TextStringObject('fmt'), new TextStringObject('none')),
-                    new MapItem(new TextStringObject('attStmt'), new ListObject([])),
-                ]))),
-                'signature' => '',
+
+                ),
+                'signature' => Base64Url::encode(new TextStringObject('')),
                 'userHandle' => '',
             ],
         ];
@@ -128,7 +123,7 @@ class WebauthnTest extends FeatureTestCase
 
         $this->assertTrue($result);
     }
-*/
+
 
     public function test_wrong_do_authenticate()
     {
@@ -163,11 +158,11 @@ class WebauthnTest extends FeatureTestCase
                     new MapItem(
                         new TextStringObject('authData'),
                         new TextStringObject(
-                            hash('sha256', 'localhost', true).
-                            pack('C', 65).
-                            pack('N', 1).'0'.
-                            '000000000000000'.
-                            pack('n', 1).'0'.
+                            hash('sha256', 'localhost', true). // rp_id_hash
+                            pack('C', 65). // flags
+                            pack('N', 1). // signCount
+                            '0000000000000000'. // aaguid
+                            pack('n', 1).'0'. // credentialLength
                             ((string) new MapObject([]))
                         )
                     ),
