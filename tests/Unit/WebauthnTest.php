@@ -43,7 +43,112 @@ class WebauthnTest extends FeatureTestCase
         $publicKey = $this->app->make(Webauthn::class)->getRegisterData($user);
         $this->assertInstanceOf(\Webauthn\PublicKeyCredentialCreationOptions::class, $publicKey);
 
+        $data = $this->getAttestationData($publicKey);
+
+        $this->app->make(Webauthn::class)->doRegister($user, $publicKey, json_encode($data), 'name');
+
+        $this->assertDatabaseHas('webauthn_keys', [
+            'user_id' => 0,
+            'name' => 'name',
+            'credentialId' => 'MA==',
+            'type' => 'public-key',
+            'transports' => '[]',
+            'attestationType' => 'none',
+            'trustPath' => '{"type":"empty"}',
+            'aaguid' => '0000000000000000',
+            'credentialPublicKey' => 'oA==',
+            'userHandle' => '0',
+            'counter' => '1',
+        ]);
+    }
+
+    public function test_get_authenticate_data()
+    {
+        $user = $this->signIn();
+        factory(WebauthnKey::class)->create([
+            'user_id' => $user->getAuthIdentifier(),
+        ]);
+
+        $publicKey = $this->app->make(Webauthn::class)->getAuthenticateData($user);
+
+        $this->assertInstanceOf(\Webauthn\PublicKeyCredentialRequestOptions::class, $publicKey);
+
+        $this->assertNotNull($publicKey->getChallenge());
+        $this->assertEquals(32, strlen($publicKey->getChallenge()));
+
+        $this->assertEquals('preferred', $publicKey->getUserVerification());
+        $this->assertEquals('localhost', $publicKey->getRpId());
+        $this->assertEquals(60000, $publicKey->getTimeout());
+        $this->assertCount(0, $publicKey->getExtensions());
+    }
+
+/*
+    public function test_do_authenticate()
+    {
+        $user = $this->signIn();
+        factory(WebauthnKey::class)->create([
+            'user_id' => $user->getAuthIdentifier(),
+        ]);
+
+        $publicKey = $this->app->make(Webauthn::class)->getAuthenticateData($user);
+        $this->assertInstanceOf(\Webauthn\PublicKeyCredentialRequestOptions::class, $publicKey);
+
         $data = [
+            'id' => Base64Url::encode('0'),
+            'rawId' => Base64Url::encode('0'),
+            'type' => 'public-key',
+            'response' => [
+                'clientDataJSON' => Base64Url::encode(json_encode([
+                    'type' => 'webauthn.create',
+                    'challenge' => Base64Url::encode($publicKey->getChallenge()),
+                    'origin' => 'https://localhost',
+                    'tokenBinding' => ['status' => 'supported', 'id' => 'id'],
+                ])),
+                'authenticatorData' => Base64Url::encode((string) (new MapObject([
+                    new MapItem(
+                        new TextStringObject('authData'),
+                        new TextStringObject(
+                            hash('sha256', 'localhost', true).
+                            pack('C', 65).
+                            pack('N', 1).'0'.
+                            '000000000000000'.
+                            pack('n', 1).'0'.
+                            ((string) new MapObject([]))
+                        )
+                    ),
+                    new MapItem(new TextStringObject('fmt'), new TextStringObject('none')),
+                    new MapItem(new TextStringObject('attStmt'), new ListObject([])),
+                ]))),
+                'signature' => '',
+                'userHandle' => '',
+            ],
+        ];
+
+        $result = $this->app->make(Webauthn::class)->doAuthenticate($user, $publicKey, json_encode($data));
+
+        $this->assertTrue($result);
+    }
+*/
+
+    public function test_wrong_do_authenticate()
+    {
+        $user = $this->signIn();
+        factory(WebauthnKey::class)->create([
+            'user_id' => $user->getAuthIdentifier(),
+        ]);
+
+        $publicKey = $this->app->make(Webauthn::class)->getAuthenticateData($user);
+        $this->assertInstanceOf(\Webauthn\PublicKeyCredentialRequestOptions::class, $publicKey);
+
+        $data = $this->getAttestationData($publicKey);
+
+        $this->expectException(\LaravelWebauthn\Exceptions\ResponseMismatchException::class);
+        $result = $this->app->make(Webauthn::class)->doAuthenticate($user, $publicKey, json_encode($data));
+    }
+
+    private function getAttestationData($publicKey)
+    {
+        return [
             'id' => Base64Url::encode('0'),
             'rawId' => Base64Url::encode('0'),
             'type' => 'public-key',
@@ -71,21 +176,5 @@ class WebauthnTest extends FeatureTestCase
                 ]))),
             ],
         ];
-
-        $this->app->make(Webauthn::class)->doRegister($user, $publicKey, json_encode($data), 'name');
-
-        $this->assertDatabaseHas('webauthn_keys', [
-            'user_id' => 0,
-            'name' => 'name',
-            'credentialId' => 'MA==',
-            'type' => 'public-key',
-            'transports' => '[]',
-            'attestationType' => 'none',
-            'trustPath' => '{"type":"empty"}',
-            'aaguid' => '0000000000000000',
-            'credentialPublicKey' => 'oA==',
-            'userHandle' => '0',
-            'counter' => '1',
-        ]);
     }
 }
