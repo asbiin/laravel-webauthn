@@ -185,4 +185,26 @@ class WebauthnTest extends FeatureTestCase
             ],
         ];
     }
+
+    public function test_force_authenticate()
+    {
+        $this->assertFalse($this->app->make(Webauthn::class)->check());
+
+        $this->app->make(Webauthn::class)->forceAuthenticate();
+
+        $this->assertTrue($this->app->make(Webauthn::class)->check());
+    }
+
+    public function test_enabled()
+    {
+        $user = $this->signIn();
+
+        $this->assertFalse($this->app->make(Webauthn::class)->enabled($user));
+
+        factory(WebauthnKey::class)->create([
+            'user_id' => $user->getAuthIdentifier(),
+        ]);
+
+        $this->assertTrue($this->app->make(Webauthn::class)->enabled($user));
+    }
 }
