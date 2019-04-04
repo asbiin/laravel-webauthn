@@ -2,14 +2,7 @@
 
 namespace LaravelWebauthn\Tests\Unit;
 
-use CBOR\MapItem;
-use CBOR\MapObject;
-use CBOR\ListObject;
-use Base64Url\Base64Url;
-use CBOR\TextStringObject;
-use LaravelWebauthn\Services\Webauthn;
 use LaravelWebauthn\Models\WebauthnKey;
-use Webauthn\TokenBinding\TokenBinding;
 use LaravelWebauthn\Tests\FeatureTestCase;
 use Webauthn\PublicKeyCredentialUserEntity;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
