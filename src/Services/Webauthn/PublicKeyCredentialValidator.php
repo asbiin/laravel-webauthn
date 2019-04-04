@@ -3,8 +3,8 @@
 namespace LaravelWebauthn\Services\Webauthn;
 
 use CBOR\Decoder;
+use GuzzleHttp\Psr7\ServerRequest;
 use Webauthn\PublicKeyCredentialSource;
-use Zend\Diactoros\ServerRequestFactory;
 use Webauthn\AuthenticatorAssertionResponse;
 use Webauthn\AuthenticatorAttestationResponse;
 use Webauthn\PublicKeyCredentialRequestOptions;
@@ -54,7 +54,7 @@ final class PublicKeyCredentialValidator extends AbstractValidatorFactory
         $authenticatorAttestationResponseValidator->check(
             $response,
             $publicKeyCredentialCreationOptions,
-            ServerRequestFactory::fromGlobals()
+            ServerRequest::fromGlobals()
         );
 
         // Everything is OK here. You can get the PublicKeyCredentialDescriptor.
@@ -101,7 +101,7 @@ final class PublicKeyCredentialValidator extends AbstractValidatorFactory
             $publicKeyCredential->getRawId(),
             $response,
             $publicKeyCredentialRequestOptions,
-            ServerRequestFactory::fromGlobals(),
+            ServerRequest::fromGlobals(),
             $user->getAuthIdentifier()
         );
 
