@@ -103,7 +103,7 @@ class WebauthnTest extends FeatureTestCase
                     'origin' => 'https://localhost',
                     'tokenBinding' => [
                         'status' => 'supported',
-                        'id' => 'id'
+                        'id' => 'id',
                     ],
                 ])),
                 'authenticatorData' => Base64Url::encode(
@@ -129,7 +129,6 @@ class WebauthnTest extends FeatureTestCase
 
         $this->assertTrue($result); // Not yet ...
     }
-
 
     public function test_wrong_do_authenticate()
     {
