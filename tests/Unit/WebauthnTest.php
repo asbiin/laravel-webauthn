@@ -82,7 +82,6 @@ class WebauthnTest extends FeatureTestCase
         $this->assertCount(0, $publicKey->getExtensions());
     }
 
-
     public function test_do_authenticate()
     {
         $user = $this->signIn();
