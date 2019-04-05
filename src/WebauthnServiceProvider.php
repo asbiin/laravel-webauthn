@@ -4,9 +4,8 @@ namespace LaravelWebauthn;
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
-use Illuminate\Contracts\Support\DeferrableProvider;
 
-class LaravelWebauthnServiceProvider extends ServiceProvider implements DeferrableProvider
+class WebauthnServiceProvider extends ServiceProvider
 {
     /**
      * Name of the middleware group.
@@ -91,35 +90,10 @@ class LaravelWebauthnServiceProvider extends ServiceProvider implements Deferrab
             __DIR__.'/../config/webauthn.php', 'webauthn'
         );
 
-        /** @var \Illuminate\Contracts\Foundation\Application */
-        $app = $this->app;
-
-        $app->singleton(
-            \LaravelWebauthn\Services\Webauthn\CredentialRepository::class,
-            \LaravelWebauthn\Services\Webauthn\CredentialRepository::class
-        );
-        $app->singleton(
-            \LaravelWebauthn\Services\Webauthn::class,
-            \LaravelWebauthn\Services\Webauthn::class
-        );
-
-        if ($app->runningInConsole()) {
+        if ($this->app->runningInConsole()) {
             $this->commands([
                 Console\PublishCommand::class,
             ]);
         }
-    }
-
-    /**
-     * Get the services provided by the provider.
-     *
-     * @return array
-     */
-    public function provides()
-    {
-        return [
-            \LaravelWebauthn\Services\Webauthn\CredentialRepository::class,
-            \LaravelWebauthn\Services\Webauthn::class,
-        ];
     }
 }
