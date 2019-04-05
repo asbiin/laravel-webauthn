@@ -15,7 +15,7 @@ class MiddlewareTest extends FeatureTestCase
         $request = new Request();
 
         $this->expectException(\Symfony\Component\HttpKernel\Exception\HttpException::class);
-        $result = $this->app->make(WebauthnMiddleware::class)->handle($request, function () {
+        $this->app->make(WebauthnMiddleware::class)->handle($request, function () {
         });
     }
 
