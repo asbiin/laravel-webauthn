@@ -2,7 +2,7 @@
 
 namespace LaravelWebauthn\Services\Webauthn;
 
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Contracts\Auth\Guard;
 use Webauthn\AttestedCredentialData;
 use LaravelWebauthn\Models\WebauthnKey;
 use Webauthn\PublicKeyCredentialSource;
@@ -14,6 +14,23 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class CredentialRepository implements PublicKeyCredentialSourceRepository
 {
+    /**
+     * Guard instance;
+     *
+     * @var \Illuminate\Contracts\Auth\Guard
+     */
+    protected $guard;
+
+    /**
+     * Create a new instance of Webauthn.
+     *
+     * @param \Illuminate\Contracts\Auth\Guard $guard
+     */
+    public function __construct(Guard $guard)
+    {
+        $this->guard = $guard;
+    }
+
     /**
      * Return a PublicKeyCredentialSource object.
      *
@@ -100,10 +117,10 @@ class CredentialRepository implements PublicKeyCredentialSourceRepository
      */
     private function model(string $credentialId)
     {
-        if (! Auth::guest()) {
+        if (! $this->guard->guest()) {
             /** @var WebauthnKey */
             $webauthnKey = WebauthnKey::where([
-                'user_id' => Auth::id(),
+                'user_id' => $this->guard->id(),
                 'credentialId' => base64_encode($credentialId),
             ])->firstOrFail();
 

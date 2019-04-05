@@ -7,7 +7,7 @@
 *
 
 ### Fixes:
-*
+* Fix some contract bindings
 
 # RELEASED VERSIONS:
 
