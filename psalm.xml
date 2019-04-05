@@ -51,22 +51,11 @@
         <InvalidStringClass errorLevel="info"/>
 
 
-        <PossiblyUndefinedMethod>
-            <errorLevel type="suppress">
-                <file name="src/Http/Controllers/WebauthnController.php" />
-            </errorLevel>
-        </PossiblyUndefinedMethod>
-
-        <UndefinedClass>
-            <errorLevel type="suppress">
-                <file name="src/LaravelWebauthnServiceProvider.php" />
-            </errorLevel>
-        </UndefinedClass>
-
         <NoInterfaceProperties>
             <errorLevel type="suppress">
                 <file name="src/Services/Webauthn/PublicKeyCredentialCreationOptionsFactory.php" />
             </errorLevel>
         </NoInterfaceProperties>
+
     </issueHandlers>
 </psalm>
