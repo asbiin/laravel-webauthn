@@ -15,7 +15,7 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 class CredentialRepository implements PublicKeyCredentialSourceRepository
 {
     /**
-     * Guard instance;
+     * Guard instance;.
      *
      * @var \Illuminate\Contracts\Auth\Guard
      */

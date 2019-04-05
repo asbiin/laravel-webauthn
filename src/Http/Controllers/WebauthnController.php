@@ -96,7 +96,7 @@ class WebauthnController extends Controller
             return Redirect::intended($this->config->get('webauthn.authenticate.postSuccessRedirectRoute'));
         } else {
             return response()->json([
-                'result' => $result
+                'result' => $result,
             ]);
         }
     }
@@ -138,7 +138,7 @@ class WebauthnController extends Controller
             );
 
             return response()->json([
-                'result' => true
+                'result' => true,
             ], 201);
         } catch (\Exception $e) {
             return response()->json([
