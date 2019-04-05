@@ -50,6 +50,11 @@
 
         <InvalidStringClass errorLevel="info"/>
 
+        <PossiblyUndefinedMethod>
+            <errorLevel type="suppress">
+                <file name="src/Http/Controllers/WebauthnController.php" />
+            </errorLevel>
+        </PossiblyUndefinedMethod>
 
         <NoInterfaceProperties>
             <errorLevel type="suppress">
