@@ -4,14 +4,14 @@ namespace LaravelWebauthn\Tests;
 
 use Orchestra\Testbench\TestCase;
 use Illuminate\Contracts\Auth\Authenticatable;
-use LaravelWebauthn\LaravelWebauthnServiceProvider;
 
 class FeatureTestCase extends TestCase
 {
     protected function getPackageProviders($app)
     {
         return [
-            LaravelWebauthnServiceProvider::class,
+            \LaravelWebauthn\SingletonServiceProvider::class,
+            \LaravelWebauthn\WebauthnServiceProvider::class,
         ];
     }
 
