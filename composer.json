@@ -50,7 +50,8 @@
     "extra": {
         "laravel": {
             "providers": [
-                "LaravelWebauthn\\LaravelWebauthnServiceProvider"
+                "LaravelWebauthn\\SingletonServiceProvider",
+                "LaravelWebauthn\\WebauthnServiceProvider"
             ]
         }
     },
