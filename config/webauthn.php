@@ -64,6 +64,30 @@ return [
         'postSuccessRedirectRoute' => '',
     ],
 
+    'register' => [
+        /*
+        |--------------------------------------------------------------------------
+        | View to load on register request.
+        |--------------------------------------------------------------------------
+        |
+        | The name of blade template to load whe a user request a creation of
+        | Webauthn key.
+        |
+        */
+        'view' => '',
+
+        /*
+        |--------------------------------------------------------------------------
+        | Redirect route
+        |--------------------------------------------------------------------------
+        |
+        | The route to redirect to after register key request is complete.
+        | Default: empty, for let the client side redirection.
+        |
+        */
+        'postSuccessRedirectRoute' => '',
+    ],
+
     /*
     |--------------------------------------------------------------------------
     | Session name
