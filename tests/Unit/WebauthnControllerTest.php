@@ -54,7 +54,7 @@ class WebauthnControllerTest extends FeatureTestCase
 
         $response->assertStatus(200);
         $response->assertJsonStructure([
-            'publicKey'
+            'publicKey',
         ]);
     }
 
