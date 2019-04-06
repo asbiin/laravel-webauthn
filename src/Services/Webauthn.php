@@ -7,6 +7,7 @@ use Illuminate\Contracts\Session\Session;
 use LaravelWebauthn\Events\WebauthnLogin;
 use Illuminate\Contracts\Events\Dispatcher;
 use LaravelWebauthn\Events\WebauthnRegister;
+use LaravelWebauthn\Events\WebauthnLoginData;
 use Webauthn\PublicKeyCredentialRequestOptions;
 use Illuminate\Contracts\Foundation\Application;
 use LaravelWebauthn\Events\WebauthnRegisterData;
