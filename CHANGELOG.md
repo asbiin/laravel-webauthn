@@ -15,6 +15,7 @@
  ### Enhancements:
   * Remove userHandle in model
   * Return a resource after registering
+  * Update to web-auth v1.1.0
 
  ### Fixes:
   * Fix some contract bindings
