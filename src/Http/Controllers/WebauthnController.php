@@ -134,7 +134,7 @@ class WebauthnController extends Controller
                 throw new ModelNotFoundException('Register data not found');
             }
 
-            Webauthn::doRegister(
+            $webauthnKey = Webauthn::doRegister(
                 $request->user(),
                 $publicKey,
                 $this->input($request, 'register'),
@@ -143,6 +143,10 @@ class WebauthnController extends Controller
 
             return response()->json([
                 'result' => true,
+                'id' => $webauthnKey->id,
+                'object' => 'webauthnKey',
+                'name' => $webauthnKey->name,
+                'counter' => $webauthnKey->counter,
             ], 201);
         } catch (\Exception $e) {
             return response()->json([

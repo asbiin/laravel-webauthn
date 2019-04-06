@@ -5,6 +5,7 @@
 
 ### Enhancements:
 * Remove userHandle in model
+* Return a resource after registering
 
 ### Fixes:
 * Fix some contract bindings
