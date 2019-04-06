@@ -110,8 +110,12 @@ class Webauthn extends WebauthnRepository
      */
     public function getAuthenticateData(User $user) : PublicKeyCredentialRequestOptions
     {
-        return $this->app->make(PublicKeyCredentialRequestOptionsFactory::class)
+        $publicKey = $this->app->make(PublicKeyCredentialRequestOptionsFactory::class)
             ->create($user);
+
+        $this->events->dispatch(new WebauthnLoginData($user, $publicKey));
+
+        return $publicKey;
     }
 
     /**

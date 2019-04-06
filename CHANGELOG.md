@@ -4,7 +4,7 @@
 *
 
 ### Enhancements:
-*
+* Add WebauthnLoginData event
 
 ### Fixes:
 *
