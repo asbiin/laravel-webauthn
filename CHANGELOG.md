@@ -4,9 +4,10 @@
 *
 
 ### Enhancements:
-*
+* Remove userHandle in model
 
 ### Fixes:
+* Fix some contract bindings
 * Split services to use Deferred services
 
 # RELEASED VERSIONS:

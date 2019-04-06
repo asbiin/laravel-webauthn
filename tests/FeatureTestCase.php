@@ -67,8 +67,8 @@ class FeatureTestCase extends TestCase
     protected function resolveApplicationHttpKernel($app)
     {
         $app->singleton(
-            \LaravelWebauthn\Services\Webauthn\CredentialRepository::class,
-            \LaravelWebauthn\Tests\Fake\FakeCredentialRepository::class
+            \Illuminate\Contracts\Http\Kernel::class,
+            \Orchestra\Testbench\Http\Kernel::class
         );
     }
 
@@ -77,16 +77,28 @@ class FeatureTestCase extends TestCase
      * object is passed, then sign in as that user.
      *
      * @param null $user
-     * @return mixed
+     * @return Authenticatable
      */
     public function signIn($user = null)
     {
         if (is_null($user)) {
-            $user = new Authenticated();
-            $user->email = 'john@doe.com';
+            $user = $this->user();
         }
 
         $this->be($user);
+
+        return $user;
+    }
+
+    /**
+     * Create a user.
+     *
+     * @return Authenticatable
+     */
+    public function user()
+    {
+        $user = new Authenticated();
+        $user->email = 'john@doe.com';
 
         return $user;
     }
@@ -96,6 +108,14 @@ class Authenticated implements Authenticatable
 {
     public $email;
 
+    protected static $ids;
+    protected $id;
+
+    public function __construct()
+    {
+        $this->id = ++self::$ids;
+    }
+
     public function getAuthIdentifierName()
     {
         return 'getAuthIdentifier';
@@ -103,7 +123,7 @@ class Authenticated implements Authenticatable
 
     public function getAuthIdentifier()
     {
-        return '0';
+        return (string) $this->id;
     }
 
     public function getAuthPassword()

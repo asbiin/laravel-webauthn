@@ -52,7 +52,7 @@ class CredentialRepositoryTest extends FeatureTestCase
     {
         $user = $this->signIn();
         factory(WebauthnKey::class)->create([
-            'user_id' => '1',
+            'user_id' => $this->user()->getAuthIdentifier(),
         ]);
         factory(WebauthnKey::class)->create([
             'user_id' => $user->getAuthIdentifier(),

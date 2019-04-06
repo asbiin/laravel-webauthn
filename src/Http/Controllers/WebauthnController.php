@@ -65,8 +65,10 @@ class WebauthnController extends Controller
     public function auth(Request $request)
     {
         try {
-            /** @var \Webauthn\PublicKeyCredentialRequestOptions */
             $publicKey = $request->session()->pull(self::SESSION_PUBLICKEY_REQUEST);
+            if (! $publicKey instanceof \Webauthn\PublicKeyCredentialRequestOptions) {
+                throw new ModelNotFoundException('Authentication data not found');
+            }
 
             $result = Webauthn::doAuthenticate(
                 $request->user(),
@@ -80,21 +82,24 @@ class WebauthnController extends Controller
                 'error' => [
                     'message' => $e->getMessage(),
                 ],
-            ]);
+            ], 403);
         }
     }
 
     /**
      * Return the redirect destination after a successfull auth.
      *
+     * @param bool $result
      * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\RedirectResponse
      */
     protected function redirectAfterSuccessAuth($result)
     {
-        if (strlen($this->config->get('webauthn.authenticate.postSuccessRedirectRoute'))) {
+        if (! empty($this->config->get('webauthn.authenticate.postSuccessRedirectRoute'))) {
             return Redirect::intended($this->config->get('webauthn.authenticate.postSuccessRedirectRoute'));
         } else {
-            return response()->json($result);
+            return response()->json([
+                'result' => $result,
+            ]);
         }
     }
 
@@ -124,8 +129,10 @@ class WebauthnController extends Controller
     public function create(Request $request)
     {
         try {
-            /** @var \Webauthn\PublicKeyCredentialCreationOptions */
             $publicKey = $request->session()->pull(self::SESSION_PUBLICKEY_CREATION);
+            if (! $publicKey instanceof \Webauthn\PublicKeyCredentialCreationOptions) {
+                throw new ModelNotFoundException('Register data not found');
+            }
 
             Webauthn::doRegister(
                 $request->user(),
@@ -134,13 +141,15 @@ class WebauthnController extends Controller
                 $this->input($request, 'name')
             );
 
-            return response()->json('true');
+            return response()->json([
+                'result' => true,
+            ], 201);
         } catch (\Exception $e) {
             return response()->json([
                 'error' => [
                     'message' => $e->getMessage(),
                 ],
-            ]);
+            ], 403);
         }
     }
 

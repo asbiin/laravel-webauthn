@@ -2,10 +2,10 @@
 
 namespace LaravelWebauthn\Services;
 
-use Illuminate\Support\Facades\Event;
 use LaravelWebauthn\Models\WebauthnKey;
 use Illuminate\Contracts\Session\Session;
 use LaravelWebauthn\Events\WebauthnLogin;
+use Illuminate\Contracts\Events\Dispatcher;
 use LaravelWebauthn\Events\WebauthnRegister;
 use Webauthn\PublicKeyCredentialRequestOptions;
 use Illuminate\Contracts\Foundation\Application;
@@ -41,17 +41,26 @@ class Webauthn extends WebauthnRepository
     protected $session;
 
     /**
+     * Event dispatcher.
+     *
+     * @var \Illuminate\Contracts\Events\Dispatcher
+     */
+    protected $events;
+
+    /**
      * Create a new instance of Webauthn.
      *
      * @param \Illuminate\Contracts\Foundation\Application $app
      * @param \Illuminate\Contracts\Config\Repository $config
      * @param \Illuminate\Contracts\Session\Session $session
+     * @param \Illuminate\Contracts\Events\Dispatcher $events
      */
-    public function __construct(Application $app, Config $config, Session $session)
+    public function __construct(Application $app, Config $config, Session $session, Dispatcher $events)
     {
         $this->app = $app;
         $this->config = $config;
         $this->session = $session;
+        $this->events = $events;
     }
 
     /**
@@ -65,7 +74,7 @@ class Webauthn extends WebauthnRepository
         $publicKey = $this->app->make(PublicKeyCredentialCreationOptionsFactory::class)
             ->create($user);
 
-        Event::dispatch(new WebauthnRegisterData($user, $publicKey));
+        $this->events->dispatch(new WebauthnRegisterData($user, $publicKey));
 
         return $publicKey;
     }
@@ -88,7 +97,7 @@ class Webauthn extends WebauthnRepository
 
         $this->forceAuthenticate();
 
-        Event::dispatch(new WebauthnRegister($webauthnKey));
+        $this->events->dispatch(new WebauthnRegister($webauthnKey));
 
         return $webauthnKey;
     }
@@ -113,7 +122,7 @@ class Webauthn extends WebauthnRepository
      * @param string $data
      * @return bool
      */
-    public function doAuthenticate(User $user, PublicKeyCredentialRequestOptions $publicKey, string $data): bool
+    public function doAuthenticate(User $user, PublicKeyCredentialRequestOptions $publicKey, string $data) : bool
     {
         $result = $this->app->make(PublicKeyCredentialValidator::class)
             ->check($user, $publicKey, $data);
@@ -121,7 +130,7 @@ class Webauthn extends WebauthnRepository
         if ($result) {
             $this->forceAuthenticate();
 
-            Event::dispatch(new WebauthnLogin($user));
+            $this->events->dispatch(new WebauthnLogin($user));
 
             return true;
         }
@@ -155,7 +164,7 @@ class Webauthn extends WebauthnRepository
      * @param \Illuminate\Contracts\Auth\Authenticatable  $user
      * @return bool
      */
-    public function enabled(User $user): bool
+    public function enabled(User $user) : bool
     {
         return $this->config->get('webauthn.enable') && $this->hasKey($user);
     }

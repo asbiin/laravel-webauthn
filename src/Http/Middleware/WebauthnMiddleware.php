@@ -4,9 +4,9 @@ namespace LaravelWebauthn\Http\Middleware;
 
 use Closure;
 use Illuminate\Support\Facades\URL;
-use Illuminate\Support\Facades\Auth;
 use LaravelWebauthn\Facades\Webauthn;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Contracts\Auth\Factory as AuthFactory;
 use Illuminate\Contracts\Config\Repository as Config;
 
 class WebauthnMiddleware
@@ -19,13 +19,21 @@ class WebauthnMiddleware
     protected $config;
 
     /**
+     * The auth factory instance.
+     *
+     * @var \Illuminate\Contracts\Auth\Factory
+     */
+    protected $factory;
+
+    /**
      * Create a Webauthn.
      *
      * @param \Illuminate\Contracts\Config\Repository $config
      */
-    public function __construct(Config $config)
+    public function __construct(Config $config, AuthFactory $factory)
     {
         $this->config = $config;
+        $this->factory = $factory;
     }
 
     /**
@@ -40,7 +48,7 @@ class WebauthnMiddleware
     {
         if ($this->config->get('webauthn.enable') &&
             ! Webauthn::check()) {
-            abort_if(Auth::guest(), 401, 'You need to log in before doing a Webauthn authentication');
+            abort_if($this->factory->guard($guard)->guest(), 401, 'You need to log in before doing a Webauthn authentication');
 
             if (Webauthn::enabled($request->user())) {
                 return Redirect::guest(route('webauthn.login').'?callback='.urlencode(URL::current()));

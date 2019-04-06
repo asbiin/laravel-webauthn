@@ -32,7 +32,7 @@ class WebauthnTest extends FeatureTestCase
         $this->assertEquals(32, strlen($publicKey->getChallenge()));
 
         $this->assertInstanceOf(\Webauthn\PublicKeyCredentialUserEntity::class, $publicKey->getUser());
-        $this->assertEquals('0', $publicKey->getUser()->getId());
+        $this->assertEquals($user->getAuthIdentifier(), $publicKey->getUser()->getId());
         $this->assertEquals('john@doe.com', $publicKey->getUser()->getDisplayName());
     }
 
@@ -48,7 +48,7 @@ class WebauthnTest extends FeatureTestCase
         $this->app->make(Webauthn::class)->doRegister($user, $publicKey, json_encode($data), 'name');
 
         $this->assertDatabaseHas('webauthn_keys', [
-            'user_id' => 0,
+            'user_id' => $user->getAuthIdentifier(),
             'name' => 'name',
             'credentialId' => 'MA==',
             'type' => 'public-key',
@@ -57,7 +57,6 @@ class WebauthnTest extends FeatureTestCase
             'trustPath' => '{"type":"empty"}',
             'aaguid' => '0000000000000000',
             'credentialPublicKey' => 'oWNrZXlldmFsdWU=',
-            'userHandle' => '0',
             'counter' => '1',
         ]);
     }

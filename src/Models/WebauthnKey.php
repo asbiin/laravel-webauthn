@@ -5,6 +5,7 @@ namespace LaravelWebauthn\Models;
 use Webauthn\TrustPath\TrustPath;
 use Illuminate\Database\Eloquent\Model;
 use Webauthn\PublicKeyCredentialSource;
+use LaravelWebauthn\Exceptions\WrongUserHandleException;
 
 class WebauthnKey extends Model
 {
@@ -32,7 +33,6 @@ class WebauthnKey extends Model
         'trustPath',
         'aaguid',
         'credentialPublicKey',
-        'userHandle',
         'counter',
         'timestamp',
     ];
@@ -124,7 +124,7 @@ class WebauthnKey extends Model
             $this->trustPath,
             $this->aaguid,
             $this->credentialPublicKey,
-            $this->userHandle,
+            (string) $this->user_id,
             $this->counter
         );
     }
@@ -136,6 +136,9 @@ class WebauthnKey extends Model
      */
     public function setPublicKeyCredentialSourceAttribute(PublicKeyCredentialSource $value)
     {
+        if ((string) $this->user_id !== $value->getUserHandle()) {
+            throw new WrongUserHandleException();
+        }
         $this->credentialId = $value->getPublicKeyCredentialId();
         $this->type = $value->getType();
         $this->transports = $value->getTransports();
@@ -143,7 +146,6 @@ class WebauthnKey extends Model
         $this->trustPath = $value->getTrustPath();
         $this->aaguid = $value->getAaguid();
         $this->credentialPublicKey = $value->getCredentialPublicKey();
-        $this->userHandle = $value->getUserHandle();
         $this->counter = $value->getCounter();
     }
 }
