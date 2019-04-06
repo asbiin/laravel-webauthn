@@ -67,6 +67,9 @@ class WebauthnController extends Controller
         try {
             /** @var \Webauthn\PublicKeyCredentialRequestOptions */
             $publicKey = $request->session()->pull(self::SESSION_PUBLICKEY_REQUEST);
+            if (! $publicKey) {
+                throw new ModelNotFoundException('Authentication data not found');
+            }
 
             $result = Webauthn::doAuthenticate(
                 $request->user(),
@@ -80,7 +83,7 @@ class WebauthnController extends Controller
                 'error' => [
                     'message' => $e->getMessage(),
                 ],
-            ]);
+            ], 403);
         }
     }
 
@@ -129,6 +132,9 @@ class WebauthnController extends Controller
         try {
             /** @var \Webauthn\PublicKeyCredentialCreationOptions */
             $publicKey = $request->session()->pull(self::SESSION_PUBLICKEY_CREATION);
+            if (! $publicKey) {
+                throw new ModelNotFoundException('Register data not found');
+            }
 
             Webauthn::doRegister(
                 $request->user(),

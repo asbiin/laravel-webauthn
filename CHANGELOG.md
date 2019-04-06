@@ -4,7 +4,7 @@
 *
 
 ### Enhancements:
-*
+* Remove userHandle in model
 
 ### Fixes:
 * Fix some contract bindings

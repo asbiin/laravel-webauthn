@@ -22,10 +22,7 @@ class MiddlewareTest extends FeatureTestCase
     public function test_middleware_user_not_enabled()
     {
         $user = $this->signIn();
-        $request = (new Request())
-            ->setUserResolver(function () use ($user) {
-                return $user;
-            });
+        $request = $this->getRequest($user);
 
         $result = $this->app->make(WebauthnMiddleware::class)->handle($request, function () {
             return 'next';
@@ -37,10 +34,7 @@ class MiddlewareTest extends FeatureTestCase
     public function test_middleware_user_authenticated()
     {
         $user = $this->signIn();
-        $request = (new Request())
-            ->setUserResolver(function () use ($user) {
-                return $user;
-            });
+        $request = $this->getRequest($user);
 
         $this->app->make(Webauthn::class)->forceAuthenticate();
 
@@ -58,15 +52,20 @@ class MiddlewareTest extends FeatureTestCase
             'user_id' => $user->getAuthIdentifier(),
         ]);
 
-        $request = (new Request())
-            ->setUserResolver(function () use ($user) {
-                return $user;
-            });
+        $request = $this->getRequest($user);
 
         $result = $this->app->make(WebauthnMiddleware::class)->handle($request, function () {
             return 'next';
         });
 
         $this->assertInstanceOf(\Illuminate\Http\RedirectResponse::class, $result);
+    }
+
+    private function getRequest($user)
+    {
+        return (new Request())
+            ->setUserResolver(function () use ($user) {
+                return $user;
+            });
     }
 }

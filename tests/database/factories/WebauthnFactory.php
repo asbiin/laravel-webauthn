@@ -13,9 +13,9 @@
 
 $factory->define(\LaravelWebauthn\Models\WebauthnKey::class, function (Faker\Generator $faker) {
     return [
+        'user_id' => '0',
         'name' => $faker->word,
         'counter' => 0,
-        'userHandle' => '0',
         'credentialId' => 'MA==',
         'type' => 'public-key',
         'transports' => [],

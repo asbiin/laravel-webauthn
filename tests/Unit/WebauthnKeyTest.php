@@ -11,15 +11,16 @@ class WebauthnKeyTest extends FeatureTestCase
     public function test_serialize_data()
     {
         $webauthnKey = new WebauthnKey();
-        $webauthnKey->publicKeyCredentialSource = new PublicKeyCredentialSource('a', 'b', [], 'c', new \Webauthn\TrustPath\EmptyTrustPath(), 'd', 'e', 'f', 0);
+        $webauthnKey->user_id = 0;
+        $webauthnKey->publicKeyCredentialSource = new PublicKeyCredentialSource('a', 'b', [], 'c', new \Webauthn\TrustPath\EmptyTrustPath(), 'd', 'e', '0', 1);
 
+        $this->assertEquals(0, $webauthnKey->user_id);
         $this->assertEquals('a', $webauthnKey->credentialId);
         $this->assertEquals('b', $webauthnKey->type);
         $this->assertEquals([], $webauthnKey->transports);
         $this->assertEquals('d', $webauthnKey->aaguid);
         $this->assertEquals('e', $webauthnKey->credentialPublicKey);
-        $this->assertEquals('f', $webauthnKey->userHandle);
-        $this->assertEquals(0, $webauthnKey->counter);
+        $this->assertEquals(1, $webauthnKey->counter);
         $this->assertEquals('c', $webauthnKey->attestationType);
         $this->assertInstanceOf(\Webauthn\TrustPath\EmptyTrustPath::class, $webauthnKey->trustPath);
     }
@@ -28,12 +29,12 @@ class WebauthnKeyTest extends FeatureTestCase
     {
         $webauthnKey = new WebauthnKey();
 
+        $webauthnKey->user_id = 0;
         $webauthnKey->credentialId = 'a';
         $webauthnKey->type = 'b';
         $webauthnKey->transports = [];
         $webauthnKey->aaguid = 'd';
         $webauthnKey->credentialPublicKey = 'e';
-        $webauthnKey->userHandle = 'f';
         $webauthnKey->counter = 0;
         $webauthnKey->attestationType = 'c';
         $webauthnKey->trustPath = new \Webauthn\TrustPath\EmptyTrustPath();
@@ -45,7 +46,7 @@ class WebauthnKeyTest extends FeatureTestCase
         $this->assertEquals([], $publicKeyCredentialSource->getTransports());
         $this->assertEquals('d', $publicKeyCredentialSource->getAaguid());
         $this->assertEquals('e', $publicKeyCredentialSource->getCredentialPublicKey());
-        $this->assertEquals('f', $publicKeyCredentialSource->getUserHandle());
+        $this->assertEquals('0', $publicKeyCredentialSource->getUserHandle());
         $this->assertEquals(0, $publicKeyCredentialSource->getCounter());
         $this->assertEquals('c', $publicKeyCredentialSource->getAttestationType());
         $this->assertInstanceOf(\Webauthn\TrustPath\EmptyTrustPath::class, $publicKeyCredentialSource->getTrustPath());
