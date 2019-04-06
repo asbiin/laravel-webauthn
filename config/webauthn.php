@@ -50,7 +50,7 @@ return [
         | the Webauthn 2nd factor.
         |
         */
-        'view' => 'auth.validatewebauthn',
+        'view' => '',
 
         /*
         |--------------------------------------------------------------------------
