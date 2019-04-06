@@ -65,9 +65,8 @@ class WebauthnController extends Controller
     public function auth(Request $request)
     {
         try {
-            /** @var \Webauthn\PublicKeyCredentialRequestOptions */
             $publicKey = $request->session()->pull(self::SESSION_PUBLICKEY_REQUEST);
-            if (! $publicKey) {
+            if (! $publicKey instanceof \Webauthn\PublicKeyCredentialRequestOptions) {
                 throw new ModelNotFoundException('Authentication data not found');
             }
 
@@ -130,9 +129,8 @@ class WebauthnController extends Controller
     public function create(Request $request)
     {
         try {
-            /** @var \Webauthn\PublicKeyCredentialCreationOptions */
             $publicKey = $request->session()->pull(self::SESSION_PUBLICKEY_CREATION);
-            if (! $publicKey) {
+            if (! $publicKey instanceof \Webauthn\PublicKeyCredentialCreationOptions) {
                 throw new ModelNotFoundException('Register data not found');
             }
 
