@@ -3,7 +3,6 @@
 namespace LaravelWebauthn\Tests\Unit;
 
 use LaravelWebauthn\Facades\Webauthn;
-use Illuminate\Support\Facades\Facade;
 use LaravelWebauthn\Models\WebauthnKey;
 use LaravelWebauthn\Tests\FeatureTestCase;
 use LaravelWebauthn\Tests\Fake\FakeWebauthn;
@@ -17,24 +16,24 @@ class WebauthnControllerTest extends FeatureTestCase
         'user' => [
             'name',
             'id',
-            'displayName'
+            'displayName',
         ],
         'challenge',
         'attestation',
         'timeout',
         'rp' => [
             'name',
-            'id'
+            'id',
         ],
         'pubKeyCredParams' => [
             '*' => [
                 'type',
-                'alg'
-            ]
+                'alg',
+            ],
         ],
         'authenticatorSelection' => [
             'requireResidentKey',
-            'userVerification'
+            'userVerification',
         ],
     ];
 
@@ -54,7 +53,7 @@ class WebauthnControllerTest extends FeatureTestCase
 
         $response->assertStatus(200);
         $response->assertJson([
-            'result' => 'true'
+            'result' => 'true',
         ]);
     }
 
@@ -67,8 +66,8 @@ class WebauthnControllerTest extends FeatureTestCase
         $response->assertStatus(403);
         $response->assertJson([
             'error' => [
-                'message' => 'Authentication data not found'
-            ]
+                'message' => 'Authentication data not found',
+            ],
         ]);
     }
 
@@ -93,7 +92,7 @@ class WebauthnControllerTest extends FeatureTestCase
 
         $response->assertStatus(200);
         $response->assertJsonStructure([
-            'publicKey' => $this->publicKeyForm
+            'publicKey' => $this->publicKeyForm,
         ]);
     }
 
@@ -109,7 +108,7 @@ class WebauthnControllerTest extends FeatureTestCase
 
         $response->assertStatus(201);
         $response->assertJson([
-            'result' => true
+            'result' => true,
         ]);
 
         $this->assertDataBaseHas('webauthn_keys', [
@@ -130,7 +129,7 @@ class WebauthnControllerTest extends FeatureTestCase
         $response->assertJson([
             'error' => [
                 'message' => 'Register data not found',
-            ]
+            ],
         ]);
     }
 
@@ -167,7 +166,7 @@ class WebauthnControllerTest extends FeatureTestCase
         $response->assertJson([
             'error' => [
                 'message' => 'Object not found',
-            ]
+            ],
         ]);
 
         $this->assertDataBaseHas('webauthn_keys', [
@@ -192,7 +191,7 @@ class WebauthnControllerTest extends FeatureTestCase
         $response->assertJson([
             'error' => [
                 'message' => 'Object not found',
-            ]
+            ],
         ]);
 
         $this->assertDataBaseHas('webauthn_keys', [

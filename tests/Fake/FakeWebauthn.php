@@ -12,7 +12,6 @@ use LaravelWebauthn\Services\Webauthn\PublicKeyCredentialCreationOptionsFactory;
 
 class FakeWebauthn
 {
-
     /**
      * Laravel application.
      *
