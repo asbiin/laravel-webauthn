@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\URL;
 use LaravelWebauthn\Facades\Webauthn;
 use LaravelWebauthn\Models\WebauthnKey;
 use Illuminate\Support\Facades\Redirect;
+use Webauthn\PublicKeyCredentialRequestOptions;
+use Webauthn\PublicKeyCredentialCreationOptions;
 use Illuminate\Contracts\Config\Repository as Config;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
@@ -43,7 +45,7 @@ class WebauthnController extends Controller
      * Show the login Webauthn request after a login authentication.
      *
      * @param \Illuminate\Http\Request $request
-     * @return \Illuminate\View\View
+     * @return \Illuminate\Http\JsonResponse|\Illuminate\View\View
      */
     public function login(Request $request)
     {
@@ -51,9 +53,27 @@ class WebauthnController extends Controller
 
         $request->session()->put(self::SESSION_PUBLICKEY_REQUEST, $publicKey);
 
-        return view($this->config->get('webauthn.authenticate.view'))
-            ->withCallback($request->query('callback', URL::current()))
-            ->withPublicKey($publicKey);
+        return $this->redirectViewAuth($request, $publicKey);
+    }
+
+    /**
+     * Return the redirect destination on login.
+     *
+     * @param Request $request
+     * @param PublicKeyCredentialRequestOptions $publicKey
+     * @return \Illuminate\Http\JsonResponse|\Illuminate\View\View
+     */
+    protected function redirectViewAuth(Request $request, PublicKeyCredentialRequestOptions $publicKey)
+    {
+        if (! empty($this->config->get('webauthn.authenticate.view'))) {
+            return view($this->config->get('webauthn.authenticate.view'))
+                ->withCallback($request->query('callback', URL::current()))
+                ->withPublicKey($publicKey);
+        } else {
+            return response()->json([
+                'publicKey' => $publicKey,
+            ]);
+        }
     }
 
     /**
@@ -66,7 +86,7 @@ class WebauthnController extends Controller
     {
         try {
             $publicKey = $request->session()->pull(self::SESSION_PUBLICKEY_REQUEST);
-            if (! $publicKey instanceof \Webauthn\PublicKeyCredentialRequestOptions) {
+            if (! $publicKey instanceof PublicKeyCredentialRequestOptions) {
                 throw new ModelNotFoundException('Authentication data not found');
             }
 
@@ -92,7 +112,7 @@ class WebauthnController extends Controller
      * @param bool $result
      * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\RedirectResponse
      */
-    protected function redirectAfterSuccessAuth($result)
+    protected function redirectAfterSuccessAuth(bool $result)
     {
         if (! empty($this->config->get('webauthn.authenticate.postSuccessRedirectRoute'))) {
             return Redirect::intended($this->config->get('webauthn.authenticate.postSuccessRedirectRoute'));
@@ -107,7 +127,7 @@ class WebauthnController extends Controller
      * Return the register data to attempt a Webauthn registration.
      *
      * @param \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\JsonResponse
+     * @return \Illuminate\Http\JsonResponse|\Illuminate\View\View
      */
     public function register(Request $request)
     {
@@ -115,22 +135,39 @@ class WebauthnController extends Controller
 
         $request->session()->put(self::SESSION_PUBLICKEY_CREATION, $publicKey);
 
-        return response()->json([
-            'publicKey' => $publicKey,
-        ]);
+        return $this->redirectViewRegister($request, $publicKey);
+    }
+
+    /**
+     * Return the redirect destination on register.
+     *
+     * @param Request $request
+     * @param PublicKeyCredentialCreationOptions $publicKey
+     * @return \Illuminate\Http\JsonResponse|\Illuminate\View\View
+     */
+    protected function redirectViewRegister(Request $request, PublicKeyCredentialCreationOptions $publicKey)
+    {
+        if (! empty($this->config->get('webauthn.register.view'))) {
+            return view($this->config->get('webauthn.register.view'))
+                ->withPublicKey($publicKey);
+        } else {
+            return response()->json([
+                'publicKey' => $publicKey,
+            ]);
+        }
     }
 
     /**
      * Validate and create the Webauthn request.
      *
      * @param \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\JsonResponse
+     * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\RedirectResponse
      */
     public function create(Request $request)
     {
         try {
             $publicKey = $request->session()->pull(self::SESSION_PUBLICKEY_CREATION);
-            if (! $publicKey instanceof \Webauthn\PublicKeyCredentialCreationOptions) {
+            if (! $publicKey instanceof PublicKeyCredentialCreationOptions) {
                 throw new ModelNotFoundException('Register data not found');
             }
 
@@ -141,6 +178,27 @@ class WebauthnController extends Controller
                 $this->input($request, 'name')
             );
 
+            return $this->redirectAfterSuccessRegister($webauthnKey);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => [
+                    'message' => $e->getMessage(),
+                ],
+            ], 403);
+        }
+    }
+
+    /**
+     * Return the redirect destination after a successfull register.
+     *
+     * @param WebauthnKey $webauthnKey
+     * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\RedirectResponse
+     */
+    protected function redirectAfterSuccessRegister(WebauthnKey $webauthnKey)
+    {
+        if (! empty($this->config->get('webauthn.register.postSuccessRedirectRoute'))) {
+            return Redirect::intended($this->config->get('webauthn.register.postSuccessRedirectRoute'));
+        } else {
             return response()->json([
                 'result' => true,
                 'id' => $webauthnKey->id,
@@ -148,12 +206,6 @@ class WebauthnController extends Controller
                 'name' => $webauthnKey->name,
                 'counter' => $webauthnKey->counter,
             ], 201);
-        } catch (\Exception $e) {
-            return response()->json([
-                'error' => [
-                    'message' => $e->getMessage(),
-                ],
-            ], 403);
         }
     }
 

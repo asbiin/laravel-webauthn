@@ -44,6 +44,20 @@ class WebauthnControllerTest extends FeatureTestCase
         Webauthn::swap(new FakeWebauthn($this->app));
     }
 
+    public function test_auth_get()
+    {
+        config(['webauthn.authenticate.view' => '']);
+
+        $user = $this->signIn();
+
+        $response = $this->get('/webauthn/auth');
+
+        $response->assertStatus(200);
+        $response->assertJsonStructure([
+            'publicKey',
+        ]);
+    }
+
     public function test_auth_success()
     {
         $user = $this->signIn();
