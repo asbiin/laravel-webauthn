@@ -4,12 +4,19 @@
 *
 
 ### Enhancements:
-* Add WebauthnLoginData event
+*
 
 ### Fixes:
 *
 
 # RELEASED VERSIONS:
+## 0.3.0 - 2019-04-08
+ ### New features:
+  * Add WebauthnLoginData event
+  * Add new redirects
+
+ ### Fixes:
+  * Fix Webauthn Facade
 
 ## 0.2.0 - 2019-04-06
  ### Enhancements:
