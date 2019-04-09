@@ -126,7 +126,7 @@ class WebauthnController extends Controller
 
         if ($this->config->get('webauthn.authenticate.postSuccessCallback') && ! empty($callback)) {
             return Redirect::intended($callback);
-        } else if (! empty($this->config->get('webauthn.authenticate.postSuccessRedirectRoute'))) {
+        } elseif (! empty($this->config->get('webauthn.authenticate.postSuccessRedirectRoute'))) {
             return Redirect::intended($this->config->get('webauthn.authenticate.postSuccessRedirectRoute'));
         } else {
             return response()->json([
