@@ -30,6 +30,13 @@ class WebauthnController extends Controller
     private const SESSION_PUBLICKEY_REQUEST = 'webauthn.publicKeyRequest';
 
     /**
+     * PublicKey Request session name.
+     *
+     * @var string
+     */
+    private const SESSION_AUTH_CALLBACK = 'webauthn.authCallback';
+
+    /**
      * The config repository instance.
      *
      * @var \Illuminate\Contracts\Config\Repository
@@ -66,8 +73,9 @@ class WebauthnController extends Controller
     protected function redirectViewAuth(Request $request, PublicKeyCredentialRequestOptions $publicKey)
     {
         if (! empty($this->config->get('webauthn.authenticate.view'))) {
+            $request->session()->put(self::SESSION_AUTH_CALLBACK, URL::current());
+
             return view($this->config->get('webauthn.authenticate.view'))
-                ->withCallback($request->query('callback', URL::current()))
                 ->withPublicKey($publicKey);
         } else {
             return response()->json([
@@ -112,13 +120,18 @@ class WebauthnController extends Controller
      * @param bool $result
      * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\RedirectResponse
      */
-    protected function redirectAfterSuccessAuth(bool $result)
+    protected function redirectAfterSuccessAuth(Request $request, bool $result)
     {
-        if (! empty($this->config->get('webauthn.authenticate.postSuccessRedirectRoute'))) {
+        $callback = $request->session()->pull(self::SESSION_AUTH_CALLBACK);
+
+        if ($this->config->get('webauthn.authenticate.postSuccessCallback') && ! empty($callback)) {
+            return Redirect::intended($callback);
+        } else if (! empty($this->config->get('webauthn.authenticate.postSuccessRedirectRoute'))) {
             return Redirect::intended($this->config->get('webauthn.authenticate.postSuccessRedirectRoute'));
         } else {
             return response()->json([
                 'result' => $result,
+                'callback' => $callback,
             ]);
         }
     }
