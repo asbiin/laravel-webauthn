@@ -4,7 +4,6 @@ namespace LaravelWebauthn\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
-use Illuminate\Support\Facades\URL;
 use LaravelWebauthn\Facades\Webauthn;
 use LaravelWebauthn\Models\WebauthnKey;
 use Illuminate\Support\Facades\Redirect;
