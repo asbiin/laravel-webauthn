@@ -73,8 +73,6 @@ class WebauthnController extends Controller
     protected function redirectViewAuth(Request $request, PublicKeyCredentialRequestOptions $publicKey)
     {
         if (! empty($this->config->get('webauthn.authenticate.view'))) {
-            $request->session()->put(self::SESSION_AUTH_CALLBACK, URL::current());
-
             return view($this->config->get('webauthn.authenticate.view'))
                 ->withPublicKey($publicKey);
         } else {
@@ -104,7 +102,7 @@ class WebauthnController extends Controller
                 $this->input($request, 'data')
             );
 
-            return $this->redirectAfterSuccessAuth($result);
+            return $this->redirectAfterSuccessAuth($request, $result);
         } catch (\Exception $e) {
             return response()->json([
                 'error' => [
