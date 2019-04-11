@@ -171,6 +171,6 @@ class Webauthn extends WebauthnRepository
      */
     public function enabled(User $user) : bool
     {
-        return $this->config->get('webauthn.enable') && $this->hasKey($user);
+        return $this->config->get('webauthn.enable', true) && $this->hasKey($user);
     }
 }

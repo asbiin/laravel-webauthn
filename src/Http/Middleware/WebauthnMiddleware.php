@@ -8,6 +8,7 @@ use LaravelWebauthn\Facades\Webauthn;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Contracts\Auth\Factory as AuthFactory;
 use Illuminate\Contracts\Config\Repository as Config;
+use LaravelWebauthn\Http\Controllers\WebauthnController;
 
 class WebauthnMiddleware
 {
@@ -23,17 +24,17 @@ class WebauthnMiddleware
      *
      * @var \Illuminate\Contracts\Auth\Factory
      */
-    protected $factory;
+    protected $auth;
 
     /**
      * Create a Webauthn.
      *
      * @param \Illuminate\Contracts\Config\Repository $config
      */
-    public function __construct(Config $config, AuthFactory $factory)
+    public function __construct(Config $config, AuthFactory $auth)
     {
         $this->config = $config;
-        $this->factory = $factory;
+        $this->auth = $auth;
     }
 
     /**
@@ -46,12 +47,16 @@ class WebauthnMiddleware
      */
     public function handle($request, Closure $next, $guard = null)
     {
-        if ($this->config->get('webauthn.enable') &&
+        if ($this->config->get('webauthn.enable', true) &&
             ! Webauthn::check()) {
-            abort_if($this->factory->guard($guard)->guest(), 401, 'You need to log in before doing a Webauthn authentication');
+            abort_if($this->auth->guard($guard)->guest(), 401, trans('webauthn::errors.user_unauthenticated'));
 
-            if (Webauthn::enabled($request->user())) {
-                return Redirect::guest(route('webauthn.login').'?callback='.urlencode(URL::current()));
+            if (Webauthn::enabled($request->user($guard))) {
+                if ($request->hasSession()) {
+                    $request->session()->put(WebauthnController::SESSION_AUTH_CALLBACK, URL::current());
+                }
+
+                return Redirect::guest(route('webauthn.login'));
             }
         }
 

@@ -4,7 +4,6 @@ namespace LaravelWebauthn\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
-use Illuminate\Support\Facades\URL;
 use LaravelWebauthn\Facades\Webauthn;
 use LaravelWebauthn\Models\WebauthnKey;
 use Illuminate\Support\Facades\Redirect;
@@ -28,6 +27,13 @@ class WebauthnController extends Controller
      * @var string
      */
     private const SESSION_PUBLICKEY_REQUEST = 'webauthn.publicKeyRequest';
+
+    /**
+     * PublicKey Request session name.
+     *
+     * @var string
+     */
+    public const SESSION_AUTH_CALLBACK = 'webauthn.authCallback';
 
     /**
      * The config repository instance.
@@ -67,7 +73,6 @@ class WebauthnController extends Controller
     {
         if (! empty($this->config->get('webauthn.authenticate.view'))) {
             return view($this->config->get('webauthn.authenticate.view'))
-                ->withCallback($request->query('callback', URL::current()))
                 ->withPublicKey($publicKey);
         } else {
             return response()->json([
@@ -87,7 +92,7 @@ class WebauthnController extends Controller
         try {
             $publicKey = $request->session()->pull(self::SESSION_PUBLICKEY_REQUEST);
             if (! $publicKey instanceof PublicKeyCredentialRequestOptions) {
-                throw new ModelNotFoundException('Authentication data not found');
+                throw new ModelNotFoundException(trans('webauthn::errors.auth_data_not_found'));
             }
 
             $result = Webauthn::doAuthenticate(
@@ -96,7 +101,7 @@ class WebauthnController extends Controller
                 $this->input($request, 'data')
             );
 
-            return $this->redirectAfterSuccessAuth($result);
+            return $this->redirectAfterSuccessAuth($request, $result);
         } catch (\Exception $e) {
             return response()->json([
                 'error' => [
@@ -112,13 +117,18 @@ class WebauthnController extends Controller
      * @param bool $result
      * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\RedirectResponse
      */
-    protected function redirectAfterSuccessAuth(bool $result)
+    protected function redirectAfterSuccessAuth(Request $request, bool $result)
     {
-        if (! empty($this->config->get('webauthn.authenticate.postSuccessRedirectRoute'))) {
+        $callback = $request->session()->pull(self::SESSION_AUTH_CALLBACK);
+
+        if ($this->config->get('webauthn.authenticate.postSuccessCallback', true) && ! empty($callback)) {
+            return Redirect::intended($callback);
+        } elseif (! empty($this->config->get('webauthn.authenticate.postSuccessRedirectRoute'))) {
             return Redirect::intended($this->config->get('webauthn.authenticate.postSuccessRedirectRoute'));
         } else {
             return response()->json([
                 'result' => $result,
+                'callback' => $callback,
             ]);
         }
     }
@@ -168,7 +178,7 @@ class WebauthnController extends Controller
         try {
             $publicKey = $request->session()->pull(self::SESSION_PUBLICKEY_CREATION);
             if (! $publicKey instanceof PublicKeyCredentialCreationOptions) {
-                throw new ModelNotFoundException('Register data not found');
+                throw new ModelNotFoundException(trans('webauthn::errors.create_data_not_found'));
             }
 
             $webauthnKey = Webauthn::doRegister(
@@ -229,7 +239,7 @@ class WebauthnController extends Controller
         } catch (ModelNotFoundException $e) {
             return response()->json([
                 'error' => [
-                    'message' => 'Object not found',
+                    'message' => trans('webauthn::errors.object_not_found'),
                 ],
             ], 404);
         }
