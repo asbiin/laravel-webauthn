@@ -87,9 +87,8 @@ class WebauthnServiceProvider extends ServiceProvider
      */
     private function registerResources()
     {
-        $this->loadTranslationsFrom(__DIR__ . '/../resources/lang', 'webauthn');
+        $this->loadTranslationsFrom(__DIR__.'/../resources/lang', 'webauthn');
     }
-
 
     /**
      * Register any package services.
