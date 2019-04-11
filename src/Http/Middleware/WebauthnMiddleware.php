@@ -49,7 +49,7 @@ class WebauthnMiddleware
     {
         if ($this->config->get('webauthn.enable', true) &&
             ! Webauthn::check()) {
-            abort_if($this->auth->guard($guard)->guest(), 401, trans('webauthn::errors.user_unauthenticated'));
+            abort_if($this->auth->guard($guard)->guest(), 401, __('webauthn::errors.user_unauthenticated'));
 
             if (Webauthn::enabled($request->user($guard))) {
                 if ($request->hasSession()) {
