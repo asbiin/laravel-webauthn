@@ -33,7 +33,7 @@ class WebauthnController extends Controller
      *
      * @var string
      */
-    private const SESSION_AUTH_CALLBACK = 'webauthn.authCallback';
+    public const SESSION_AUTH_CALLBACK = 'webauthn.authCallback';
 
     /**
      * The config repository instance.
@@ -92,7 +92,7 @@ class WebauthnController extends Controller
         try {
             $publicKey = $request->session()->pull(self::SESSION_PUBLICKEY_REQUEST);
             if (! $publicKey instanceof PublicKeyCredentialRequestOptions) {
-                throw new ModelNotFoundException('Authentication data not found');
+                throw new ModelNotFoundException(trans('webauthn::errors.auth_data_not_found'));
             }
 
             $result = Webauthn::doAuthenticate(
@@ -121,7 +121,7 @@ class WebauthnController extends Controller
     {
         $callback = $request->session()->pull(self::SESSION_AUTH_CALLBACK);
 
-        if ($this->config->get('webauthn.authenticate.postSuccessCallback') && ! empty($callback)) {
+        if ($this->config->get('webauthn.authenticate.postSuccessCallback', true) && ! empty($callback)) {
             return Redirect::intended($callback);
         } elseif (! empty($this->config->get('webauthn.authenticate.postSuccessRedirectRoute'))) {
             return Redirect::intended($this->config->get('webauthn.authenticate.postSuccessRedirectRoute'));
@@ -178,7 +178,7 @@ class WebauthnController extends Controller
         try {
             $publicKey = $request->session()->pull(self::SESSION_PUBLICKEY_CREATION);
             if (! $publicKey instanceof PublicKeyCredentialCreationOptions) {
-                throw new ModelNotFoundException('Register data not found');
+                throw new ModelNotFoundException(trans('webauthn::errors.create_data_not_found'));
             }
 
             $webauthnKey = Webauthn::doRegister(
@@ -239,7 +239,7 @@ class WebauthnController extends Controller
         } catch (ModelNotFoundException $e) {
             return response()->json([
                 'error' => [
-                    'message' => 'Object not found',
+                    'message' => trans('webauthn::errors.object_not_found'),
                 ],
             ], 404);
         }
