@@ -92,7 +92,7 @@ class WebauthnController extends Controller
         try {
             $publicKey = $request->session()->pull(self::SESSION_PUBLICKEY_REQUEST);
             if (! $publicKey instanceof PublicKeyCredentialRequestOptions) {
-                throw new ModelNotFoundException(__('webauthn::errors.auth_data_not_found'));
+                throw new ModelNotFoundException(trans('webauthn::errors.auth_data_not_found'));
             }
 
             $result = Webauthn::doAuthenticate(
@@ -178,7 +178,7 @@ class WebauthnController extends Controller
         try {
             $publicKey = $request->session()->pull(self::SESSION_PUBLICKEY_CREATION);
             if (! $publicKey instanceof PublicKeyCredentialCreationOptions) {
-                throw new ModelNotFoundException(__('webauthn::errors.create_data_not_found'));
+                throw new ModelNotFoundException(trans('webauthn::errors.create_data_not_found'));
             }
 
             $webauthnKey = Webauthn::doRegister(
@@ -239,7 +239,7 @@ class WebauthnController extends Controller
         } catch (ModelNotFoundException $e) {
             return response()->json([
                 'error' => [
-                    'message' => __('webauthn::errors.object_not_found'),
+                    'message' => trans('webauthn::errors.object_not_found'),
                 ],
             ], 404);
         }

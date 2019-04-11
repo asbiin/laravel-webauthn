@@ -62,5 +62,11 @@
             </errorLevel>
         </NoInterfaceProperties>
 
+        <PossiblyInvalidArgument>
+            <errorLevel type="suppress">
+                <file name="src/Http/Controllers/WebauthnController.php" />
+                <file name="src/Http/Middleware/WebauthnMiddleware.php" />
+            </errorLevel>
+        </PossiblyInvalidArgument>
     </issueHandlers>
 </psalm>
