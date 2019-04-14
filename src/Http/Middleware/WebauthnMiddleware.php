@@ -3,12 +3,10 @@
 namespace LaravelWebauthn\Http\Middleware;
 
 use Closure;
-use Illuminate\Support\Facades\URL;
 use LaravelWebauthn\Facades\Webauthn;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Contracts\Auth\Factory as AuthFactory;
 use Illuminate\Contracts\Config\Repository as Config;
-use LaravelWebauthn\Http\Controllers\WebauthnController;
 
 class WebauthnMiddleware
 {
@@ -52,10 +50,6 @@ class WebauthnMiddleware
             abort_if($this->auth->guard($guard)->guest(), 401, trans('webauthn::errors.user_unauthenticated'));
 
             if (Webauthn::enabled($request->user($guard))) {
-                if ($request->hasSession()) {
-                    $request->session()->put(WebauthnController::SESSION_AUTH_CALLBACK, URL::current());
-                }
-
                 return Redirect::guest(route('webauthn.login'));
             }
         }
