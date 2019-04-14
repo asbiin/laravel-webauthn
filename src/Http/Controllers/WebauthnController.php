@@ -7,6 +7,7 @@ use Illuminate\Routing\Controller;
 use LaravelWebauthn\Facades\Webauthn;
 use LaravelWebauthn\Models\WebauthnKey;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Response;
 use Webauthn\PublicKeyCredentialRequestOptions;
 use Webauthn\PublicKeyCredentialCreationOptions;
 use Illuminate\Contracts\Config\Repository as Config;
@@ -27,13 +28,6 @@ class WebauthnController extends Controller
      * @var string
      */
     private const SESSION_PUBLICKEY_REQUEST = 'webauthn.publicKeyRequest';
-
-    /**
-     * PublicKey Request session name.
-     *
-     * @var string
-     */
-    public const SESSION_AUTH_CALLBACK = 'webauthn.authCallback';
 
     /**
      * The config repository instance.
@@ -75,7 +69,7 @@ class WebauthnController extends Controller
             return view($this->config->get('webauthn.authenticate.view'))
                 ->withPublicKey($publicKey);
         } else {
-            return response()->json([
+            return Response::json([
                 'publicKey' => $publicKey,
             ]);
         }
@@ -103,7 +97,7 @@ class WebauthnController extends Controller
 
             return $this->redirectAfterSuccessAuth($request, $result);
         } catch (\Exception $e) {
-            return response()->json([
+            return Response::json([
                 'error' => [
                     'message' => $e->getMessage(),
                 ],
@@ -119,14 +113,12 @@ class WebauthnController extends Controller
      */
     protected function redirectAfterSuccessAuth(Request $request, bool $result)
     {
-        $callback = $request->session()->pull(self::SESSION_AUTH_CALLBACK);
-
-        if ($this->config->get('webauthn.authenticate.postSuccessCallback', true) && ! empty($callback)) {
-            return Redirect::intended($callback);
+        if ($this->config->get('webauthn.authenticate.postSuccessCallback', true)) {
+            return Redirect::intended();
         } elseif (! empty($this->config->get('webauthn.authenticate.postSuccessRedirectRoute'))) {
             return Redirect::intended($this->config->get('webauthn.authenticate.postSuccessRedirectRoute'));
         } else {
-            return response()->json([
+            return Response::json([
                 'result' => $result,
                 'callback' => $callback,
             ]);
@@ -161,7 +153,7 @@ class WebauthnController extends Controller
             return view($this->config->get('webauthn.register.view'))
                 ->withPublicKey($publicKey);
         } else {
-            return response()->json([
+            return Response::json([
                 'publicKey' => $publicKey,
             ]);
         }
@@ -190,7 +182,7 @@ class WebauthnController extends Controller
 
             return $this->redirectAfterSuccessRegister($webauthnKey);
         } catch (\Exception $e) {
-            return response()->json([
+            return Response::json([
                 'error' => [
                     'message' => $e->getMessage(),
                 ],
@@ -209,7 +201,7 @@ class WebauthnController extends Controller
         if (! empty($this->config->get('webauthn.register.postSuccessRedirectRoute'))) {
             return Redirect::intended($this->config->get('webauthn.register.postSuccessRedirectRoute'));
         } else {
-            return response()->json([
+            return Response::json([
                 'result' => true,
                 'id' => $webauthnKey->id,
                 'object' => 'webauthnKey',
@@ -232,12 +224,12 @@ class WebauthnController extends Controller
                 ->findOrFail($webauthnKeyId)
                 ->delete();
 
-            return response()->json([
+            return Response::json([
                 'deleted' => true,
                 'id' => $webauthnKeyId,
             ]);
         } catch (ModelNotFoundException $e) {
-            return response()->json([
+            return Response::json([
                 'error' => [
                     'message' => trans('webauthn::errors.object_not_found'),
                 ],
