@@ -3,7 +3,6 @@
 namespace LaravelWebauthn\Http\Middleware;
 
 use Closure;
-use Illuminate\Support\Facades\URL;
 use LaravelWebauthn\Facades\Webauthn;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Contracts\Auth\Factory as AuthFactory;
