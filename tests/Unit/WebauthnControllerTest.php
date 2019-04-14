@@ -60,12 +60,14 @@ class WebauthnControllerTest extends FeatureTestCase
 
     public function test_auth_success()
     {
+        config(['webauthn.authenticate.postSuccessCallback' => false]);
+
         $user = $this->signIn();
         $this->session(['webauthn.publicKeyRequest' => Webauthn::getAuthenticateData($user)]);
 
         $response = $this->post('/webauthn/auth', ['data' => '']);
 
-        $response->assertStatus(302);
+        $response->assertStatus(200);
         $response->assertJson([
             'result' => 'true',
         ]);
