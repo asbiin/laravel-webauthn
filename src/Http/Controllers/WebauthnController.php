@@ -118,6 +118,7 @@ class WebauthnController extends Controller
         } elseif (! empty($this->config->get('webauthn.authenticate.postSuccessRedirectRoute'))) {
             return Redirect::intended($this->config->get('webauthn.authenticate.postSuccessRedirectRoute'));
         } else {
+            $callback = $request->session()->pull('url.intended', '/');
             return Response::json([
                 'result' => $result,
                 'callback' => $callback,
