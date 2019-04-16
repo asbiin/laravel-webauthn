@@ -28,13 +28,12 @@ class WebAuthn {
    * @param {function(PublicKeyCredential)} callback  User callback
    */
   register(publicKey, callback) {
-    var self = this;
-
     let publicKeyCredential = Object.assign({}, publicKey);
     publicKeyCredential.user.id = this._bufferDecode(publicKey.user.id);
     publicKeyCredential.challenge = this._bufferDecode(publicKey.challenge);
     publicKeyCredential.excludeCredentials = this._credentialDecode(publicKey.excludeCredentials);
 
+    var self = this;
     navigator.credentials.create({
       publicKey: publicKeyCredential
     }).then((data) => {
@@ -72,12 +71,11 @@ class WebAuthn {
    * @param {function(PublicKeyCredential)} callback  User callback
    */
   sign(publicKey, callback) {
-    var self = this;
-
     let publicKeyCredential = Object.assign({}, publicKey);
     publicKeyCredential.challenge = this._bufferDecode(publicKey.challenge);
     publicKeyCredential.allowCredentials = this._credentialDecode(publicKey.allowCredentials);
 
+    var self = this;
     navigator.credentials.get({
       publicKey: publicKeyCredential
     }).then((data) => {

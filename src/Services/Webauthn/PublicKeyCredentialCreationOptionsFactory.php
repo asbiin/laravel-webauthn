@@ -31,9 +31,9 @@ final class PublicKeyCredentialCreationOptionsFactory extends AbstractOptionsFac
         return new PublicKeyCredentialCreationOptions(
             $this->createRpEntity(),
             $userEntity,
-            random_bytes($this->config->get('webauthn.challenge_length')),
+            random_bytes($this->config->get('webauthn.challenge_length', 32)),
             $this->createCredentialParameters(),
-            $this->config->get('webauthn.timeout'),
+            $this->config->get('webauthn.timeout', 60000),
             $this->repository->getRegisteredKeys($user),
             $this->createAuthenticatorSelectionCriteria(),
             $this->config->get('webauthn.attestation_conveyance') ?: PublicKeyCredentialCreationOptions::ATTESTATION_CONVEYANCE_PREFERENCE_NONE,
@@ -45,7 +45,7 @@ final class PublicKeyCredentialCreationOptionsFactory extends AbstractOptionsFac
     {
         return new AuthenticatorSelectionCriteria(
             $this->config->get('webauthn.authenticator_selection_criteria.attachment_mode') ?: AuthenticatorSelectionCriteria::AUTHENTICATOR_ATTACHMENT_NO_PREFERENCE,
-            $this->config->get('webauthn.authenticator_selection_criteria.require_resident_key'),
+            $this->config->get('webauthn.authenticator_selection_criteria.require_resident_key', false),
             $this->config->get('webauthn.authenticator_selection_criteria.user_verification') ?: AuthenticatorSelectionCriteria::USER_VERIFICATION_REQUIREMENT_PREFERRED
         );
     }
@@ -53,7 +53,7 @@ final class PublicKeyCredentialCreationOptionsFactory extends AbstractOptionsFac
     private function createRpEntity(): PublicKeyCredentialRpEntity
     {
         return new PublicKeyCredentialRpEntity(
-            $this->config->get('app.name'),
+            $this->config->get('app.name', 'Laravel'),
             Request::getHttpHost(),
             $this->config->get('webauthn.icon')
         );
