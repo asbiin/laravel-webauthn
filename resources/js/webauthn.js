@@ -5,6 +5,8 @@
  * @license MIT
  */
 
+'use strict';
+
 class WebAuthn {
 
   /**
@@ -28,23 +30,28 @@ class WebAuthn {
   register(publicKey, callback) {
     var self = this;
 
-    publicKey.challenge = this._bufferDecode(publicKey.challenge);
-    publicKey.user.id = this._bufferDecode(publicKey.user.id);
-    if (publicKey.excludeCredentials) {
-      publicKey.excludeCredentials = publicKey.excludeCredentials.map(function(data) {
-        data.id = self._bufferDecode(data.id);
-        return data;
-      });
-    }
+    let publicKeyCredential = {
+      rp: publicKey.rp,
+      user: {
+        id: this._bufferDecode(publicKey.user.id),
+        displayName: publicKey.user.displayName,
+      },
+      challenge: this._bufferDecode(publicKey.challenge),
+      pubKeyCredParams: publicKey.pubKeyCredParams,
+      timeout: publicKey.timeout,
+      excludeCredentials : this._credentialDecode(publicKey.excludeCredentials),
+      authenticatorSelection: publicKey.authenticatorSelection,
+      attestation: publicKey.attestation,
+      extensions: publicKey.extensions,
+    };
 
     navigator.credentials.create({
-        publicKey: publicKey
-      }).then((data) => {
-        self._registerCallback(data, callback);
-      }, (error) => {
-        self._notify(error.message, false);
-      }
-    );
+      publicKey: publicKeyCredential
+    }).then((data) => {
+      self._registerCallback(data, callback);
+    }, (error) => {
+      self._notify(error.name, error.message, false);
+    });
   }
 
   /**
@@ -77,19 +84,22 @@ class WebAuthn {
   sign(publicKey, callback) {
     var self = this;
 
-    publicKey.challenge = this._bufferDecode(publicKey.challenge);
-    publicKey.allowCredentials = publicKey.allowCredentials.map(function(data) {
-      data.id = self._bufferDecode(data.id);
-      return data;
-    });
+    let publicKeyCredential = {
+      challenge: this._bufferDecode(publicKey.challenge),
+      timeout : publicKey.timeout,
+      rpId : publicKey.rpId,
+      allowCredentials : this._credentialDecode(publicKey.allowCredentials),
+      userVerification : publicKey.userVerification,
+      extensions : publicKey.extensions,
+    };
 
     navigator.credentials.get({
-        publicKey: publicKey
-      }).then((data) => {
-        self._signCallback(data, callback);
-      }, (error) => {
-        self._notify(error.message, false);
-      }
+      publicKey: publicKeyCredential
+    }).then((data) => {
+      self._signCallback(data, callback);
+    }, (error) => {
+      self._notify(error.name, error.message, false);
+    }
     );
   }
 
@@ -137,6 +147,23 @@ class WebAuthn {
   }
 
   /**
+   * Credential decode.
+   *
+   * @param {PublicKeyCredentialDescriptor} credentials
+   * @return {PublicKeyCredentialDescriptor}
+   */
+  _credentialDecode(credentials) {
+    var self = this;
+    return credentials.map(function(data) {
+      return {
+        id: self._bufferDecode(data.id),
+        type: data.type,
+        transports: data.transports,
+      };
+    });
+  }
+
+  /**
    * Test is WebAuthn is supported by this navigator.
    *
    * @return {bool}
@@ -174,9 +201,11 @@ class WebAuthn {
   /**
    * Set the notify callback.
    *
-   * @param {function(string, bool)} callback
+   * @param {function(name: string, message: string, isError: bool)} callback
    */
   setNotify(callback) {
     this._notifyCallback = callback;
   }
-};
+}
+
+module.exports = WebAuthn;
