@@ -2,6 +2,10 @@
 
 namespace LaravelWebauthn\Models;
 
+
+use function Safe\json_decode;
+use function Safe\json_encode;
+use function Safe\base64_decode;
 use Webauthn\TrustPath\TrustPath;
 use Illuminate\Database\Eloquent\Model;
 use Webauthn\PublicKeyCredentialSource;
@@ -94,7 +98,7 @@ class WebauthnKey extends Model
      */
     public function getTrustPathAttribute($value)
     {
-        $json = \Safe\json_decode($value, true);
+        $json = json_decode($value, true);
 
         return \Webauthn\TrustPath\AbstractTrustPath::createFromJson($json);
     }

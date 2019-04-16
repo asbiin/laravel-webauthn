@@ -7,6 +7,7 @@
 * Add callback URL in session
 
 ### Fixes:
+* Use safe php functions
 * Fix redirect guest callback
 
 # RELEASED VERSIONS:
