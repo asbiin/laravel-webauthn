@@ -2,7 +2,6 @@
 
 namespace LaravelWebauthn\Models;
 
-
 use function Safe\json_decode;
 use function Safe\json_encode;
 use function Safe\base64_decode;
