@@ -4,10 +4,10 @@
 *
 
 ### Enhancements:
-*
+* Add callback URL in session
 
 ### Fixes:
-*
+* Fix redirect guest callback
 
 # RELEASED VERSIONS:
 ## 0.3.0 - 2019-04-08

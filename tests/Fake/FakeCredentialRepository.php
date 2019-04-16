@@ -2,6 +2,7 @@
 
 namespace LaravelWebauthn\Tests\Fake;
 
+use Illuminate\Support\Arr;
 use Webauthn\AttestedCredentialData;
 use LaravelWebauthn\Models\WebauthnKey;
 use Webauthn\PublicKeyCredentialSource;
@@ -54,7 +55,7 @@ class FakeCredentialRepository extends CredentialRepository
 
     public function findOneByCredentialId(string $publicKeyCredentialId): ?PublicKeyCredentialSource
     {
-        if (array_has($this->publicKeyCredentialSources, $publicKeyCredentialId)) {
+        if (Arr::has($this->publicKeyCredentialSources, $publicKeyCredentialId)) {
             return $this->publicKeyCredentialSources[$publicKeyCredentialId];
         }
 

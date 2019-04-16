@@ -54,10 +54,22 @@ return [
 
         /*
         |--------------------------------------------------------------------------
+        | Redirect with callback url after login.
+        |--------------------------------------------------------------------------
+        |
+        | Save the destination url, then after a succesful login, redirect to this
+        | url.
+        |
+        */
+        'postSuccessCallback' => true,
+
+        /*
+        |--------------------------------------------------------------------------
         | Redirect route
         |--------------------------------------------------------------------------
         |
-        | The route to redirect to after login request is complete.
+        | If postSuccessCallback if false, redirect to this route after login
+        | request is complete.
         | Default: empty, for let the client side redirection.
         |
         */

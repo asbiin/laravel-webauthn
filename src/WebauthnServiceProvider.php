@@ -25,6 +25,7 @@ class WebauthnServiceProvider extends ServiceProvider
 
         $this->registerRoutes();
         $this->registerPublishing();
+        $this->registerResources();
     }
 
     /**
@@ -77,6 +78,16 @@ class WebauthnServiceProvider extends ServiceProvider
                 __DIR__.'/../database/migrations/' => base_path('/database/migrations'),
             ], 'webauthn-migrations');
         }
+    }
+
+    /**
+     * Register other package's resources.
+     *
+     * @return void
+     */
+    private function registerResources()
+    {
+        $this->loadTranslationsFrom(__DIR__.'/../resources/lang', 'webauthn');
     }
 
     /**

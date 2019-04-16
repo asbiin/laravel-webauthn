@@ -60,6 +60,8 @@ class WebauthnControllerTest extends FeatureTestCase
 
     public function test_auth_success()
     {
+        config(['webauthn.authenticate.postSuccessCallback' => false]);
+
         $user = $this->signIn();
         $this->session(['webauthn.publicKeyRequest' => Webauthn::getAuthenticateData($user)]);
 
@@ -87,7 +89,8 @@ class WebauthnControllerTest extends FeatureTestCase
 
     public function test_auth_success_with_redirect()
     {
-        config(['webauthn.authenticate.postSuccessRedirectRoute' => 'localhost/redirect']);
+        config(['webauthn.authenticate.postSuccessCallback' => false]);
+        config(['webauthn.authenticate.postSuccessRedirectRoute' => 'redirect']);
 
         $user = $this->signIn();
         $this->session(['webauthn.publicKeyRequest' => Webauthn::getAuthenticateData($user)]);
@@ -95,7 +98,7 @@ class WebauthnControllerTest extends FeatureTestCase
         $response = $this->post('/webauthn/auth', ['data' => '']);
 
         $response->assertStatus(302);
-        $response->assertRedirect('localhost/redirect');
+        $response->assertRedirect('redirect');
     }
 
     public function test_register_get_data()
