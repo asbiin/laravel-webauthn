@@ -82,7 +82,7 @@ return [
         | View to load on register request.
         |--------------------------------------------------------------------------
         |
-        | The name of blade template to load whe a user request a creation of
+        | The name of blade template to load when a user request a creation of
         | Webauthn key.
         |
         */
@@ -116,7 +116,7 @@ return [
     | Webauthn challenge length
     |--------------------------------------------------------------------------
     |
-    | Lenght of the random string used in the challenge request.
+    | Length of the random string used in the challenge request.
     |
     */
 
