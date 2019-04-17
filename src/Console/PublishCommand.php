@@ -35,5 +35,13 @@ class PublishCommand extends Command
             '--tag' => 'webauthn-migrations',
             '--force' => $this->option('force'),
         ]);
+        $this->call('vendor:publish', [
+            '--tag' => 'webauthn-assets',
+            '--force' => $this->option('force'),
+        ]);
+        $this->call('vendor:publish', [
+            '--tag' => 'webauthn-views',
+            '--force' => $this->option('force'),
+        ]);
     }
 }

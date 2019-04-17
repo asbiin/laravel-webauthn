@@ -164,9 +164,9 @@ class WebAuthn {
    */
   notSupportedMessage() {
     if (! window.isSecureContext && window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
-      return 'webauthn_not_secured';
+      return 'not_secured';
     }
-    return 'webauthn_not_supported';
+    return 'not_supported';
   }
 
   /**

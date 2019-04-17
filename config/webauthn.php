@@ -50,7 +50,7 @@ return [
         | the Webauthn 2nd factor.
         |
         */
-        'view' => '',
+        'view' => 'webauthn::authenticate',
 
         /*
         |--------------------------------------------------------------------------
@@ -86,7 +86,7 @@ return [
         | Webauthn key.
         |
         */
-        'view' => '',
+        'view' => 'webauthn::register',
 
         /*
         |--------------------------------------------------------------------------
@@ -97,7 +97,7 @@ return [
         | Default: empty, for let the client side redirection.
         |
         */
-        'postSuccessRedirectRoute' => '',
+        'postSuccessRedirectRoute' => 'index',
     ],
 
     /*
