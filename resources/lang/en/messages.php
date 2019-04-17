@@ -12,5 +12,5 @@ return [
 
     'register' => [
         'title' => 'Register a new security key',
-    ]
+    ],
 ];
