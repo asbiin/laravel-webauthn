@@ -10,6 +10,8 @@ class PublishCommandTest extends FeatureTestCase
     {
         $this->artisan('laravelwebauthn:publish')
             ->expectsOutput('Publishing complete.')
+            ->expectsOutput('Publishing complete.')
+            ->expectsOutput('Publishing complete.')
             ->expectsOutput('Publishing complete.');
     }
 }

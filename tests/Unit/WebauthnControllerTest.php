@@ -103,6 +103,8 @@ class WebauthnControllerTest extends FeatureTestCase
 
     public function test_register_get_data()
     {
+        config(['webauthn.register.view' => '']);
+
         $user = $this->signIn();
 
         $response = $this->get('/webauthn/register');
@@ -115,6 +117,8 @@ class WebauthnControllerTest extends FeatureTestCase
 
     public function test_register_create()
     {
+        config(['webauthn.register.postSuccessRedirectRoute' => '']);
+
         $user = $this->signIn();
         $this->session(['webauthn.publicKeyCreation' => Webauthn::getRegisterData($user)]);
 

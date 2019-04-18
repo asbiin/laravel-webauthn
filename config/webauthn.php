@@ -70,7 +70,7 @@ return [
         |
         | If postSuccessCallback if false, redirect to this route after login
         | request is complete.
-        | Default: empty, for let the client side redirection.
+        | If empty, send a json response to let the client side redirection.
         |
         */
         'postSuccessRedirectRoute' => '',
@@ -94,10 +94,10 @@ return [
         |--------------------------------------------------------------------------
         |
         | The route to redirect to after register key request is complete.
-        | Default: empty, for let the client side redirection.
+        | If empty, send a json response to let the client side redirection.
         |
         */
-        'postSuccessRedirectRoute' => 'index',
+        'postSuccessRedirectRoute' => '/',
     ],
 
     /*
