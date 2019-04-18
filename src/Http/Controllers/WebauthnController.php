@@ -219,7 +219,7 @@ class WebauthnController extends Controller
      * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function remove(Request $request, int $webauthnKeyId)
+    public function destroy(Request $request, int $webauthnKeyId)
     {
         try {
             WebauthnKey::where('user_id', $request->user()->getAuthIdentifier())
