@@ -4,7 +4,7 @@
   *
 
  ### Enhancements:
-  *
+  * Name the destroy route
 
  ### Fixes:
   *
