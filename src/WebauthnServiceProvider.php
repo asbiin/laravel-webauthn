@@ -39,10 +39,10 @@ class WebauthnServiceProvider extends ServiceProvider
     {
         Route::group($this->routeConfiguration(), function (\Illuminate\Routing\Router $router) : void {
             $router->get('auth', 'WebauthnController@login')->name('webauthn.login');
-            $router->post('auth', 'WebauthnController@auth');
+            $router->post('auth', 'WebauthnController@auth')->name('webauthn.auth');
 
             $router->get('register', 'WebauthnController@register')->name('webauthn.register');
-            $router->post('register', 'WebauthnController@create');
+            $router->post('register', 'WebauthnController@create')->name('webauthn.create');
             $router->delete('{id}', 'WebauthnController@remove');
         });
     }
@@ -75,8 +75,16 @@ class WebauthnServiceProvider extends ServiceProvider
             ], 'webauthn-config');
 
             $this->publishes([
-                __DIR__.'/../database/migrations/' => base_path('/database/migrations'),
+                __DIR__.'/../database/migrations/' => database_path('migrations'),
             ], 'webauthn-migrations');
+
+            $this->publishes([
+                __DIR__.'/../resources/js' => public_path('vendor/webauthn'),
+            ], 'webauthn-assets');
+
+            $this->publishes([
+                __DIR__.'/../resources/views' => resource_path('views/vendor/webauthn'),
+            ], 'webauthn-views');
         }
     }
 
@@ -87,6 +95,7 @@ class WebauthnServiceProvider extends ServiceProvider
      */
     private function registerResources()
     {
+        $this->loadViewsFrom(__DIR__.'/../resources/views/', 'webauthn');
         $this->loadTranslationsFrom(__DIR__.'/../resources/lang', 'webauthn');
     }
 

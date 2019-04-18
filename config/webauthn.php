@@ -50,7 +50,7 @@ return [
         | the Webauthn 2nd factor.
         |
         */
-        'view' => '',
+        'view' => 'webauthn::authenticate',
 
         /*
         |--------------------------------------------------------------------------
@@ -70,7 +70,7 @@ return [
         |
         | If postSuccessCallback if false, redirect to this route after login
         | request is complete.
-        | Default: empty, for let the client side redirection.
+        | If empty, send a json response to let the client side redirection.
         |
         */
         'postSuccessRedirectRoute' => '',
@@ -82,11 +82,11 @@ return [
         | View to load on register request.
         |--------------------------------------------------------------------------
         |
-        | The name of blade template to load whe a user request a creation of
+        | The name of blade template to load when a user request a creation of
         | Webauthn key.
         |
         */
-        'view' => '',
+        'view' => 'webauthn::register',
 
         /*
         |--------------------------------------------------------------------------
@@ -94,10 +94,10 @@ return [
         |--------------------------------------------------------------------------
         |
         | The route to redirect to after register key request is complete.
-        | Default: empty, for let the client side redirection.
+        | If empty, send a json response to let the client side redirection.
         |
         */
-        'postSuccessRedirectRoute' => '',
+        'postSuccessRedirectRoute' => '/',
     ],
 
     /*
@@ -116,7 +116,7 @@ return [
     | Webauthn challenge length
     |--------------------------------------------------------------------------
     |
-    | Lenght of the random string used in the challenge request.
+    | Length of the random string used in the challenge request.
     |
     */
 
