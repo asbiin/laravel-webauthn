@@ -31,7 +31,7 @@
   <div id="app">
     <main class="py-4">
       <div class="container">
-        <div class="row">
+        <div class="row justify-content-center">
           <div class="col-xs-12 col-md-6 col-md-offset-3 col-md-offset-3-right  ">
             <div class="card">
               <div class="card-header">{{ trans('webauthn::messages.auth.title') }}</div>

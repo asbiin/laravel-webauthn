@@ -33,7 +33,9 @@ class WebAuthn {
     let publicKeyCredential = Object.assign({}, publicKey);
     publicKeyCredential.user.id = this._bufferDecode(publicKey.user.id);
     publicKeyCredential.challenge = this._bufferDecode(publicKey.challenge);
-    publicKeyCredential.excludeCredentials = this._credentialDecode(publicKey.excludeCredentials);
+    if (publicKey.excludeCredentials) {
+      publicKeyCredential.excludeCredentials = this._credentialDecode(publicKey.excludeCredentials);
+    }
 
     var self = this;
     navigator.credentials.create({
@@ -75,7 +77,9 @@ class WebAuthn {
   sign(publicKey, callback) {
     let publicKeyCredential = Object.assign({}, publicKey);
     publicKeyCredential.challenge = this._bufferDecode(publicKey.challenge);
-    publicKeyCredential.allowCredentials = this._credentialDecode(publicKey.allowCredentials);
+    if (publicKey.allowCredentials) {
+      publicKeyCredential.allowCredentials = this._credentialDecode(publicKey.allowCredentials);
+    }
 
     var self = this;
     navigator.credentials.get({
