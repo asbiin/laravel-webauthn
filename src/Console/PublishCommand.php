@@ -27,20 +27,21 @@ class PublishCommand extends Command
      */
     public function handle()
     {
+        $this->publish('webauthn-config');
+        $this->publish('webauthn-migrations');
+        $this->publish('webauthn-assets');
+        $this->publish('webauthn-views');
+    }
+
+    /**
+     * Publish one asset.
+     *
+     * @param string $tag
+     */
+    private function publish($tag)
+    {
         $this->call('vendor:publish', [
-            '--tag' => 'webauthn-config',
-            '--force' => $this->option('force'),
-        ]);
-        $this->call('vendor:publish', [
-            '--tag' => 'webauthn-migrations',
-            '--force' => $this->option('force'),
-        ]);
-        $this->call('vendor:publish', [
-            '--tag' => 'webauthn-assets',
-            '--force' => $this->option('force'),
-        ]);
-        $this->call('vendor:publish', [
-            '--tag' => 'webauthn-views',
+            '--tag' => $tag,
             '--force' => $this->option('force'),
         ]);
     }
