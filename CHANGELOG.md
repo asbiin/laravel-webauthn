@@ -1,7 +1,8 @@
 # UNRELEASED CHANGES:
 
 ### New features:
-*
+* Add resources files to client adoption
+* Add register and auth example pages
 
 ### Enhancements:
 * Add callback URL in session

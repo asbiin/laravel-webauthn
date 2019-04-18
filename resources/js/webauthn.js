@@ -1,7 +1,9 @@
 /**
  * WebAuthn client.
  *
- * @copyright Alexis SAETTLER (c) 2019
+ * This file is part of asbiin/laravel-webauthn project.
+ *
+ * @copyright Alexis SAETTLER © 2019
  * @license MIT
  */
 

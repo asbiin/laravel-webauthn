@@ -1,9 +1,16 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
-  <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="author" content="Alexis Saettler" />
+  <!--
+    This file is part of asbiin/laravel-webauthn project.
+
+    @copyright Alexis SAETTLER © 2019
+    @license MIT
+  -->
 
   <title>{{ config('app.name', 'Laravel') }}</title>
 
@@ -14,11 +21,11 @@
   <script src="{!! secure_asset('vendor/webauthn/webauthn.js') !!}"></script>
 
   <!-- Fonts -->
-  <link href="https://fonts.googleapis.com/css?family=Nunito:200,600" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Nunito:200,600" rel="stylesheet" />
 
   <!-- Styles -->
-  <link href="{{ asset('css/app.css') }}" rel="stylesheet">
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  <link href="{{ asset('css/app.css') }}" rel="stylesheet" />
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous" />
 </head>
 <body>
   <div id="app">
@@ -58,7 +65,7 @@
 
       <form method="POST" action="{{ route('webauthn.auth') }}" id="form">
         @csrf
-        <input type="hidden" name="data" id="data">
+        <input type="hidden" name="data" id="data" />
       </form>
 
     </main>
