@@ -35,19 +35,21 @@
                   {{ trans('webauthn::messages.success') }}
                 </div>
 
-                <div class="text-center">
-                  <img src="https://ssl.gstatic.com/accounts/strongauth/Challenge_2SV-Gnubby_graphic.png" alt=""/>
-                </div>
+                <h3 class="card-title">
+                    {{ trans('webauthn::messages.insertKey') }}
+                  </h3>
 
-                <h3>
-                  {{ trans('webauthn::messages.insertKey') }}
-                </h3>
+                  <p class="card-text text-center">
+                    <img src="https://ssl.gstatic.com/accounts/strongauth/Challenge_2SV-Gnubby_graphic.png" alt=""/>
+                  </p>
 
-                <p>
-                  {{ trans('webauthn::messages.buttonAdvise') }}
-                  <br />
-                  {{ trans('webauthn::messages.noButtonAdvise') }}
-                </p>
+                  <p class="card-text">
+                    {{ trans('webauthn::messages.buttonAdvise') }}
+                    <br />
+                    {{ trans('webauthn::messages.noButtonAdvise') }}
+                  </p>
+
+                <a href="/" class="card-link" aria-pressed="true">{{ trans('webauthn::messages.cancel') }}</a>
               </div>
             </div>
           </div>
@@ -84,8 +86,7 @@
     }
 
     function error(message) {
-      $('error').val(message);
-      $('error').show();
+      $('#error').text(message).removeClass('d-none');
     }
 
     var webauthn = new WebAuthn((name, message) => {
@@ -106,9 +107,9 @@
     webauthn.sign(
       publicKey,
       function (datas) {
-        $('success').show();
-        $('data').val(JSON.stringify(datas)),
-        $('form').submit();
+        $('#success').removeClass('d-none');
+        $('#data').val(JSON.stringify(datas)),
+        $('#form').submit();
       }
     );
   </script>

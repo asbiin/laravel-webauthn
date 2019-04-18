@@ -24,8 +24,8 @@
   <div id="app">
     <main class="py-4">
       <div class="container">
-        <div class="row">
-          <div class="col-xs-12 col-md-6 col-md-offset-3 col-md-offset-3-right  ">
+        <div class="row justify-content-center">
+          <div class="col-xs-12 col-md-6">
             <div class="card">
               <div class="card-header">{{ trans('webauthn::messages.register.title') }}</div>
 
@@ -35,19 +35,21 @@
                   {{ trans('webauthn::messages.success') }}
                 </div>
 
-                <div class="text-center">
-                  <img src="https://ssl.gstatic.com/accounts/strongauth/Challenge_2SV-Gnubby_graphic.png" alt=""/>
-                </div>
-
-                <h3>
+                <h3 class="card-title">
                   {{ trans('webauthn::messages.insertKey') }}
                 </h3>
 
-                <p>
+                <p class="card-text text-center">
+                  <img src="https://ssl.gstatic.com/accounts/strongauth/Challenge_2SV-Gnubby_graphic.png" alt=""/>
+                </p>
+
+                <p class="card-text">
                   {{ trans('webauthn::messages.buttonAdvise') }}
                   <br />
                   {{ trans('webauthn::messages.noButtonAdvise') }}
                 </p>
+
+                <a href="/" class="card-link" aria-pressed="true">{{ trans('webauthn::messages.cancel') }}</a>
               </div>
             </div>
           </div>
@@ -84,8 +86,7 @@
     }
 
     function error(message) {
-      $('error').val(message);
-      $('error').show();
+      $('#error').text(message).removeClass('d-none');
     }
 
     var webauthn = new WebAuthn((name, message) => {
@@ -106,9 +107,9 @@
     webauthn.register(
       publicKey,
       function (datas) {
-        $('success').show();
-        $('register').val(JSON.stringify(datas)),
-        $('form').submit();
+        $('#success').removeClass('d-none');
+        $('#register').val(JSON.stringify(datas)),
+        $('#form').submit();
       }
     );
   </script>
