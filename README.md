@@ -27,7 +27,7 @@ It's based on [web-auth/webauthn-framework](https://github.com/web-auth/webauthn
 
 ## Configuration
 
-You can publish the LaravelWebauthn configuration in a file named `config/webauthn.php`.
+You can publish the LaravelWebauthn configuration in a file named `config/webauthn.php`, and resources.
 Just run this artisan command:
 
 ```sh
@@ -42,30 +42,139 @@ If desired, you may disable LaravelWebauthn entirely using the `enabled` configu
 
 # Usage
 
-## Add middleware
+You will find an example of usage on this repository: [asbiin/laravel-webauthn-example](https://github.com/asbiin/laravel-webauthn-example).
+
+
+## Add LaravelWebauthn middleware
 
 Add this in the `$routeMiddleware` array of your `app/Http/Kernel.php` file:
 
 ```php
-'webauthn' => \LaravelWebauthn\Http\Middleware\WebauthnMiddleware::class,
+  'webauthn' => \LaravelWebauthn\Http\Middleware\WebauthnMiddleware::class,
 ```
 
 You can use this middleware in your `routes.php` file:
 ```php
 Route::middleware(['auth', 'webauthn'])->group(function () {
-  ...
+    Route::get('/home', 'HomeController@index')->name('home');
+    ...
 }
 ```
+
+This way user would have to validates their key on login.
+
+
+## Authenticate
+
+The middleware will open the page defined in `webauthn.authenticate.view` configuration.
+The default value will open [webauthn::authenticate](/resources/views/authenticate.blade.php) page. The basics are:
+
+```html
+  <!-- load javascript part -->
+  <script src="{!! secure_asset('vendor/webauthn/webauthn.js') !!}"></script>
+...
+  <!-- form to send datas to -->
+  <form method="POST" action="{{ route('webauthn.auth') }}" id="form">
+    @csrf
+    <input type="hidden" name="data" id="data" />
+  </form>
+...
+  <!-- script part to run the sign part -->
+  <script>
+    var publicKey = {!! json_encode($publicKey) !!};
+
+    var webauthn = new WebAuthn();
+
+    webauthn.sign(
+      publicKey,
+      function (datas) {
+        $('#data').val(JSON.stringify(datas)),
+        $('#form').submit();
+      }
+    );
+  </script>
+```
+
+The `webauthn.authenticate.postSuccessCallback` configuration is used to redirect the submit form to the callback url: it's the page the user tried to access first.
+
+If the value is false, the `webauthn.authenticate.postSuccessRedirectRoute` is used as a redirect route.
+
+If `postSuccessCallback` is false and `postSuccessRedirectRoute` is empty, the return will be JSON form:
+```json
+{
+    result: true,
+    callback: 'http://localhost',
+}
+```
+
+
+## Register a new key
+
+To register a new key, open `/webauthn/register` or go to `route('webauthn.register')`, or any of your implementation.
+
+The controller will open the page defined in `webauthn.register.view` configuration.
+The default value will open [webauthn::register](/resources/views/register.blade.php) page. The basics are:
+
+```html
+  <!-- load javascript part -->
+  <script src="{!! secure_asset('vendor/webauthn/webauthn.js') !!}"></script>
+...
+  <!-- form to send datas to -->
+  <form method="POST" action="{{ route('webauthn.auth') }}" id="form">
+    @csrf
+    <input type="hidden" name="register" id="register" />
+    <input type="hidden" name="name" id="name" />
+  </form>
+...
+  <!-- script part to run the sign part -->
+  <script>
+    var publicKey = {!! json_encode($publicKey) !!};
+
+    var webauthn = new WebAuthn();
+
+    webauthn.register(
+      publicKey,
+      function (datas) {
+        $('#register').val(JSON.stringify(datas)),
+        $('#form').submit();
+      }
+    );
+  </script>
+```
+
+The `webauthn.register.postSuccessRedirectRoute` configuration is used to redirect the submit form after the registration.
+
+If `postSuccessRedirectRoute` is empty, the return will be JSON form:
+```json
+{
+    result: true,
+    id: 42,
+    object => 'webauthnKey',
+    name => 'name of the key',
+    counter => 12,
+}
+```
+
 
 ## Urls
 
 These url are used
 
-* GET `/webauthn/auth`: login page
-* POST `/webauthn/auth`: post datas after WebAuthn validate
-* GET `/webauthn/register`: get datas to register a new key
-* POST `/webauthn/register`: post datas after WebAuthn check
-* DELETE `/webauthn/{id}`: get register datas
+* GET `/webauthn/auth` / `route('webauthn.login')`
+  The login page.
+
+* POST `/webauthn/auth` / `route('webauthn.auth')`
+  Post datas after a WebAuthn login validate.
+
+* GET `/webauthn/register` / `route('webauthn.register')`
+  Get datas to register a new key
+
+* POST `/webauthn/register` / `route('webauthn.create')`
+  Post datas after a WebAuthn register check
+
+* DELETE `/webauthn/{id}` / `route('webauthn.destroy')`
+  Get register datas
+
 
 ## Events
 

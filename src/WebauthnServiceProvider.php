@@ -43,7 +43,7 @@ class WebauthnServiceProvider extends ServiceProvider
 
             $router->get('register', 'WebauthnController@register')->name('webauthn.register');
             $router->post('register', 'WebauthnController@create')->name('webauthn.create');
-            $router->delete('{id}', 'WebauthnController@remove');
+            $router->delete('{id}', 'WebauthnController@destroy')->name('webauthn.destroy');
         });
     }
 
