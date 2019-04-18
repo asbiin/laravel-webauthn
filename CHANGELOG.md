@@ -1,17 +1,28 @@
 # UNRELEASED CHANGES:
 
-### New features:
-* Add resources files to client adoption
-* Add register and auth example pages
+ ### New features:
+  *
 
-### Enhancements:
-* Add callback URL in session
+ ### Enhancements:
+  *
 
-### Fixes:
-* Use safe php functions
-* Fix redirect guest callback
+ ### Fixes:
+  *
 
 # RELEASED VERSIONS:
+
+## 0.4.0 - 2019-04-18
+ ### New features:
+  * Add resources files to client adoption
+  * Add register and auth example pages
+
+ ### Enhancements:
+  * Add callback URL in session
+
+ ### Fixes:
+  * Use safe php functions
+  * Fix redirect guest callback
+
 ## 0.3.0 - 2019-04-08
  ### New features:
   * Add WebauthnLoginData event
