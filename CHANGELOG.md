@@ -9,7 +9,12 @@
  ### Fixes:
   *
 
+
 # RELEASED VERSIONS:
+
+## 0.4.1 - 2019-04-18
+ ### Fixes:
+  * Fix javascript resource in case no key is registered yet
 
 ## 0.4.0 - 2019-04-18
  ### New features:
