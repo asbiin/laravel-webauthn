@@ -98,13 +98,15 @@ class WebauthnKey extends Model
      * Get the TrustPath.
      *
      * @param string|null $value
-     * @return TrustPath
+     * @return TrustPath|null
      */
     public function getTrustPathAttribute($value)
     {
-        $json = json_decode($value, true);
+        if (! is_null($value)) {
+            $json = json_decode($value, true);
 
-        return \Webauthn\TrustPath\AbstractTrustPath::createFromArray($json);
+            return \Webauthn\TrustPath\AbstractTrustPath::createFromArray($json);
+        }
     }
 
     /**
