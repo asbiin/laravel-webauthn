@@ -41,7 +41,7 @@ class CredentialRepository implements PublicKeyCredentialSourceRepository
     {
         try {
             $webauthnKey = $this->model($publicKeyCredentialId);
-            if ($webauthnKey) {
+            if (! is_null($webauthnKey)) {
                 return $webauthnKey->publicKeyCredentialSource;
             }
         } catch (ModelNotFoundException $e) {
@@ -72,7 +72,7 @@ class CredentialRepository implements PublicKeyCredentialSourceRepository
     public function saveCredentialSource(PublicKeyCredentialSource $publicKeyCredentialSource): void
     {
         $webauthnKey = $this->model($publicKeyCredentialSource->getPublicKeyCredentialId());
-        if ($webauthnKey) {
+        if (! is_null($webauthnKey)) {
             $webauthnKey->publicKeyCredentialSource = $publicKeyCredentialSource;
             $webauthnKey->save();
         }
@@ -144,7 +144,7 @@ class CredentialRepository implements PublicKeyCredentialSourceRepository
     public function get(string $credentialId): AttestedCredentialData
     {
         $publicKeyCredentialSource = $this->findOneByCredentialId($credentialId);
-        if (! $publicKeyCredentialSource) {
+        if (is_null($publicKeyCredentialSource)) {
             throw new ModelNotFoundException('Wrong credentialId');
         }
 
@@ -157,7 +157,7 @@ class CredentialRepository implements PublicKeyCredentialSourceRepository
     public function getUserHandleFor(string $credentialId): string
     {
         $publicKeyCredentialSource = $this->findOneByCredentialId($credentialId);
-        if (! $publicKeyCredentialSource) {
+        if (is_null($publicKeyCredentialSource)) {
             throw new ModelNotFoundException('Wrong credentialId');
         }
 
@@ -170,7 +170,7 @@ class CredentialRepository implements PublicKeyCredentialSourceRepository
     public function getCounterFor(string $credentialId): int
     {
         $publicKeyCredentialSource = $this->findOneByCredentialId($credentialId);
-        if (! $publicKeyCredentialSource) {
+        if (is_null($publicKeyCredentialSource)) {
             throw new ModelNotFoundException('Wrong credentialId');
         }
 
@@ -183,7 +183,7 @@ class CredentialRepository implements PublicKeyCredentialSourceRepository
     public function updateCounterFor(string $credentialId, int $newCounter): void
     {
         $publicKeyCredentialSource = $this->findOneByCredentialId($credentialId);
-        if (! $publicKeyCredentialSource) {
+        if (is_null($publicKeyCredentialSource)) {
             throw new ModelNotFoundException('Wrong credentialId');
         }
         $publicKeyCredentialSource->setCounter($newCounter);

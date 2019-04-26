@@ -45,7 +45,7 @@ class WebauthnMiddleware
      */
     public function handle($request, Closure $next, $guard = null)
     {
-        if ($this->config->get('webauthn.enable', true) &&
+        if ((bool) $this->config->get('webauthn.enable', true) &&
             ! Webauthn::check()) {
             abort_if($this->auth->guard($guard)->guest(), 401, trans('webauthn::errors.user_unauthenticated'));
 
