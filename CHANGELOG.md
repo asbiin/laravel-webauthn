@@ -7,7 +7,8 @@
   * Name the destroy route
 
  ### Fixes:
-  *
+  * Remove use of empty() php function
+  * Remove deprecated methods
 
 
 # RELEASED VERSIONS:

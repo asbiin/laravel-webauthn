@@ -54,6 +54,7 @@ class WebauthnKey extends Model
      * Get the credentialId.
      *
      * @param string|null $value
+     * @return string|null
      */
     public function getCredentialIdAttribute($value)
     {
@@ -64,6 +65,7 @@ class WebauthnKey extends Model
      * Set the credentialId.
      *
      * @param string|null $value
+     * @return void
      */
     public function setCredentialIdAttribute($value)
     {
@@ -74,6 +76,7 @@ class WebauthnKey extends Model
      * Get the CredentialPublicKey.
      *
      * @param string|null $value
+     * @return string|null
      */
     public function getCredentialPublicKeyAttribute($value)
     {
@@ -84,6 +87,7 @@ class WebauthnKey extends Model
      * Set the CredentialPublicKey.
      *
      * @param string|null $value
+     * @return void
      */
     public function setCredentialPublicKeyAttribute($value)
     {
@@ -93,19 +97,23 @@ class WebauthnKey extends Model
     /**
      * Get the TrustPath.
      *
-     * @return TrustPath
+     * @param string|null $value
+     * @return TrustPath|null
      */
     public function getTrustPathAttribute($value)
     {
-        $json = json_decode($value, true);
+        if (! is_null($value)) {
+            $json = json_decode($value, true);
 
-        return \Webauthn\TrustPath\AbstractTrustPath::createFromJson($json);
+            return \Webauthn\TrustPath\AbstractTrustPath::createFromArray($json);
+        }
     }
 
     /**
      * Set the TrustPath.
      *
      * @param TrustPath|null $value
+     * @return void
      */
     public function setTrustPathAttribute($value)
     {
@@ -136,6 +144,7 @@ class WebauthnKey extends Model
      * Set WebauthnKey attributes from a PublicKeyCredentialSource object.
      *
      * @param PublicKeyCredentialSource $value
+     * @return void
      */
     public function setPublicKeyCredentialSourceAttribute(PublicKeyCredentialSource $value)
     {

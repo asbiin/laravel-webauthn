@@ -37,6 +37,7 @@ class PublishCommand extends Command
      * Publish one asset.
      *
      * @param string $tag
+     * @return void
      */
     private function publish($tag)
     {

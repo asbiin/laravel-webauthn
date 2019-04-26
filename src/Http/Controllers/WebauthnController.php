@@ -65,7 +65,7 @@ class WebauthnController extends Controller
      */
     protected function redirectViewAuth(Request $request, PublicKeyCredentialRequestOptions $publicKey)
     {
-        if (! empty($this->config->get('webauthn.authenticate.view'))) {
+        if ($this->config->get('webauthn.authenticate.view', '') !== '') {
             return view($this->config->get('webauthn.authenticate.view'))
                 ->withPublicKey($publicKey);
         } else {
@@ -113,9 +113,9 @@ class WebauthnController extends Controller
      */
     protected function redirectAfterSuccessAuth(Request $request, bool $result)
     {
-        if ($this->config->get('webauthn.authenticate.postSuccessCallback', true)) {
+        if ((bool) $this->config->get('webauthn.authenticate.postSuccessCallback', true)) {
             return Redirect::intended();
-        } elseif (! empty($this->config->get('webauthn.authenticate.postSuccessRedirectRoute'))) {
+        } elseif ($this->config->get('webauthn.authenticate.postSuccessRedirectRoute', '') !== '') {
             return Redirect::intended($this->config->get('webauthn.authenticate.postSuccessRedirectRoute'));
         } else {
             $callback = $request->session()->pull('url.intended', '/');
@@ -151,7 +151,7 @@ class WebauthnController extends Controller
      */
     protected function redirectViewRegister(Request $request, PublicKeyCredentialCreationOptions $publicKey)
     {
-        if (! empty($this->config->get('webauthn.register.view'))) {
+        if ($this->config->get('webauthn.register.view', '') !== '') {
             return view($this->config->get('webauthn.register.view'))
                 ->withPublicKey($publicKey);
         } else {
@@ -200,7 +200,7 @@ class WebauthnController extends Controller
      */
     protected function redirectAfterSuccessRegister(WebauthnKey $webauthnKey)
     {
-        if (! empty($this->config->get('webauthn.register.postSuccessRedirectRoute'))) {
+        if ($this->config->get('webauthn.register.postSuccessRedirectRoute', '') !== '') {
             return Redirect::intended($this->config->get('webauthn.register.postSuccessRedirectRoute'));
         } else {
             return Response::json([

@@ -1,9 +1,16 @@
 includes:
     - ./vendor/nunomaduro/larastan/extension.neon
     - ./vendor/thecodingmachine/phpstan-safe-rule/phpstan-safe-rule.neon
+    - ./vendor/phpstan/phpstan-phpunit/extension.neon
+    - ./vendor/phpstan/phpstan-deprecation-rules/rules.neon
+    - ./vendor/phpstan/phpstan-strict-rules/rules.neon
+
 parameters:
     level: 5
     ignoreErrors:
         # Level 2
         - '#Call to an undefined method Illuminate\\View\\View::with[a-zA-Z0-9\\_]+\(\)\.#'
+        - '#Dynamic call to static method Illuminate\\Database\\Eloquent\\Builder::[a-zA-Z0-9\\_]+\(\)\.#'
+        - '#Dynamic call to static method Illuminate\\Database\\Eloquent\\Model::[a-zA-Z0-9\\_]+\(\)\.#'
+        - '#Dynamic call to static method Illuminate\\Database\\Query\\Builder::[a-zA-Z0-9\\_]+\(\)\.#'
     excludes_analyse:

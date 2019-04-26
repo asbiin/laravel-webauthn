@@ -72,8 +72,8 @@ final class PublicKeyCredentialCreationOptionsFactory extends AbstractOptionsFac
         };
 
         return array_map($callback, $this->config->get('public_key_credential_parameters') ?: [
-            PublicKeyCredentialParameters::ALGORITHM_ES256,
-            PublicKeyCredentialParameters::ALGORITHM_RS256,
+            \Cose\Algorithms::COSE_ALGORITHM_ES256,
+            \Cose\Algorithms::COSE_ALGORITHM_RS256,
         ]);
     }
 }
