@@ -50,8 +50,8 @@ abstract class AbstractValidatorFactory extends AbstractFactory
         $attestationStatementSupportManager->add(new FidoU2FAttestationStatementSupport($decoder));
 
         // https://www.w3.org/TR/webauthn/#android-safetynet-attestation
-        if ($this->config->get('webauthn.google_safetynet_api_jey', '') !== '') {
-            $attestationStatementSupportManager->add(new AndroidSafetyNetAttestationStatementSupport(new Client(), $this->config->get('webauthn.google_safetynet_api_jey')));
+        if ($this->config->get('webauthn.google_safetynet_api_key', '') !== '') {
+            $attestationStatementSupportManager->add(new AndroidSafetyNetAttestationStatementSupport(new Client(), $this->config->get('webauthn.google_safetynet_api_key')));
         }
 
         // https://www.w3.org/TR/webauthn/#android-key-attestation
