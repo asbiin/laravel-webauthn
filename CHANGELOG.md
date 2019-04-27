@@ -5,6 +5,7 @@
 
  ### Enhancements:
   * Name the destroy route
+  * Add Google Safetynet Apikey config
 
  ### Fixes:
   * Remove use of empty() php function
