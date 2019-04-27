@@ -169,6 +169,19 @@ return [
 
     'attestation_conveyance' => \Webauthn\PublicKeyCredentialCreationOptions::ATTESTATION_CONVEYANCE_PREFERENCE_NONE,
 
+
+    /*
+    |--------------------------------------------------------------------------
+    | Google Safetynet ApiKey
+    |--------------------------------------------------------------------------
+    |
+    | Api key to use Google Safetynet.
+    | See https://developer.android.com/training/safetynet/attestation
+    |
+    */
+
+    'google_safetynet_api_jey' => '',
+
     /*
     |--------------------------------------------------------------------------
     | Webauthn Public Key Credential Parameters
