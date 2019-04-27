@@ -169,7 +169,6 @@ return [
 
     'attestation_conveyance' => \Webauthn\PublicKeyCredentialCreationOptions::ATTESTATION_CONVEYANCE_PREFERENCE_NONE,
 
-
     /*
     |--------------------------------------------------------------------------
     | Google Safetynet ApiKey
