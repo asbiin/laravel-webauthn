@@ -172,6 +172,18 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Google Safetynet ApiKey
+    |--------------------------------------------------------------------------
+    |
+    | Api key to use Google Safetynet.
+    | See https://developer.android.com/training/safetynet/attestation
+    |
+    */
+
+    'google_safetynet_api_key' => '',
+
+    /*
+    |--------------------------------------------------------------------------
     | Webauthn Public Key Credential Parameters
     |--------------------------------------------------------------------------
     |
