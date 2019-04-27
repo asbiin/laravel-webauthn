@@ -4,6 +4,7 @@ namespace LaravelWebauthn\Services\Webauthn;
 
 use CBOR\Decoder;
 use Cose\Algorithm\Manager;
+use Cose\Algorithm\Signature;
 use CBOR\Tag\TagObjectManager;
 use Http\Adapter\Guzzle6\Client;
 use Webauthn\PublicKeyCredentialLoader;
@@ -62,12 +63,12 @@ abstract class AbstractValidatorFactory extends AbstractFactory
         // https://www.w3.org/TR/webauthn/#packed-attestation
         $coseAlgorithmManager = new Manager();
 
-        $coseAlgorithmManager->add(new ECDSA\ES256());
-        $coseAlgorithmManager->add(new ECDSA\ES512());
-        $coseAlgorithmManager->add(new EdDSA\EdDSA());
-        $coseAlgorithmManager->add(new RSA\RS1());
-        $coseAlgorithmManager->add(new RSA\RS256());
-        $coseAlgorithmManager->add(new RSA\RS512());
+        $coseAlgorithmManager->add(new Signature\ECDSA\ES256());
+        $coseAlgorithmManager->add(new Signature\ECDSA\ES512());
+        $coseAlgorithmManager->add(new Signature\EdDSA\EdDSA());
+        $coseAlgorithmManager->add(new Signature\RSA\RS1());
+        $coseAlgorithmManager->add(new Signature\RSA\RS256());
+        $coseAlgorithmManager->add(new Signature\RSA\RS512());
 
         $attestationStatementSupportManager->add(new PackedAttestationStatementSupport($decoder, $coseAlgorithmManager));
 
