@@ -53,7 +53,7 @@ abstract class AbstractValidatorFactory extends AbstractFactory
             try {
                 $client = \Http\Discovery\HttpClientDiscovery::find();
                 $attestationStatementSupportManager->add(new AndroidSafetyNetAttestationStatementSupport($client, $this->config->get('webauthn.google_safetynet_api_key')));
-            } catch (\Exception\NotFoundException $e) {
+            } catch (\Http\Discovery\Exception\NotFoundException $e) {
                 // ignore
             }
         }
