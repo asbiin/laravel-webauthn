@@ -51,7 +51,13 @@ abstract class AbstractValidatorFactory extends AbstractFactory
 
         // https://www.w3.org/TR/webauthn/#android-safetynet-attestation
         if ($this->config->get('webauthn.google_safetynet_api_key', '') !== '') {
-            $attestationStatementSupportManager->add(new AndroidSafetyNetAttestationStatementSupport(new Client(), $this->config->get('webauthn.google_safetynet_api_key')));
+            try {
+                $client = \Http\Discovery\HttpClientDiscovery::find();
+                $attestationStatementSupportManager->add(new AndroidSafetyNetAttestationStatementSupport($client, $this->config->get('webauthn.google_safetynet_api_key')));
+            }
+            catch (\Exception\NotFoundException $e) {
+                // ignore
+            }
         }
 
         // https://www.w3.org/TR/webauthn/#android-key-attestation
