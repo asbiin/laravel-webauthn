@@ -6,7 +6,6 @@ use CBOR\Decoder;
 use Cose\Algorithm\Manager;
 use Cose\Algorithm\Signature;
 use CBOR\Tag\TagObjectManager;
-use Http\Adapter\Guzzle6\Client;
 use Webauthn\PublicKeyCredentialLoader;
 use CBOR\OtherObject\OtherObjectManager;
 use Webauthn\AttestationStatement\AttestationObjectLoader;
@@ -54,8 +53,7 @@ abstract class AbstractValidatorFactory extends AbstractFactory
             try {
                 $client = \Http\Discovery\HttpClientDiscovery::find();
                 $attestationStatementSupportManager->add(new AndroidSafetyNetAttestationStatementSupport($client, $this->config->get('webauthn.google_safetynet_api_key')));
-            }
-            catch (\Exception\NotFoundException $e) {
+            } catch (\Exception\NotFoundException $e) {
                 // ignore
             }
         }
