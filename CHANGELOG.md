@@ -7,7 +7,7 @@
   *
 
  ### Fixes:
-  *
+  * Remove Guzzle6 direct dependency
 
 
 # RELEASED VERSIONS:
