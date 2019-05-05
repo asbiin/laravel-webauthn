@@ -2390,7 +2390,7 @@
                 },
                 {
                     "name": "Gert de Pagter",
-                    "email": "backendtea@gmail.com"
+                    "email": "BackEndTea@gmail.com"
                 }
             ],
             "description": "Symfony polyfill for ctype functions",
@@ -3204,16 +3204,16 @@
         },
         {
             "name": "web-auth/webauthn-lib",
-            "version": "v1.1.0",
+            "version": "v1.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/web-auth/webauthn-lib.git",
-                "reference": "8340118733794160164a7f9e8798bb0d9130ea09"
+                "reference": "a6ed0e22226bb8bede7e2b6bcd1301b15c26df0b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/web-auth/webauthn-lib/zipball/8340118733794160164a7f9e8798bb0d9130ea09",
-                "reference": "8340118733794160164a7f9e8798bb0d9130ea09",
+                "url": "https://api.github.com/repos/web-auth/webauthn-lib/zipball/a6ed0e22226bb8bede7e2b6bcd1301b15c26df0b",
+                "reference": "a6ed0e22226bb8bede7e2b6bcd1301b15c26df0b",
                 "shasum": ""
             },
             "require": {
@@ -3236,7 +3236,8 @@
             "extra": {
                 "branch-alias": {
                     "v1.0": "1.0.x-dev",
-                    "v1.1": "1.1.x-dev"
+                    "v1.1": "1.1.x-dev",
+                    "v1.2": "1.2.x-dev"
                 }
             },
             "autoload": {
@@ -3266,7 +3267,7 @@
                 "u2f",
                 "webauthn"
             ],
-            "time": "2019-03-28T12:43:47+00:00"
+            "time": "2019-05-05T15:24:28+00:00"
         },
         {
             "name": "web-token/jwt-core",
