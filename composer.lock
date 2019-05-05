@@ -2390,7 +2390,7 @@
                 },
                 {
                     "name": "Gert de Pagter",
-                    "email": "backendtea@gmail.com"
+                    "email": "BackEndTea@gmail.com"
                 }
             ],
             "description": "Symfony polyfill for ctype functions",
@@ -3147,16 +3147,16 @@
         },
         {
             "name": "web-auth/cose-lib",
-            "version": "v1.1.0",
+            "version": "v1.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/web-auth/cose-lib.git",
-                "reference": "3dfcb59aa3c3775f0856612fe1dd2a02cca75577"
+                "reference": "042224835e73ebe81d8f9d8c1c82982450716ac5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/web-auth/cose-lib/zipball/3dfcb59aa3c3775f0856612fe1dd2a02cca75577",
-                "reference": "3dfcb59aa3c3775f0856612fe1dd2a02cca75577",
+                "url": "https://api.github.com/repos/web-auth/cose-lib/zipball/042224835e73ebe81d8f9d8c1c82982450716ac5",
+                "reference": "042224835e73ebe81d8f9d8c1c82982450716ac5",
                 "shasum": ""
             },
             "require": {
@@ -3172,7 +3172,8 @@
             "extra": {
                 "branch-alias": {
                     "v1.0": "1.0.x-dev",
-                    "v1.1": "1.1.x-dev"
+                    "v1.1": "1.1.x-dev",
+                    "v1.2": "1.2.x-dev"
                 }
             },
             "autoload": {
@@ -3200,7 +3201,7 @@
                 "COSE",
                 "RFC8152"
             ],
-            "time": "2019-03-27T20:45:55+00:00"
+            "time": "2019-05-05T15:24:28+00:00"
         },
         {
             "name": "web-auth/webauthn-lib",
