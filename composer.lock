@@ -2390,7 +2390,7 @@
                 },
                 {
                     "name": "Gert de Pagter",
-                    "email": "backendtea@gmail.com"
+                    "email": "BackEndTea@gmail.com"
                 }
             ],
             "description": "Symfony polyfill for ctype functions",
@@ -6982,16 +6982,16 @@
         },
         {
             "name": "vimeo/psalm",
-            "version": "3.2.10",
+            "version": "3.2.11",
             "source": {
                 "type": "git",
                 "url": "https://github.com/vimeo/psalm.git",
-                "reference": "b9bece4cbcb3f342c8412618f73ca02db98064e8"
+                "reference": "111abf82daaf90f785b3a67ef847eb509b224d9b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/vimeo/psalm/zipball/b9bece4cbcb3f342c8412618f73ca02db98064e8",
-                "reference": "b9bece4cbcb3f342c8412618f73ca02db98064e8",
+                "url": "https://api.github.com/repos/vimeo/psalm/zipball/111abf82daaf90f785b3a67ef847eb509b224d9b",
+                "reference": "111abf82daaf90f785b3a67ef847eb509b224d9b",
                 "shasum": ""
             },
             "require": {
@@ -7058,7 +7058,7 @@
                 "inspection",
                 "php"
             ],
-            "time": "2019-04-29T16:19:51+00:00"
+            "time": "2019-05-08T18:26:52+00:00"
         },
         {
             "name": "webmozart/assert",
