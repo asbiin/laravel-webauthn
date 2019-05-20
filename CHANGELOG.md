@@ -7,6 +7,7 @@
   *
 
  ### Fixes:
+  * Fix google safetynet config test
   * Remove Guzzle6 direct dependency
 
 
