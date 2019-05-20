@@ -7,11 +7,15 @@
   *
 
  ### Fixes:
-  * Fix google safetynet config test
-  * Remove Guzzle6 direct dependency
+  *
 
 
 # RELEASED VERSIONS:
+
+## 0.5.1 — 2019-05-20
+ ### Fixes:
+  * Fix google safetynet config test
+  * Remove Guzzle6 direct dependency
 
 ## 0.5.0 — 2019-05-03
  ### Enhancements:
