@@ -153,7 +153,8 @@ class WebauthnController extends Controller
     {
         if ($this->config->get('webauthn.register.view', '') !== '') {
             return view($this->config->get('webauthn.register.view'))
-                ->withPublicKey($publicKey)->withName($request->input('name'));
+                ->withPublicKey($publicKey)
+                ->withName($request->input('name'));
         } else {
             return Response::json([
                 'publicKey' => $publicKey,
