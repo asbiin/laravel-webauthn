@@ -25,6 +25,7 @@
         "php-http/discovery": "^1.6",
         "php-http/httplug": "^1.0",
         "php-http/message": "^1.7",
+        "psr/http-client": "^1.0",
         "thecodingmachine/safe": "^0.1.14",
         "web-auth/cose-lib": "^1.1",
         "web-auth/webauthn-lib": "^1.1",
