@@ -3553,16 +3553,16 @@
         },
         {
             "name": "web-auth/webauthn-lib",
-            "version": "v1.2.1",
+            "version": "v1.2.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/web-auth/webauthn-lib.git",
-                "reference": "42b13d26e7ee78da018dfe8c44aad7355b72d9af"
+                "reference": "7681e7002cbd4839feb07b13bf1fae4cabde3d72"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/web-auth/webauthn-lib/zipball/42b13d26e7ee78da018dfe8c44aad7355b72d9af",
-                "reference": "42b13d26e7ee78da018dfe8c44aad7355b72d9af",
+                "url": "https://api.github.com/repos/web-auth/webauthn-lib/zipball/7681e7002cbd4839feb07b13bf1fae4cabde3d72",
+                "reference": "7681e7002cbd4839feb07b13bf1fae4cabde3d72",
                 "shasum": ""
             },
             "require": {
@@ -3616,7 +3616,7 @@
                 "u2f",
                 "webauthn"
             ],
-            "time": "2019-05-28T12:10:12+00:00"
+            "time": "2019-06-05T17:41:05+00:00"
         },
         {
             "name": "web-token/jwt-core",
