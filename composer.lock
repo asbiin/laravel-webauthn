@@ -1944,25 +1944,27 @@
         },
         {
             "name": "symfony/console",
-            "version": "v4.2.9",
+            "version": "v4.3.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/console.git",
-                "reference": "7a293c9a4587a92e6a0e81edb0bea54071b1b99d"
+                "reference": "d50bbeeb0e17e6dd4124ea391eff235e932cbf64"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/console/zipball/7a293c9a4587a92e6a0e81edb0bea54071b1b99d",
-                "reference": "7a293c9a4587a92e6a0e81edb0bea54071b1b99d",
+                "url": "https://api.github.com/repos/symfony/console/zipball/d50bbeeb0e17e6dd4124ea391eff235e932cbf64",
+                "reference": "d50bbeeb0e17e6dd4124ea391eff235e932cbf64",
                 "shasum": ""
             },
             "require": {
                 "php": "^7.1.3",
-                "symfony/contracts": "^1.0",
-                "symfony/polyfill-mbstring": "~1.0"
+                "symfony/polyfill-mbstring": "~1.0",
+                "symfony/polyfill-php73": "^1.8",
+                "symfony/service-contracts": "^1.1"
             },
             "conflict": {
                 "symfony/dependency-injection": "<3.4",
+                "symfony/event-dispatcher": "<4.3",
                 "symfony/process": "<3.3"
             },
             "provide": {
@@ -1972,9 +1974,10 @@
                 "psr/log": "~1.0",
                 "symfony/config": "~3.4|~4.0",
                 "symfony/dependency-injection": "~3.4|~4.0",
-                "symfony/event-dispatcher": "~3.4|~4.0",
+                "symfony/event-dispatcher": "^4.3",
                 "symfony/lock": "~3.4|~4.0",
-                "symfony/process": "~3.4|~4.0"
+                "symfony/process": "~3.4|~4.0",
+                "symfony/var-dumper": "^4.3"
             },
             "suggest": {
                 "psr/log": "For using the console logger",
@@ -1985,7 +1988,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "4.2-dev"
+                    "dev-master": "4.3-dev"
                 }
             },
             "autoload": {
@@ -2012,78 +2015,7 @@
             ],
             "description": "Symfony Console Component",
             "homepage": "https://symfony.com",
-            "time": "2019-05-09T09:19:46+00:00"
-        },
-        {
-            "name": "symfony/contracts",
-            "version": "v1.1.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/symfony/contracts.git",
-                "reference": "d3636025e8253c6144358ec0a62773cae588395b"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/symfony/contracts/zipball/d3636025e8253c6144358ec0a62773cae588395b",
-                "reference": "d3636025e8253c6144358ec0a62773cae588395b",
-                "shasum": ""
-            },
-            "require": {
-                "php": "^7.1.3"
-            },
-            "require-dev": {
-                "psr/cache": "^1.0",
-                "psr/container": "^1.0",
-                "symfony/polyfill-intl-idn": "^1.10"
-            },
-            "suggest": {
-                "psr/cache": "When using the Cache contracts",
-                "psr/container": "When using the Service contracts",
-                "symfony/cache-contracts-implementation": "",
-                "symfony/event-dispatcher-implementation": "",
-                "symfony/http-client-contracts-implementation": "",
-                "symfony/service-contracts-implementation": "",
-                "symfony/translation-contracts-implementation": ""
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "1.1-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Symfony\\Contracts\\": ""
-                },
-                "exclude-from-classmap": [
-                    "**/Tests/"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Nicolas Grekas",
-                    "email": "p@tchwork.com"
-                },
-                {
-                    "name": "Symfony Community",
-                    "homepage": "https://symfony.com/contributors"
-                }
-            ],
-            "description": "A set of abstractions extracted out of the Symfony components",
-            "homepage": "https://symfony.com",
-            "keywords": [
-                "abstractions",
-                "contracts",
-                "decoupling",
-                "interfaces",
-                "interoperability",
-                "standards"
-            ],
-            "time": "2019-04-27T14:29:50+00:00"
+            "time": "2019-06-05T13:25:51+00:00"
         },
         {
             "name": "symfony/css-selector",
@@ -3052,6 +2984,64 @@
                 "url"
             ],
             "time": "2019-05-20T16:16:12+00:00"
+        },
+        {
+            "name": "symfony/service-contracts",
+            "version": "v1.1.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/service-contracts.git",
+                "reference": "191afdcb5804db960d26d8566b7e9a2843cab3a0"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/service-contracts/zipball/191afdcb5804db960d26d8566b7e9a2843cab3a0",
+                "reference": "191afdcb5804db960d26d8566b7e9a2843cab3a0",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.1.3"
+            },
+            "suggest": {
+                "psr/container": "",
+                "symfony/service-implementation": ""
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.1-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Symfony\\Contracts\\Service\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Nicolas Grekas",
+                    "email": "p@tchwork.com"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "https://symfony.com/contributors"
+                }
+            ],
+            "description": "Generic abstractions related to writing services",
+            "homepage": "https://symfony.com",
+            "keywords": [
+                "abstractions",
+                "contracts",
+                "decoupling",
+                "interfaces",
+                "interoperability",
+                "standards"
+            ],
+            "time": "2019-05-28T07:50:59+00:00"
         },
         {
             "name": "symfony/translation",
@@ -4181,24 +4171,25 @@
     "packages-dev": [
         {
             "name": "amphp/amp",
-            "version": "v2.1.1",
+            "version": "v2.1.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/amphp/amp.git",
-                "reference": "7075ef7d74dbd32626bfd31c976b23055c3ade6a"
+                "reference": "f824f0df1da2cc042934fa267d7a227fff9276c9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/amphp/amp/zipball/7075ef7d74dbd32626bfd31c976b23055c3ade6a",
-                "reference": "7075ef7d74dbd32626bfd31c976b23055c3ade6a",
+                "url": "https://api.github.com/repos/amphp/amp/zipball/f824f0df1da2cc042934fa267d7a227fff9276c9",
+                "reference": "f824f0df1da2cc042934fa267d7a227fff9276c9",
                 "shasum": ""
             },
             "require": {
                 "php": ">=7"
             },
             "require-dev": {
+                "amphp/php-cs-fixer-config": "dev-master",
                 "amphp/phpunit-util": "^1",
-                "friendsofphp/php-cs-fixer": "^2.3",
+                "ext-json": "*",
                 "phpstan/phpstan": "^0.8.5",
                 "phpunit/phpunit": "^6.0.9",
                 "react/promise": "^2"
@@ -4253,7 +4244,7 @@
                 "non-blocking",
                 "promise"
             ],
-            "time": "2018-12-11T10:31:37+00:00"
+            "time": "2019-05-31T18:42:02+00:00"
         },
         {
             "name": "amphp/byte-stream",
@@ -5499,16 +5490,16 @@
         },
         {
             "name": "openlss/lib-array2xml",
-            "version": "0.5.1",
+            "version": "1.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nullivex/lib-array2xml.git",
-                "reference": "c8b5998a342d7861f2e921403f44e0a2f3ef2be0"
+                "reference": "a91f18a8dfc69ffabe5f9b068bc39bb202c81d90"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nullivex/lib-array2xml/zipball/c8b5998a342d7861f2e921403f44e0a2f3ef2be0",
-                "reference": "c8b5998a342d7861f2e921403f44e0a2f3ef2be0",
+                "url": "https://api.github.com/repos/nullivex/lib-array2xml/zipball/a91f18a8dfc69ffabe5f9b068bc39bb202c81d90",
+                "reference": "a91f18a8dfc69ffabe5f9b068bc39bb202c81d90",
                 "shasum": ""
             },
             "require": {
@@ -5527,24 +5518,24 @@
             "authors": [
                 {
                     "name": "Bryan Tong",
-                    "email": "contact@nullivex.com",
-                    "homepage": "http://bryantong.com"
+                    "email": "bryan@nullivex.com",
+                    "homepage": "https://www.nullivex.com"
                 },
                 {
                     "name": "Tony Butler",
                     "email": "spudz76@gmail.com",
-                    "homepage": "http://openlss.org"
+                    "homepage": "https://www.nullivex.com"
                 }
             ],
             "description": "Array2XML conversion library credit to lalit.org",
-            "homepage": "http://openlss.org",
+            "homepage": "https://www.nullivex.com",
             "keywords": [
                 "array",
                 "array conversion",
                 "xml",
                 "xml conversion"
             ],
-            "time": "2016-11-10T19:10:18+00:00"
+            "time": "2019-03-29T20:06:56+00:00"
         },
         {
             "name": "orchestra/testbench",
@@ -7251,16 +7242,16 @@
         },
         {
             "name": "vimeo/psalm",
-            "version": "3.4.1",
+            "version": "3.4.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/vimeo/psalm.git",
-                "reference": "99a2d866611c6478490bfba1377a30d527e6b874"
+                "reference": "c21e9917fa05ba4d97da464725471f53ab4fe0d8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/vimeo/psalm/zipball/99a2d866611c6478490bfba1377a30d527e6b874",
-                "reference": "99a2d866611c6478490bfba1377a30d527e6b874",
+                "url": "https://api.github.com/repos/vimeo/psalm/zipball/c21e9917fa05ba4d97da464725471f53ab4fe0d8",
+                "reference": "c21e9917fa05ba4d97da464725471f53ab4fe0d8",
                 "shasum": ""
             },
             "require": {
@@ -7272,10 +7263,10 @@
                 "netresearch/jsonmapper": "^1.0",
                 "nikic/php-parser": "^4.0.2 || ^4.1",
                 "ocramius/package-versions": "^1.2",
-                "openlss/lib-array2xml": "^0.0.10||^0.5.1",
+                "openlss/lib-array2xml": "^1.0",
                 "php": "^7.1",
                 "sebastian/diff": "^3.0",
-                "symfony/console": "^3.3||4.0.*||4.1.*||4.2.*",
+                "symfony/console": "^3.3||^4.0",
                 "webmozart/glob": "^4.1",
                 "webmozart/path-util": "^2.3"
             },
@@ -7296,7 +7287,8 @@
                 "psalm",
                 "psalter",
                 "psalm-language-server",
-                "psalm-plugin"
+                "psalm-plugin",
+                "psalm-refactor"
             ],
             "type": "library",
             "extra": {
@@ -7330,7 +7322,7 @@
                 "inspection",
                 "php"
             ],
-            "time": "2019-06-04T05:58:50+00:00"
+            "time": "2019-06-10T18:41:21+00:00"
         },
         {
             "name": "webmozart/assert",
