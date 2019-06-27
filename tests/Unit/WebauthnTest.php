@@ -9,7 +9,6 @@ use Base64Url\Base64Url;
 use CBOR\TextStringObject;
 use LaravelWebauthn\Services\Webauthn;
 use LaravelWebauthn\Models\WebauthnKey;
-use Webauthn\TokenBinding\TokenBinding;
 use LaravelWebauthn\Tests\FeatureTestCase;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 
