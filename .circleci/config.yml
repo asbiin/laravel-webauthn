@@ -32,7 +32,8 @@ aliases:
       name: Prepare environment
       command: |
         sudo rm -f /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
-        sudo apt-get install libgmp-dev
+        sudo apt update
+        sudo apt install libgmp-dev
         sudo docker-php-ext-install -j$(nproc) gmp
 
   - &restore_composer
