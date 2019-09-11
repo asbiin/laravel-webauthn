@@ -2,6 +2,8 @@
 
 namespace LaravelWebauthn\Models;
 
+use Ramsey\Uuid\Uuid;
+use Ramsey\Uuid\UuidInterface;
 use function Safe\json_decode;
 use function Safe\json_encode;
 use function Safe\base64_decode;
@@ -105,7 +107,7 @@ class WebauthnKey extends Model
         if (! is_null($value)) {
             $json = json_decode($value, true);
 
-            return \Webauthn\TrustPath\AbstractTrustPath::createFromArray($json);
+            return \Webauthn\TrustPath\TrustPathLoader::loadTrustPath($json);
         }
     }
 
@@ -118,6 +120,30 @@ class WebauthnKey extends Model
     public function setTrustPathAttribute($value)
     {
         $this->attributes['trustPath'] = json_encode($value);
+    }
+
+    /**
+     * Get the Aaguid.
+     *
+     * @param string|null $value
+     * @return UuidInterface|null
+     */
+    public function getAaguidAttribute($value)
+    {
+        if (! is_null($value)) {
+            return Uuid::fromString($value);
+        }
+    }
+
+    /**
+     * Set the Aaguid.
+     *
+     * @param UuidInterface|null $value
+     * @return void
+     */
+    public function setAaguidAttribute($value)
+    {
+        $this->attributes['aaguid'] = $value->toString();
     }
 
     /**

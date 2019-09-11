@@ -53,8 +53,8 @@ class WebauthnTest extends FeatureTestCase
             'type' => 'public-key',
             'transports' => '[]',
             'attestationType' => 'none',
-            'trustPath' => '{"type":"empty"}',
-            'aaguid' => '0000000000000000',
+            'trustPath' => "{\"type\":\"Webauthn\\\\TrustPath\\\\EmptyTrustPath\"}",
+            'aaguid' => '30303030-3030-3030-3030-303030303030',
             'credentialPublicKey' => 'oWNrZXlldmFsdWU=',
             'counter' => '1',
         ]);
@@ -85,6 +85,16 @@ class WebauthnTest extends FeatureTestCase
         $user = $this->signIn();
         $webauthnKey = factory(WebauthnKey::class)->create([
             'user_id' => $user->getAuthIdentifier(),
+            'credentialPublicKey' => (string) new MapObject([
+                new MapItem(
+                    new TextStringObject('1'),
+                    new TextStringObject('0')
+                ),
+                new MapItem(
+                    new TextStringObject('3'),
+                    new TextStringObject('-7')
+                ),
+            ])
         ]);
 
         $publicKey = $this->app->make(Webauthn::class)->getAuthenticateData($user);
@@ -117,12 +127,12 @@ class WebauthnTest extends FeatureTestCase
                         ),
                     ])) // credentialPublicKey
                 ),
-                'signature' => Base64Url::encode(new TextStringObject('')),
+                'signature' => Base64Url::encode(new TextStringObject('00000100000001000000010000000100000001000000010000000100000001')),
                 'userHandle' => base64_encode($user->getAuthIdentifier()),
             ],
         ];
 
-        $this->expectException(\ErrorException::class);
+        $this->expectException(\Assert\InvalidArgumentException::class);
         $result = $this->app->make(Webauthn::class)->doAuthenticate($user, $publicKey, json_encode($data));
 
         $this->assertTrue($result); // Not yet ...

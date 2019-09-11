@@ -1,5 +1,7 @@
 <?php
 
+use Ramsey\Uuid\Uuid;
+
 /*
 |--------------------------------------------------------------------------
 | Model Factories
@@ -21,7 +23,7 @@ $factory->define(\LaravelWebauthn\Models\WebauthnKey::class, function (Faker\Gen
         'transports' => [],
         'attestationType' => 'none',
         'trustPath' => new \Webauthn\TrustPath\EmptyTrustPath,
-        'aaguid' => '0000000000000000',
+        'aaguid' => Uuid::fromString('38195f59-0e5b-4ebf-be46-75664177eeee'),
         'credentialPublicKey' => 'oWNrZXlldmFsdWU=',
     ];
 });

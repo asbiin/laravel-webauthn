@@ -4,7 +4,7 @@
   *
 
  ### Enhancements:
-  *
+  * Upgrade to webauthn-lib v2.x
 
  ### Fixes:
   *

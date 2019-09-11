@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "1e2323f2a10bf48389ac8b29cec48e42",
+    "content-hash": "77a2ee8309b424774f9b04444abac994",
     "packages": [
         {
             "name": "beberlei/assert",
@@ -921,6 +921,68 @@
                 "time"
             ],
             "time": "2019-08-31T16:37:55+00:00"
+        },
+        {
+            "name": "nyholm/psr7",
+            "version": "1.2.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Nyholm/psr7.git",
+                "reference": "55ff6b76573f5b242554c9775792bd59fb52e11c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Nyholm/psr7/zipball/55ff6b76573f5b242554c9775792bd59fb52e11c",
+                "reference": "55ff6b76573f5b242554c9775792bd59fb52e11c",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.1",
+                "php-http/message-factory": "^1.0",
+                "psr/http-factory": "^1.0",
+                "psr/http-message": "^1.0"
+            },
+            "provide": {
+                "psr/http-factory-implementation": "1.0",
+                "psr/http-message-implementation": "1.0"
+            },
+            "require-dev": {
+                "http-interop/http-factory-tests": "dev-master",
+                "php-http/psr7-integration-tests": "dev-master",
+                "phpunit/phpunit": "^7.5"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Nyholm\\Psr7\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Tobias Nyholm",
+                    "email": "tobias.nyholm@gmail.com"
+                },
+                {
+                    "name": "Martijn van der Ven",
+                    "email": "martijn@vanderven.se"
+                }
+            ],
+            "description": "A fast PHP7 implementation of PSR-7",
+            "homepage": "http://tnyholm.se",
+            "keywords": [
+                "psr-17",
+                "psr-7"
+            ],
+            "time": "2019-09-05T13:24:16+00:00"
         },
         {
             "name": "opis/closure",
@@ -1843,25 +1905,23 @@
         },
         {
             "name": "spomky-labs/cbor-php",
-            "version": "v1.0.3",
+            "version": "v1.0.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Spomky-Labs/cbor-php.git",
-                "reference": "a83e84d6f0839be11f75f157b246be2791c96e85"
+                "reference": "f937d527b05bb3ec3f6b8670ece38ccaf9a0eddd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Spomky-Labs/cbor-php/zipball/a83e84d6f0839be11f75f157b246be2791c96e85",
-                "reference": "a83e84d6f0839be11f75f157b246be2791c96e85",
+                "url": "https://api.github.com/repos/Spomky-Labs/cbor-php/zipball/f937d527b05bb3ec3f6b8670ece38ccaf9a0eddd",
+                "reference": "f937d527b05bb3ec3f6b8670ece38ccaf9a0eddd",
                 "shasum": ""
             },
             "require": {
                 "beberlei/assert": "^3.2",
-                "ext-bcmath": "*",
                 "ext-gmp": "*",
                 "php": "^7.1|^8.0",
-                "spomky-labs/base64url": "^1.0|^2.0",
-                "thecodingmachine/safe": "^0.1.13"
+                "spomky-labs/base64url": "^1.0|^2.0"
             },
             "require-dev": {
                 "php-coveralls/php-coveralls": "^2.0",
@@ -1870,9 +1930,11 @@
                 "phpstan/phpstan-deprecation-rules": "^0.11",
                 "phpstan/phpstan-phpunit": "^0.11",
                 "phpstan/phpstan-strict-rules": "^0.11",
-                "phpunit/phpunit": "^7.5",
-                "rector/rector": "^0.3",
-                "thecodingmachine/phpstan-safe-rule": "^0.1.2"
+                "phpunit/phpunit": "^7.5|^8.0",
+                "rector/rector": "^0.5"
+            },
+            "suggest": {
+                "ext-bcmath": "BCMath extension needed to handle the Big Float and Decimal Fraction Tags"
             },
             "type": "library",
             "extra": {
@@ -1905,7 +1967,7 @@
                 "RFC7049",
                 "cbor"
             ],
-            "time": "2019-02-09T20:24:50+00:00"
+            "time": "2019-08-15T14:53:55+00:00"
         },
         {
             "name": "swiftmailer/swiftmailer",
@@ -3517,16 +3579,16 @@
         },
         {
             "name": "web-auth/cose-lib",
-            "version": "v1.2.2",
+            "version": "v2.1.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/web-auth/cose-lib.git",
-                "reference": "042224835e73ebe81d8f9d8c1c82982450716ac5"
+                "reference": "8d1c37bac6e5db8d502b7735448d416f05fb4c70"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/web-auth/cose-lib/zipball/042224835e73ebe81d8f9d8c1c82982450716ac5",
-                "reference": "042224835e73ebe81d8f9d8c1c82982450716ac5",
+                "url": "https://api.github.com/repos/web-auth/cose-lib/zipball/8d1c37bac6e5db8d502b7735448d416f05fb4c70",
+                "reference": "8d1c37bac6e5db8d502b7735448d416f05fb4c70",
                 "shasum": ""
             },
             "require": {
@@ -3535,15 +3597,16 @@
                 "ext-mbstring": "*",
                 "ext-openssl": "*",
                 "fgrosse/phpasn1": "^2.1",
-                "php": "^7.1",
-                "thecodingmachine/safe": "^0.1"
+                "php": "^7.2"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
                     "v1.0": "1.0.x-dev",
                     "v1.1": "1.1.x-dev",
-                    "v1.2": "1.2.x-dev"
+                    "v1.2": "1.2.x-dev",
+                    "v2.0": "2.0.x-dev",
+                    "v2.1": "2.1.x-dev"
                 }
             },
             "autoload": {
@@ -3571,20 +3634,74 @@
                 "COSE",
                 "RFC8152"
             ],
-            "time": "2019-05-05T15:24:28+00:00"
+            "time": "2019-09-04T20:53:12+00:00"
         },
         {
-            "name": "web-auth/webauthn-lib",
-            "version": "v1.2.2",
+            "name": "web-auth/metadata-service",
+            "version": "v2.1.7",
             "source": {
                 "type": "git",
-                "url": "https://github.com/web-auth/webauthn-lib.git",
-                "reference": "7681e7002cbd4839feb07b13bf1fae4cabde3d72"
+                "url": "https://github.com/web-auth/webauthn-metadata-service.git",
+                "reference": "5fc754d00dfa05913260dc3781227dfa8ed7dbdd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/web-auth/webauthn-lib/zipball/7681e7002cbd4839feb07b13bf1fae4cabde3d72",
-                "reference": "7681e7002cbd4839feb07b13bf1fae4cabde3d72",
+                "url": "https://api.github.com/repos/web-auth/webauthn-metadata-service/zipball/5fc754d00dfa05913260dc3781227dfa8ed7dbdd",
+                "reference": "5fc754d00dfa05913260dc3781227dfa8ed7dbdd",
+                "shasum": ""
+            },
+            "require": {
+                "ext-json": "*",
+                "php": "^7.1",
+                "psr/http-client": "^1.0",
+                "psr/http-factory": "^1.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "v2.1": "2.1.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Webauthn\\MetadataService\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Florent Morselli",
+                    "homepage": "https://github.com/Spomky"
+                },
+                {
+                    "name": "All contributors",
+                    "homepage": "https://github.com/web-auth/metadata-service/contributors"
+                }
+            ],
+            "description": "Metadata Service for FIDO2/Webauthn",
+            "homepage": "https://github.com/web-auth",
+            "keywords": [
+                "FIDO2",
+                "fido",
+                "webauthn"
+            ],
+            "time": "2019-09-04T20:53:12+00:00"
+        },
+        {
+            "name": "web-auth/webauthn-lib",
+            "version": "v2.1.7",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/web-auth/webauthn-lib.git",
+                "reference": "4cd346f2ef4d282296e503b7b1b3ef200347437b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/web-auth/webauthn-lib/zipball/4cd346f2ef4d282296e503b7b1b3ef200347437b",
+                "reference": "4cd346f2ef4d282296e503b7b1b3ef200347437b",
                 "shasum": ""
             },
             "require": {
@@ -3592,23 +3709,30 @@
                 "ext-json": "*",
                 "ext-mbstring": "*",
                 "ext-openssl": "*",
-                "php": "^7.1",
+                "nyholm/psr7": "^1.1",
+                "php": "^7.2",
+                "psr/http-client": "^1.0",
                 "psr/http-factory": "^1.0",
                 "psr/http-message": "^1.0",
+                "ramsey/uuid": "^3.8",
                 "spomky-labs/base64url": "^2.0",
                 "spomky-labs/cbor-php": "^1.0.2",
-                "thecodingmachine/safe": "^0.1",
-                "web-auth/cose-lib": "^1.1"
+                "web-auth/cose-lib": "self.version",
+                "web-auth/metadata-service": "self.version"
             },
             "suggest": {
-                "php-http/httplug": "For Android SafetyNet support"
+                "web-token/jwt-signature-algorithm-ecdsa": "Recommended for the AndroidSafetyNet Attestation Statement support",
+                "web-token/jwt-signature-algorithm-eddsa": "Recommended for the AndroidSafetyNet Attestation Statement support",
+                "web-token/jwt-signature-algorithm-rsa": "Mandatory for the AndroidSafetyNet Attestation Statement support"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
                     "v1.0": "1.0.x-dev",
                     "v1.1": "1.1.x-dev",
-                    "v1.2": "1.2.x-dev"
+                    "v1.2": "1.2.x-dev",
+                    "v2.0": "2.0.x-dev",
+                    "v2.1": "2.1.x-dev"
                 }
             },
             "autoload": {
@@ -3635,10 +3759,9 @@
             "keywords": [
                 "FIDO2",
                 "fido",
-                "u2f",
                 "webauthn"
             ],
-            "time": "2019-06-05T17:41:05+00:00"
+            "time": "2019-09-09T12:04:09+00:00"
         },
         {
             "name": "web-token/jwt-core",
