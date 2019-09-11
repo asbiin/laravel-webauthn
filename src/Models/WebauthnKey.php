@@ -3,9 +3,9 @@
 namespace LaravelWebauthn\Models;
 
 use Ramsey\Uuid\Uuid;
-use Ramsey\Uuid\UuidInterface;
 use function Safe\json_decode;
 use function Safe\json_encode;
+use Ramsey\Uuid\UuidInterface;
 use function Safe\base64_decode;
 use Webauthn\TrustPath\TrustPath;
 use Illuminate\Database\Eloquent\Model;

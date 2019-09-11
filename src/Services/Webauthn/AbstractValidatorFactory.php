@@ -4,7 +4,6 @@ namespace LaravelWebauthn\Services\Webauthn;
 
 use CBOR\Decoder;
 use Cose\Algorithm\Manager;
-use Cose\Algorithm\Signature;
 use CBOR\Tag\TagObjectManager;
 use Webauthn\PublicKeyCredentialLoader;
 use CBOR\OtherObject\OtherObjectManager;

@@ -53,7 +53,7 @@ class WebauthnTest extends FeatureTestCase
             'type' => 'public-key',
             'transports' => '[]',
             'attestationType' => 'none',
-            'trustPath' => "{\"type\":\"Webauthn\\\\TrustPath\\\\EmptyTrustPath\"}",
+            'trustPath' => '{"type":"Webauthn\\\\TrustPath\\\\EmptyTrustPath"}',
             'aaguid' => '30303030-3030-3030-3030-303030303030',
             'credentialPublicKey' => 'oWNrZXlldmFsdWU=',
             'counter' => '1',
@@ -94,7 +94,7 @@ class WebauthnTest extends FeatureTestCase
                     new TextStringObject('3'),
                     new TextStringObject('-7')
                 ),
-            ])
+            ]),
         ]);
 
         $publicKey = $this->app->make(Webauthn::class)->getAuthenticateData($user);

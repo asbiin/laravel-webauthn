@@ -161,7 +161,7 @@ final class PublicKeyCredentialValidator extends AbstractValidatorFactory
     }
 
     /**
-     * Get the Cose Algorithm Manager
+     * Get the Cose Algorithm Manager.
      *
      * @return Manager
      */
