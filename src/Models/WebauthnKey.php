@@ -143,7 +143,7 @@ class WebauthnKey extends Model
      */
     public function setAaguidAttribute($value)
     {
-        $this->attributes['aaguid'] = $value->toString();
+        $this->attributes['aaguid'] = ! is_null($value) ? $value->toString() : null;
     }
 
     /**

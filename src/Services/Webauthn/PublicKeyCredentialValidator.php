@@ -55,16 +55,10 @@ final class PublicKeyCredentialValidator extends AbstractValidatorFactory
         $authenticatorAttestationResponseValidator = $this->getAuthenticatorAttestationResponseValidator($attestationStatementSupportManager);
 
         // Check the response against the request
-        $authenticatorAttestationResponseValidator->check(
+        return $authenticatorAttestationResponseValidator->check(
             $response,
             $publicKeyCredentialCreationOptions,
             ServerRequest::fromGlobals()
-        );
-
-        // Everything is OK here. You can get the PublicKeyCredentialDescriptor.
-        return PublicKeyCredentialSource::createFromPublicKeyCredential(
-            $publicKeyCredential,
-            $publicKeyCredentialCreationOptions->getUser()->getId()
         );
     }
 
