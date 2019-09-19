@@ -4,7 +4,6 @@ namespace LaravelWebauthn\Services\Webauthn;
 
 use CBOR\Decoder;
 use Cose\Algorithm\Manager;
-use Cose\Algorithm\Signature;
 use CBOR\Tag\TagObjectManager;
 use Webauthn\PublicKeyCredentialLoader;
 use CBOR\OtherObject\OtherObjectManager;
@@ -36,9 +35,10 @@ abstract class AbstractValidatorFactory extends AbstractFactory
      * Attestation Statement Support Manager.
      *
      * @param Decoder $decoder
+     * @param Manager $coseAlgorithmManager
      * @return AttestationStatementSupportManager
      */
-    protected function getAttestationStatementSupportManager(Decoder $decoder) : AttestationStatementSupportManager
+    protected function getAttestationStatementSupportManager(Decoder $decoder, Manager $coseAlgorithmManager) : AttestationStatementSupportManager
     {
         $attestationStatementSupportManager = new AttestationStatementSupportManager();
 
@@ -65,15 +65,6 @@ abstract class AbstractValidatorFactory extends AbstractFactory
         $attestationStatementSupportManager->add(new TPMAttestationStatementSupport());
 
         // https://www.w3.org/TR/webauthn/#packed-attestation
-        $coseAlgorithmManager = new Manager();
-
-        $coseAlgorithmManager->add(new Signature\ECDSA\ES256());
-        $coseAlgorithmManager->add(new Signature\ECDSA\ES512());
-        $coseAlgorithmManager->add(new Signature\EdDSA\EdDSA());
-        $coseAlgorithmManager->add(new Signature\RSA\RS1());
-        $coseAlgorithmManager->add(new Signature\RSA\RS256());
-        $coseAlgorithmManager->add(new Signature\RSA\RS512());
-
         $attestationStatementSupportManager->add(new PackedAttestationStatementSupport($decoder, $coseAlgorithmManager));
 
         return $attestationStatementSupportManager;

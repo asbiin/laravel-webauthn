@@ -2,6 +2,7 @@
 
 namespace LaravelWebauthn\Tests\Unit;
 
+use Ramsey\Uuid\Uuid;
 use LaravelWebauthn\Models\WebauthnKey;
 use Webauthn\PublicKeyCredentialSource;
 use LaravelWebauthn\Tests\FeatureTestCase;
@@ -12,13 +13,13 @@ class WebauthnKeyTest extends FeatureTestCase
     {
         $webauthnKey = new WebauthnKey();
         $webauthnKey->user_id = 0;
-        $webauthnKey->publicKeyCredentialSource = new PublicKeyCredentialSource('a', 'b', [], 'c', new \Webauthn\TrustPath\EmptyTrustPath(), 'd', 'e', '0', 1);
+        $webauthnKey->publicKeyCredentialSource = new PublicKeyCredentialSource('a', 'b', [], 'c', new \Webauthn\TrustPath\EmptyTrustPath(), Uuid::fromString('38195f59-0e5b-4ebf-be46-75664177eeee'), 'e', '0', 1);
 
         $this->assertEquals(0, $webauthnKey->user_id);
         $this->assertEquals('a', $webauthnKey->credentialId);
         $this->assertEquals('b', $webauthnKey->type);
         $this->assertEquals([], $webauthnKey->transports);
-        $this->assertEquals('d', $webauthnKey->aaguid);
+        $this->assertEquals('38195f59-0e5b-4ebf-be46-75664177eeee', $webauthnKey->aaguid->toString());
         $this->assertEquals('e', $webauthnKey->credentialPublicKey);
         $this->assertEquals(1, $webauthnKey->counter);
         $this->assertEquals('c', $webauthnKey->attestationType);
@@ -33,7 +34,7 @@ class WebauthnKeyTest extends FeatureTestCase
         $webauthnKey->credentialId = 'a';
         $webauthnKey->type = 'b';
         $webauthnKey->transports = [];
-        $webauthnKey->aaguid = 'd';
+        $webauthnKey->aaguid = Uuid::fromString('38195f59-0e5b-4ebf-be46-75664177eeee');
         $webauthnKey->credentialPublicKey = 'e';
         $webauthnKey->counter = 0;
         $webauthnKey->attestationType = 'c';
@@ -44,7 +45,7 @@ class WebauthnKeyTest extends FeatureTestCase
         $this->assertEquals('a', $publicKeyCredentialSource->getPublicKeyCredentialId());
         $this->assertEquals('b', $publicKeyCredentialSource->getType());
         $this->assertEquals([], $publicKeyCredentialSource->getTransports());
-        $this->assertEquals('d', $publicKeyCredentialSource->getAaguid());
+        $this->assertEquals('38195f59-0e5b-4ebf-be46-75664177eeee', $publicKeyCredentialSource->getAaguid()->toString());
         $this->assertEquals('e', $publicKeyCredentialSource->getCredentialPublicKey());
         $this->assertEquals('0', $publicKeyCredentialSource->getUserHandle());
         $this->assertEquals(0, $publicKeyCredentialSource->getCounter());

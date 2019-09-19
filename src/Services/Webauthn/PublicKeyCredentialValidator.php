@@ -3,6 +3,8 @@
 namespace LaravelWebauthn\Services\Webauthn;
 
 use CBOR\Decoder;
+use Cose\Algorithm\Manager;
+use Cose\Algorithm\Signature;
 use GuzzleHttp\Psr7\ServerRequest;
 use Webauthn\PublicKeyCredentialSource;
 use Webauthn\AuthenticatorAssertionResponse;
@@ -32,7 +34,9 @@ final class PublicKeyCredentialValidator extends AbstractValidatorFactory
         // Create a CBOR Decoder object
         $decoder = $this->createCBORDecoder();
 
-        $attestationStatementSupportManager = $this->getAttestationStatementSupportManager($decoder);
+        $coseAlgorithmManager = $this->getCoseAlgorithmManager();
+
+        $attestationStatementSupportManager = $this->getAttestationStatementSupportManager($decoder, $coseAlgorithmManager);
 
         // Public Key Credential Loader
         $publicKeyCredentialLoader = $this->getPublicKeyCredentialLoader($attestationStatementSupportManager, $decoder);
@@ -51,16 +55,10 @@ final class PublicKeyCredentialValidator extends AbstractValidatorFactory
         $authenticatorAttestationResponseValidator = $this->getAuthenticatorAttestationResponseValidator($attestationStatementSupportManager);
 
         // Check the response against the request
-        $authenticatorAttestationResponseValidator->check(
+        return $authenticatorAttestationResponseValidator->check(
             $response,
             $publicKeyCredentialCreationOptions,
             ServerRequest::fromGlobals()
-        );
-
-        // Everything is OK here. You can get the PublicKeyCredentialDescriptor.
-        return PublicKeyCredentialSource::createFromPublicKeyCredential(
-            $publicKeyCredential,
-            $publicKeyCredentialCreationOptions->getUser()->getId()
         );
     }
 
@@ -78,7 +76,9 @@ final class PublicKeyCredentialValidator extends AbstractValidatorFactory
         // Create a CBOR Decoder object
         $decoder = $this->createCBORDecoder();
 
-        $attestationStatementSupportManager = $this->getAttestationStatementSupportManager($decoder);
+        $coseAlgorithmManager = $this->getCoseAlgorithmManager();
+
+        $attestationStatementSupportManager = $this->getAttestationStatementSupportManager($decoder, $coseAlgorithmManager);
 
         // Public Key Credential Loader
         $publicKeyCredentialLoader = $this->getPublicKeyCredentialLoader($attestationStatementSupportManager, $decoder);
@@ -94,7 +94,7 @@ final class PublicKeyCredentialValidator extends AbstractValidatorFactory
         }
 
         // Authenticator Assertion Response Validator
-        $authenticatorAssertionResponseValidator = $this->getAuthenticatorAssertionResponseValidator($decoder);
+        $authenticatorAssertionResponseValidator = $this->getAuthenticatorAssertionResponseValidator($decoder, $coseAlgorithmManager);
 
         // Check the response against the request
         $authenticatorAssertionResponseValidator->check(
@@ -112,9 +112,10 @@ final class PublicKeyCredentialValidator extends AbstractValidatorFactory
      * Get the Authenticator Assertion Response Validator.
      *
      * @param Decoder $decoder
+     * @param Manager $coseAlgorithmManager
      * @return AuthenticatorAssertionResponseValidator
      */
-    private function getAuthenticatorAssertionResponseValidator(Decoder $decoder) : AuthenticatorAssertionResponseValidator
+    private function getAuthenticatorAssertionResponseValidator(Decoder $decoder, Manager $coseAlgorithmManager) : AuthenticatorAssertionResponseValidator
     {
         // The token binding handler
         $tokenBindnigHandler = new TokenBindingNotSupportedHandler();
@@ -126,7 +127,8 @@ final class PublicKeyCredentialValidator extends AbstractValidatorFactory
             $this->repository,
             $decoder,
             $tokenBindnigHandler,
-            $extensionOutputCheckerHandler
+            $extensionOutputCheckerHandler,
+            $coseAlgorithmManager
         );
     }
 
@@ -150,5 +152,24 @@ final class PublicKeyCredentialValidator extends AbstractValidatorFactory
             $tokenBindnigHandler,
             $extensionOutputCheckerHandler
         );
+    }
+
+    /**
+     * Get the Cose Algorithm Manager.
+     *
+     * @return Manager
+     */
+    private function getCoseAlgorithmManager()
+    {
+        $coseAlgorithmManager = new Manager();
+
+        $coseAlgorithmManager->add(new Signature\ECDSA\ES256());
+        $coseAlgorithmManager->add(new Signature\ECDSA\ES512());
+        $coseAlgorithmManager->add(new Signature\EdDSA\EdDSA());
+        $coseAlgorithmManager->add(new Signature\RSA\RS1());
+        $coseAlgorithmManager->add(new Signature\RSA\RS256());
+        $coseAlgorithmManager->add(new Signature\RSA\RS512());
+
+        return $coseAlgorithmManager;
     }
 }
