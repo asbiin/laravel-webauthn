@@ -7,7 +7,7 @@
   *
 
  ### Fixes:
-  *
+  * Use bigInteger for foreign key reference
 
 
 # RELEASED VERSIONS:
