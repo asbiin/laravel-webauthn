@@ -7,7 +7,7 @@
   * Upgrade to webauthn-lib v2.x
 
  ### Fixes:
-  *
+  * Use bigInteger for foreign key reference
 
 
 # RELEASED VERSIONS:

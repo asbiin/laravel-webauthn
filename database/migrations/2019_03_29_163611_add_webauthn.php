@@ -15,7 +15,7 @@ class AddWebauthn extends Migration
     {
         Schema::create('webauthn_keys', function (Blueprint $table) {
             $table->increments('id');
-            $table->unsignedInteger('user_id');
+            $table->bigInteger('user_id')->unsigned();
 
             $table->string('name')->default('key');
             $table->string('credentialId', 255);
