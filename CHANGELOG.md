@@ -7,7 +7,7 @@
   *
 
  ### Fixes:
-  * Use bigInteger for foreign key reference
+  *
 
 
 # RELEASED VERSIONS:
@@ -15,6 +15,9 @@
 ## 0.6.0 — 2019-09-19
  ### Enhancements:
   * Upgrade to webauthn-lib v2.x
+
+ ### Fixes:
+  * Use bigInteger for foreign key reference
 
 ## 0.5.1 — 2019-05-20
  ### Fixes:
