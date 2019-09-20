@@ -7,10 +7,14 @@
   *
 
  ### Fixes:
-  * Fix aaguid parsing
+  *
 
 
 # RELEASED VERSIONS:
+
+## 0.6.1 — 2019-09-20
+ ### Fixes:
+  * Fix aaguid parsing
 
 ## 0.6.0 — 2019-09-19
  ### Enhancements:
