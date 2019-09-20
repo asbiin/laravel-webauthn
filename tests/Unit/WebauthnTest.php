@@ -5,6 +5,7 @@ namespace LaravelWebauthn\Tests\Unit;
 use CBOR\MapItem;
 use CBOR\MapObject;
 use CBOR\ListObject;
+use Ramsey\Uuid\Uuid;
 use Base64Url\Base64Url;
 use CBOR\TextStringObject;
 use LaravelWebauthn\Services\Webauthn;
@@ -214,5 +215,43 @@ class WebauthnTest extends FeatureTestCase
         ]);
 
         $this->assertTrue($this->app->make(Webauthn::class)->enabled($user));
+    }
+
+    public function test_aaguid_null()
+    {
+        $webauthnKey = new WebauthnKey();
+        $webauthnKey->aaguid = null;
+
+        $this->assertNull($webauthnKey->getAttributeValue('aaguid'));
+        $this->assertNull($webauthnKey->aaguid);
+    }
+
+    public function test_aaguid_empty()
+    {
+        $webauthnKey = new WebauthnKey();
+        $webauthnKey->aaguid = '';
+
+        $this->assertEquals('', $webauthnKey->getAttributeValue('aaguid'));
+        $this->assertEquals('', $webauthnKey->aaguid);
+    }
+
+    public function test_aaguid_string()
+    {
+        $webauthnKey = new WebauthnKey();
+        $webauthnKey->aaguid = '38195f59-0e5b-4ebf-be46-75664177eeee';
+
+        $this->assertEquals('38195f59-0e5b-4ebf-be46-75664177eeee', $webauthnKey->getAttributeValue('aaguid'));
+        $this->assertInstanceOf(Uuid::class, $webauthnKey->aaguid);
+        $this->assertEquals(Uuid::fromString('38195f59-0e5b-4ebf-be46-75664177eeee'), $webauthnKey->aaguid);
+    }
+
+    public function test_aaguid_Uuid()
+    {
+        $webauthnKey = new WebauthnKey();
+        $webauthnKey->aaguid = Uuid::fromString('38195f59-0e5b-4ebf-be46-75664177eeee');
+
+        $this->assertEquals('38195f59-0e5b-4ebf-be46-75664177eeee', $webauthnKey->getAttributeValue('aaguid'));
+        $this->assertInstanceOf(Uuid::class, $webauthnKey->aaguid);
+        $this->assertEquals(Uuid::fromString('38195f59-0e5b-4ebf-be46-75664177eeee'), $webauthnKey->aaguid);
     }
 }

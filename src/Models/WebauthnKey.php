@@ -130,7 +130,7 @@ class WebauthnKey extends Model
      */
     public function getAaguidAttribute($value)
     {
-        if (! is_null($value)) {
+        if (! is_null($value) && $value !== '') {
             return Uuid::fromString($value);
         }
     }
@@ -138,12 +138,12 @@ class WebauthnKey extends Model
     /**
      * Set the Aaguid.
      *
-     * @param UuidInterface|null $value
+     * @param UuidInterface|string|null $value
      * @return void
      */
     public function setAaguidAttribute($value)
     {
-        $this->attributes['aaguid'] = ! is_null($value) ? $value->toString() : null;
+        $this->attributes['aaguid'] = $value instanceof UuidInterface ? $value->toString() : (string) $value;
     }
 
     /**

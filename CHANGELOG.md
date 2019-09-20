@@ -7,7 +7,7 @@
   *
 
  ### Fixes:
-  *
+  * Fix aaguid parsing
 
 
 # RELEASED VERSIONS:
