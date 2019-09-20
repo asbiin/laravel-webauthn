@@ -25,6 +25,9 @@ jobs:
       run: composer -V
     - name: Check PHP Extensions
       run: php -m
-    
+    - name: Composer install
+      run: composer install --no-interaction --no-suggest --ignore-platform-reqs
     - name : Run tests
-      run: phpdbg -dmemory_limit=4G -qrr vendor/bin/phpunit -c phpunit.xml --log-junit ./results/results.xml --coverage-clover ./results/coverage.xml
+      run: |
+        mkdir results
+        phpdbg -dmemory_limit=4G -qrr vendor/bin/phpunit -c phpunit.xml --log-junit ./results/results.xml --coverage-clover ./results/coverage.xml
