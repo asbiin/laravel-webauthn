@@ -3,12 +3,12 @@ name: CI
 on: [push]
 
 jobs:
-  run:    
+  tests:
     runs-on: ${{ matrix.operating-system }}
     strategy:
       max-parallel: 15
       matrix:
-        operating-system: [ubuntu-latest, windows-latest, macOS-latest]
+        operating-system: [ubuntu-latest]
         php-versions: ['7.2', '7.3', '7.4']
     name: PHP ${{ matrix.php-versions }} Test on ${{ matrix.operating-system }}
     steps:
@@ -31,3 +31,55 @@ jobs:
       run: |
         mkdir results
         phpdbg -dmemory_limit=4G -qrr vendor/bin/phpunit -c phpunit.xml --log-junit ./results/results.xml --coverage-clover ./results/coverage.xml
+
+  psalm:
+    runs-on: ubuntu-latest
+    name: psalm
+    steps:
+    - name: Checkout
+      uses: actions/checkout@master
+    - name: Install PHP
+      uses: shivammathur/setup-php@master
+      with:
+        php-version: '7.3'
+        extension-csv: gmp
+    - name: Composer install
+      run: composer install --no-interaction --no-suggest --ignore-platform-reqs
+    - name : Run psalm
+      run: vendor/bin/psalm --show-info=false
+
+  phpstan:
+    runs-on: ubuntu-latest
+    name: phpstan
+    steps:
+    - name: Checkout
+      uses: actions/checkout@master
+    - name: Install PHP
+      uses: shivammathur/setup-php@master
+      with:
+        php-version: '7.3'
+        extension-csv: gmp
+    - name: Composer install
+      run: composer install --no-interaction --no-suggest --ignore-platform-reqs
+    - name : Run phpstan
+      run: vendor/bin/phpstan analyse src
+
+  reporting:
+    runs-on: ubuntu-latest
+    name: sonar
+    needs: [tests]
+    steps:
+    - name: Checkout
+      uses: actions/checkout@master
+    - name: Install PHP
+      uses: shivammathur/setup-php@master
+      with:
+        php-version: '7.3'
+        extension-csv: gmp
+    - name: Composer install
+      run: composer install --no-interaction --no-suggest --ignore-platform-reqs
+    - name: Run sonar scanner
+      run: |
+        export SONAR_RESULT=./results/results.xml
+        export SONAR_COVERAGE=./results/coverage.xml
+        scripts/tests/runsonar.sh
