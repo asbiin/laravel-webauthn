@@ -90,11 +90,11 @@ jobs:
     - name: test
       run: |
         set
-        echo GITHUB_HEAD_REF=$GITHUB_HEAD_REF
-        echo GITHUB_REF=$GITHUB_REF
+        cat $GITHUB_EVENT_PATH
     - name: Run sonar scanner
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
       run: |
         export SONAR_RESULT=./results/results.xml
         export SONAR_COVERAGE=./results/coverage.xml

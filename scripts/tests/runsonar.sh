@@ -18,8 +18,9 @@ if [ "$CIRCLECI" == "true" ]; then
 elif [[ -n $GITHUB_ACTION ]]; then
   REPO=$GITHUB_REPOSITORY
   BRANCH=${GITHUB_HEAD_REF:-GITHUB_REF}
-  PR_NUMBER=
-  BUILD_NUMBER=
+  BRANCH=${BRANCH##refs/heads/}
+  PR_NUMBER=$(jq --raw-output .pull_request.number "$GITHUB_EVENT_PATH")
+  BUILD_NUMBER=$RUNNER_TRACKING_ID
   GIT_COMMIT=$GITHUB_SHA
 elif [[ -n $BUILD_NUMBER ]]; then
   echo "CHANGE_ID=$CHANGE_ID"
