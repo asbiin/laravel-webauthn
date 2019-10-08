@@ -3925,16 +3925,16 @@
     "packages-dev": [
         {
             "name": "amphp/amp",
-            "version": "v2.2.1",
+            "version": "v2.3.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/amphp/amp.git",
-                "reference": "49a0bf693d5e60e578e5518d87fe7025244f9db5"
+                "reference": "5a294f13810844e3bdda28c0f352821d735ca9b3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/amphp/amp/zipball/49a0bf693d5e60e578e5518d87fe7025244f9db5",
-                "reference": "49a0bf693d5e60e578e5518d87fe7025244f9db5",
+                "url": "https://api.github.com/repos/amphp/amp/zipball/5a294f13810844e3bdda28c0f352821d735ca9b3",
+                "reference": "5a294f13810844e3bdda28c0f352821d735ca9b3",
                 "shasum": ""
             },
             "require": {
@@ -3998,20 +3998,20 @@
                 "non-blocking",
                 "promise"
             ],
-            "time": "2019-09-21T21:29:37+00:00"
+            "time": "2019-10-01T19:39:23+00:00"
         },
         {
             "name": "amphp/byte-stream",
-            "version": "v1.6.1",
+            "version": "v1.7.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/amphp/byte-stream.git",
-                "reference": "47908f8e8bb2da8af4e59028200758477bc927ea"
+                "reference": "3d457738751295b9bf6b15036578e7823919f724"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/amphp/byte-stream/zipball/47908f8e8bb2da8af4e59028200758477bc927ea",
-                "reference": "47908f8e8bb2da8af4e59028200758477bc927ea",
+                "url": "https://api.github.com/repos/amphp/byte-stream/zipball/3d457738751295b9bf6b15036578e7823919f724",
+                "reference": "3d457738751295b9bf6b15036578e7823919f724",
                 "shasum": ""
             },
             "require": {
@@ -4057,7 +4057,7 @@
                 "non-blocking",
                 "stream"
             ],
-            "time": "2019-07-26T21:22:49+00:00"
+            "time": "2019-08-24T17:01:13+00:00"
         },
         {
             "name": "composer/xdebug-handler",
@@ -7059,16 +7059,16 @@
         },
         {
             "name": "vimeo/psalm",
-            "version": "3.5.2",
+            "version": "3.5.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/vimeo/psalm.git",
-                "reference": "648dda67ed7aca1d4ea243258f0ee7f2844ac60a"
+                "reference": "c3e781c4a06cbb17dc32068eb5d6de075f6babdc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/vimeo/psalm/zipball/648dda67ed7aca1d4ea243258f0ee7f2844ac60a",
-                "reference": "648dda67ed7aca1d4ea243258f0ee7f2844ac60a",
+                "url": "https://api.github.com/repos/vimeo/psalm/zipball/c3e781c4a06cbb17dc32068eb5d6de075f6babdc",
+                "reference": "c3e781c4a06cbb17dc32068eb5d6de075f6babdc",
                 "shasum": ""
             },
             "require": {
@@ -7143,7 +7143,7 @@
                 "inspection",
                 "php"
             ],
-            "time": "2019-09-25T17:12:29+00:00"
+            "time": "2019-09-27T13:22:06+00:00"
         },
         {
             "name": "webmozart/assert",
