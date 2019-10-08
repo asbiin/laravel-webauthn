@@ -7,10 +7,14 @@
   *
 
  ### Fixes:
-  * Fix javascript base64url decode function
+  *
 
 
 # RELEASED VERSIONS:
+
+## 0.6.2 — 2019-10-08
+ ### Fixes:
+  * Fix javascript base64url decode function
 
 ## 0.6.1 — 2019-09-20
  ### Fixes:
