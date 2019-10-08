@@ -7,7 +7,7 @@
   *
 
  ### Fixes:
-  *
+  * Fix javascript base64url decode function
 
 
 # RELEASED VERSIONS:
