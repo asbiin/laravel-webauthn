@@ -4,13 +4,17 @@
   *
 
  ### Enhancements:
-  * Upgrade for laravel 6.x
+  *
 
  ### Fixes:
   *
 
 
 # RELEASED VERSIONS:
+
+## 0.6.3 — 2019-10-12
+ ### Enhancements:
+  * Upgrade to Laravel 6.x
 
 ## 0.6.2 — 2019-10-08
  ### Fixes:
