@@ -4,7 +4,7 @@
   *
 
  ### Enhancements:
-  *
+  * Upgrade for laravel 6.x
 
  ### Fixes:
   *
