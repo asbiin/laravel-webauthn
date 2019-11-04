@@ -3,18 +3,18 @@
 namespace LaravelWebauthn\Services\Webauthn;
 
 use CBOR\Decoder;
-use Cose\Algorithm\Manager;
-use CBOR\Tag\TagObjectManager;
-use Webauthn\PublicKeyCredentialLoader;
 use CBOR\OtherObject\OtherObjectManager;
-use Webauthn\AttestationStatement\AttestationObjectLoader;
-use Webauthn\AttestationStatement\TPMAttestationStatementSupport;
-use Webauthn\AttestationStatement\NoneAttestationStatementSupport;
-use Webauthn\AttestationStatement\PackedAttestationStatementSupport;
-use Webauthn\AttestationStatement\AttestationStatementSupportManager;
-use Webauthn\AttestationStatement\FidoU2FAttestationStatementSupport;
+use CBOR\Tag\TagObjectManager;
+use Cose\Algorithm\Manager;
 use Webauthn\AttestationStatement\AndroidKeyAttestationStatementSupport;
 use Webauthn\AttestationStatement\AndroidSafetyNetAttestationStatementSupport;
+use Webauthn\AttestationStatement\AttestationObjectLoader;
+use Webauthn\AttestationStatement\AttestationStatementSupportManager;
+use Webauthn\AttestationStatement\FidoU2FAttestationStatementSupport;
+use Webauthn\AttestationStatement\NoneAttestationStatementSupport;
+use Webauthn\AttestationStatement\PackedAttestationStatementSupport;
+use Webauthn\AttestationStatement\TPMAttestationStatementSupport;
+use Webauthn\PublicKeyCredentialLoader;
 
 abstract class AbstractValidatorFactory extends AbstractFactory
 {
