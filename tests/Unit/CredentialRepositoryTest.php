@@ -2,11 +2,11 @@
 
 namespace LaravelWebauthn\Tests\Unit;
 
+use Illuminate\Foundation\Testing\DatabaseTransactions;
 use LaravelWebauthn\Models\WebauthnKey;
+use LaravelWebauthn\Services\Webauthn\CredentialRepository;
 use LaravelWebauthn\Tests\FeatureTestCase;
 use Webauthn\PublicKeyCredentialUserEntity;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
-use LaravelWebauthn\Services\Webauthn\CredentialRepository;
 
 class CredentialRepositoryTest extends FeatureTestCase
 {

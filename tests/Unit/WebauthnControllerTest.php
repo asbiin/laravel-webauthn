@@ -2,11 +2,11 @@
 
 namespace LaravelWebauthn\Tests\Unit;
 
+use Illuminate\Foundation\Testing\DatabaseTransactions;
 use LaravelWebauthn\Facades\Webauthn;
 use LaravelWebauthn\Models\WebauthnKey;
-use LaravelWebauthn\Tests\FeatureTestCase;
 use LaravelWebauthn\Tests\Fake\FakeWebauthn;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
+use LaravelWebauthn\Tests\FeatureTestCase;
 
 class WebauthnControllerTest extends FeatureTestCase
 {

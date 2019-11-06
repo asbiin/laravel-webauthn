@@ -2,8 +2,8 @@
 
 namespace LaravelWebauthn\Events;
 
-use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Auth\Authenticatable as User;
+use Illuminate\Queue\SerializesModels;
 
 class WebauthnLogin
 {

@@ -2,10 +2,10 @@
 
 namespace LaravelWebauthn\Tests\Unit;
 
-use Ramsey\Uuid\Uuid;
 use LaravelWebauthn\Models\WebauthnKey;
-use Webauthn\PublicKeyCredentialSource;
 use LaravelWebauthn\Tests\FeatureTestCase;
+use Ramsey\Uuid\Uuid;
+use Webauthn\PublicKeyCredentialSource;
 
 class WebauthnKeyTest extends FeatureTestCase
 {
