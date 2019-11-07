@@ -2,15 +2,15 @@
 
 namespace LaravelWebauthn\Models;
 
+use Illuminate\Database\Eloquent\Model;
+use LaravelWebauthn\Exceptions\WrongUserHandleException;
 use Ramsey\Uuid\Uuid;
-use function Safe\json_decode;
-use function Safe\json_encode;
 use Ramsey\Uuid\UuidInterface;
 use function Safe\base64_decode;
-use Webauthn\TrustPath\TrustPath;
-use Illuminate\Database\Eloquent\Model;
+use function Safe\json_decode;
+use function Safe\json_encode;
 use Webauthn\PublicKeyCredentialSource;
-use LaravelWebauthn\Exceptions\WrongUserHandleException;
+use Webauthn\TrustPath\TrustPath;
 
 class WebauthnKey extends Model
 {

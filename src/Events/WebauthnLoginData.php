@@ -2,9 +2,9 @@
 
 namespace LaravelWebauthn\Events;
 
+use Illuminate\Contracts\Auth\Authenticatable as User;
 use Illuminate\Queue\SerializesModels;
 use Webauthn\PublicKeyCredentialRequestOptions;
-use Illuminate\Contracts\Auth\Authenticatable as User;
 
 class WebauthnLoginData
 {

@@ -2,21 +2,21 @@
 
 namespace LaravelWebauthn\Services;
 
-use LaravelWebauthn\Models\WebauthnKey;
+use Illuminate\Contracts\Auth\Authenticatable as User;
+use Illuminate\Contracts\Config\Repository as Config;
+use Illuminate\Contracts\Events\Dispatcher;
+use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\Session\Session;
 use LaravelWebauthn\Events\WebauthnLogin;
-use Illuminate\Contracts\Events\Dispatcher;
-use LaravelWebauthn\Events\WebauthnRegister;
 use LaravelWebauthn\Events\WebauthnLoginData;
-use Webauthn\PublicKeyCredentialRequestOptions;
-use Illuminate\Contracts\Foundation\Application;
+use LaravelWebauthn\Events\WebauthnRegister;
 use LaravelWebauthn\Events\WebauthnRegisterData;
-use Webauthn\PublicKeyCredentialCreationOptions;
-use Illuminate\Contracts\Config\Repository as Config;
-use Illuminate\Contracts\Auth\Authenticatable as User;
-use LaravelWebauthn\Services\Webauthn\PublicKeyCredentialValidator;
-use LaravelWebauthn\Services\Webauthn\PublicKeyCredentialRequestOptionsFactory;
+use LaravelWebauthn\Models\WebauthnKey;
 use LaravelWebauthn\Services\Webauthn\PublicKeyCredentialCreationOptionsFactory;
+use LaravelWebauthn\Services\Webauthn\PublicKeyCredentialRequestOptionsFactory;
+use LaravelWebauthn\Services\Webauthn\PublicKeyCredentialValidator;
+use Webauthn\PublicKeyCredentialCreationOptions;
+use Webauthn\PublicKeyCredentialRequestOptions;
 
 class Webauthn extends WebauthnRepository
 {
