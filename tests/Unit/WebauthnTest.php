@@ -2,16 +2,16 @@
 
 namespace LaravelWebauthn\Tests\Unit;
 
+use Base64Url\Base64Url;
+use CBOR\ListObject;
 use CBOR\MapItem;
 use CBOR\MapObject;
-use CBOR\ListObject;
-use Ramsey\Uuid\Uuid;
-use Base64Url\Base64Url;
 use CBOR\TextStringObject;
-use LaravelWebauthn\Services\Webauthn;
-use LaravelWebauthn\Models\WebauthnKey;
-use LaravelWebauthn\Tests\FeatureTestCase;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use LaravelWebauthn\Models\WebauthnKey;
+use LaravelWebauthn\Services\Webauthn;
+use LaravelWebauthn\Tests\FeatureTestCase;
+use Ramsey\Uuid\Uuid;
 
 class WebauthnTest extends FeatureTestCase
 {

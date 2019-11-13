@@ -2,14 +2,14 @@
 
 namespace LaravelWebauthn\Services\Webauthn;
 
+use Illuminate\Contracts\Auth\Authenticatable as User;
 use Illuminate\Support\Facades\Request;
-use Webauthn\PublicKeyCredentialRpEntity;
-use Webauthn\PublicKeyCredentialDescriptor;
-use Webauthn\PublicKeyCredentialParameters;
-use Webauthn\PublicKeyCredentialUserEntity;
 use Webauthn\AuthenticatorSelectionCriteria;
 use Webauthn\PublicKeyCredentialCreationOptions;
-use Illuminate\Contracts\Auth\Authenticatable as User;
+use Webauthn\PublicKeyCredentialDescriptor;
+use Webauthn\PublicKeyCredentialParameters;
+use Webauthn\PublicKeyCredentialRpEntity;
+use Webauthn\PublicKeyCredentialUserEntity;
 
 final class PublicKeyCredentialCreationOptionsFactory extends AbstractOptionsFactory
 {
