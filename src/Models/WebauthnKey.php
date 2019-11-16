@@ -130,7 +130,7 @@ class WebauthnKey extends Model
      */
     public function getAaguidAttribute($value)
     {
-        if (! is_null($value) && $value !== '') {
+        if (! is_null($value) && Uuid::isValid($value)) {
             return Uuid::fromString($value);
         }
     }
@@ -159,7 +159,7 @@ class WebauthnKey extends Model
             $this->transports,
             $this->attestationType,
             $this->trustPath,
-            $this->aaguid,
+            $this->aaguid ?: Uuid::fromString(Uuid::NIL),
             $this->credentialPublicKey,
             (string) $this->user_id,
             $this->counter
