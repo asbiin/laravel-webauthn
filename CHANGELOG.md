@@ -7,10 +7,17 @@
   *
 
  ### Fixes:
-  * Fix Uuid decode
+  *
 
 
 # RELEASED VERSIONS:
+
+## 0.6.4 — 2019-11-16
+ ### Enhancements:
+  * Add suggestions for web-token/jwt-signature-algorithm-* dependencies
+
+ ### Fixes:
+  * Fix Uuid decode
 
 ## 0.6.3 — 2019-10-12
  ### Enhancements:
