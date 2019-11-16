@@ -2,10 +2,10 @@
 
 namespace LaravelWebauthn\Services\Webauthn;
 
+use Illuminate\Contracts\Auth\Authenticatable as User;
 use Illuminate\Support\Facades\Request;
 use Webauthn\AuthenticatorSelectionCriteria;
 use Webauthn\PublicKeyCredentialRequestOptions;
-use Illuminate\Contracts\Auth\Authenticatable as User;
 
 final class PublicKeyCredentialRequestOptionsFactory extends AbstractOptionsFactory
 {

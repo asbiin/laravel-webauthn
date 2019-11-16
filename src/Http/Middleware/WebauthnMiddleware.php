@@ -3,10 +3,10 @@
 namespace LaravelWebauthn\Http\Middleware;
 
 use Closure;
-use LaravelWebauthn\Facades\Webauthn;
-use Illuminate\Support\Facades\Redirect;
 use Illuminate\Contracts\Auth\Factory as AuthFactory;
 use Illuminate\Contracts\Config\Repository as Config;
+use Illuminate\Support\Facades\Redirect;
+use LaravelWebauthn\Facades\Webauthn;
 
 class WebauthnMiddleware
 {

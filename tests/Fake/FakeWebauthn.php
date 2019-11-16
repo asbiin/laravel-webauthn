@@ -2,13 +2,13 @@
 
 namespace LaravelWebauthn\Tests\Fake;
 
-use LaravelWebauthn\Models\WebauthnKey;
-use Webauthn\PublicKeyCredentialRequestOptions;
-use Illuminate\Contracts\Foundation\Application;
-use Webauthn\PublicKeyCredentialCreationOptions;
 use Illuminate\Contracts\Auth\Authenticatable as User;
-use LaravelWebauthn\Services\Webauthn\PublicKeyCredentialRequestOptionsFactory;
+use Illuminate\Contracts\Foundation\Application;
+use LaravelWebauthn\Models\WebauthnKey;
 use LaravelWebauthn\Services\Webauthn\PublicKeyCredentialCreationOptionsFactory;
+use LaravelWebauthn\Services\Webauthn\PublicKeyCredentialRequestOptionsFactory;
+use Webauthn\PublicKeyCredentialCreationOptions;
+use Webauthn\PublicKeyCredentialRequestOptions;
 
 class FakeWebauthn
 {
