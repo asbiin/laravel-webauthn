@@ -1,34 +1,16 @@
 #!/bin/bash
 
 RUNREVPARSE=false
-if [ "$CIRCLECI" == "true" ]; then
-  if [[ ! -z $CIRCLE_PULL_REQUEST ]] ; then
-    CIRCLE_PR_NUMBER="${CIRCLE_PR_NUMBER:-${CIRCLE_PULL_REQUEST##*/}}"
-    REPO=$CIRCLE_PULL_REQUEST
-    REPO=${REPO##https://github.com/}
-    REPO=${REPO%%/pull/$CIRCLE_PR_NUMBER}
-  else
-    REPO=$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME
-  fi
-  BRANCH=${CIRCLE_BRANCH:-$CIRCLE_TAG}
-  PR_NUMBER=${CIRCLE_PR_NUMBER:-false}
-  BUILD_NUMBER=$CIRCLE_BUILD_NUM
-  GIT_COMMIT=$CIRCLE_SHA1
-  RUNREVPARSE=true
-elif [[ -n $BUILD_NUMBER ]]; then
-  echo "CHANGE_ID=$CHANGE_ID"
-  echo "CHANGE_URL=$CHANGE_URL"
-  REPO=${CHANGE_URL##https://github.com/}
-  if [[ ! -z $CHANGE_ID ]] ; then
-    REPO=${REPO%%/pull/$CHANGE_ID}
-  fi
-  PR_NUMBER=${CHANGE_ID:-false}
-  BRANCH=$BRANCH_NAME
-fi
+REPO=$GITHUB_REPOSITORY
+BRANCH=${GITHUB_HEAD_REF:-GITHUB_REF}
+BRANCH=${BRANCH##refs/heads/}
+#PR_NUMBER=$(jq --raw-output .pull_request.number "$GITHUB_EVENT_PATH")
+BUILD_NUMBER=$RUNNER_TRACKING_ID
+GIT_COMMIT=$GITHUB_SHA
 
 echo "REPO=$REPO"
 echo "BRANCH=$BRANCH"
-echo "PR_NUMBER=$PR_NUMBER"
+#echo "PR_NUMBER=$PR_NUMBER"
 echo "BUILD_NUMBER=$BUILD_NUMBER"
 echo "GIT_COMMIT=$GIT_COMMIT"
 
@@ -139,10 +121,13 @@ elif [ "$PR_NUMBER" != "false" ] && [ -n "${SONAR_TOKEN:-}" ] && [ -n "${GITHUB_
   REPOS_VALUES=($(curl -H "Authorization: token $GITHUB_TOKEN" -sSL https://api.github.com/repos/$REPO/pulls/$PR_NUMBER | jq -r -c ".head.repo.full_name, .head.repo.owner.login, .base.ref, .head.ref"))
 
   PULL_REQUEST_BRANCH=
-  PULL_REQUEST_REPOSITORY=${REPOS_VALUES[0]}
-  PULL_REQUEST_USER=${REPOS_VALUES[1]}
-  PULL_REQUEST_BASEBRANCH=${REPOS_VALUES[2]}
-  PULL_REQUEST_HEADBRANCH=${REPOS_VALUES[3]}
+  PULL_REQUEST_REPOSITORY=$(jq --raw-output .repository.full_name "$GITHUB_EVENT_PATH")
+  PULL_REQUEST_USER=$(jq --raw-output .repository.owner.login "$GITHUB_EVENT_PATH")
+  PULL_REQUEST_BASEBRANCH=$(jq --raw-output .base_ref "$GITHUB_EVENT_PATH")
+  PULL_REQUEST_HEADBRANCH=$(jq --raw-output .ref "$GITHUB_EVENT_PATH")
+
+fork=$(jq --raw-output .repository.fork "$GITHUB_EVENT_PATH")
+
 
   if [ -z "${PULL_REQUEST_REPOSITORY:-}" ] || [ "$PULL_REQUEST_REPOSITORY" == "null" ]; then
     echo '== Error with github api call'
@@ -158,6 +143,10 @@ elif [ "$PR_NUMBER" != "false" ] && [ -n "${SONAR_TOKEN:-}" ] && [ -n "${GITHUB_
     echo '========================================='
     echo "== External repository: $PULL_REQUEST_REPOSITORY"
     PULL_REQUEST_BRANCH="${PULL_REQUEST_USER}__$PULL_REQUEST_HEADBRANCH"
+
+PULL_REQUEST_BASEBRANCH=$GITHUB_BASE_REF
+PULL_REQUEST_HEADBRANCH=$GITHUB_HEAD_REF
+
   fi
   echo "PULL_REQUEST_BRANCH=$PULL_REQUEST_BRANCH"
   echo "PULL_REQUEST_REPOSITORY=$PULL_REQUEST_REPOSITORY"
