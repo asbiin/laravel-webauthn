@@ -1,101 +1,181 @@
-name: CI
+name: Laravel WebAuthn workflow
 
-on: [push, release]
+on: [push]
 
 jobs:
   tests:
     runs-on: ${{ matrix.operating-system }}
     strategy:
       max-parallel: 15
+      fail-fast: false
       matrix:
         operating-system: [ubuntu-latest]
         php-versions: ['7.2', '7.3', '7.4']
     name: PHP ${{ matrix.php-versions }} Test on ${{ matrix.operating-system }}
+
     steps:
     - name: Checkout
       uses: actions/checkout@master
-    - name: Install PHP
+
+    - name: Setup PHP ${{ matrix.php-version }}
+      if: matrix.php-version != '7.4' && matrix.operating-system == 'ubuntu-latest'
+      run: |
+        sudo update-alternatives --set php /usr/bin/php${{ matrix.php-version }}
+        sudo update-alternatives --set phar /usr/bin/phar${{ matrix.php-version }}
+        sudo update-alternatives --set phpdbg /usr/bin/phpdbg${{ matrix.php-version }}
+        sudo update-alternatives --set php-cgi /usr/bin/php-cgi${{ matrix.php-version }}
+        sudo update-alternatives --set phar.phar /usr/bin/phar.phar${{ matrix.php-version }}
+    - name: Setup PHP ${{ matrix.php-version }}
+      if: matrix.php-version == '7.4' || matrix.operating-system != 'ubuntu-latest'
       uses: shivammathur/setup-php@master
       with:
-        php-version: ${{ matrix.php-versions }}
-        extension-csv: gmp
+        php-version: ${{ matrix.php-version }}
+        coverage: none
     - name: Check PHP Version
       run: php -v
     - name: Check Composer Version
       run: composer -V
     - name: Check PHP Extensions
       run: php -m
-    - name: Composer install
+
+    - name: Get Composer Cache Directory
+      id: composer-cache
+      run: echo "::set-output name=dir::$(composer config cache-files-dir)"
+    - name: Cache composer files
+      uses: actions/cache@v1
+      with:
+        path: ${{ steps.composer-cache.outputs.dir }}
+        key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          ${{ runner.os }}-composer-
+
+    - name: Install dependencies
       run: composer install --no-interaction --no-suggest --ignore-platform-reqs
-    - name : Run tests
-      run: |
-        mkdir results
-        phpdbg -dmemory_limit=4G -qrr vendor/bin/phpunit -c phpunit.xml --log-junit ./results/results.xml --coverage-clover ./results/coverage.xml
-    - name: Upload results
+
+    - name: Run test suite
+      run: phpdbg -dmemory_limit=4G -qrr vendor/bin/phpunit -c phpunit.xml --log-junit ./results/junit/results.xml --coverage-clover ./results/coverage.xml
+
+    - name: Store results
+      if: matrix.php-version == '7.3' && matrix.operating-system == 'ubuntu-latest'
       uses: actions/upload-artifact@v1
       with:
-        name: results_${{ matrix.operating-system }}_${{ matrix.php-versions }}
+        name: results
         path: results
+
 
   psalm:
     runs-on: ubuntu-latest
-    name: psalm
+    strategy:
+      matrix:
+        php-version: ['7.3']
+
     steps:
-    - name: Checkout
-      uses: actions/checkout@master
-    - name: Install PHP
-      uses: shivammathur/setup-php@master
+    - uses: actions/checkout@v1
+
+    - name: Setup PHP ${{ matrix.php-version }}
+      run: |
+        sudo update-alternatives --set php /usr/bin/php${{ matrix.php-version }}
+        sudo update-alternatives --set phar /usr/bin/phar${{ matrix.php-version }}
+        sudo update-alternatives --set phpdbg /usr/bin/phpdbg${{ matrix.php-version }}
+        sudo update-alternatives --set php-cgi /usr/bin/php-cgi${{ matrix.php-version }}
+        sudo update-alternatives --set phar.phar /usr/bin/phar.phar${{ matrix.php-version }}
+
+    - name: Get Composer Cache Directory
+      id: composer-cache
+      run: echo "::set-output name=dir::$(composer config cache-files-dir)"
+    - name: Cache composer files
+      uses: actions/cache@v1
       with:
-        php-version: '7.3'
-        extension-csv: gmp
-    - name: Composer install
+        path: ${{ steps.composer-cache.outputs.dir }}
+        key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          ${{ runner.os }}-composer-
+
+    - name: Install dependencies
       run: composer install --no-interaction --no-suggest --ignore-platform-reqs
-    - name : Run psalm
+
+    - name: Run psalm
       run: vendor/bin/psalm --show-info=false
+
 
   phpstan:
     runs-on: ubuntu-latest
-    name: phpstan
+    strategy:
+      matrix:
+        php-version: ['7.3']
+
     steps:
-    - name: Checkout
-      uses: actions/checkout@master
-    - name: Install PHP
-      uses: shivammathur/setup-php@master
+    - uses: actions/checkout@v1
+
+    - name: Setup PHP ${{ matrix.php-version }}
+      run: |
+        sudo update-alternatives --set php /usr/bin/php${{ matrix.php-version }}
+        sudo update-alternatives --set phar /usr/bin/phar${{ matrix.php-version }}
+        sudo update-alternatives --set phpdbg /usr/bin/phpdbg${{ matrix.php-version }}
+        sudo update-alternatives --set php-cgi /usr/bin/php-cgi${{ matrix.php-version }}
+        sudo update-alternatives --set phar.phar /usr/bin/phar.phar${{ matrix.php-version }}
+
+    - name: Get Composer Cache Directory
+      id: composer-cache
+      run: echo "::set-output name=dir::$(composer config cache-files-dir)"
+    - name: Cache composer files
+      uses: actions/cache@v1
       with:
-        php-version: '7.3'
-        extension-csv: gmp
-    - name: Composer install
+        path: ${{ steps.composer-cache.outputs.dir }}
+        key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          ${{ runner.os }}-composer-
+
+    - name: Install dependencies
       run: composer install --no-interaction --no-suggest --ignore-platform-reqs
+
     - name : Run phpstan
       run: vendor/bin/phpstan analyse src
 
+
   reporting:
+    needs: tests
     runs-on: ubuntu-latest
-    name: sonar
-    needs: [tests]
+    strategy:
+      matrix:
+        php-version: ['7.3']
+
     steps:
-    - name: Checkout
-      uses: actions/checkout@master
-    - name: Install PHP
-      uses: shivammathur/setup-php@master
+    - uses: actions/checkout@v1
+
+    - name: Setup PHP ${{ matrix.php-version }}
+      run: |
+        sudo update-alternatives --set php /usr/bin/php${{ matrix.php-version }}
+        sudo update-alternatives --set phar /usr/bin/phar${{ matrix.php-version }}
+        sudo update-alternatives --set phpdbg /usr/bin/phpdbg${{ matrix.php-version }}
+        sudo update-alternatives --set php-cgi /usr/bin/php-cgi${{ matrix.php-version }}
+        sudo update-alternatives --set phar.phar /usr/bin/phar.phar${{ matrix.php-version }}
+
+    - name: Get Composer Cache Directory
+      id: composer-cache
+      run: echo "::set-output name=dir::$(composer config cache-files-dir)"
+    - name: Cache composer files
+      uses: actions/cache@v1
       with:
-        php-version: '7.3'
-        extension-csv: gmp
-    - name: Composer install
+        path: ${{ steps.composer-cache.outputs.dir }}
+        key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          ${{ runner.os }}-composer-
+
+    - name: Install dependencies
       run: composer install --no-interaction --no-suggest --ignore-platform-reqs
+
     - name: Download results
       uses: actions/download-artifact@v1
       with:
-        name: results_ubuntu-latest_7.3
-    - name: test
-      run: |
-        set
-        cat $GITHUB_EVENT_PATH
-    - name: Run sonar scanner
+        name: results
+
+    - name: SonarCloud Scan
+      uses: SonarSource/sonarcloud-github-action@v1.1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-      run: |
-        export SONAR_RESULT=./results/results.xml
-        export SONAR_COVERAGE=./results/coverage.xml
-        scripts/tests/runsonar.sh
