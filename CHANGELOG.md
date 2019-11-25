@@ -7,10 +7,29 @@
   *
 
  ### Fixes:
-  * Fix aaguid parsing
+  *
 
 
 # RELEASED VERSIONS:
+
+## 0.6.4 — 2019-11-16
+ ### Enhancements:
+  * Add suggestions for web-token/jwt-signature-algorithm-* dependencies
+
+ ### Fixes:
+  * Fix Uuid decode
+
+## 0.6.3 — 2019-10-12
+ ### Enhancements:
+  * Upgrade to Laravel 6.x
+
+## 0.6.2 — 2019-10-08
+ ### Fixes:
+  * Fix javascript base64url decode function
+
+## 0.6.1 — 2019-09-20
+ ### Fixes:
+  * Fix aaguid parsing
 
 ## 0.6.0 — 2019-09-19
  ### Enhancements:

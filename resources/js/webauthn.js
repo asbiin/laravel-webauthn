@@ -30,7 +30,7 @@ function WebAuthn(notifyCallback = null) {
 WebAuthn.prototype.register = function(publicKey, callback) {
   let publicKeyCredential = Object.assign({}, publicKey);
   publicKeyCredential.user.id = this._bufferDecode(publicKey.user.id);
-  publicKeyCredential.challenge = this._bufferDecode(publicKey.challenge);
+  publicKeyCredential.challenge = this._bufferDecode(this._base64Decode(publicKey.challenge));
   if (publicKey.excludeCredentials) {
     publicKeyCredential.excludeCredentials = this._credentialDecode(publicKey.excludeCredentials);
   }
@@ -74,7 +74,7 @@ WebAuthn.prototype._registerCallback = function(publicKey, callback) {
  */
 WebAuthn.prototype.sign = function(publicKey, callback) {
   let publicKeyCredential = Object.assign({}, publicKey);
-  publicKeyCredential.challenge = this._bufferDecode(publicKey.challenge);
+  publicKeyCredential.challenge = this._bufferDecode(this._base64Decode(publicKey.challenge));
   if (publicKey.allowCredentials) {
     publicKeyCredential.allowCredentials = this._credentialDecode(publicKey.allowCredentials);
   }
@@ -135,6 +135,28 @@ WebAuthn.prototype._bufferDecode = function(value) {
 }
 
 /**
+ * Convert a base64url to a base64 string.
+ *
+ * @param {string} input
+ * @return {string}
+ */
+WebAuthn.prototype._base64Decode = function(input) {
+  // Replace non-url compatible chars with base64 standard chars
+  input = input.replace(/-/g, '+').replace(/_/g, '/');
+
+  // Pad out with standard base64 required padding characters
+  const pad = input.length % 4;
+  if (pad) {
+      if (pad === 1) {
+          throw new Error('InvalidLengthError: Input base64url string is the wrong length to determine padding');
+      }
+      input += new Array(5-pad).join('=');
+  }
+
+  return input;
+}
+
+/**
  * Credential decode.
  *
  * @param {PublicKeyCredentialDescriptor} credentials
@@ -144,7 +166,7 @@ WebAuthn.prototype._credentialDecode = function(credentials) {
   var self = this;
   return credentials.map(function(data) {
     return {
-      id: self._bufferDecode(data.id),
+      id: self._bufferDecode(self._base64Decode(data.id)),
       type: data.type,
       transports: data.transports,
     };

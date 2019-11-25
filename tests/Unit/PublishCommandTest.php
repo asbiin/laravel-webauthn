@@ -12,6 +12,10 @@ class PublishCommandTest extends FeatureTestCase
             ->expectsOutput('Publishing complete.')
             ->expectsOutput('Publishing complete.')
             ->expectsOutput('Publishing complete.')
+            ->expectsOutput('Publishing complete.')
+            ->expectsOutput('Publishing complete.')
+            ->expectsOutput('Publishing complete.')
+            ->expectsOutput('Publishing complete.')
             ->expectsOutput('Publishing complete.');
     }
 }
