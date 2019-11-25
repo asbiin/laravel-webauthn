@@ -3,10 +3,10 @@
 namespace LaravelWebauthn\Tests\Unit;
 
 use Illuminate\Http\Request;
-use LaravelWebauthn\Services\Webauthn;
-use LaravelWebauthn\Models\WebauthnKey;
-use LaravelWebauthn\Tests\FeatureTestCase;
 use LaravelWebauthn\Http\Middleware\WebauthnMiddleware;
+use LaravelWebauthn\Models\WebauthnKey;
+use LaravelWebauthn\Services\Webauthn;
+use LaravelWebauthn\Tests\FeatureTestCase;
 
 class MiddlewareTest extends FeatureTestCase
 {

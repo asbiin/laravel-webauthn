@@ -6,18 +6,18 @@ use CBOR\Decoder;
 use Cose\Algorithm\Manager;
 use Cose\Algorithm\Signature;
 use GuzzleHttp\Psr7\ServerRequest;
-use Webauthn\PublicKeyCredentialSource;
-use Webauthn\AuthenticatorAssertionResponse;
-use Webauthn\AuthenticatorAttestationResponse;
-use Webauthn\PublicKeyCredentialRequestOptions;
-use Webauthn\PublicKeyCredentialCreationOptions;
-use Webauthn\AuthenticatorAssertionResponseValidator;
 use Illuminate\Contracts\Auth\Authenticatable as User;
-use Webauthn\AuthenticatorAttestationResponseValidator;
 use LaravelWebauthn\Exceptions\ResponseMismatchException;
-use Webauthn\TokenBinding\TokenBindingNotSupportedHandler;
-use Webauthn\AuthenticationExtensions\ExtensionOutputCheckerHandler;
 use Webauthn\AttestationStatement\AttestationStatementSupportManager;
+use Webauthn\AuthenticationExtensions\ExtensionOutputCheckerHandler;
+use Webauthn\AuthenticatorAssertionResponse;
+use Webauthn\AuthenticatorAssertionResponseValidator;
+use Webauthn\AuthenticatorAttestationResponse;
+use Webauthn\AuthenticatorAttestationResponseValidator;
+use Webauthn\PublicKeyCredentialCreationOptions;
+use Webauthn\PublicKeyCredentialRequestOptions;
+use Webauthn\PublicKeyCredentialSource;
+use Webauthn\TokenBinding\TokenBindingNotSupportedHandler;
 
 final class PublicKeyCredentialValidator extends AbstractValidatorFactory
 {

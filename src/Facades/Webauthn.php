@@ -3,8 +3,8 @@
 namespace LaravelWebauthn\Facades;
 
 use Illuminate\Support\Facades\Facade;
-use Webauthn\PublicKeyCredentialRequestOptions;
 use Webauthn\PublicKeyCredentialCreationOptions;
+use Webauthn\PublicKeyCredentialRequestOptions;
 
 /**
  * @method static PublicKeyCredentialCreationOptions getRegisterData(\Illuminate\Contracts\Auth\Authenticatable $user)

@@ -2,8 +2,8 @@
 
 namespace LaravelWebauthn;
 
-use Illuminate\Support\ServiceProvider;
 use Illuminate\Contracts\Support\DeferrableProvider;
+use Illuminate\Support\ServiceProvider;
 
 class SingletonServiceProvider extends ServiceProvider implements DeferrableProvider
 {
