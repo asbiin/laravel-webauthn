@@ -2,13 +2,13 @@
 
 namespace LaravelWebauthn\Tests\Fake;
 
+use Illuminate\Contracts\Auth\Authenticatable as User;
 use Illuminate\Support\Arr;
-use Webauthn\AttestedCredentialData;
 use LaravelWebauthn\Models\WebauthnKey;
+use LaravelWebauthn\Services\Webauthn\CredentialRepository;
+use Webauthn\AttestedCredentialData;
 use Webauthn\PublicKeyCredentialSource;
 use Webauthn\PublicKeyCredentialUserEntity;
-use Illuminate\Contracts\Auth\Authenticatable as User;
-use LaravelWebauthn\Services\Webauthn\CredentialRepository;
 
 class FakeCredentialRepository extends CredentialRepository
 {

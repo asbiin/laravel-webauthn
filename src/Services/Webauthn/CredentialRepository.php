@@ -2,15 +2,15 @@
 
 namespace LaravelWebauthn\Services\Webauthn;
 
-use Illuminate\Contracts\Auth\Guard;
-use Webauthn\AttestedCredentialData;
-use LaravelWebauthn\Models\WebauthnKey;
-use Webauthn\PublicKeyCredentialSource;
-use Webauthn\PublicKeyCredentialDescriptor;
-use Webauthn\PublicKeyCredentialUserEntity;
-use Webauthn\PublicKeyCredentialSourceRepository;
 use Illuminate\Contracts\Auth\Authenticatable as User;
+use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use LaravelWebauthn\Models\WebauthnKey;
+use Webauthn\AttestedCredentialData;
+use Webauthn\PublicKeyCredentialDescriptor;
+use Webauthn\PublicKeyCredentialSource;
+use Webauthn\PublicKeyCredentialSourceRepository;
+use Webauthn\PublicKeyCredentialUserEntity;
 
 class CredentialRepository implements PublicKeyCredentialSourceRepository
 {

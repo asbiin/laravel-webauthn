@@ -2,8 +2,8 @@
 
 namespace LaravelWebauthn\Tests;
 
-use Orchestra\Testbench\TestCase;
 use Illuminate\Contracts\Auth\Authenticatable;
+use Orchestra\Testbench\TestCase;
 
 class FeatureTestCase extends TestCase
 {
