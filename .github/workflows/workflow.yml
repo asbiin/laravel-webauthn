@@ -31,7 +31,7 @@ jobs:
       with:
         php-version: ${{ matrix.php-version }}
         coverage: none
-        extension-csv: sqlite
+        extension-csv: sqlite, gmp
     - name: Check PHP Version
       run: php -v
     - name: Check Composer Version
