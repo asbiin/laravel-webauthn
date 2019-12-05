@@ -51,7 +51,7 @@ class WebauthnMiddleware
             abort_if($this->auth->guard($guard)->guest(), 401, trans('webauthn::errors.user_unauthenticated'));
 
             if (Webauthn::enabled($request->user($guard))) {
-                if ($request->session()->has('url.intended')) {
+                if ($request->hasSession() && $request->session()->has('url.intended')) {
                     return Redirect::to(route('webauthn.login'));
                 } else {
                     return Redirect::guest(route('webauthn.login'));
