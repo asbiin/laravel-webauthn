@@ -28,6 +28,7 @@ class WebauthnMiddleware
      * Create a Webauthn.
      *
      * @param \Illuminate\Contracts\Config\Repository $config
+     * @param \Illuminate\Contracts\Auth\Factory $auth
      */
     public function __construct(Config $config, AuthFactory $auth)
     {
@@ -50,7 +51,12 @@ class WebauthnMiddleware
             abort_if($this->auth->guard($guard)->guest(), 401, trans('webauthn::errors.user_unauthenticated'));
 
             if (Webauthn::enabled($request->user($guard))) {
-                return Redirect::guest(route('webauthn.login'));
+
+                if ($request->session()->has('url.intended')) {
+                    return Redirect::to(route('webauthn.login'));
+                } else {
+                    return Redirect::guest(route('webauthn.login'));
+                }
             }
         }
 

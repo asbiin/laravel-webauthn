@@ -61,7 +61,7 @@ Route::middleware(['auth', 'webauthn'])->group(function () {
 }
 ```
 
-This way user would have to validates their key on login.
+This way users would have to validate their key on login.
 
 
 ## Authenticate
@@ -100,7 +100,7 @@ The `webauthn.authenticate.postSuccessCallback` configuration is used to redirec
 If the value is false, the `webauthn.authenticate.postSuccessRedirectRoute` is used as a redirect route.
 
 If `postSuccessCallback` is false and `postSuccessRedirectRoute` is empty, the return will be JSON form:
-```json
+```javascript
 {
     result: true,
     callback: 'http://localhost',
@@ -145,13 +145,13 @@ The default value will open [webauthn::register](/resources/views/register.blade
 The `webauthn.register.postSuccessRedirectRoute` configuration is used to redirect the submit form after the registration.
 
 If `postSuccessRedirectRoute` is empty, the return will be JSON form:
-```json
+```javascript
 {
     result: true,
     id: 42,
-    object => 'webauthnKey',
-    name => 'name of the key',
-    counter => 12,
+    object: 'webauthnKey',
+    name: 'name of the key',
+    counter: 12,
 }
 ```
 

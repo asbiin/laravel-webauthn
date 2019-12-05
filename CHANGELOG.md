@@ -1,7 +1,7 @@
 # UNRELEASED CHANGES:
 
  ### New features:
-  *
+  * Make the callback url setable by the user before the middleware hit
 
  ### Enhancements:
   *
