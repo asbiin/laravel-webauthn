@@ -1,7 +1,7 @@
 # UNRELEASED CHANGES:
 
  ### New features:
-  * Make the callback url setable by the user before the middleware hit
+  *
 
  ### Enhancements:
   *
@@ -11,6 +11,10 @@
 
 
 # RELEASED VERSIONS:
+
+## 0.7.0 — 2019-12-05
+ ### New features:
+  * Make the callback url setable by the user before the middleware hit
 
 ## 0.6.4 — 2019-11-16
  ### Enhancements:
