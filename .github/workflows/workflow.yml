@@ -14,7 +14,7 @@ jobs:
     name: PHP ${{ matrix.php-version }} Test on ${{ matrix.operating-system }}
 
     steps:
-    - name: Checkout
+    - name: Checkout sources
       uses: actions/checkout@master
 
     - name: Setup PHP ${{ matrix.php-version }}
@@ -72,7 +72,8 @@ jobs:
         php-version: ['7.3']
 
     steps:
-    - uses: actions/checkout@v1
+    - name: Checkout sources
+      uses: actions/checkout@master
 
     - name: Setup PHP ${{ matrix.php-version }}
       run: |
@@ -108,7 +109,8 @@ jobs:
         php-version: ['7.3']
 
     steps:
-    - uses: actions/checkout@v1
+    - name: Checkout sources
+      uses: actions/checkout@master
 
     - name: Setup PHP ${{ matrix.php-version }}
       run: |
@@ -145,7 +147,10 @@ jobs:
         php-version: ['7.3']
 
     steps:
-    - uses: actions/checkout@v1
+    - name: Checkout sources
+      uses: actions/checkout@master
+      with:
+        fetch-depth: 0
 
     - name: Download results
       uses: actions/download-artifact@v1
