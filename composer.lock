@@ -1098,16 +1098,16 @@
         },
         {
             "name": "php-http/discovery",
-            "version": "1.7.0",
+            "version": "1.7.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-http/discovery.git",
-                "reference": "e822f86a6983790aa17ab13aa7e69631e86806b6"
+                "reference": "16a3327861ae291006a2df8fc22e991806f720d7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-http/discovery/zipball/e822f86a6983790aa17ab13aa7e69631e86806b6",
-                "reference": "e822f86a6983790aa17ab13aa7e69631e86806b6",
+                "url": "https://api.github.com/repos/php-http/discovery/zipball/16a3327861ae291006a2df8fc22e991806f720d7",
+                "reference": "16a3327861ae291006a2df8fc22e991806f720d7",
                 "shasum": ""
             },
             "require": {
@@ -1159,7 +1159,7 @@
                 "message",
                 "psr7"
             ],
-            "time": "2019-06-30T09:04:27+00:00"
+            "time": "2019-12-27T09:22:53+00:00"
         },
         {
             "name": "php-http/httplug",
