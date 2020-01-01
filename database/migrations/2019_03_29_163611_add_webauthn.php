@@ -40,6 +40,6 @@ class AddWebauthn extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('webauthn');
+        Schema::dropIfExists('webauthn_keys');
     }
 }
