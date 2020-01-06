@@ -115,7 +115,7 @@ final class PublicKeyCredentialValidator extends AbstractValidatorFactory
      * @param Manager $coseAlgorithmManager
      * @return AuthenticatorAssertionResponseValidator
      */
-    private function getAuthenticatorAssertionResponseValidator(Decoder $decoder, Manager $coseAlgorithmManager) : AuthenticatorAssertionResponseValidator
+    private function getAuthenticatorAssertionResponseValidator(Decoder $decoder, Manager $coseAlgorithmManager): AuthenticatorAssertionResponseValidator
     {
         // The token binding handler
         $tokenBindnigHandler = new TokenBindingNotSupportedHandler();
@@ -138,7 +138,7 @@ final class PublicKeyCredentialValidator extends AbstractValidatorFactory
      * @param AttestationStatementSupportManager $attestationStatementSupportManager
      * @return AuthenticatorAttestationResponseValidator
      */
-    private function getAuthenticatorAttestationResponseValidator(AttestationStatementSupportManager $attestationStatementSupportManager) : AuthenticatorAttestationResponseValidator
+    private function getAuthenticatorAttestationResponseValidator(AttestationStatementSupportManager $attestationStatementSupportManager): AuthenticatorAttestationResponseValidator
     {
         // The token binding handler
         $tokenBindnigHandler = new TokenBindingNotSupportedHandler();

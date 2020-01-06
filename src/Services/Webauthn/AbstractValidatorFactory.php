@@ -23,7 +23,7 @@ abstract class AbstractValidatorFactory extends AbstractFactory
      *
      * @return Decoder
      */
-    protected function createCBORDecoder() : Decoder
+    protected function createCBORDecoder(): Decoder
     {
         $otherObjectManager = new OtherObjectManager();
         $tagObjectManager = new TagObjectManager();
@@ -38,7 +38,7 @@ abstract class AbstractValidatorFactory extends AbstractFactory
      * @param Manager $coseAlgorithmManager
      * @return AttestationStatementSupportManager
      */
-    protected function getAttestationStatementSupportManager(Decoder $decoder, Manager $coseAlgorithmManager) : AttestationStatementSupportManager
+    protected function getAttestationStatementSupportManager(Decoder $decoder, Manager $coseAlgorithmManager): AttestationStatementSupportManager
     {
         $attestationStatementSupportManager = new AttestationStatementSupportManager();
 
@@ -77,7 +77,7 @@ abstract class AbstractValidatorFactory extends AbstractFactory
      * @param Decoder $decoder
      * @return PublicKeyCredentialLoader
      */
-    protected function getPublicKeyCredentialLoader(AttestationStatementSupportManager $attestationStatementSupportManager, Decoder $decoder) : PublicKeyCredentialLoader
+    protected function getPublicKeyCredentialLoader(AttestationStatementSupportManager $attestationStatementSupportManager, Decoder $decoder): PublicKeyCredentialLoader
     {
         // Attestation Object Loader
         $attestationObjectLoader = new AttestationObjectLoader($attestationStatementSupportManager, $decoder);

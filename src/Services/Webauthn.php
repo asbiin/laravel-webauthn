@@ -70,7 +70,7 @@ class Webauthn extends WebauthnRepository
      * @param User $user
      * @return PublicKeyCredentialCreationOptions
      */
-    public function getRegisterData(User $user) : PublicKeyCredentialCreationOptions
+    public function getRegisterData(User $user): PublicKeyCredentialCreationOptions
     {
         $publicKey = $this->app->make(PublicKeyCredentialCreationOptionsFactory::class)
             ->create($user);
@@ -89,7 +89,7 @@ class Webauthn extends WebauthnRepository
      * @param string $keyName
      * @return WebauthnKey
      */
-    public function doRegister(User $user, PublicKeyCredentialCreationOptions $publicKey, string $data, string $keyName) : WebauthnKey
+    public function doRegister(User $user, PublicKeyCredentialCreationOptions $publicKey, string $data, string $keyName): WebauthnKey
     {
         $publicKeyCredentialSource = $this->app->make(PublicKeyCredentialValidator::class)
             ->validate($publicKey, $data);
@@ -109,7 +109,7 @@ class Webauthn extends WebauthnRepository
      * @param User $user
      * @return PublicKeyCredentialRequestOptions
      */
-    public function getAuthenticateData(User $user) : PublicKeyCredentialRequestOptions
+    public function getAuthenticateData(User $user): PublicKeyCredentialRequestOptions
     {
         $publicKey = $this->app->make(PublicKeyCredentialRequestOptionsFactory::class)
             ->create($user);
@@ -127,7 +127,7 @@ class Webauthn extends WebauthnRepository
      * @param string $data
      * @return bool
      */
-    public function doAuthenticate(User $user, PublicKeyCredentialRequestOptions $publicKey, string $data) : bool
+    public function doAuthenticate(User $user, PublicKeyCredentialRequestOptions $publicKey, string $data): bool
     {
         $result = $this->app->make(PublicKeyCredentialValidator::class)
             ->check($user, $publicKey, $data);
@@ -158,7 +158,7 @@ class Webauthn extends WebauthnRepository
      *
      * @return bool
      */
-    public function check() : bool
+    public function check(): bool
     {
         return (bool) $this->session->get($this->config->get('webauthn.sessionName'), false);
     }
@@ -169,7 +169,7 @@ class Webauthn extends WebauthnRepository
      * @param \Illuminate\Contracts\Auth\Authenticatable  $user
      * @return bool
      */
-    public function enabled(User $user) : bool
+    public function enabled(User $user): bool
     {
         return (bool) $this->config->get('webauthn.enable', true) && $this->hasKey($user);
     }
