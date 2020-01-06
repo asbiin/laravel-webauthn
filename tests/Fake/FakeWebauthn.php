@@ -31,7 +31,7 @@ class FakeWebauthn
 
     protected $authenticate = true;
 
-    public function getRegisterData(User $user) : PublicKeyCredentialCreationOptions
+    public function getRegisterData(User $user): PublicKeyCredentialCreationOptions
     {
         $publicKey = $this->app->make(PublicKeyCredentialCreationOptionsFactory::class)
             ->create($user);
@@ -39,7 +39,7 @@ class FakeWebauthn
         return $publicKey;
     }
 
-    public function doRegister(User $user, PublicKeyCredentialCreationOptions $publicKey, string $data, string $keyName) : WebauthnKey
+    public function doRegister(User $user, PublicKeyCredentialCreationOptions $publicKey, string $data, string $keyName): WebauthnKey
     {
         $webauthnKey = factory(WebauthnKey::class)->create([
             'user_id' => $user->getAuthIdentifier(),
@@ -51,13 +51,13 @@ class FakeWebauthn
         return $webauthnKey;
     }
 
-    public function getAuthenticateData(User $user) : PublicKeyCredentialRequestOptions
+    public function getAuthenticateData(User $user): PublicKeyCredentialRequestOptions
     {
         return $this->app->make(PublicKeyCredentialRequestOptionsFactory::class)
             ->create($user);
     }
 
-    public function doAuthenticate(User $user, PublicKeyCredentialRequestOptions $publicKey, string $data) : bool
+    public function doAuthenticate(User $user, PublicKeyCredentialRequestOptions $publicKey, string $data): bool
     {
         if ($this->authenticate) {
             $this->forceAuthenticate();
@@ -76,12 +76,12 @@ class FakeWebauthn
         $this->app['session']->put([$this->app['config']->get('webauthn.sessionName') => true]);
     }
 
-    public function check() : bool
+    public function check(): bool
     {
         return (bool) $this->app['session']->get($this->app['config']->get('webauthn.sessionName'), false);
     }
 
-    public function enabled(User $user) : bool
+    public function enabled(User $user): bool
     {
         return $this->app['config']->get('webauthn.enable') &&
             WebauthnKey::where('user_id', $user->getAuthIdentifier())->count() > 0;
