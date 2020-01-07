@@ -1,14 +1,14 @@
 <?php
 
 return [
-    'user_unauthenticated' => 'You need to log in before doing a Webauthn authentication',
-    'auth_data_not_found' => 'Authentication data not found',
-    'create_data_not_found' => 'Register data not found',
-    'object_not_found' => 'Object not found',
+    'user_unauthenticated' => 'Vous devez vous connecter avant de faire une authentification Webauthn',
+    'auth_data_not_found' => 'Données d’authentification introuvables',
+    'create_data_not_found' => 'Données d’enregistrement non trouvées',
+    'object_not_found' => 'Objet introuvable',
 
-    'not_supported' => 'Your browser doesn’t currently support WebAuthn.',
-    'not_secured' => 'WebAuthn only supports secure connections. For testing over HTTP, you can use the origin "localhost".',
-    'key_already_used' => 'This key is already registered. It’s not necessary to register it again.',
-    'key_not_allowed' => 'The operation either timed out or was not allowed.',
+    'not_supported' => 'Votre navigateur ne prend actuellement pas en charge WebAuthn.',
+    'not_secured' => 'WebAuthn ne prend en charge que les connexions sécurisées. Pour les tests via HTTP, vous pouvez utiliser l\'origine "localhost".',
+    'key_already_used' => 'Cette clé est déjà enregistrée. Il n\'est pas nécessaire de l\'enregistrer à nouveau.',
+    'key_not_allowed' => 'L’opération a expiré ou n’a pas été autorisée.',
 
 ];
