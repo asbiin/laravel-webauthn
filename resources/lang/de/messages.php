@@ -1,17 +1,17 @@
 <?php
 
 return [
-    'buttonAdvise' => 'If your security key has a button, press it.',
-    'noButtonAdvise' => 'If it does not, remove it and insert it again.',
-    'success' => 'Your key is detected and validated.',
-    'insertKey' => 'Insert your security key',
-    'cancel' => 'Cancel',
+    'buttonAdvise' => 'Wenn Ihr Sicherkeitsschlüssel einen Knopf hat, drücken Sie ihn jetzt.',
+    'noButtonAdvise' => 'Falls er keinen hat, bitte entfernen Sie das Gerät und schließen Sie es erneut an.',
+    'success' => 'Ihr Sicherheitsschlüssel wurde gefunden und verifiziert.',
+    'insertKey' => 'Bitte Sicherheitsschlüssel anschließen',
+    'cancel' => 'Abbrechen',
 
     'auth' => [
-        'title' => 'Authentication with a security key',
+        'title' => 'Anmeldung mit einem Sicherheitsschlüssel',
     ],
 
     'register' => [
-        'title' => 'Register a new security key',
+        'title' => 'Neuen Sicherheitsschlüssel registrieren',
     ],
 ];
