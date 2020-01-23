@@ -3841,16 +3841,16 @@
         },
         {
             "name": "web-token/jwt-core",
-            "version": "v2.1.2",
+            "version": "v2.1.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/web-token/jwt-core.git",
-                "reference": "7e710be4a6eea125b92cb4cc4e6a0fc36c14d720"
+                "reference": "3e794092db3d85737dcc5ce2a21beeeaf801cd85"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/web-token/jwt-core/zipball/7e710be4a6eea125b92cb4cc4e6a0fc36c14d720",
-                "reference": "7e710be4a6eea125b92cb4cc4e6a0fc36c14d720",
+                "url": "https://api.github.com/repos/web-token/jwt-core/zipball/3e794092db3d85737dcc5ce2a21beeeaf801cd85",
+                "reference": "3e794092db3d85737dcc5ce2a21beeeaf801cd85",
                 "shasum": ""
             },
             "require": {
@@ -3916,20 +3916,20 @@
                 "jwt",
                 "symfony"
             ],
-            "time": "2019-12-09T20:14:55+00:00"
+            "time": "2019-12-27T22:22:20+00:00"
         },
         {
             "name": "web-token/jwt-signature",
-            "version": "v2.1.2",
+            "version": "v2.1.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/web-token/jwt-signature.git",
-                "reference": "7a986383f1406a1790130e2a0151b82536a03a96"
+                "reference": "18d80f83dc391bfd76bfb34079f7bc28920be958"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/web-token/jwt-signature/zipball/7a986383f1406a1790130e2a0151b82536a03a96",
-                "reference": "7a986383f1406a1790130e2a0151b82536a03a96",
+                "url": "https://api.github.com/repos/web-token/jwt-signature/zipball/18d80f83dc391bfd76bfb34079f7bc28920be958",
+                "reference": "18d80f83dc391bfd76bfb34079f7bc28920be958",
                 "shasum": ""
             },
             "require": {
@@ -3996,7 +3996,7 @@
                 "jwt",
                 "symfony"
             ],
-            "time": "2019-12-09T20:14:55+00:00"
+            "time": "2020-01-23T20:44:53+00:00"
         }
     ],
     "packages-dev": [
