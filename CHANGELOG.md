@@ -1,10 +1,10 @@
 # UNRELEASED CHANGES:
 
  ### New features:
-  *
+  * Add fr and de languages
 
  ### Enhancements:
-  *
+  * Upgrade to WebAuthn v3.0
 
  ### Fixes:
   *
