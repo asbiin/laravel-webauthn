@@ -104,7 +104,6 @@ final class PublicKeyCredentialValidator extends AbstractValidatorFactory
     /**
      * Get the Authenticator Assertion Response Validator.
      *
-     * @param Decoder $decoder
      * @param Manager $coseAlgorithmManager
      * @return AuthenticatorAssertionResponseValidator
      */
