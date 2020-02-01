@@ -152,8 +152,10 @@ jobs:
       with:
         name: results
 
-    - name: Fix coverage
-      run: sed -i -e "s%/home/runner/work/laravel-webauthn/laravel-webauthn%/github/workspace%g" results/coverage.xml
+    - name: Fix paths
+      run: |
+        sed -i -e 's%/home/runner/work/laravel-webauthn/laravel-webauthn%/github/workspace%g' results/results.xml
+        sed -i -e 's%/home/runner/work/laravel-webauthn/laravel-webauthn%/github/workspace%g' results/coverage.xml
 
     - name: SonarCloud Scan
       uses: SonarSource/sonarcloud-github-action@v1.1
