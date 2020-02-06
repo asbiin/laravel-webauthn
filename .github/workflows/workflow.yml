@@ -1,6 +1,12 @@
 name: Laravel WebAuthn workflow
 
-on: [push, pull_request]
+on:
+  push:
+    branches:
+    - master
+  pull_request:
+    branches:
+    - master
 
 jobs:
   tests:
