@@ -2,7 +2,6 @@
 
 namespace LaravelWebauthn\Services\Webauthn;
 
-use CBOR\Decoder;
 use Cose\Algorithm\Manager;
 use Cose\Algorithm\Signature;
 use GuzzleHttp\Psr7\ServerRequest;
@@ -31,15 +30,12 @@ final class PublicKeyCredentialValidator extends AbstractValidatorFactory
      */
     public function validate(PublicKeyCredentialCreationOptions $publicKeyCredentialCreationOptions, string $data): PublicKeyCredentialSource
     {
-        // Create a CBOR Decoder object
-        $decoder = $this->createCBORDecoder();
-
         $coseAlgorithmManager = $this->getCoseAlgorithmManager();
 
-        $attestationStatementSupportManager = $this->getAttestationStatementSupportManager($decoder, $coseAlgorithmManager);
+        $attestationStatementSupportManager = $this->getAttestationStatementSupportManager($coseAlgorithmManager);
 
         // Public Key Credential Loader
-        $publicKeyCredentialLoader = $this->getPublicKeyCredentialLoader($attestationStatementSupportManager, $decoder);
+        $publicKeyCredentialLoader = $this->getPublicKeyCredentialLoader($attestationStatementSupportManager);
 
         // Load the data
         $publicKeyCredential = $publicKeyCredentialLoader->load($data);
@@ -73,15 +69,12 @@ final class PublicKeyCredentialValidator extends AbstractValidatorFactory
      */
     public function check(User $user, PublicKeyCredentialRequestOptions $publicKeyCredentialRequestOptions, string $data): bool
     {
-        // Create a CBOR Decoder object
-        $decoder = $this->createCBORDecoder();
-
         $coseAlgorithmManager = $this->getCoseAlgorithmManager();
 
-        $attestationStatementSupportManager = $this->getAttestationStatementSupportManager($decoder, $coseAlgorithmManager);
+        $attestationStatementSupportManager = $this->getAttestationStatementSupportManager($coseAlgorithmManager);
 
         // Public Key Credential Loader
-        $publicKeyCredentialLoader = $this->getPublicKeyCredentialLoader($attestationStatementSupportManager, $decoder);
+        $publicKeyCredentialLoader = $this->getPublicKeyCredentialLoader($attestationStatementSupportManager);
 
         // Load the data
         $publicKeyCredential = $publicKeyCredentialLoader->load($data);
@@ -94,7 +87,7 @@ final class PublicKeyCredentialValidator extends AbstractValidatorFactory
         }
 
         // Authenticator Assertion Response Validator
-        $authenticatorAssertionResponseValidator = $this->getAuthenticatorAssertionResponseValidator($decoder, $coseAlgorithmManager);
+        $authenticatorAssertionResponseValidator = $this->getAuthenticatorAssertionResponseValidator($coseAlgorithmManager);
 
         // Check the response against the request
         $authenticatorAssertionResponseValidator->check(
@@ -111,11 +104,10 @@ final class PublicKeyCredentialValidator extends AbstractValidatorFactory
     /**
      * Get the Authenticator Assertion Response Validator.
      *
-     * @param Decoder $decoder
      * @param Manager $coseAlgorithmManager
      * @return AuthenticatorAssertionResponseValidator
      */
-    private function getAuthenticatorAssertionResponseValidator(Decoder $decoder, Manager $coseAlgorithmManager) : AuthenticatorAssertionResponseValidator
+    private function getAuthenticatorAssertionResponseValidator(Manager $coseAlgorithmManager): AuthenticatorAssertionResponseValidator
     {
         // The token binding handler
         $tokenBindnigHandler = new TokenBindingNotSupportedHandler();
@@ -125,7 +117,6 @@ final class PublicKeyCredentialValidator extends AbstractValidatorFactory
         // Authenticator Attestation Response Validator
         return new AuthenticatorAssertionResponseValidator(
             $this->repository,
-            $decoder,
             $tokenBindnigHandler,
             $extensionOutputCheckerHandler,
             $coseAlgorithmManager
@@ -138,7 +129,7 @@ final class PublicKeyCredentialValidator extends AbstractValidatorFactory
      * @param AttestationStatementSupportManager $attestationStatementSupportManager
      * @return AuthenticatorAttestationResponseValidator
      */
-    private function getAuthenticatorAttestationResponseValidator(AttestationStatementSupportManager $attestationStatementSupportManager) : AuthenticatorAttestationResponseValidator
+    private function getAuthenticatorAttestationResponseValidator(AttestationStatementSupportManager $attestationStatementSupportManager): AuthenticatorAttestationResponseValidator
     {
         // The token binding handler
         $tokenBindnigHandler = new TokenBindingNotSupportedHandler();

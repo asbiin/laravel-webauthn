@@ -2,9 +2,6 @@
 
 namespace LaravelWebauthn\Services\Webauthn;
 
-use CBOR\Decoder;
-use CBOR\OtherObject\OtherObjectManager;
-use CBOR\Tag\TagObjectManager;
 use Cose\Algorithm\Manager;
 use Webauthn\AttestationStatement\AndroidKeyAttestationStatementSupport;
 use Webauthn\AttestationStatement\AndroidSafetyNetAttestationStatementSupport;
@@ -19,26 +16,12 @@ use Webauthn\PublicKeyCredentialLoader;
 abstract class AbstractValidatorFactory extends AbstractFactory
 {
     /**
-     * Create a CBOR Decoder object.
-     *
-     * @return Decoder
-     */
-    protected function createCBORDecoder() : Decoder
-    {
-        $otherObjectManager = new OtherObjectManager();
-        $tagObjectManager = new TagObjectManager();
-
-        return new Decoder($tagObjectManager, $otherObjectManager);
-    }
-
-    /**
      * Attestation Statement Support Manager.
      *
-     * @param Decoder $decoder
      * @param Manager $coseAlgorithmManager
      * @return AttestationStatementSupportManager
      */
-    protected function getAttestationStatementSupportManager(Decoder $decoder, Manager $coseAlgorithmManager) : AttestationStatementSupportManager
+    protected function getAttestationStatementSupportManager(Manager $coseAlgorithmManager): AttestationStatementSupportManager
     {
         $attestationStatementSupportManager = new AttestationStatementSupportManager();
 
@@ -46,7 +29,7 @@ abstract class AbstractValidatorFactory extends AbstractFactory
         $attestationStatementSupportManager->add(new NoneAttestationStatementSupport());
 
         // https://www.w3.org/TR/webauthn/#fido-u2f-attestation
-        $attestationStatementSupportManager->add(new FidoU2FAttestationStatementSupport($decoder));
+        $attestationStatementSupportManager->add(new FidoU2FAttestationStatementSupport());
 
         // https://www.w3.org/TR/webauthn/#android-safetynet-attestation
         if ($this->config->get('webauthn.google_safetynet_api_key') != null) {
@@ -59,13 +42,13 @@ abstract class AbstractValidatorFactory extends AbstractFactory
         }
 
         // https://www.w3.org/TR/webauthn/#android-key-attestation
-        $attestationStatementSupportManager->add(new AndroidKeyAttestationStatementSupport($decoder));
+        $attestationStatementSupportManager->add(new AndroidKeyAttestationStatementSupport());
 
         // https://www.w3.org/TR/webauthn/#tpm-attestation
         $attestationStatementSupportManager->add(new TPMAttestationStatementSupport());
 
         // https://www.w3.org/TR/webauthn/#packed-attestation
-        $attestationStatementSupportManager->add(new PackedAttestationStatementSupport($decoder, $coseAlgorithmManager));
+        $attestationStatementSupportManager->add(new PackedAttestationStatementSupport($coseAlgorithmManager));
 
         return $attestationStatementSupportManager;
     }
@@ -74,15 +57,14 @@ abstract class AbstractValidatorFactory extends AbstractFactory
      * Get the Public Key Credential Loader.
      *
      * @param AttestationStatementSupportManager $attestationStatementSupportManager
-     * @param Decoder $decoder
      * @return PublicKeyCredentialLoader
      */
-    protected function getPublicKeyCredentialLoader(AttestationStatementSupportManager $attestationStatementSupportManager, Decoder $decoder) : PublicKeyCredentialLoader
+    protected function getPublicKeyCredentialLoader(AttestationStatementSupportManager $attestationStatementSupportManager): PublicKeyCredentialLoader
     {
         // Attestation Object Loader
-        $attestationObjectLoader = new AttestationObjectLoader($attestationStatementSupportManager, $decoder);
+        $attestationObjectLoader = new AttestationObjectLoader($attestationStatementSupportManager);
 
         // Public Key Credential Loader
-        return new PublicKeyCredentialLoader($attestationObjectLoader, $decoder);
+        return new PublicKeyCredentialLoader($attestationObjectLoader);
     }
 }
