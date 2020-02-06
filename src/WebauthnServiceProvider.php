@@ -37,7 +37,7 @@ class WebauthnServiceProvider extends ServiceProvider
      */
     private function registerRoutes()
     {
-        Route::group($this->routeConfiguration(), function (\Illuminate\Routing\Router $router) : void {
+        Route::group($this->routeConfiguration(), function (\Illuminate\Routing\Router $router): void {
             $router->get('auth', 'WebauthnController@login')->name('webauthn.login');
             $router->post('auth', 'WebauthnController@auth')->name('webauthn.auth');
 
