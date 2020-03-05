@@ -16,7 +16,7 @@ jobs:
       fail-fast: false
       matrix:
         operating-system: [ubuntu-latest]
-        php-version: ['7.2', '7.3', '7.4']
+        php-version: ['7.3', '7.4']
     name: PHP ${{ matrix.php-version }} Test on ${{ matrix.operating-system }}
 
     steps:
@@ -24,15 +24,6 @@ jobs:
       uses: actions/checkout@master
 
     - name: Setup PHP ${{ matrix.php-version }}
-      if: matrix.php-version != '7.4' && matrix.operating-system == 'ubuntu-latest'
-      run: |
-        sudo update-alternatives --set php /usr/bin/php${{ matrix.php-version }}
-        sudo update-alternatives --set phar /usr/bin/phar${{ matrix.php-version }}
-        sudo update-alternatives --set phpdbg /usr/bin/phpdbg${{ matrix.php-version }}
-        sudo update-alternatives --set php-cgi /usr/bin/php-cgi${{ matrix.php-version }}
-        sudo update-alternatives --set phar.phar /usr/bin/phar.phar${{ matrix.php-version }}
-    - name: Setup PHP ${{ matrix.php-version }}
-      if: matrix.php-version == '7.4' || matrix.operating-system != 'ubuntu-latest'
       uses: shivammathur/setup-php@master
       with:
         php-version: ${{ matrix.php-version }}
