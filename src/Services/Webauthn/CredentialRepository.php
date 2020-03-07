@@ -115,7 +115,7 @@ class CredentialRepository implements PublicKeyCredentialSourceRepository
      * @return WebauthnKey|null
      * @throws ModelNotFoundException
      */
-    private function model(string $credentialId) : ?WebauthnKey
+    private function model(string $credentialId): ?WebauthnKey
     {
         if (! $this->guard->guest()) {
             /** @var WebauthnKey */
@@ -126,6 +126,7 @@ class CredentialRepository implements PublicKeyCredentialSourceRepository
 
             return $webauthnKey;
         }
+
         return null;
     }
 

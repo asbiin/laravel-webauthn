@@ -109,6 +109,7 @@ class WebauthnKey extends Model
 
             return \Webauthn\TrustPath\TrustPathLoader::loadTrustPath($json);
         }
+
         return null;
     }
 
@@ -129,11 +130,12 @@ class WebauthnKey extends Model
      * @param string|null $value
      * @return UuidInterface|null
      */
-    public function getAaguidAttribute($value) : ?UuidInterface
+    public function getAaguidAttribute($value): ?UuidInterface
     {
         if (! is_null($value) && Uuid::isValid($value)) {
             return Uuid::fromString($value);
         }
+
         return null;
     }
 

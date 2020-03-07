@@ -64,7 +64,7 @@ final class PublicKeyCredentialCreationOptionsFactory extends AbstractOptionsFac
      */
     private function createCredentialParameters(): array
     {
-        $callback = function ($algorithm) : PublicKeyCredentialParameters {
+        $callback = function ($algorithm): PublicKeyCredentialParameters {
             return new PublicKeyCredentialParameters(
                 PublicKeyCredentialDescriptor::CREDENTIAL_TYPE_PUBLIC_KEY,
                 $algorithm
