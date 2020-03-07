@@ -1,10 +1,11 @@
 # UNRELEASED CHANGES:
 
  ### New features:
-  *
+  * Add fr and de languages
 
  ### Enhancements:
-  *
+  * Support Laravel 7 and upper
+  * Upgrade to WebAuthn v3.0
 
  ### Fixes:
   *

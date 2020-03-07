@@ -115,7 +115,7 @@ class CredentialRepository implements PublicKeyCredentialSourceRepository
      * @return WebauthnKey|null
      * @throws ModelNotFoundException
      */
-    private function model(string $credentialId)
+    private function model(string $credentialId): ?WebauthnKey
     {
         if (! $this->guard->guest()) {
             /** @var WebauthnKey */
@@ -126,11 +126,14 @@ class CredentialRepository implements PublicKeyCredentialSourceRepository
 
             return $webauthnKey;
         }
+
+        return null;
     }
 
     // deprecated CredentialRepository interface :
 
     /**
+     * @deprecated
      * @codeCoverageIgnore
      */
     public function has(string $credentialId): bool
@@ -139,6 +142,7 @@ class CredentialRepository implements PublicKeyCredentialSourceRepository
     }
 
     /**
+     * @deprecated
      * @codeCoverageIgnore
      */
     public function get(string $credentialId): AttestedCredentialData
@@ -152,6 +156,7 @@ class CredentialRepository implements PublicKeyCredentialSourceRepository
     }
 
     /**
+     * @deprecated
      * @codeCoverageIgnore
      */
     public function getUserHandleFor(string $credentialId): string
@@ -165,6 +170,7 @@ class CredentialRepository implements PublicKeyCredentialSourceRepository
     }
 
     /**
+     * @deprecated
      * @codeCoverageIgnore
      */
     public function getCounterFor(string $credentialId): int
@@ -178,6 +184,7 @@ class CredentialRepository implements PublicKeyCredentialSourceRepository
     }
 
     /**
+     * @deprecated
      * @codeCoverageIgnore
      */
     public function updateCounterFor(string $credentialId, int $newCounter): void
