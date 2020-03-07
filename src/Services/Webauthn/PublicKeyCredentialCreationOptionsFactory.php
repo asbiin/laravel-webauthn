@@ -22,9 +22,9 @@ final class PublicKeyCredentialCreationOptionsFactory extends AbstractOptionsFac
     public function create(User $user): PublicKeyCredentialCreationOptions
     {
         $userEntity = new PublicKeyCredentialUserEntity(
-            $user->email ?: '',
+            $user->email ?? '',
             $user->getAuthIdentifier(),
-            $user->email ?: '',
+            $user->email ?? '',
             null
         );
 
@@ -36,7 +36,7 @@ final class PublicKeyCredentialCreationOptionsFactory extends AbstractOptionsFac
             $this->config->get('webauthn.timeout', 60000),
             $this->repository->getRegisteredKeys($user),
             $this->createAuthenticatorSelectionCriteria(),
-            $this->config->get('webauthn.attestation_conveyance') ?: PublicKeyCredentialCreationOptions::ATTESTATION_CONVEYANCE_PREFERENCE_NONE,
+            $this->config->get('webauthn.attestation_conveyance') ?? PublicKeyCredentialCreationOptions::ATTESTATION_CONVEYANCE_PREFERENCE_NONE,
             $this->createExtensions()
         );
     }
@@ -44,9 +44,9 @@ final class PublicKeyCredentialCreationOptionsFactory extends AbstractOptionsFac
     private function createAuthenticatorSelectionCriteria(): AuthenticatorSelectionCriteria
     {
         return new AuthenticatorSelectionCriteria(
-            $this->config->get('webauthn.authenticator_selection_criteria.attachment_mode') ?: AuthenticatorSelectionCriteria::AUTHENTICATOR_ATTACHMENT_NO_PREFERENCE,
+            $this->config->get('webauthn.authenticator_selection_criteria.attachment_mode') ?? AuthenticatorSelectionCriteria::AUTHENTICATOR_ATTACHMENT_NO_PREFERENCE,
             $this->config->get('webauthn.authenticator_selection_criteria.require_resident_key', false),
-            $this->config->get('webauthn.authenticator_selection_criteria.user_verification') ?: AuthenticatorSelectionCriteria::USER_VERIFICATION_REQUIREMENT_PREFERRED
+            $this->config->get('webauthn.authenticator_selection_criteria.user_verification') ?? AuthenticatorSelectionCriteria::USER_VERIFICATION_REQUIREMENT_PREFERRED
         );
     }
 
@@ -64,14 +64,14 @@ final class PublicKeyCredentialCreationOptionsFactory extends AbstractOptionsFac
      */
     private function createCredentialParameters(): array
     {
-        $callback = function ($algorithm) {
+        $callback = function ($algorithm) : PublicKeyCredentialParameters {
             return new PublicKeyCredentialParameters(
                 PublicKeyCredentialDescriptor::CREDENTIAL_TYPE_PUBLIC_KEY,
                 $algorithm
             );
         };
 
-        return array_map($callback, $this->config->get('public_key_credential_parameters') ?: [
+        return array_map($callback, $this->config->get('public_key_credential_parameters') ?? [
             \Cose\Algorithms::COSE_ALGORITHM_ES256,
             \Cose\Algorithms::COSE_ALGORITHM_RS256,
         ]);

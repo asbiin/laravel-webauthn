@@ -102,13 +102,14 @@ class WebauthnKey extends Model
      * @param string|null $value
      * @return TrustPath|null
      */
-    public function getTrustPathAttribute($value)
+    public function getTrustPathAttribute($value): ?TrustPath
     {
         if (! is_null($value)) {
             $json = json_decode($value, true);
 
             return \Webauthn\TrustPath\TrustPathLoader::loadTrustPath($json);
         }
+        return null;
     }
 
     /**
@@ -128,11 +129,12 @@ class WebauthnKey extends Model
      * @param string|null $value
      * @return UuidInterface|null
      */
-    public function getAaguidAttribute($value)
+    public function getAaguidAttribute($value) : ?UuidInterface
     {
         if (! is_null($value) && Uuid::isValid($value)) {
             return Uuid::fromString($value);
         }
+        return null;
     }
 
     /**
@@ -159,7 +161,7 @@ class WebauthnKey extends Model
             $this->transports,
             $this->attestationType,
             $this->trustPath,
-            $this->aaguid ?: Uuid::fromString(Uuid::NIL),
+            $this->aaguid ?? Uuid::fromString(Uuid::NIL),
             $this->credentialPublicKey,
             (string) $this->user_id,
             $this->counter

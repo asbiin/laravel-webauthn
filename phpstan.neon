@@ -13,4 +13,6 @@ parameters:
         - '#Dynamic call to static method Illuminate\\Database\\Eloquent\\Builder::[a-zA-Z0-9\\_]+\(\)\.#'
         - '#Dynamic call to static method Illuminate\\Database\\Eloquent\\Model::[a-zA-Z0-9\\_]+\(\)\.#'
         - '#Dynamic call to static method Illuminate\\Database\\Query\\Builder::[a-zA-Z0-9\\_]+\(\)\.#'
+        - '#Access to an undefined property Illuminate\\Contracts\\Auth\\Authenticatable::\$email\.#'
+        - '#Dynamic call to static method Illuminate\\Database\\Eloquent\\Builder<LaravelWebauthn\\Models\\WebauthnKey>::count\(\)\.#'
     excludes_analyse:
