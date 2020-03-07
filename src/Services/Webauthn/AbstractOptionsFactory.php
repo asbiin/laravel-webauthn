@@ -11,7 +11,7 @@ abstract class AbstractOptionsFactory extends AbstractFactory
     {
         $extensions = new AuthenticationExtensionsClientInputs();
 
-        $array = $this->config->get('webauthn.extensions') ?: [];
+        $array = $this->config->get('webauthn.extensions', []);
         foreach ($array as $k => $v) {
             $extensions->add(new AuthenticationExtension($k, $v));
         }
