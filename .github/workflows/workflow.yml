@@ -3,10 +3,8 @@ name: Laravel WebAuthn workflow
 on:
   push:
     branches:
-    - master
+      - master
   pull_request:
-    branches:
-    - master
 
 jobs:
   tests:
@@ -20,7 +18,7 @@ jobs:
     name: PHP ${{ matrix.php-version }} Test on ${{ matrix.operating-system }}
 
     steps:
-    - name: Checkout
+    - name: Checkout sources
       uses: actions/checkout@master
 
     - name: Setup PHP ${{ matrix.php-version }}
@@ -69,7 +67,8 @@ jobs:
         php-version: ['7.3']
 
     steps:
-    - uses: actions/checkout@v1
+    - name: Checkout sources
+      uses: actions/checkout@master
 
     - name: Setup PHP ${{ matrix.php-version }}
       uses: shivammathur/setup-php@master
@@ -103,7 +102,8 @@ jobs:
         php-version: ['7.3']
 
     steps:
-    - uses: actions/checkout@v1
+    - name: Checkout sources
+      uses: actions/checkout@master
 
     - name: Setup PHP ${{ matrix.php-version }}
       uses: shivammathur/setup-php@master
@@ -138,7 +138,10 @@ jobs:
         php-version: ['7.3']
 
     steps:
-    - uses: actions/checkout@v1
+    - name: Checkout sources
+      uses: actions/checkout@master
+      with:
+        fetch-depth: 0
 
     - name: Download results
       uses: actions/download-artifact@v1
