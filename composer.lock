@@ -5381,22 +5381,22 @@
         },
         {
             "name": "orchestra/testbench",
-            "version": "v5.0.1",
+            "version": "v5.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/orchestral/testbench.git",
-                "reference": "3847c2230b45fb16a445b95b628ccd3517e39625"
+                "reference": "d2fb3f270f4413a8148336b3b902f45eb1ff4511"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/orchestral/testbench/zipball/3847c2230b45fb16a445b95b628ccd3517e39625",
-                "reference": "3847c2230b45fb16a445b95b628ccd3517e39625",
+                "url": "https://api.github.com/repos/orchestral/testbench/zipball/d2fb3f270f4413a8148336b3b902f45eb1ff4511",
+                "reference": "d2fb3f270f4413a8148336b3b902f45eb1ff4511",
                 "shasum": ""
             },
             "require": {
-                "laravel/framework": "^7.0.1",
+                "laravel/framework": "^7.0.6",
                 "mockery/mockery": "^1.3.1",
-                "orchestra/testbench-core": "^5.0.1",
+                "orchestra/testbench-core": "^5.0.2",
                 "php": ">=7.2.5",
                 "phpunit/phpunit": "^8.4 || ^9.0"
             },
@@ -5427,20 +5427,20 @@
                 "orchestral",
                 "testing"
             ],
-            "time": "2020-03-03T14:33:51+00:00"
+            "time": "2020-03-06T23:39:54+00:00"
         },
         {
             "name": "orchestra/testbench-core",
-            "version": "v5.0.1",
+            "version": "v5.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/orchestral/testbench-core.git",
-                "reference": "2bf166beb0a7407acd312ffb75bf4917ec9a41e5"
+                "reference": "9fac37e442651664cab3025dc482a3933f494422"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/orchestral/testbench-core/zipball/2bf166beb0a7407acd312ffb75bf4917ec9a41e5",
-                "reference": "2bf166beb0a7407acd312ffb75bf4917ec9a41e5",
+                "url": "https://api.github.com/repos/orchestral/testbench-core/zipball/9fac37e442651664cab3025dc482a3933f494422",
+                "reference": "9fac37e442651664cab3025dc482a3933f494422",
                 "shasum": ""
             },
             "require": {
@@ -5448,14 +5448,14 @@
                 "php": ">=7.2.5"
             },
             "require-dev": {
-                "laravel/framework": "^7.0",
+                "laravel/framework": "^7.0.6",
                 "laravel/laravel": "dev-master",
                 "mockery/mockery": "^1.3.1",
                 "orchestra/canvas": "^5.0",
                 "phpunit/phpunit": "^8.4 || ^9.0"
             },
             "suggest": {
-                "laravel/framework": "Required for testing (^7.0).",
+                "laravel/framework": "Required for testing (^7.0.6).",
                 "mockery/mockery": "Allow using Mockery for testing (^1.3.1).",
                 "orchestra/testbench-browser-kit": "Allow using legacy Laravel BrowserKit for testing (^5.0).",
                 "orchestra/testbench-dusk": "Allow using Laravel Dusk for testing (^5.0).",
@@ -5493,7 +5493,7 @@
                 "orchestral",
                 "testing"
             ],
-            "time": "2020-03-03T14:02:06+00:00"
+            "time": "2020-03-06T23:32:49+00:00"
         },
         {
             "name": "phar-io/manifest",
