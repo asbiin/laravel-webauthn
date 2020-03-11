@@ -503,16 +503,16 @@
         },
         {
             "name": "laravel/framework",
-            "version": "v7.0.7",
+            "version": "v7.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/framework.git",
-                "reference": "5c3b3d9c77560b249305cbc42d0aa0a16f9e80f9"
+                "reference": "59b97d2868ff42d11626e63c6773b41146b3eb9c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/framework/zipball/5c3b3d9c77560b249305cbc42d0aa0a16f9e80f9",
-                "reference": "5c3b3d9c77560b249305cbc42d0aa0a16f9e80f9",
+                "url": "https://api.github.com/repos/laravel/framework/zipball/59b97d2868ff42d11626e63c6773b41146b3eb9c",
+                "reference": "59b97d2868ff42d11626e63c6773b41146b3eb9c",
                 "shasum": ""
             },
             "require": {
@@ -650,7 +650,7 @@
                 "framework",
                 "laravel"
             ],
-            "time": "2020-03-07T14:35:34+00:00"
+            "time": "2020-03-10T14:07:01+00:00"
         },
         {
             "name": "league/commonmark",
@@ -728,16 +728,16 @@
         },
         {
             "name": "league/flysystem",
-            "version": "1.0.64",
+            "version": "1.0.65",
             "source": {
                 "type": "git",
                 "url": "https://github.com/thephpleague/flysystem.git",
-                "reference": "d13c43dbd4b791f815215959105a008515d1a2e0"
+                "reference": "8f17b3ba67097aafb8318cd5c553b1acf7c891c8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/thephpleague/flysystem/zipball/d13c43dbd4b791f815215959105a008515d1a2e0",
-                "reference": "d13c43dbd4b791f815215959105a008515d1a2e0",
+                "url": "https://api.github.com/repos/thephpleague/flysystem/zipball/8f17b3ba67097aafb8318cd5c553b1acf7c891c8",
+                "reference": "8f17b3ba67097aafb8318cd5c553b1acf7c891c8",
                 "shasum": ""
             },
             "require": {
@@ -808,7 +808,7 @@
                 "sftp",
                 "storage"
             ],
-            "time": "2020-02-05T18:14:17+00:00"
+            "time": "2020-03-08T18:53:20+00:00"
         },
         {
             "name": "league/uri",
