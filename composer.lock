@@ -4445,16 +4445,16 @@
         },
         {
             "name": "composer/composer",
-            "version": "1.10.0-RC",
+            "version": "1.10.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/composer/composer.git",
-                "reference": "ec39b4cbb5e012365d70cd95969ea11780d3c1fc"
+                "reference": "b912a45da3e2b22f5cb5a23e441b697a295ba011"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/composer/composer/zipball/ec39b4cbb5e012365d70cd95969ea11780d3c1fc",
-                "reference": "ec39b4cbb5e012365d70cd95969ea11780d3c1fc",
+                "url": "https://api.github.com/repos/composer/composer/zipball/b912a45da3e2b22f5cb5a23e441b697a295ba011",
+                "reference": "b912a45da3e2b22f5cb5a23e441b697a295ba011",
                 "shasum": ""
             },
             "require": {
@@ -4521,7 +4521,7 @@
                 "dependency",
                 "package"
             ],
-            "time": "2020-02-14T14:11:30+00:00"
+            "time": "2020-03-13T19:34:27+00:00"
         },
         {
             "name": "composer/semver",
@@ -5209,16 +5209,16 @@
         },
         {
             "name": "nunomaduro/larastan",
-            "version": "v0.5.2",
+            "version": "v0.5.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nunomaduro/larastan.git",
-                "reference": "a4cc1d5861123ea4c6b5c966a092063fb70a144b"
+                "reference": "8e7989f32519c8e8c7b8b61f51b0ef0c97ef6c9d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nunomaduro/larastan/zipball/a4cc1d5861123ea4c6b5c966a092063fb70a144b",
-                "reference": "a4cc1d5861123ea4c6b5c966a092063fb70a144b",
+                "url": "https://api.github.com/repos/nunomaduro/larastan/zipball/8e7989f32519c8e8c7b8b61f51b0ef0c97ef6c9d",
+                "reference": "8e7989f32519c8e8c7b8b61f51b0ef0c97ef6c9d",
                 "shasum": ""
             },
             "require": {
@@ -5277,7 +5277,7 @@
                 "php",
                 "static analysis"
             ],
-            "time": "2020-02-10T12:49:03+00:00"
+            "time": "2020-03-21T20:08:13+00:00"
         },
         {
             "name": "ocramius/package-versions",
@@ -5813,16 +5813,16 @@
         },
         {
             "name": "phpstan/phpstan",
-            "version": "0.12.14",
+            "version": "0.12.17",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpstan.git",
-                "reference": "37bdd26a80235d0f9045b49f4151102b7831cbe2"
+                "reference": "b2c37bda79fdb11d801ce208ce391cffc0f572e6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/37bdd26a80235d0f9045b49f4151102b7831cbe2",
-                "reference": "37bdd26a80235d0f9045b49f4151102b7831cbe2",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/b2c37bda79fdb11d801ce208ce391cffc0f572e6",
+                "reference": "b2c37bda79fdb11d801ce208ce391cffc0f572e6",
                 "shasum": ""
             },
             "require": {
@@ -5848,7 +5848,7 @@
                 "MIT"
             ],
             "description": "PHPStan - PHP Static Analysis Tool",
-            "time": "2020-03-02T22:29:43+00:00"
+            "time": "2020-03-17T15:39:11+00:00"
         },
         {
             "name": "phpstan/phpstan-deprecation-rules",
