@@ -5,6 +5,7 @@ on:
     branches:
       - master
   pull_request:
+    types: [opened, synchronize, reopened]
 
 jobs:
   tests:
@@ -41,10 +42,10 @@ jobs:
       uses: actions/cache@v1
       with:
         path: ${{ steps.composer-cache.outputs.dir }}
-        key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+        key: ${{ runner.os }}-composer-v2-${{ hashFiles('**/composer.json') }}
         restore-keys: |
-          ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
-          ${{ runner.os }}-composer-
+          ${{ runner.os }}-composer-v2-${{ hashFiles('**/composer.json') }}
+          ${{ runner.os }}-composer-v2-
 
     - name: Install dependencies
       run: composer install --no-interaction --no-suggest --ignore-platform-reqs
@@ -83,10 +84,10 @@ jobs:
       uses: actions/cache@v1
       with:
         path: ${{ steps.composer-cache.outputs.dir }}
-        key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+        key: ${{ runner.os }}-composer-v2-${{ hashFiles('**/composer.json') }}
         restore-keys: |
-          ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
-          ${{ runner.os }}-composer-
+          ${{ runner.os }}-composer-v2-${{ hashFiles('**/composer.json') }}
+          ${{ runner.os }}-composer-v2-
 
     - name: Install dependencies
       run: composer install --no-interaction --no-suggest --ignore-platform-reqs
@@ -118,10 +119,10 @@ jobs:
       uses: actions/cache@v1
       with:
         path: ${{ steps.composer-cache.outputs.dir }}
-        key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+        key: ${{ runner.os }}-composer-v2-${{ hashFiles('**/composer.json') }}
         restore-keys: |
-          ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
-          ${{ runner.os }}-composer-
+          ${{ runner.os }}-composer-v2-${{ hashFiles('**/composer.json') }}
+          ${{ runner.os }}-composer-v2-
 
     - name: Install dependencies
       run: composer install --no-interaction --no-suggest --ignore-platform-reqs
@@ -154,9 +155,7 @@ jobs:
         sed -i -e "s%$GITHUB_WORKSPACE/%%g" results/coverage.xml
 
     - name: SonarCloud Scan
-      #uses: SonarSource/sonarcloud-github-action@v1.1
-      # see https://github.com/SonarSource/sonarcloud-github-action/pull/6#discussion_r367822221
-      uses: hakimio/sonarcloud-github-action@pr-fix
+      uses: SonarSource/sonarcloud-github-action@v1.2
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
