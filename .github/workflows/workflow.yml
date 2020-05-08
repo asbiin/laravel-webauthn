@@ -5,6 +5,10 @@ on:
     branches:
       - master
   pull_request:
+    types: [opened, synchronize, reopened]
+  release:
+    types:
+      - created
 
 jobs:
   tests:
@@ -19,10 +23,10 @@ jobs:
 
     steps:
     - name: Checkout sources
-      uses: actions/checkout@master
+      uses: actions/checkout@v2
 
     - name: Setup PHP ${{ matrix.php-version }}
-      uses: shivammathur/setup-php@master
+      uses: shivammathur/setup-php@v2
       with:
         php-version: ${{ matrix.php-version }}
         coverage: none
@@ -34,6 +38,9 @@ jobs:
     - name: Check PHP Extensions
       run: php -m
 
+    - name: Validate composer.json and composer.lock
+      run: composer validate
+
     - name: Get Composer Cache Directory
       id: composer-cache
       run: echo "::set-output name=dir::$(composer config cache-files-dir)"
@@ -41,10 +48,10 @@ jobs:
       uses: actions/cache@v1
       with:
         path: ${{ steps.composer-cache.outputs.dir }}
-        key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+        key: ${{ runner.os }}-composer-v2-${{ hashFiles('**/composer.json') }}
         restore-keys: |
-          ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
-          ${{ runner.os }}-composer-
+          ${{ runner.os }}-composer-v2-${{ hashFiles('**/composer.json') }}
+          ${{ runner.os }}-composer-v2-
 
     - name: Install dependencies
       run: composer install --no-interaction --no-suggest --ignore-platform-reqs
@@ -68,10 +75,10 @@ jobs:
 
     steps:
     - name: Checkout sources
-      uses: actions/checkout@master
+      uses: actions/checkout@v2
 
     - name: Setup PHP ${{ matrix.php-version }}
-      uses: shivammathur/setup-php@master
+      uses: shivammathur/setup-php@v2
       with:
         php-version: ${{ matrix.php-version }}
         coverage: none
@@ -83,16 +90,16 @@ jobs:
       uses: actions/cache@v1
       with:
         path: ${{ steps.composer-cache.outputs.dir }}
-        key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+        key: ${{ runner.os }}-composer-v2-${{ hashFiles('**/composer.json') }}
         restore-keys: |
-          ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
-          ${{ runner.os }}-composer-
+          ${{ runner.os }}-composer-v2-${{ hashFiles('**/composer.json') }}
+          ${{ runner.os }}-composer-v2-
 
     - name: Install dependencies
       run: composer install --no-interaction --no-suggest --ignore-platform-reqs
 
     - name: Run psalm
-      run: vendor/bin/psalm --show-info=false
+      run: vendor/bin/psalm
 
 
   phpstan:
@@ -103,10 +110,10 @@ jobs:
 
     steps:
     - name: Checkout sources
-      uses: actions/checkout@master
+      uses: actions/checkout@v2
 
     - name: Setup PHP ${{ matrix.php-version }}
-      uses: shivammathur/setup-php@master
+      uses: shivammathur/setup-php@v2
       with:
         php-version: ${{ matrix.php-version }}
         coverage: none
@@ -118,16 +125,16 @@ jobs:
       uses: actions/cache@v1
       with:
         path: ${{ steps.composer-cache.outputs.dir }}
-        key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+        key: ${{ runner.os }}-composer-v2-${{ hashFiles('**/composer.json') }}
         restore-keys: |
-          ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
-          ${{ runner.os }}-composer-
+          ${{ runner.os }}-composer-v2-${{ hashFiles('**/composer.json') }}
+          ${{ runner.os }}-composer-v2-
 
     - name: Install dependencies
       run: composer install --no-interaction --no-suggest --ignore-platform-reqs
 
     - name : Run phpstan
-      run: vendor/bin/phpstan analyse src
+      run: vendor/bin/phpstan analyse
 
 
   reporting:
@@ -139,7 +146,7 @@ jobs:
 
     steps:
     - name: Checkout sources
-      uses: actions/checkout@master
+      uses: actions/checkout@v2
       with:
         fetch-depth: 0
 
@@ -148,15 +155,14 @@ jobs:
       with:
         name: results
 
-    - name: Fix coverage
+    - name: Fix results files
       run: |
         sed -i -e "s%$GITHUB_WORKSPACE/%%g" results/results.xml
         sed -i -e "s%$GITHUB_WORKSPACE/%%g" results/coverage.xml
 
     - name: SonarCloud Scan
-      #uses: SonarSource/sonarcloud-github-action@v1.1
-      # see https://github.com/SonarSource/sonarcloud-github-action/pull/6#discussion_r367822221
-      uses: hakimio/sonarcloud-github-action@pr-fix
+      if: env.SONAR_TOKEN != ''
+      uses: SonarSource/sonarcloud-github-action@v1.2
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}

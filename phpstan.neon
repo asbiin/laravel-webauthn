@@ -6,6 +6,8 @@ includes:
     - ./vendor/phpstan/phpstan-strict-rules/rules.neon
 
 parameters:
+    paths:
+        - src
     level: 5
     ignoreErrors:
         # Level 2

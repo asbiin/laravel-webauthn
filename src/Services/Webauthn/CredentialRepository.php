@@ -88,7 +88,7 @@ class CredentialRepository implements PublicKeyCredentialSourceRepository
     {
         return WebauthnKey::where('user_id', $userId)
             ->get()
-            ->map(function ($webauthnKey) {
+            ->map(function ($webauthnKey): PublicKeyCredentialSource {
                 return $webauthnKey->publicKeyCredentialSource;
             });
     }
