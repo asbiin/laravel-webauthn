@@ -6,6 +6,9 @@ on:
       - master
   pull_request:
     types: [opened, synchronize, reopened]
+  release:
+    types:
+      - created
 
 jobs:
   tests:
@@ -20,10 +23,10 @@ jobs:
 
     steps:
     - name: Checkout sources
-      uses: actions/checkout@master
+      uses: actions/checkout@v2
 
     - name: Setup PHP ${{ matrix.php-version }}
-      uses: shivammathur/setup-php@master
+      uses: shivammathur/setup-php@v2
       with:
         php-version: ${{ matrix.php-version }}
         coverage: none
@@ -34,6 +37,9 @@ jobs:
       run: composer -V
     - name: Check PHP Extensions
       run: php -m
+
+    - name: Validate composer.json and composer.lock
+      run: composer validate
 
     - name: Get Composer Cache Directory
       id: composer-cache
@@ -69,10 +75,10 @@ jobs:
 
     steps:
     - name: Checkout sources
-      uses: actions/checkout@master
+      uses: actions/checkout@v2
 
     - name: Setup PHP ${{ matrix.php-version }}
-      uses: shivammathur/setup-php@master
+      uses: shivammathur/setup-php@v2
       with:
         php-version: ${{ matrix.php-version }}
         coverage: none
@@ -104,10 +110,10 @@ jobs:
 
     steps:
     - name: Checkout sources
-      uses: actions/checkout@master
+      uses: actions/checkout@v2
 
     - name: Setup PHP ${{ matrix.php-version }}
-      uses: shivammathur/setup-php@master
+      uses: shivammathur/setup-php@v2
       with:
         php-version: ${{ matrix.php-version }}
         coverage: none
@@ -140,7 +146,7 @@ jobs:
 
     steps:
     - name: Checkout sources
-      uses: actions/checkout@master
+      uses: actions/checkout@v2
       with:
         fetch-depth: 0
 
@@ -149,12 +155,13 @@ jobs:
       with:
         name: results
 
-    - name: Fix coverage
+    - name: Fix results files
       run: |
         sed -i -e "s%$GITHUB_WORKSPACE/%%g" results/results.xml
         sed -i -e "s%$GITHUB_WORKSPACE/%%g" results/coverage.xml
 
     - name: SonarCloud Scan
+      if: env.SONAR_TOKEN != ''
       uses: SonarSource/sonarcloud-github-action@v1.2
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
