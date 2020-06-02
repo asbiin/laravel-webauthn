@@ -5,7 +5,7 @@ LaravelWebauthn is an adapter to use Webauthn on Laravel.
 
 [![Latest Version](https://img.shields.io/packagist/v/asbiin/laravel-webauthn.svg?style=flat-square)](https://github.com/asbiin/laravel-webauthn/releases)
 [![Downloads](https://img.shields.io/packagist/dt/asbiin/laravel-webauthn.svg?style=flat-square)](https://packagist.org/packages/asbiin/laravel-webauthn)
-[![GitHub Workflow Status](https://img.shields.io/github/workflow/status/asbiin/laravel-webauthn/Laravel%20webauthn%20workflow?style=flat-square)](https://github.com/asbiin/laravel-webauthn/actions?query=branch%3Amaster)
+[![GitHub Workflow Status](https://img.shields.io/github/workflow/status/asbiin/laravel-webauthn/Laravel%20WebAuthn%20workflow?style=flat-square)](https://github.com/asbiin/laravel-webauthn/actions?query=branch%3Amaster)
 [![Sonar Quality Gate](https://img.shields.io/sonar/quality_gate/asbiin_laravel-webauthn?server=https%3A%2F%2Fsonarcloud.io&style=flat-square)](https://sonarcloud.io/dashboard?id=asbiin_laravel-webauthn)
 [![Coverage Status](https://img.shields.io/sonar/https/sonarcloud.io/asbiin_laravel-webauthn/coverage.svg?style=flat-square)](https://sonarcloud.io/dashboard?id=asbiin_laravel-webauthn)
 
