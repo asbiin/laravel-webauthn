@@ -26,6 +26,34 @@ This package supports Laravel 5.8 and newer, and has been tested with php 7.2 an
 
 It's based on [web-auth/webauthn-framework](https://github.com/web-auth/webauthn-framework).
 
+
+## Important
+
+Your browser will refuse to negotiate a relay to your security device without the following:
+
+- domain (localhost and 127.0.0.1 will be rejected by `webauthn.js`)
+- an SSL/TLS certificate trusted by your browser (self-signed is okay)
+- connected HTTPS on port 443 (ports other than 443 will be rejected)
+
+### Homestead
+If you are a Laravel Homestead user, the default is to forward ports. You can switch from NAT/port forwarding to a private network with similar `Homestead.yaml` options:
+
+```yaml
+sites:
+  - map: homestead.test
+networks:
+  - type: "private_network"
+    ip: "192.168.254.2"
+```
+
+Re-provisioning vagrant will inform your virtual machine of the new network and install self-signed SSL/TLS certificates automatically: `vagrant reload --provision`
+
+If you haven't done so already, describe your site domain and network in your hosts file:
+```
+192.168.254.2 homestead.test
+```
+
+
 ## Configuration
 
 You can publish the LaravelWebauthn configuration in a file named `config/webauthn.php`, and resources.
@@ -40,13 +68,7 @@ If desired, you may disable LaravelWebauthn entirely using the `enabled` configu
 'enabled' => false,
 ```
 
-
-# Usage
-
-You will find an example of usage on this repository: [asbiin/laravel-webauthn-example](https://github.com/asbiin/laravel-webauthn-example).
-
-
-## Add LaravelWebauthn middleware
+### Add LaravelWebauthn middleware
 
 Add this in the `$routeMiddleware` array of your `app/Http/Kernel.php` file:
 
@@ -63,6 +85,12 @@ Route::middleware(['auth', 'webauthn'])->group(function () {
 ```
 
 This way users would have to validate their key on login.
+
+
+
+# Usage
+
+You will find an example of usage on this repository: [asbiin/laravel-webauthn-example](https://github.com/asbiin/laravel-webauthn-example).
 
 
 ## Authenticate
