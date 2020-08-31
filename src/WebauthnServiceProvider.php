@@ -79,12 +79,16 @@ class WebauthnServiceProvider extends ServiceProvider
             ], 'webauthn-migrations');
 
             $this->publishes([
-                __DIR__.'/../resources/js' => public_path('vendor/webauthn'),
+                __DIR__.'/../resources/js' => resource_path('js/vendor/webauthn'),
             ], 'webauthn-assets');
 
             $this->publishes([
                 __DIR__.'/../resources/views' => resource_path('views/vendor/webauthn'),
             ], 'webauthn-views');
+            
+            $this->publishes([
+                __DIR__.'/../dist' => public_path('vendor/webauthn'),
+            ], 'webauthn-public-assets');
         }
     }
 
