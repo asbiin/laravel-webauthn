@@ -21,7 +21,7 @@
     ],
     "require": {
         "guzzlehttp/psr7": "^1.5",
-        "laravel/framework": ">5.8",
+        "laravel/framework": "^5.8 || ^6.0 || ^7.0 || ^8.0",
         "php-http/discovery": "^1.6",
         "php-http/httplug": "^1.0 || ^2.0",
         "php-http/message": "^1.7",
