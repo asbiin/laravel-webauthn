@@ -35,7 +35,7 @@
         "ext-sqlite3": "*",
         "nunomaduro/larastan": "^0.6",
         "ocramius/package-versions": "^1.5 || ^2.0",
-        "orchestra/testbench": "^5.0",
+        "orchestra/testbench": "^5.0 || ^6.0",
         "phpstan/phpstan-deprecation-rules": "^0.12",
         "phpstan/phpstan-phpunit": "^0.12",
         "phpstan/phpstan-strict-rules": "^0.12",
