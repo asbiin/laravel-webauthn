@@ -11,6 +11,12 @@
 
 
 # RELEASED VERSIONS:
+## 0.9.0 — 2020-09-10
+ ### Enhancements:
+  * Update dependency for Laravel 8
+  * Remove composer.lock
+  * Update README doc
+
 ## 0.8.0 — 2020-03-07
  ### New features:
   * Add French and German languages
