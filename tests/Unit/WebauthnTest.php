@@ -55,7 +55,6 @@ class WebauthnTest extends FeatureTestCase
             'transports' => '[]',
             'attestationType' => 'none',
             'trustPath' => '{"type":"Webauthn\\\\TrustPath\\\\EmptyTrustPath"}',
-            'aaguid' => '00000000-0000-0000-0000-000000000000',
             'credentialPublicKey' => 'oWNrZXlldmFsdWU=',
             'counter' => '1',
         ]);
