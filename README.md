@@ -8,6 +8,7 @@ LaravelWebauthn is an adapter to use Webauthn as 2FA (second-factor authenticati
 [![GitHub Workflow Status](https://img.shields.io/github/workflow/status/asbiin/laravel-webauthn/Laravel%20WebAuthn%20workflow?style=flat-square)](https://github.com/asbiin/laravel-webauthn/actions?query=branch%3Amaster)
 [![Sonar Quality Gate](https://img.shields.io/sonar/quality_gate/asbiin_laravel-webauthn?server=https%3A%2F%2Fsonarcloud.io&style=flat-square)](https://sonarcloud.io/dashboard?id=asbiin_laravel-webauthn)
 [![Coverage Status](https://img.shields.io/sonar/https/sonarcloud.io/asbiin_laravel-webauthn/coverage.svg?style=flat-square)](https://sonarcloud.io/dashboard?id=asbiin_laravel-webauthn)
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fasbiin%2Flaravel-webauthn.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Fasbiin%2Flaravel-webauthn?ref=badge_shield)
 
 
 # Installation
@@ -222,3 +223,6 @@ Author: [Alexis Saettler](https://github.com/asbiin)
 Copyright © 2019-2020.
 
 Licensed under the MIT License. [View license](/LICENSE).
+
+
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fasbiin%2Flaravel-webauthn.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2Fasbiin%2Flaravel-webauthn?ref=badge_large)
