@@ -24,7 +24,7 @@ jobs:
             composer_flags: '--prefer-lowest'
           - laravel_version: 8.*
             composer_flags: '--prefer-lowest'
-      name: PHP ${{ matrix.php-version }} | Laravel ${{ matrix.laravel_version }} | Composer Flags ${{ matrix.composer_flags }}
+    name: PHP ${{ matrix.php-version }} | Laravel ${{ matrix.laravel_version }} | Composer Flags ${{ matrix.composer_flags }}
 
     steps:
       - name: Checkout sources
