@@ -182,6 +182,6 @@ class Webauthn extends WebauthnRepository
      */
     public function canRegister(User $user): bool
     {
-        return (bool) ! $this->enabled($user) || $this->check();
+        return ! $this->enabled($user) || $this->check();
     }
 }
