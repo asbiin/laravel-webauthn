@@ -115,6 +115,37 @@ class WebauthnControllerTest extends FeatureTestCase
         ]);
     }
 
+    public function test_register_view_without_check()
+    {
+        config(['webauthn.register.view' => '']);
+        $user = $this->signIn();
+        $webauthnKey = factory(WebauthnKey::class)->create([
+            'user_id' => $user->getAuthIdentifier(),
+        ]);
+
+        $response = $this->get('/webauthn/register');
+        $response->assertStatus(403);
+    }
+
+    public function test_register_create_without_check()
+    {
+        config(['webauthn.register.postSuccessRedirectRoute' => '']);
+
+        $user = $this->signIn();
+        $webauthnKey = factory(WebauthnKey::class)->create([
+            'user_id' => $user->getAuthIdentifier(),
+        ]);
+
+        $this->session(['webauthn.publicKeyCreation' => Webauthn::getRegisterData($user)]);
+
+        $response = $this->post('/webauthn/register', [
+            'register' => '',
+            'name' => 'keyname',
+        ]);
+
+        $response->assertStatus(403);
+    }
+
     public function test_register_create()
     {
         config(['webauthn.register.postSuccessRedirectRoute' => '']);
