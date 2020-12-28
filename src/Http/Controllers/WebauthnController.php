@@ -135,7 +135,7 @@ class WebauthnController extends Controller
      */
     public function register(Request $request)
     {
-        if(!Webauthn::canRegister($request->user())) {
+        if (! Webauthn::canRegister($request->user())) {
             return Response::json([
                 'error' => [
                     'message' => trans('webauthn::errors.cannot_register_new_key'),
@@ -178,7 +178,7 @@ class WebauthnController extends Controller
      */
     public function create(Request $request)
     {
-        if(!Webauthn::canRegister($request->user())) {
+        if (! Webauthn::canRegister($request->user())) {
             return Response::json([
                 'error' => [
                     'message' => trans('webauthn::errors.cannot_register_new_key'),
