@@ -4,7 +4,7 @@ return [
     'user_unauthenticated' => 'Vous devez vous connecter avant de faire une authentification Webauthn',
     'auth_data_not_found' => 'Données d’authentification introuvables',
     'create_data_not_found' => 'Données d’enregistrement non trouvées',
-    'cannot_register_new_key' => 'You need to log in before adding a new Webauthn authentication',
+    'cannot_register_new_key' => 'Vous devez vous connecter avant de pouvoir ajouter une nouvelle authentification Webauthn',
     'object_not_found' => 'Objet introuvable',
 
     'not_supported' => 'Votre navigateur ne prend actuellement pas en charge WebAuthn.',
