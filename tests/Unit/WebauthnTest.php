@@ -55,7 +55,7 @@ class WebauthnTest extends FeatureTestCase
             'transports' => '[]',
             'attestationType' => 'none',
             'trustPath' => '{"type":"Webauthn\\\\TrustPath\\\\EmptyTrustPath"}',
-            'aaguid' => '30303030-3030-3030-3030-303030303030',
+            'aaguid' => '00000000-0000-0000-0000-000000000000',
             'credentialPublicKey' => 'oWNrZXlldmFsdWU=',
             'counter' => '1',
         ]);
@@ -241,7 +241,7 @@ class WebauthnTest extends FeatureTestCase
         $webauthnKey->aaguid = '38195f59-0e5b-4ebf-be46-75664177eeee';
 
         $this->assertEquals('38195f59-0e5b-4ebf-be46-75664177eeee', $webauthnKey->getAttributeValue('aaguid'));
-        $this->assertInstanceOf(Uuid::class, $webauthnKey->aaguid);
+        $this->assertInstanceOf(\Ramsey\Uuid\UuidInterface::class, $webauthnKey->aaguid);
         $this->assertEquals(Uuid::fromString('38195f59-0e5b-4ebf-be46-75664177eeee'), $webauthnKey->aaguid);
     }
 
@@ -251,7 +251,7 @@ class WebauthnTest extends FeatureTestCase
         $webauthnKey->aaguid = Uuid::fromString('38195f59-0e5b-4ebf-be46-75664177eeee');
 
         $this->assertEquals('38195f59-0e5b-4ebf-be46-75664177eeee', $webauthnKey->getAttributeValue('aaguid'));
-        $this->assertInstanceOf(Uuid::class, $webauthnKey->aaguid);
+        $this->assertInstanceOf(\Ramsey\Uuid\UuidInterface::class, $webauthnKey->aaguid);
         $this->assertEquals(Uuid::fromString('38195f59-0e5b-4ebf-be46-75664177eeee'), $webauthnKey->aaguid);
     }
 }

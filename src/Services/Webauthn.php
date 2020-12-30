@@ -173,4 +173,15 @@ class Webauthn extends WebauthnRepository
     {
         return (bool) $this->config->get('webauthn.enable', true) && $this->hasKey($user);
     }
+
+    /**
+     * Test if the user can register a new token.
+     *
+     * @param \Illuminate\Contracts\Auth\Authenticatable  $user
+     * @return bool
+     */
+    public function canRegister(User $user): bool
+    {
+        return ! $this->enabled($user) || $this->check();
+    }
 }

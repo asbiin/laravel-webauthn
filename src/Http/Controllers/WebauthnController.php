@@ -135,6 +135,14 @@ class WebauthnController extends Controller
      */
     public function register(Request $request)
     {
+        if (! Webauthn::canRegister($request->user())) {
+            return Response::json([
+                'error' => [
+                    'message' => trans('webauthn::errors.cannot_register_new_key'),
+                ],
+            ], 403);
+        }
+
         $publicKey = Webauthn::getRegisterData($request->user());
 
         $request->session()->put(self::SESSION_PUBLICKEY_CREATION, $publicKey);
@@ -170,6 +178,14 @@ class WebauthnController extends Controller
      */
     public function create(Request $request)
     {
+        if (! Webauthn::canRegister($request->user())) {
+            return Response::json([
+                'error' => [
+                    'message' => trans('webauthn::errors.cannot_register_new_key'),
+                ],
+            ], 403);
+        }
+
         try {
             $publicKey = $request->session()->pull(self::SESSION_PUBLICKEY_CREATION);
             if (! $publicKey instanceof PublicKeyCredentialCreationOptions) {

@@ -1,17 +1,29 @@
 # UNRELEASED CHANGES:
 
  ### New features:
-  * Add fr and de languages
+  *
 
  ### Enhancements:
-  * Support Laravel 7 and upper
-  * Upgrade to WebAuthn v3.0
+  *
 
  ### Fixes:
   *
 
 
 # RELEASED VERSIONS:
+## 0.9.0 — 2020-09-10
+ ### Enhancements:
+  * Update dependency for Laravel 8
+  * Remove composer.lock
+  * Update README doc
+
+## 0.8.0 — 2020-03-07
+ ### New features:
+  * Add French and German languages
+
+ ### Enhancements:
+  * Support Laravel 7 and higher
+  * Upgrade to WebAuthn v3.0
 
 ## 0.7.0 — 2019-12-05
  ### New features:

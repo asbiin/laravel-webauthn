@@ -86,4 +86,9 @@ class FakeWebauthn
         return $this->app['config']->get('webauthn.enable') &&
             WebauthnKey::where('user_id', $user->getAuthIdentifier())->count() > 0;
     }
+
+    public function canRegister(User $user): bool
+    {
+        return (bool) ! $this->enabled($user) || $this->check();
+    }
 }

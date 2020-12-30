@@ -12,6 +12,10 @@
         </ignoreFiles>
     </projectFiles>
 
+    <plugins>
+        <pluginClass class="Psalm\LaravelPlugin\Plugin"/>
+    </plugins>
+
     <issueHandlers>
         <LessSpecificReturnType errorLevel="info"/>
 
@@ -32,7 +36,6 @@
         <MissingReturnType errorLevel="info"/>
         <MissingPropertyType errorLevel="info"/>
         <InvalidDocblock errorLevel="info"/>
-        <MisplacedRequiredParam errorLevel="info"/>
 
         <PropertyNotSetInConstructor errorLevel="info"/>
         <MissingConstructor errorLevel="info"/>
@@ -52,20 +55,20 @@
 
         <PossiblyUndefinedMethod>
             <errorLevel type="suppress">
-                <file name="src/Http/Controllers/WebauthnController.php" />
+                <file name="src/Http/Controllers/WebauthnController.php"/>
             </errorLevel>
         </PossiblyUndefinedMethod>
 
         <NoInterfaceProperties>
             <errorLevel type="suppress">
-                <file name="src/Services/Webauthn/PublicKeyCredentialCreationOptionsFactory.php" />
+                <file name="src/Services/Webauthn/PublicKeyCredentialCreationOptionsFactory.php"/>
             </errorLevel>
         </NoInterfaceProperties>
 
         <PossiblyInvalidArgument>
             <errorLevel type="suppress">
-                <file name="src/Http/Controllers/WebauthnController.php" />
-                <file name="src/Http/Middleware/WebauthnMiddleware.php" />
+                <file name="src/Http/Controllers/WebauthnController.php"/>
+                <file name="src/Http/Middleware/WebauthnMiddleware.php"/>
             </errorLevel>
         </PossiblyInvalidArgument>
     </issueHandlers>

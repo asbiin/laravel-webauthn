@@ -6,14 +6,14 @@ includes:
     - ./vendor/phpstan/phpstan-strict-rules/rules.neon
 
 parameters:
+    paths:
+        - src
+    inferPrivatePropertyTypeFromConstructor: true
     level: 5
     ignoreErrors:
         # Level 2
         - '#Call to an undefined method Illuminate\\View\\View::with[a-zA-Z0-9\\_]+\(\)\.#'
-        - '#Dynamic call to static method Illuminate\\Database\\Eloquent\\Builder::[a-zA-Z0-9\\_]+\(\)\.#'
-        - '#Dynamic call to static method Illuminate\\Database\\Eloquent\\Model::[a-zA-Z0-9\\_]+\(\)\.#'
-        - '#Dynamic call to static method Illuminate\\Database\\Query\\Builder::[a-zA-Z0-9\\_]+\(\)\.#'
+        - '#Access to an undefined property LaravelWebauthn\\Models\\WebauthnKey::\$.*\.#'
         - '#Access to an undefined property Illuminate\\Contracts\\Auth\\Authenticatable::\$email\.#'
-        - '#Access to an undefined property LaravelWebauthn\\Models\\WebauthnKey::.*\.#'
         - '#Dynamic call to static method Illuminate\\Database\\Eloquent\\Builder<LaravelWebauthn\\Models\\WebauthnKey>::count\(\)\.#'
     excludes_analyse:
