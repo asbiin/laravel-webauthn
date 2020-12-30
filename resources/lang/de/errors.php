@@ -4,6 +4,7 @@ return [
     'user_unauthenticated' => 'Sie müssen sich vor einer WebAuthn-Authentifizierung anmelden',
     'auth_data_not_found' => 'Authentifizierungsdaten nicht gefunden',
     'create_data_not_found' => 'Registrierungsdaten nicht gefunden',
+    'cannot_register_new_key' => 'You need to log in before adding a new Webauthn authentication',
     'object_not_found' => 'Objekt nicht gefunden',
 
     'not_supported' => 'Ihr Browser unterstützt noch kein WebAuthn.',
