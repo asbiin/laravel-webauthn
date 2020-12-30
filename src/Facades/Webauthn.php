@@ -14,6 +14,7 @@ use Webauthn\PublicKeyCredentialRequestOptions;
  * @method static void forceAuthenticate()
  * @method static bool check()
  * @method static bool enabled(\Illuminate\Contracts\Auth\Authenticatable $user)
+ * @method static bool canRegister(\Illuminate\Contracts\Auth\Authenticatable $user)
  *
  * @see \LaravelWebauthn\Webauthn
  */
