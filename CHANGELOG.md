@@ -11,6 +11,14 @@
 
 
 # RELEASED VERSIONS:
+## 1.0.0 — 2020-12-30
+
+ * Major release 1.0.0
+
+## 0.9.1 — 2020-12-30
+ ### Fixes:
+  * Securing the register route from unchecked users
+
 ## 0.9.0 — 2020-09-10
  ### Enhancements:
   * Update dependency for Laravel 8
