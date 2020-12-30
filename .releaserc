@@ -4,6 +4,7 @@
     {"name": "next", "prerelease": true},
     {"name": "alpha", "prerelease": true}
   ],
+  "tagFormat": "${version}",
   "plugins": [
     [
       "@semantic-release/commit-analyzer", {
@@ -23,6 +24,12 @@
         "writerOpts": {
           "commitsSort": ["scope"]
         }
+      }
+    ],
+    [
+      "@semantic-release/changelog",
+      {
+        "changelogFile": "CHANGELOG.md"
       }
     ],
     "@semantic-release/github"
