@@ -1,16 +1,3 @@
-# UNRELEASED CHANGES:
-
- ### New features:
-  *
-
- ### Enhancements:
-  *
-
- ### Fixes:
-  *
-
-
-# RELEASED VERSIONS:
 ## 1.0.0 — 2020-12-30
 
  * Major release 1.0.0
