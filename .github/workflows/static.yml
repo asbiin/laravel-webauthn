@@ -24,7 +24,7 @@ jobs:
         id: composer-cache
         run: echo "::set-output name=dir::$(composer config cache-files-dir)"
       - name: Cache composer files
-        uses: actions/cache@v2
+        uses: actions/cache@v2.1.4
         with:
           path: ${{ steps.composer-cache.outputs.dir }}
           key: ${{ runner.os }}-composer-v3-${{ hashFiles('**/composer.json') }}
@@ -58,7 +58,7 @@ jobs:
         id: composer-cache
         run: echo "::set-output name=dir::$(composer config cache-files-dir)"
       - name: Cache composer files
-        uses: actions/cache@v2
+        uses: actions/cache@v2.1.4
         with:
           path: ${{ steps.composer-cache.outputs.dir }}
           key: ${{ runner.os }}-composer-v3-${{ hashFiles('**/composer.json') }}
