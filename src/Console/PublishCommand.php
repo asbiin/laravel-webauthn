@@ -16,7 +16,7 @@ class PublishCommand extends Command
     /**
      * The console command description.
      *
-     * @var string
+     * @var string|null
      */
     protected $description = 'Publish all of the LaravelWebauthn resources';
 
