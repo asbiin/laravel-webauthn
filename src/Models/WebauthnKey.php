@@ -19,14 +19,14 @@ class WebauthnKey extends Model
     /**
      * The attributes that aren't mass assignable.
      *
-     * @var array
+     * @var string[]|bool
      */
     protected $guarded = ['id'];
 
     /**
      * The attributes that are mass assignable.
      *
-     * @var array
+     * @var string[]
      */
     protected $fillable = [
         'user_id',
