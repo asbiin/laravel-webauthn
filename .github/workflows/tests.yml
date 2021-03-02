@@ -33,7 +33,7 @@ jobs:
         with:
           php-version: ${{ matrix.php-version }}
           coverage: none
-          extension-csv: sqlite, gmp
+          extensions: sqlite3, gmp
       - name: Check PHP Version
         run: php -v
       - name: Check Composer Version
@@ -66,6 +66,10 @@ jobs:
       - name: Run test suite
         run: phpdbg -dmemory_limit=4G -qrr vendor/bin/phpunit -c phpunit.xml --log-junit ./results/results.xml --coverage-clover ./results/coverage.xml
 
+      - name: Fix results files
+        run: sed -i -e "s%$GITHUB_WORKSPACE/%%g" *.xml
+        working-directory: results
+
       - name: Store results
         if: matrix.php-version == '8.0' && matrix.laravel_version == '8.*'
         uses: actions/upload-artifact@v2
@@ -90,21 +94,11 @@ jobs:
         with:
           fetch-depth: 0
 
-      # If this run was triggered by a pull request event, then checkout
-      # the head of the pull request instead of the merge commit.
-      - run: git checkout HEAD^2
-        if: ${{ github.event_name == 'pull_request' }}
-
       - name: Download results
         uses: actions/download-artifact@v2
         with:
           name: results
           path: results
-
-      - name: Fix results files
-        run: |
-          sed -i -e "s%$GITHUB_WORKSPACE/%%g" results/results.xml
-          sed -i -e "s%$GITHUB_WORKSPACE/%%g" results/coverage.xml
 
       - name: SonarCloud Scan
         if: env.SONAR_TOKEN != ''
