@@ -1,3 +1,10 @@
+# [1.1.0](https://github.com/asbiin/laravel-webauthn/compare/1.0.0...1.1.0) (2021-07-03)
+
+
+### Features
+
+* use host without port for RP ID ([#339](https://github.com/asbiin/laravel-webauthn/issues/339)) ([b957ef8](https://github.com/asbiin/laravel-webauthn/commit/b957ef8d8dd9a0b9a119f1bb97e855bf9f61ac22))
+
 ## 1.0.0 — 2020-12-30
 
  * Major release 1.0.0
