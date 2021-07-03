@@ -54,7 +54,7 @@ final class PublicKeyCredentialCreationOptionsFactory extends AbstractOptionsFac
     {
         return new PublicKeyCredentialRpEntity(
             $this->config->get('app.name', 'Laravel'),
-            Request::getHttpHost(),
+            Request::getHost(),
             $this->config->get('webauthn.icon')
         );
     }
