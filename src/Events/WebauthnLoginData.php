@@ -27,8 +27,8 @@ class WebauthnLoginData
     /**
      * Create a new event instance.
      *
-     * @param \Illuminate\Contracts\Auth\Authenticatable  $user
-     * @param PublicKeyCredentialRequestOptions  $publicKey
+     * @param  \Illuminate\Contracts\Auth\Authenticatable  $user
+     * @param  PublicKeyCredentialRequestOptions  $publicKey
      */
     public function __construct(User $user, PublicKeyCredentialRequestOptions $publicKey)
     {

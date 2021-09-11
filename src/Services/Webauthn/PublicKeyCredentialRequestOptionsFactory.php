@@ -12,7 +12,7 @@ final class PublicKeyCredentialRequestOptionsFactory extends AbstractOptionsFact
     /**
      * Create a new PublicKeyCredentialCreationOptions object.
      *
-     * @param User $user
+     * @param  User  $user
      * @return PublicKeyCredentialRequestOptions
      */
     public function create(User $user): PublicKeyCredentialRequestOptions

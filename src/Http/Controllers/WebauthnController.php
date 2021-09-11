@@ -44,7 +44,7 @@ class WebauthnController extends Controller
     /**
      * Show the login Webauthn request after a login authentication.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\JsonResponse|\Illuminate\View\View
      */
     public function login(Request $request)
@@ -59,8 +59,8 @@ class WebauthnController extends Controller
     /**
      * Return the redirect destination on login.
      *
-     * @param Request $request
-     * @param PublicKeyCredentialRequestOptions $publicKey
+     * @param  Request  $request
+     * @param  PublicKeyCredentialRequestOptions  $publicKey
      * @return \Illuminate\Http\JsonResponse|\Illuminate\View\View
      */
     protected function redirectViewAuth(Request $request, PublicKeyCredentialRequestOptions $publicKey)
@@ -78,7 +78,7 @@ class WebauthnController extends Controller
     /**
      * Authenticate a webauthn request.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\RedirectResponse
      */
     public function auth(Request $request)
@@ -108,7 +108,7 @@ class WebauthnController extends Controller
     /**
      * Return the redirect destination after a successfull auth.
      *
-     * @param bool $result
+     * @param  bool  $result
      * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\RedirectResponse
      */
     protected function redirectAfterSuccessAuth(Request $request, bool $result)
@@ -130,7 +130,7 @@ class WebauthnController extends Controller
     /**
      * Return the register data to attempt a Webauthn registration.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\JsonResponse|\Illuminate\View\View
      */
     public function register(Request $request)
@@ -153,8 +153,8 @@ class WebauthnController extends Controller
     /**
      * Return the redirect destination on register.
      *
-     * @param Request $request
-     * @param PublicKeyCredentialCreationOptions $publicKey
+     * @param  Request  $request
+     * @param  PublicKeyCredentialCreationOptions  $publicKey
      * @return \Illuminate\Http\JsonResponse|\Illuminate\View\View
      */
     protected function redirectViewRegister(Request $request, PublicKeyCredentialCreationOptions $publicKey)
@@ -173,7 +173,7 @@ class WebauthnController extends Controller
     /**
      * Validate and create the Webauthn request.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\RedirectResponse
      */
     public function create(Request $request)
@@ -212,7 +212,7 @@ class WebauthnController extends Controller
     /**
      * Return the redirect destination after a successfull register.
      *
-     * @param WebauthnKey $webauthnKey
+     * @param  WebauthnKey  $webauthnKey
      * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\RedirectResponse
      */
     protected function redirectAfterSuccessRegister(WebauthnKey $webauthnKey)
@@ -233,7 +233,7 @@ class WebauthnController extends Controller
     /**
      * Remove an existing Webauthn key.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\JsonResponse
      */
     public function destroy(Request $request, int $webauthnKeyId)
@@ -259,9 +259,9 @@ class WebauthnController extends Controller
     /**
      * Retrieve the input with a string result.
      *
-     * @param \Illuminate\Http\Request $request
-     * @param string $name
-     * @param string $default
+     * @param  \Illuminate\Http\Request  $request
+     * @param  string  $name
+     * @param  string  $default
      * @return string
      */
     private function input(Request $request, string $name, string $default = ''): string

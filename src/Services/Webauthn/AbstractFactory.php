@@ -15,6 +15,7 @@ abstract class AbstractFactory
 
     /**
      * Public Key Credential Source Repository.
+     *
      * @var CredentialRepository
      */
     protected $repository;

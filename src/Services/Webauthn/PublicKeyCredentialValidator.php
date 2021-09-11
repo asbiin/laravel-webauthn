@@ -23,9 +23,10 @@ final class PublicKeyCredentialValidator extends AbstractValidatorFactory
     /**
      * Validate a creation request.
      *
-     * @param PublicKeyCredentialCreationOptions $publicKeyCredentialCreationOptions
-     * @param string $data
+     * @param  PublicKeyCredentialCreationOptions  $publicKeyCredentialCreationOptions
+     * @param  string  $data
      * @return PublicKeyCredentialSource
+     *
      * @throws ResponseMismatchException
      */
     public function validate(PublicKeyCredentialCreationOptions $publicKeyCredentialCreationOptions, string $data): PublicKeyCredentialSource
@@ -61,10 +62,11 @@ final class PublicKeyCredentialValidator extends AbstractValidatorFactory
     /**
      * Validate an authentication request.
      *
-     * @param User $user
-     * @param PublicKeyCredentialRequestOptions $publicKeyCredentialRequestOptions
-     * @param string $data
+     * @param  User  $user
+     * @param  PublicKeyCredentialRequestOptions  $publicKeyCredentialRequestOptions
+     * @param  string  $data
      * @return bool
+     *
      * @throws ResponseMismatchException
      */
     public function check(User $user, PublicKeyCredentialRequestOptions $publicKeyCredentialRequestOptions, string $data): bool
@@ -104,7 +106,7 @@ final class PublicKeyCredentialValidator extends AbstractValidatorFactory
     /**
      * Get the Authenticator Assertion Response Validator.
      *
-     * @param Manager $coseAlgorithmManager
+     * @param  Manager  $coseAlgorithmManager
      * @return AuthenticatorAssertionResponseValidator
      */
     private function getAuthenticatorAssertionResponseValidator(Manager $coseAlgorithmManager): AuthenticatorAssertionResponseValidator
@@ -126,7 +128,7 @@ final class PublicKeyCredentialValidator extends AbstractValidatorFactory
     /**
      * Get the Authenticator Attestation Response Validator.
      *
-     * @param AttestationStatementSupportManager $attestationStatementSupportManager
+     * @param  AttestationStatementSupportManager  $attestationStatementSupportManager
      * @return AuthenticatorAttestationResponseValidator
      */
     private function getAuthenticatorAttestationResponseValidator(AttestationStatementSupportManager $attestationStatementSupportManager): AuthenticatorAttestationResponseValidator

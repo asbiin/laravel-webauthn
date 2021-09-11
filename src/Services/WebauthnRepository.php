@@ -11,9 +11,9 @@ abstract class WebauthnRepository
     /**
      * Create a new key.
      *
-     * @param User $user
-     * @param string $keyName
-     * @param PublicKeyCredentialSource $publicKeyCredentialSource
+     * @param  User  $user
+     * @param  string  $keyName
+     * @param  PublicKeyCredentialSource  $publicKeyCredentialSource
      * @return WebauthnKey
      */
     public function create(User $user, string $keyName, PublicKeyCredentialSource $publicKeyCredentialSource)
@@ -31,7 +31,7 @@ abstract class WebauthnRepository
     /**
      * Detect if user has a key.
      *
-     * @param User $user
+     * @param  User  $user
      * @return bool
      */
     public function hasKey(User $user): bool

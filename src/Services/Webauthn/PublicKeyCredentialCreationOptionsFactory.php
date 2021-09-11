@@ -16,7 +16,7 @@ final class PublicKeyCredentialCreationOptionsFactory extends AbstractOptionsFac
     /**
      * Create a new PublicKeyCredentialCreationOptions object.
      *
-     * @param User $user
+     * @param  User  $user
      * @return PublicKeyCredentialCreationOptions
      */
     public function create(User $user): PublicKeyCredentialCreationOptions

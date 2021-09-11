@@ -18,7 +18,7 @@ abstract class AbstractValidatorFactory extends AbstractFactory
     /**
      * Attestation Statement Support Manager.
      *
-     * @param Manager $coseAlgorithmManager
+     * @param  Manager  $coseAlgorithmManager
      * @return AttestationStatementSupportManager
      */
     protected function getAttestationStatementSupportManager(Manager $coseAlgorithmManager): AttestationStatementSupportManager
@@ -56,7 +56,7 @@ abstract class AbstractValidatorFactory extends AbstractFactory
     /**
      * Get the Public Key Credential Loader.
      *
-     * @param AttestationStatementSupportManager $attestationStatementSupportManager
+     * @param  AttestationStatementSupportManager  $attestationStatementSupportManager
      * @return PublicKeyCredentialLoader
      */
     protected function getPublicKeyCredentialLoader(AttestationStatementSupportManager $attestationStatementSupportManager): PublicKeyCredentialLoader
