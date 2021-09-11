@@ -51,10 +51,10 @@ class Webauthn extends WebauthnRepository
     /**
      * Create a new instance of Webauthn.
      *
-     * @param \Illuminate\Contracts\Foundation\Application $app
-     * @param \Illuminate\Contracts\Config\Repository $config
-     * @param \Illuminate\Contracts\Session\Session $session
-     * @param \Illuminate\Contracts\Events\Dispatcher $events
+     * @param  \Illuminate\Contracts\Foundation\Application  $app
+     * @param  \Illuminate\Contracts\Config\Repository  $config
+     * @param  \Illuminate\Contracts\Session\Session  $session
+     * @param  \Illuminate\Contracts\Events\Dispatcher  $events
      */
     public function __construct(Application $app, Config $config, Session $session, Dispatcher $events)
     {
@@ -67,7 +67,7 @@ class Webauthn extends WebauthnRepository
     /**
      * Get datas to register a new key.
      *
-     * @param User $user
+     * @param  User  $user
      * @return PublicKeyCredentialCreationOptions
      */
     public function getRegisterData(User $user): PublicKeyCredentialCreationOptions
@@ -83,10 +83,10 @@ class Webauthn extends WebauthnRepository
     /**
      * Register a new key.
      *
-     * @param User $user
-     * @param PublicKeyCredentialCreationOptions $publicKey
-     * @param string $data
-     * @param string $keyName
+     * @param  User  $user
+     * @param  PublicKeyCredentialCreationOptions  $publicKey
+     * @param  string  $data
+     * @param  string  $keyName
      * @return WebauthnKey
      */
     public function doRegister(User $user, PublicKeyCredentialCreationOptions $publicKey, string $data, string $keyName): WebauthnKey
@@ -106,7 +106,7 @@ class Webauthn extends WebauthnRepository
     /**
      * Get datas to authenticate a user.
      *
-     * @param User $user
+     * @param  User  $user
      * @return PublicKeyCredentialRequestOptions
      */
     public function getAuthenticateData(User $user): PublicKeyCredentialRequestOptions
@@ -122,9 +122,9 @@ class Webauthn extends WebauthnRepository
     /**
      * Authenticate a user.
      *
-     * @param User $user
-     * @param PublicKeyCredentialRequestOptions $publicKey
-     * @param string $data
+     * @param  User  $user
+     * @param  PublicKeyCredentialRequestOptions  $publicKey
+     * @param  string  $data
      * @return bool
      */
     public function doAuthenticate(User $user, PublicKeyCredentialRequestOptions $publicKey, string $data): bool
@@ -166,7 +166,7 @@ class Webauthn extends WebauthnRepository
     /**
      * Test if the user has one webauthn key set or more.
      *
-     * @param \Illuminate\Contracts\Auth\Authenticatable  $user
+     * @param  \Illuminate\Contracts\Auth\Authenticatable  $user
      * @return bool
      */
     public function enabled(User $user): bool
@@ -177,7 +177,7 @@ class Webauthn extends WebauthnRepository
     /**
      * Test if the user can register a new token.
      *
-     * @param \Illuminate\Contracts\Auth\Authenticatable  $user
+     * @param  \Illuminate\Contracts\Auth\Authenticatable  $user
      * @return bool
      */
     public function canRegister(User $user): bool

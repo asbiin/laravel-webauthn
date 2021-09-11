@@ -24,7 +24,7 @@ class CredentialRepository implements PublicKeyCredentialSourceRepository
     /**
      * Create a new instance of Webauthn.
      *
-     * @param \Illuminate\Contracts\Auth\Guard $guard
+     * @param  \Illuminate\Contracts\Auth\Guard  $guard
      */
     public function __construct(Guard $guard)
     {
@@ -34,7 +34,7 @@ class CredentialRepository implements PublicKeyCredentialSourceRepository
     /**
      * Return a PublicKeyCredentialSource object.
      *
-     * @param string $publicKeyCredentialId
+     * @param  string  $publicKeyCredentialId
      * @return null|PublicKeyCredentialSource
      */
     public function findOneByCredentialId(string $publicKeyCredentialId): ?PublicKeyCredentialSource
@@ -54,7 +54,7 @@ class CredentialRepository implements PublicKeyCredentialSourceRepository
     /**
      * Return a list of PublicKeyCredentialSource objects.
      *
-     * @param PublicKeyCredentialUserEntity $publicKeyCredentialUserEntity
+     * @param  PublicKeyCredentialUserEntity  $publicKeyCredentialUserEntity
      * @return PublicKeyCredentialSource[]
      */
     public function findAllForUserEntity(PublicKeyCredentialUserEntity $publicKeyCredentialUserEntity): array
@@ -66,7 +66,8 @@ class CredentialRepository implements PublicKeyCredentialSourceRepository
     /**
      * Save a PublicKeyCredentialSource object.
      *
-     * @param PublicKeyCredentialSource $publicKeyCredentialSource
+     * @param  PublicKeyCredentialSource  $publicKeyCredentialSource
+     *
      * @throws ModelNotFoundException
      */
     public function saveCredentialSource(PublicKeyCredentialSource $publicKeyCredentialSource): void
@@ -81,7 +82,7 @@ class CredentialRepository implements PublicKeyCredentialSourceRepository
     /**
      * List of PublicKeyCredentialSource associated to the user.
      *
-     * @param int|string $userId
+     * @param  int|string  $userId
      * @return \Illuminate\Support\Collection collection of PublicKeyCredentialSource
      */
     protected function getAllRegisteredKeys($userId)
@@ -96,7 +97,7 @@ class CredentialRepository implements PublicKeyCredentialSourceRepository
     /**
      * List of registered PublicKeyCredentialDescriptor associated to the user.
      *
-     * @param User $user
+     * @param  User  $user
      * @return PublicKeyCredentialDescriptor[]
      */
     public function getRegisteredKeys(User $user): array
@@ -111,8 +112,9 @@ class CredentialRepository implements PublicKeyCredentialSourceRepository
     /**
      * Get one WebauthnKey.
      *
-     * @param string $credentialId
+     * @param  string  $credentialId
      * @return WebauthnKey|null
+     *
      * @throws ModelNotFoundException
      */
     private function model(string $credentialId): ?WebauthnKey

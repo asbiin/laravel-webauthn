@@ -28,7 +28,8 @@ class FakeCredentialRepository extends CredentialRepository
 
     /**
      * List of registered PublicKeyCredentialDescriptor classes associated to the user.
-     * @param User $user
+     *
+     * @param  User  $user
      * @return PublicKeyCredentialDescriptor[]
      */
     public function getRegisteredKeys(User $user): array
@@ -43,7 +44,7 @@ class FakeCredentialRepository extends CredentialRepository
     /**
      * Detect if user has a key.
      *
-     * @param User $user
+     * @param  User  $user
      * @return bool
      */
     public function hasKey(User $user): bool

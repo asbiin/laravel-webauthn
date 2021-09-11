@@ -19,7 +19,7 @@ class WebauthnRegister
     /**
      * Create a new event instance.
      *
-     * @param WebauthnKey  $webauthnKey
+     * @param  WebauthnKey  $webauthnKey
      */
     public function __construct(WebauthnKey $webauthnKey)
     {

@@ -22,7 +22,7 @@ class FakeWebauthn
     /**
      * Create a new instance of Webauthn.
      *
-     * @param \Illuminate\Contracts\Foundation\Application $app
+     * @param  \Illuminate\Contracts\Foundation\Application  $app
      */
     public function __construct(Application $app)
     {

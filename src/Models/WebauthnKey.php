@@ -55,7 +55,7 @@ class WebauthnKey extends Model
     /**
      * Get the credentialId.
      *
-     * @param string|null $value
+     * @param  string|null  $value
      * @return string|null
      */
     public function getCredentialIdAttribute($value)
@@ -66,7 +66,7 @@ class WebauthnKey extends Model
     /**
      * Set the credentialId.
      *
-     * @param string|null $value
+     * @param  string|null  $value
      * @return void
      */
     public function setCredentialIdAttribute($value)
@@ -77,7 +77,7 @@ class WebauthnKey extends Model
     /**
      * Get the CredentialPublicKey.
      *
-     * @param string|null $value
+     * @param  string|null  $value
      * @return string|null
      */
     public function getCredentialPublicKeyAttribute($value)
@@ -88,7 +88,7 @@ class WebauthnKey extends Model
     /**
      * Set the CredentialPublicKey.
      *
-     * @param string|null $value
+     * @param  string|null  $value
      * @return void
      */
     public function setCredentialPublicKeyAttribute($value)
@@ -99,7 +99,7 @@ class WebauthnKey extends Model
     /**
      * Get the TrustPath.
      *
-     * @param string|null $value
+     * @param  string|null  $value
      * @return TrustPath|null
      */
     public function getTrustPathAttribute($value): ?TrustPath
@@ -116,7 +116,7 @@ class WebauthnKey extends Model
     /**
      * Set the TrustPath.
      *
-     * @param TrustPath|null $value
+     * @param  TrustPath|null  $value
      * @return void
      */
     public function setTrustPathAttribute($value)
@@ -127,7 +127,7 @@ class WebauthnKey extends Model
     /**
      * Get the Aaguid.
      *
-     * @param string|null $value
+     * @param  string|null  $value
      * @return UuidInterface|null
      */
     public function getAaguidAttribute($value): ?UuidInterface
@@ -142,7 +142,7 @@ class WebauthnKey extends Model
     /**
      * Set the Aaguid.
      *
-     * @param UuidInterface|string|null $value
+     * @param  UuidInterface|string|null  $value
      * @return void
      */
     public function setAaguidAttribute($value)
@@ -173,7 +173,7 @@ class WebauthnKey extends Model
     /**
      * Set WebauthnKey attributes from a PublicKeyCredentialSource object.
      *
-     * @param PublicKeyCredentialSource $value
+     * @param  PublicKeyCredentialSource  $value
      * @return void
      */
     public function setPublicKeyCredentialSourceAttribute(PublicKeyCredentialSource $value)
