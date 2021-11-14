@@ -112,14 +112,14 @@ final class PublicKeyCredentialValidator extends AbstractValidatorFactory
     private function getAuthenticatorAssertionResponseValidator(Manager $coseAlgorithmManager): AuthenticatorAssertionResponseValidator
     {
         // The token binding handler
-        $tokenBindnigHandler = new TokenBindingNotSupportedHandler();
+        $tokenBindingHandler = new TokenBindingNotSupportedHandler();
 
         $extensionOutputCheckerHandler = new ExtensionOutputCheckerHandler();
 
         // Authenticator Attestation Response Validator
         return new AuthenticatorAssertionResponseValidator(
             $this->repository,
-            $tokenBindnigHandler,
+            $tokenBindingHandler,
             $extensionOutputCheckerHandler,
             $coseAlgorithmManager
         );
@@ -134,7 +134,7 @@ final class PublicKeyCredentialValidator extends AbstractValidatorFactory
     private function getAuthenticatorAttestationResponseValidator(AttestationStatementSupportManager $attestationStatementSupportManager): AuthenticatorAttestationResponseValidator
     {
         // The token binding handler
-        $tokenBindnigHandler = new TokenBindingNotSupportedHandler();
+        $tokenBindingHandler = new TokenBindingNotSupportedHandler();
 
         $extensionOutputCheckerHandler = new ExtensionOutputCheckerHandler();
 
@@ -142,7 +142,7 @@ final class PublicKeyCredentialValidator extends AbstractValidatorFactory
         return new AuthenticatorAttestationResponseValidator(
             $attestationStatementSupportManager,
             $this->repository,
-            $tokenBindnigHandler,
+            $tokenBindingHandler,
             $extensionOutputCheckerHandler
         );
     }
