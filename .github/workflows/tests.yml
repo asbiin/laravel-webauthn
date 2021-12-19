@@ -21,12 +21,18 @@ env:
 jobs:
   tests:
     runs-on: ubuntu-latest
+    name: PHP ${{ matrix.php-version }} | Laravel ${{ matrix.laravel_version }}
+
     strategy:
       fail-fast: false
       matrix:
         php-version: [7.4, 8.0, 8.1]
         laravel_version: [6.*, 7.*, 8.*]
-    name: PHP ${{ matrix.php-version }} | Laravel ${{ matrix.laravel_version }}
+        exclude:
+          - php-version: 7.4
+            laravel_version: 8.*
+          - php-version: 8.0
+            laravel_version: 8.*
 
     steps:
       - name: Checkout sources
