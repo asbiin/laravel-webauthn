@@ -18,7 +18,7 @@ abstract class WebauthnRepository
      */
     public function create(User $user, string $keyName, PublicKeyCredentialSource $publicKeyCredentialSource)
     {
-        $webauthnKey = WebauthnKey::make([
+        $webauthnKey = WebauthnKey::create([
             'user_id' => $user->getAuthIdentifier(),
             'name' => $keyName,
         ]);
