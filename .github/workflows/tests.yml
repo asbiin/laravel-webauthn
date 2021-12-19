@@ -29,10 +29,10 @@ jobs:
         php-version: [7.4, 8.0, 8.1]
         laravel_version: [6.*, 7.*, 8.*]
         exclude:
-          - php-version: 7.4
-            laravel_version: 8.*
-          - php-version: 8.0
-            laravel_version: 8.*
+          - php-version: '8.1'
+            laravel_version: '6.*'
+          - php-version: '8.1'
+            laravel_version: '7.*'
 
     steps:
       - name: Checkout sources
