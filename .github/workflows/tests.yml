@@ -14,15 +14,25 @@ on:
     types:
       - created
 
+env:
+  php-version: '8.1'
+  laravel-version: '8.*'
+
 jobs:
   tests:
     runs-on: ubuntu-latest
+    name: PHP ${{ matrix.php-version }} | Laravel ${{ matrix.laravel_version }}
+
     strategy:
       fail-fast: false
       matrix:
-        php-version: [7.3, 7.4, 8.0]
+        php-version: ['7.4', '8.0', '8.1']
         laravel_version: [6.*, 7.*, 8.*]
-    name: PHP ${{ matrix.php-version }} | Laravel ${{ matrix.laravel_version }}
+        exclude:
+          - php-version: '8.1'
+            laravel_version: '6.*'
+          - php-version: '8.1'
+            laravel_version: '7.*'
 
     steps:
       - name: Checkout sources
@@ -71,7 +81,7 @@ jobs:
         working-directory: results
 
       - name: Store results
-        if: matrix.php-version == '8.0' && matrix.laravel_version == '8.*'
+        if: matrix.php-version == '${{ env.php-version }}' && matrix.laravel_version == '${{ env.laravel-version }}'
         uses: actions/upload-artifact@v2
         with:
           name: results
@@ -86,7 +96,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        php-version: [8.0]
+        php-version: ['8.1']
 
     steps:
       - name: Checkout repository
