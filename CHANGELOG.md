@@ -1,3 +1,10 @@
+# [1.2.0](https://github.com/asbiin/laravel-webauthn/compare/1.1.0...1.2.0) (2021-12-20)
+
+
+### Features
+
+* update guzzlehttp/psr7 requirement to || ^2.0 ([#350](https://github.com/asbiin/laravel-webauthn/issues/350)) ([8fe8c8a](https://github.com/asbiin/laravel-webauthn/commit/8fe8c8a77b0967d272a89cf7f8eb5ebed8434a6b))
+
 # [1.1.0](https://github.com/asbiin/laravel-webauthn/compare/1.0.0...1.1.0) (2021-07-03)
 
 
