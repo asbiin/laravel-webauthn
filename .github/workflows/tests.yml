@@ -29,10 +29,10 @@ jobs:
       fail-fast: false
       matrix:
         php-version: ['7.4', '8.0', '8.1']
-        laravel_version: [6.*, 7.*, 8.*]
+        laravel_version: [6.*, 7.*, 8.*, 9.*]
         exclude:
-        #   - php-version: '7.4'
-        #     laravel_version: '9.*'
+          - php-version: '7.4'
+            laravel_version: '9.*'
           - php-version: '8.1'
             laravel_version: '6.*'
           - php-version: '8.1'
@@ -75,6 +75,8 @@ jobs:
       - name: Install dependencies with Laravel ${{ matrix.laravel_version }}
         run: |
           export COMPOSER_ROOT_VERSION=dev-master
+          mv composer.json composer.json.bak
+          grep -v "psalm/plugin-laravel" composer.json.bak > composer.json
           composer require "laravel/framework:${{ matrix.laravel_version }}" --no-interaction --no-progress --prefer-stable --prefer-dist
 
       - name: Run test suite
