@@ -29,7 +29,7 @@ class RegisterSuccessResponse implements RegisterSuccessResponseContract
      * Get the created WebauthnKey.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return  WebauthnKey
+     * @return WebauthnKey
      */
     protected function getWebauthnKey($request): WebauthnKey
     {

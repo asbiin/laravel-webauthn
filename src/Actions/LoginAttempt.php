@@ -49,7 +49,7 @@ class LoginAttempt
      *
      * @throws \Illuminate\Validation\ValidationException
      */
-    protected function throwFailedLoginException(Authenticatable $user, \Exception $e)
+    protected function throwFailedLoginException(Authenticatable $user, Exception $e)
     {
         WebauthnLoginFailed::dispatch($user);
 

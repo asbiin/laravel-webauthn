@@ -69,6 +69,7 @@ class WebauthnControllerTest extends FeatureTestCase
         $this->mock(LoginAttempt::class, function (MockInterface $mock) {
             $mock->shouldReceive('__invoke')->andReturnUsing(function () {
                 Webauthn::forceAuthenticate();
+
                 return true;
             });
         });

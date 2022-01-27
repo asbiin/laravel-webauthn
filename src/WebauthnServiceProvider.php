@@ -4,23 +4,23 @@ namespace LaravelWebauthn;
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
-use LaravelWebauthn\Http\Controllers\AuthenticateController;
-use LaravelWebauthn\Http\Controllers\WebauthnKeyController;
-use LaravelWebauthn\Services\Webauthn\CredentialRepository;
-use LaravelWebauthn\Facades\Webauthn as WebauthnFacade;
-use LaravelWebauthn\Services\Webauthn;
 use LaravelWebauthn\Contracts\DestroyResponse as DestroyResponseContract;
 use LaravelWebauthn\Contracts\LoginSuccessResponse as LoginSuccessResponseContract;
 use LaravelWebauthn\Contracts\LoginViewResponse as LoginViewResponseContract;
 use LaravelWebauthn\Contracts\RegisterSuccessResponse as RegisterSuccessResponseContract;
 use LaravelWebauthn\Contracts\RegisterViewResponse as RegisterViewResponseContract;
 use LaravelWebauthn\Contracts\UpdateResponse as UpdateResponseContract;
+use LaravelWebauthn\Facades\Webauthn as WebauthnFacade;
+use LaravelWebauthn\Http\Controllers\AuthenticateController;
+use LaravelWebauthn\Http\Controllers\WebauthnKeyController;
 use LaravelWebauthn\Http\Responses\DestroyResponse;
 use LaravelWebauthn\Http\Responses\LoginSuccessResponse;
 use LaravelWebauthn\Http\Responses\LoginViewResponse;
 use LaravelWebauthn\Http\Responses\RegisterSuccessResponse;
 use LaravelWebauthn\Http\Responses\RegisterViewResponse;
 use LaravelWebauthn\Http\Responses\UpdateResponse;
+use LaravelWebauthn\Services\Webauthn;
+use LaravelWebauthn\Services\Webauthn\CredentialRepository;
 
 class WebauthnServiceProvider extends ServiceProvider
 {

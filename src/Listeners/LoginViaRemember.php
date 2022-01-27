@@ -3,8 +3,8 @@
 namespace LaravelWebauthn\Listeners;
 
 use Illuminate\Auth\Events\Login;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Contracts\Auth\Authenticatable as User;
+use Illuminate\Support\Facades\Auth;
 use LaravelWebauthn\Facades\Webauthn;
 
 class LoginViaRemember

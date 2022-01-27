@@ -4,7 +4,6 @@ namespace LaravelWebauthn\Services\Webauthn;
 
 use Cose\Algorithm\Manager;
 use Illuminate\Support\Facades\Log;
-use Psr\Http\Message\RequestFactoryInterface;
 use Webauthn\AttestationStatement\AndroidKeyAttestationStatementSupport;
 use Webauthn\AttestationStatement\AndroidSafetyNetAttestationStatementSupport;
 use Webauthn\AttestationStatement\AttestationObjectLoader;
@@ -43,7 +42,7 @@ abstract class AbstractValidatorFactory extends AbstractFactory
                         ->enableApiVerification($client, $google_safetynet_api_key, $requestFactory)
                 );
             } catch (\Http\Discovery\Exception\NotFoundException $e) {
-                Log::error("Either Psr18Client or Psr17Factory not found.", ['exception' => $e]);
+                Log::error('Either Psr18Client or Psr17Factory not found.', ['exception' => $e]);
                 // ignore
             }
         }

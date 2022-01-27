@@ -7,9 +7,9 @@ use Illuminate\Validation\ValidationException;
 use LaravelWebauthn\Events\WebauthnRegister;
 use LaravelWebauthn\Events\WebauthnRegisterFailed;
 use LaravelWebauthn\Facades\Webauthn;
+use LaravelWebauthn\Models\WebauthnKey;
 use LaravelWebauthn\Services\Webauthn\PublicKeyCredentialValidator;
 use Webauthn\PublicKeyCredentialCreationOptions;
-use LaravelWebauthn\Models\WebauthnKey;
 
 class RegisterKeyStore
 {
