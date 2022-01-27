@@ -13,6 +13,5 @@ parameters:
     ignoreErrors:
         # Level 2
         - '#Access to an undefined property Illuminate\\Contracts\\Auth\\Authenticatable::\$email\.#'
-        - '#Access to an undefined property LaravelWebauthn\\Models\\WebauthnKey::\$.*\.#'
         - '#Dynamic call to static method Illuminate\\Database\\Eloquent\\Builder<LaravelWebauthn\\Models\\WebauthnKey>::count\(\)\.#'
     excludes_analyse:
