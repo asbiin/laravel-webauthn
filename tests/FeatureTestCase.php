@@ -10,7 +10,6 @@ class FeatureTestCase extends TestCase
     protected function getPackageProviders($app)
     {
         return [
-            \LaravelWebauthn\SingletonServiceProvider::class,
             \LaravelWebauthn\WebauthnServiceProvider::class,
         ];
     }

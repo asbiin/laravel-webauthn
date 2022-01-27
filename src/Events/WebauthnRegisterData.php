@@ -3,12 +3,13 @@
 namespace LaravelWebauthn\Events;
 
 use Illuminate\Contracts\Auth\Authenticatable as User;
+use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 use Webauthn\PublicKeyCredentialCreationOptions;
 
 class WebauthnRegisterData
 {
-    use SerializesModels;
+    use SerializesModels, Dispatchable;
 
     /**
      * The authenticated user.

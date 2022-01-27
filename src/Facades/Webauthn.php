@@ -3,18 +3,16 @@
 namespace LaravelWebauthn\Facades;
 
 use Illuminate\Support\Facades\Facade;
-use Webauthn\PublicKeyCredentialCreationOptions;
-use Webauthn\PublicKeyCredentialRequestOptions;
 
 /**
- * @method static PublicKeyCredentialCreationOptions getRegisterData(\Illuminate\Contracts\Auth\Authenticatable $user)
- * @method static \LaravelWebauthn\Models\WebauthnKey doRegister(\Illuminate\Contracts\Auth\Authenticatable $user, PublicKeyCredentialCreationOptions $publicKey, string $data, string $keyName)
- * @method static PublicKeyCredentialRequestOptions getAuthenticateData(\Illuminate\Contracts\Auth\Authenticatable $user)
- * @method static bool doAuthenticate(\Illuminate\Contracts\Auth\Authenticatable $user, PublicKeyCredentialRequestOptions $publicKey, string $data)
+ * @method static \LaravelWebauthn\Models\WebauthnKey create(\Illuminate\Contracts\Auth\Authenticatable $user, string $keyName, \Webauthn\PublicKeyCredentialSource $publicKeyCredentialSource)
  * @method static void forceAuthenticate()
+ * @method static void forgetAuthenticate()
  * @method static bool check()
+ * @method static bool webauthnEnabled()
  * @method static bool enabled(\Illuminate\Contracts\Auth\Authenticatable $user)
  * @method static bool canRegister(\Illuminate\Contracts\Auth\Authenticatable $user)
+ * @method static bool hasKey(\Illuminate\Contracts\Auth\Authenticatable $user)
  *
  * @see \LaravelWebauthn\Webauthn
  */

@@ -195,13 +195,13 @@ These url are used
 * POST `/webauthn/auth` / `route('webauthn.auth')`
   Post datas after a WebAuthn login validate.
 
-* GET `/webauthn/register` / `route('webauthn.register')`
+* GET `/webauthn/keys/create` / `route('webauthn.create')`
   Get datas to register a new key
 
-* POST `/webauthn/register` / `route('webauthn.create')`
+* POST `/webauthn/keys` / `route('webauthn.store')`
   Post datas after a WebAuthn register check
 
-* DELETE `/webauthn/{id}` / `route('webauthn.destroy')`
+* DELETE `/webauthn/keys/{id}` / `route('webauthn.destroy')`
   Get register datas
 
 

@@ -2,27 +2,27 @@
 
 namespace LaravelWebauthn\Events;
 
-use Illuminate\Contracts\Auth\Authenticatable as User;
+use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class WebauthnLogin
+class WebauthnRegisterFailed
 {
     use SerializesModels, Dispatchable;
 
     /**
-     * The authenticated user.
+     * The user.
      *
-     * @var \Illuminate\Contracts\Auth\Authenticatable
+     * @var Authenticatable
      */
     public $user;
 
     /**
      * Create a new event instance.
      *
-     * @param  \Illuminate\Contracts\Auth\Authenticatable  $user
+     * @param  Authenticatable  $user
      */
-    public function __construct(User $user)
+    public function __construct(Authenticatable $user)
     {
         $this->user = $user;
     }

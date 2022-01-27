@@ -15,15 +15,17 @@ final class PublicKeyCredentialRequestOptionsFactory extends AbstractOptionsFact
      * @param  User  $user
      * @return PublicKeyCredentialRequestOptions
      */
-    public function create(User $user): PublicKeyCredentialRequestOptions
+    public function __invoke(User $user): PublicKeyCredentialRequestOptions
     {
-        return new PublicKeyCredentialRequestOptions(
+        return (new PublicKeyCredentialRequestOptions(
             random_bytes($this->config->get('webauthn.challenge_length', 32)),
             $this->config->get('webauthn.timeout', 60000),
-            Request::getHttpHost(),
+            null,
             $this->repository->getRegisteredKeys($user),
-            $this->config->get('webauthn.authenticator_selection_criteria.user_verification') ?? AuthenticatorSelectionCriteria::USER_VERIFICATION_REQUIREMENT_PREFERRED,
+            null,
             $this->createExtensions()
-        );
+        ))
+            ->setRpId(Request::getHttpHost())
+            ->setUserVerification($this->config->get('webauthn.user_verification', 'preferred'));
     }
 }

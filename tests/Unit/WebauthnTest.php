@@ -8,6 +8,10 @@ use CBOR\MapItem;
 use CBOR\MapObject;
 use CBOR\TextStringObject;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use LaravelWebauthn\Actions\LoginAttempt;
+use LaravelWebauthn\Actions\LoginPrepare;
+use LaravelWebauthn\Actions\RegisterKeyPrepare;
+use LaravelWebauthn\Actions\RegisterKeyStore;
 use LaravelWebauthn\Models\WebauthnKey;
 use LaravelWebauthn\Services\Webauthn;
 use LaravelWebauthn\Tests\FeatureTestCase;
@@ -20,11 +24,8 @@ class WebauthnTest extends FeatureTestCase
     public function test_get_register_data()
     {
         $user = $this->signIn();
-        factory(WebauthnKey::class)->create([
-            'user_id' => $user->getAuthIdentifier(),
-        ]);
 
-        $publicKey = $this->app->make(Webauthn::class)->getRegisterData($user);
+        $publicKey = $this->app->make(RegisterKeyPrepare::class)($user);
 
         $this->assertInstanceOf(\Webauthn\PublicKeyCredentialCreationOptions::class, $publicKey);
 
@@ -40,12 +41,12 @@ class WebauthnTest extends FeatureTestCase
     {
         $user = $this->signIn();
 
-        $publicKey = $this->app->make(Webauthn::class)->getRegisterData($user);
+        $publicKey = $this->app->make(RegisterKeyPrepare::class)($user);
         $this->assertInstanceOf(\Webauthn\PublicKeyCredentialCreationOptions::class, $publicKey);
 
         $data = $this->getAttestationData($publicKey);
 
-        $this->app->make(Webauthn::class)->doRegister($user, $publicKey, json_encode($data), 'name');
+        $this->app->make(RegisterKeyStore::class)($user, $publicKey, json_encode($data), 'name');
 
         $this->assertDatabaseHas('webauthn_keys', [
             'user_id' => $user->getAuthIdentifier(),
@@ -68,7 +69,7 @@ class WebauthnTest extends FeatureTestCase
             'user_id' => $user->getAuthIdentifier(),
         ]);
 
-        $publicKey = $this->app->make(Webauthn::class)->getAuthenticateData($user);
+        $publicKey = $this->app->make(LoginPrepare::class)($user);
 
         $this->assertInstanceOf(\Webauthn\PublicKeyCredentialRequestOptions::class, $publicKey);
 
@@ -98,7 +99,7 @@ class WebauthnTest extends FeatureTestCase
             ]),
         ]);
 
-        $publicKey = $this->app->make(Webauthn::class)->getAuthenticateData($user);
+        $publicKey = $this->app->make(LoginPrepare::class)($user);
         $this->assertInstanceOf(\Webauthn\PublicKeyCredentialRequestOptions::class, $publicKey);
 
         $data = [
@@ -133,8 +134,8 @@ class WebauthnTest extends FeatureTestCase
             ],
         ];
 
-        $this->expectException(\Assert\InvalidArgumentException::class);
-        $result = $this->app->make(Webauthn::class)->doAuthenticate($user, $publicKey, json_encode($data));
+        $this->expectException(\Illuminate\Validation\ValidationException::class);
+        $result = $this->app->make(LoginAttempt::class)($user, $publicKey, json_encode($data));
 
         $this->assertTrue($result); // Not yet ...
     }
@@ -146,13 +147,13 @@ class WebauthnTest extends FeatureTestCase
             'user_id' => $user->getAuthIdentifier(),
         ]);
 
-        $publicKey = $this->app->make(Webauthn::class)->getAuthenticateData($user);
+        $publicKey = $this->app->make(LoginPrepare::class)($user);
         $this->assertInstanceOf(\Webauthn\PublicKeyCredentialRequestOptions::class, $publicKey);
 
         $data = $this->getAttestationData($publicKey);
 
-        $this->expectException(\LaravelWebauthn\Exceptions\ResponseMismatchException::class);
-        $result = $this->app->make(Webauthn::class)->doAuthenticate($user, $publicKey, json_encode($data));
+        $this->expectException(\Illuminate\Validation\ValidationException::class);
+        $result = $this->app->make(LoginAttempt::class)($user, $publicKey, json_encode($data));
     }
 
     private function getAttestationData($publicKey)

@@ -3,6 +3,8 @@
 namespace LaravelWebauthn\Services\Webauthn;
 
 use Cose\Algorithm\Manager;
+use Illuminate\Support\Facades\Log;
+use Psr\Http\Message\RequestFactoryInterface;
 use Webauthn\AttestationStatement\AndroidKeyAttestationStatementSupport;
 use Webauthn\AttestationStatement\AndroidSafetyNetAttestationStatementSupport;
 use Webauthn\AttestationStatement\AttestationObjectLoader;
@@ -25,29 +27,34 @@ abstract class AbstractValidatorFactory extends AbstractFactory
     {
         $attestationStatementSupportManager = new AttestationStatementSupportManager();
 
-        // https://www.w3.org/TR/webauthn/#none-attestation
+        // https://www.w3.org/TR/webauthn/#sctn-none-attestation
         $attestationStatementSupportManager->add(new NoneAttestationStatementSupport());
 
-        // https://www.w3.org/TR/webauthn/#fido-u2f-attestation
+        // https://www.w3.org/TR/webauthn/#sctn-fido-u2f-attestation
         $attestationStatementSupportManager->add(new FidoU2FAttestationStatementSupport());
 
-        // https://www.w3.org/TR/webauthn/#android-safetynet-attestation
-        if ($this->config->get('webauthn.google_safetynet_api_key') != null) {
+        // https://www.w3.org/TR/webauthn/#sctn-android-safetynet-attestation
+        if (($google_safetynet_api_key = $this->config->get('webauthn.google_safetynet_api_key')) !== null) {
             try {
                 $client = \Http\Discovery\Psr18ClientDiscovery::find();
-                $attestationStatementSupportManager->add(new AndroidSafetyNetAttestationStatementSupport($client, $this->config->get('webauthn.google_safetynet_api_key')));
+                $requestFactory = \Http\Discovery\Psr17FactoryDiscovery::findRequestFactory();
+                $attestationStatementSupportManager->add(
+                    (new AndroidSafetyNetAttestationStatementSupport())
+                        ->enableApiVerification($client, $google_safetynet_api_key, $requestFactory)
+                );
             } catch (\Http\Discovery\Exception\NotFoundException $e) {
+                Log::error("Either Psr18Client or Psr17Factory not found.", ['exception' => $e]);
                 // ignore
             }
         }
 
-        // https://www.w3.org/TR/webauthn/#android-key-attestation
+        // https://www.w3.org/TR/webauthn/#sctn-android-key-attestation
         $attestationStatementSupportManager->add(new AndroidKeyAttestationStatementSupport());
 
-        // https://www.w3.org/TR/webauthn/#tpm-attestation
+        // https://www.w3.org/TR/webauthn/#sctn-tpm-attestation
         $attestationStatementSupportManager->add(new TPMAttestationStatementSupport());
 
-        // https://www.w3.org/TR/webauthn/#packed-attestation
+        // https://www.w3.org/TR/webauthn/#sctn-packed-attestation
         $attestationStatementSupportManager->add(new PackedAttestationStatementSupport($coseAlgorithmManager));
 
         return $attestationStatementSupportManager;

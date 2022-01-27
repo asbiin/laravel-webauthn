@@ -18,7 +18,7 @@ use Webauthn\PublicKeyCredentialRequestOptions;
 use Webauthn\PublicKeyCredentialSource;
 use Webauthn\TokenBinding\TokenBindingNotSupportedHandler;
 
-final class PublicKeyCredentialValidator extends AbstractValidatorFactory
+class PublicKeyCredentialValidator extends AbstractValidatorFactory
 {
     /**
      * Validate a creation request.

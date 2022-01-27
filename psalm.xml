@@ -53,23 +53,11 @@
 
         <InvalidStringClass errorLevel="info"/>
 
-        <PossiblyUndefinedMethod>
-            <errorLevel type="suppress">
-                <file name="src/Http/Controllers/WebauthnController.php"/>
-            </errorLevel>
-        </PossiblyUndefinedMethod>
-
         <NoInterfaceProperties>
             <errorLevel type="suppress">
                 <file name="src/Services/Webauthn/PublicKeyCredentialCreationOptionsFactory.php"/>
             </errorLevel>
         </NoInterfaceProperties>
 
-        <PossiblyInvalidArgument>
-            <errorLevel type="suppress">
-                <file name="src/Http/Controllers/WebauthnController.php"/>
-                <file name="src/Http/Middleware/WebauthnMiddleware.php"/>
-            </errorLevel>
-        </PossiblyInvalidArgument>
     </issueHandlers>
 </psalm>

@@ -46,10 +46,12 @@
         "vimeo/psalm": "^3.9 || ^4.0"
     },
     "suggest": {
-        "php-http/client-implementation": "Recommended for the AndroidSafetyNet Attestation Statement support",
-        "web-token/jwt-signature-algorithm-rsa": "Mandatory for the AndroidSafetyNet Attestation Statement support",
-        "web-token/jwt-signature-algorithm-ecdsa": "Recommended for the AndroidSafetyNet Attestation Statement support",
-        "web-token/jwt-signature-algorithm-eddsa": "Recommended for the AndroidSafetyNet Attestation Statement support"
+        "psr/http-client-implementation": "Required for the AndroidSafetyNet Attestation Statement support",
+        "psr/http-factory-implementation": "Required for the AndroidSafetyNet Attestation Statement support",
+        "web-token/jwt-signature-algorithm-rsa": "Required for the AndroidSafetyNet Attestation Statement support",
+        "web-token/jwt-signature-algorithm-ecdsa": "Required for the AndroidSafetyNet Attestation Statement support",
+        "web-token/jwt-signature-algorithm-eddsa": "Required for the AndroidSafetyNet Attestation Statement support",
+        "web-token/jwt-key-mgmt": "Required for the AndroidSafetyNet Attestation Statement support"
     },
     "autoload": {
         "psr-4": {
@@ -64,13 +66,15 @@
     "extra": {
         "laravel": {
             "providers": [
-                "LaravelWebauthn\\SingletonServiceProvider",
                 "LaravelWebauthn\\WebauthnServiceProvider"
             ]
         }
     },
     "config": {
-        "sort-packages": true
+        "sort-packages": true,
+        "allow-plugins": {
+            "composer/package-versions-deprecated": true
+        }
     },
     "minimum-stability": "dev",
     "prefer-stable": true

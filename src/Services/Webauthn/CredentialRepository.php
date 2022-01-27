@@ -6,7 +6,6 @@ use Illuminate\Contracts\Auth\Authenticatable as User;
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use LaravelWebauthn\Models\WebauthnKey;
-use Webauthn\AttestedCredentialData;
 use Webauthn\PublicKeyCredentialDescriptor;
 use Webauthn\PublicKeyCredentialSource;
 use Webauthn\PublicKeyCredentialSourceRepository;
@@ -85,7 +84,7 @@ class CredentialRepository implements PublicKeyCredentialSourceRepository
      * @param  int|string  $userId
      * @return \Illuminate\Support\Collection collection of PublicKeyCredentialSource
      */
-    protected function getAllRegisteredKeys($userId)
+    protected function getAllRegisteredKeys($userId): \Illuminate\Support\Collection
     {
         return WebauthnKey::where('user_id', $userId)
             ->get()
@@ -130,71 +129,5 @@ class CredentialRepository implements PublicKeyCredentialSourceRepository
         }
 
         return null;
-    }
-
-    // deprecated CredentialRepository interface :
-
-    /**
-     * @deprecated
-     * @codeCoverageIgnore
-     */
-    public function has(string $credentialId): bool
-    {
-        return $this->findOneByCredentialId($credentialId) !== null;
-    }
-
-    /**
-     * @deprecated
-     * @codeCoverageIgnore
-     */
-    public function get(string $credentialId): AttestedCredentialData
-    {
-        $publicKeyCredentialSource = $this->findOneByCredentialId($credentialId);
-        if (is_null($publicKeyCredentialSource)) {
-            throw new ModelNotFoundException('Wrong credentialId');
-        }
-
-        return $publicKeyCredentialSource->getAttestedCredentialData();
-    }
-
-    /**
-     * @deprecated
-     * @codeCoverageIgnore
-     */
-    public function getUserHandleFor(string $credentialId): string
-    {
-        $publicKeyCredentialSource = $this->findOneByCredentialId($credentialId);
-        if (is_null($publicKeyCredentialSource)) {
-            throw new ModelNotFoundException('Wrong credentialId');
-        }
-
-        return $publicKeyCredentialSource->getUserHandle();
-    }
-
-    /**
-     * @deprecated
-     * @codeCoverageIgnore
-     */
-    public function getCounterFor(string $credentialId): int
-    {
-        $publicKeyCredentialSource = $this->findOneByCredentialId($credentialId);
-        if (is_null($publicKeyCredentialSource)) {
-            throw new ModelNotFoundException('Wrong credentialId');
-        }
-
-        return $publicKeyCredentialSource->getCounter();
-    }
-
-    /**
-     * @deprecated
-     * @codeCoverageIgnore
-     */
-    public function updateCounterFor(string $credentialId, int $newCounter): void
-    {
-        $publicKeyCredentialSource = $this->findOneByCredentialId($credentialId);
-        if (is_null($publicKeyCredentialSource)) {
-            throw new ModelNotFoundException('Wrong credentialId');
-        }
-        $publicKeyCredentialSource->setCounter($newCounter);
     }
 }

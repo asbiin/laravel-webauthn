@@ -19,7 +19,7 @@ final class PublicKeyCredentialCreationOptionsFactory extends AbstractOptionsFac
      * @param  User  $user
      * @return PublicKeyCredentialCreationOptions
      */
-    public function create(User $user): PublicKeyCredentialCreationOptions
+    public function __invoke(User $user): PublicKeyCredentialCreationOptions
     {
         $userEntity = new PublicKeyCredentialUserEntity(
             $user->email ?? '',
@@ -28,26 +28,27 @@ final class PublicKeyCredentialCreationOptionsFactory extends AbstractOptionsFac
             null
         );
 
-        return new PublicKeyCredentialCreationOptions(
+        return (new PublicKeyCredentialCreationOptions(
             $this->createRpEntity(),
             $userEntity,
             random_bytes($this->config->get('webauthn.challenge_length', 32)),
             $this->createCredentialParameters(),
             $this->config->get('webauthn.timeout', 60000),
-            $this->repository->getRegisteredKeys($user),
-            $this->createAuthenticatorSelectionCriteria(),
-            $this->config->get('webauthn.attestation_conveyance') ?? PublicKeyCredentialCreationOptions::ATTESTATION_CONVEYANCE_PREFERENCE_NONE,
+            [],
+            null,
+            null,
             $this->createExtensions()
-        );
+        ))
+            ->excludeCredentials($this->repository->getRegisteredKeys($user))
+            ->setAuthenticatorSelection($this->createAuthenticatorSelectionCriteria())
+            ->setAttestation($this->config->get('webauthn.attestation_conveyance', 'none'));
     }
 
     private function createAuthenticatorSelectionCriteria(): AuthenticatorSelectionCriteria
     {
-        return new AuthenticatorSelectionCriteria(
-            $this->config->get('webauthn.authenticator_selection_criteria.attachment_mode') ?? AuthenticatorSelectionCriteria::AUTHENTICATOR_ATTACHMENT_NO_PREFERENCE,
-            $this->config->get('webauthn.authenticator_selection_criteria.require_resident_key', false),
-            $this->config->get('webauthn.authenticator_selection_criteria.user_verification') ?? AuthenticatorSelectionCriteria::USER_VERIFICATION_REQUIREMENT_PREFERRED
-        );
+        return (new AuthenticatorSelectionCriteria())
+            ->setAuthenticatorAttachment($this->config->get('webauthn.attachment_mode', 'null'))
+            ->setUserVerification($this->config->get('webauthn.user_verification', 'preferred'));
     }
 
     private function createRpEntity(): PublicKeyCredentialRpEntity
@@ -73,7 +74,10 @@ final class PublicKeyCredentialCreationOptionsFactory extends AbstractOptionsFac
 
         return array_map($callback, $this->config->get('public_key_credential_parameters') ?? [
             \Cose\Algorithms::COSE_ALGORITHM_ES256,
+            \Cose\Algorithms::COSE_ALGORITHM_ES512,
             \Cose\Algorithms::COSE_ALGORITHM_RS256,
+            \Cose\Algorithms::COSE_ALGORITHM_EdDSA,
+            \Cose\Algorithms::COSE_ALGORITHM_ES384,
         ]);
     }
 }
