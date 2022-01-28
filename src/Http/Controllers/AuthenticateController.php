@@ -4,6 +4,7 @@ namespace LaravelWebauthn\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Log;
 use LaravelWebauthn\Actions\LoginAttempt;
 use LaravelWebauthn\Actions\LoginPrepare;
 use LaravelWebauthn\Contracts\LoginSuccessResponse;
@@ -39,6 +40,7 @@ class AuthenticateController extends Controller
         $publicKey = $request->session()->pull(WebauthnService::SESSION_PUBLICKEY_REQUEST);
 
         if (! $publicKey instanceof \Webauthn\PublicKeyCredentialRequestOptions) {
+            Log::debug('Webauthn wrong publickKey type');
             abort(404);
         }
 

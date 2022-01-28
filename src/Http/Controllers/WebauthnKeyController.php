@@ -4,6 +4,7 @@ namespace LaravelWebauthn\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Log;
 use LaravelWebauthn\Actions\DeleteKey;
 use LaravelWebauthn\Actions\RegisterKeyPrepare;
 use LaravelWebauthn\Actions\RegisterKeyStore;
@@ -44,6 +45,7 @@ class WebauthnKeyController extends Controller
         $publicKey = $request->session()->pull(Webauthn::SESSION_PUBLICKEY_CREATION);
 
         if (! $publicKey instanceof \Webauthn\PublicKeyCredentialCreationOptions) {
+            Log::debug('Webauthn wrong publickKey type');
             abort(404);
         }
 

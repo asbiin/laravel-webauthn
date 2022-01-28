@@ -2,7 +2,9 @@
 
 namespace LaravelWebauthn\Actions;
 
+use Exception;
 use Illuminate\Contracts\Auth\Authenticatable;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
 use LaravelWebauthn\Events\WebauthnRegisterData;
 use LaravelWebauthn\Events\WebauthnRegisterFailed;
@@ -35,12 +37,15 @@ class RegisterKeyPrepare
      * Throw a failed register validation exception.
      *
      * @param  Authenticatable  $user
+     * @param  Exception|null  $e
      * @return void
      *
      * @throws \Illuminate\Validation\ValidationException
      */
-    protected function throwFailedRegisterException($user)
+    protected function throwFailedRegisterException($user, ?Exception $e = null)
     {
+        Log::error('Webauthn register key prepare failed');
+
         WebauthnRegisterFailed::dispatch($user);
 
         throw ValidationException::withMessages([

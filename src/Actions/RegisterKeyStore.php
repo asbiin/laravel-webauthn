@@ -2,7 +2,9 @@
 
 namespace LaravelWebauthn\Actions;
 
+use Exception;
 use Illuminate\Contracts\Auth\Authenticatable;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
 use LaravelWebauthn\Events\WebauthnRegister;
 use LaravelWebauthn\Events\WebauthnRegisterFailed;
@@ -39,8 +41,8 @@ class RegisterKeyStore
             Webauthn::forceAuthenticate();
 
             return $webauthnKey;
-        } catch (\Exception $e) {
-            $this->throwFailedRegisterException($user);
+        } catch (Exception $e) {
+            $this->throwFailedRegisterException($user, $e);
         }
 
         return null;
@@ -50,12 +52,15 @@ class RegisterKeyStore
      * Throw a failed register validation exception.
      *
      * @param  Authenticatable  $user
+     * @param  Exception|null  $e
      * @return void
      *
      * @throws \Illuminate\Validation\ValidationException
      */
-    protected function throwFailedRegisterException($user)
+    protected function throwFailedRegisterException(Authenticatable $user, ?Exception $e = null)
     {
+        Log::error('Webauthn register key failed', [$e]);
+
         WebauthnRegisterFailed::dispatch($user);
 
         throw ValidationException::withMessages([
