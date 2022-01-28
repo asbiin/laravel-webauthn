@@ -4,7 +4,6 @@ namespace LaravelWebauthn\Actions;
 
 use Exception;
 use Illuminate\Contracts\Auth\Authenticatable;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
 use LaravelWebauthn\Events\WebauthnLogin;
 use LaravelWebauthn\Events\WebauthnLoginFailed;
@@ -53,9 +52,7 @@ class LoginAttempt
      */
     protected function throwFailedLoginException(Authenticatable $user, ?Exception $e = null)
     {
-        Log::error('Webauthn login failed', [$e]);
-
-        WebauthnLoginFailed::dispatch($user);
+        WebauthnLoginFailed::dispatch($user, $e);
 
         throw ValidationException::withMessages([
             'data' => [trans('webauthn::errors.login_failed')],
