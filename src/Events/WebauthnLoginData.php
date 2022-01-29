@@ -5,7 +5,7 @@ namespace LaravelWebauthn\Events;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Webauthn\PublicKeyCredentialRequestOptions;
 
-class WebauthnLoginData extends AbstractEventUser
+class WebauthnLoginData extends EventUser
 {
     /**
      * The authentication data.

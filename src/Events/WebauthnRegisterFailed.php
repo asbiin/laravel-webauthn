@@ -2,6 +2,6 @@
 
 namespace LaravelWebauthn\Events;
 
-class WebauthnRegisterFailed extends AbstractEventFailed
+class WebauthnRegisterFailed extends EventFailed
 {
 }

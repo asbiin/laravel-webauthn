@@ -2,6 +2,6 @@
 
 namespace LaravelWebauthn\Events;
 
-class WebauthnLogin extends AbstractEventUser
+class WebauthnLogin extends EventUser
 {
 }

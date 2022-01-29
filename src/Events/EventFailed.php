@@ -5,7 +5,7 @@ namespace LaravelWebauthn\Events;
 use Exception;
 use Illuminate\Contracts\Auth\Authenticatable;
 
-abstract class AbstractEventFailed extends AbstractEventUser
+abstract class EventFailed extends EventUser
 {
     /**
      * Exception throwned.

@@ -6,7 +6,7 @@ use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-abstract class AbstractEventUser
+abstract class EventUser
 {
     use SerializesModels, Dispatchable;
 
