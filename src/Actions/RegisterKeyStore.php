@@ -58,7 +58,7 @@ class RegisterKeyStore
      */
     protected function throwFailedRegisterException(Authenticatable $user, ?Exception $e = null)
     {
-        WebauthnRegisterFailed::dispatch($user);
+        WebauthnRegisterFailed::dispatch($user, $e);
 
         throw ValidationException::withMessages([
             'register' => [trans('webauthn::errors.cannot_register_new_key')],
