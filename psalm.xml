@@ -59,5 +59,11 @@
             </errorLevel>
         </NoInterfaceProperties>
 
+        <UndefinedClass>
+            <errorLevel type="suppress">
+                <file name="src/Services/Webauthn/AbstractValidatorFactory.php"/>
+            </errorLevel>
+        </UndefinedClass>
+
     </issueHandlers>
 </psalm>
