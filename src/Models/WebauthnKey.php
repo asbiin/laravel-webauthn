@@ -5,10 +5,10 @@ namespace LaravelWebauthn\Models;
 use Illuminate\Database\Eloquent\Model;
 use LaravelWebauthn\Exceptions\WrongUserHandleException;
 use LaravelWebauthn\Models\Casts\Base64;
-use LaravelWebauthn\Models\Casts\Uuid;
 use LaravelWebauthn\Models\Casts\TrustPath;
-use Webauthn\PublicKeyCredentialSource;
+use LaravelWebauthn\Models\Casts\Uuid;
 use Ramsey\Uuid\Uuid as UuidConvert;
+use Webauthn\PublicKeyCredentialSource;
 
 class WebauthnKey extends Model
 {
@@ -53,7 +53,6 @@ class WebauthnKey extends Model
         'aaguid' => Uuid::class,
         'trustPath' => TrustPath::class,
     ];
-
 
     /**
      * Get PublicKeyCredentialSource object from WebauthnKey attributes.

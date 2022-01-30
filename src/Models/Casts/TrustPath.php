@@ -5,7 +5,7 @@ namespace LaravelWebauthn\Models\Casts;
 use Illuminate\Contracts\Database\Eloquent\CastsAttributes;
 use function Safe\json_decode;
 use function Safe\json_encode;
-use \Webauthn\TrustPath\TrustPathLoader;
+use Webauthn\TrustPath\TrustPathLoader;
 
 class TrustPath implements CastsAttributes
 {
