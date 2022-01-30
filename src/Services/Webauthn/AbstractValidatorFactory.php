@@ -74,7 +74,9 @@ abstract class AbstractValidatorFactory extends AbstractFactory
      */
     private function getPsrInterfaces(): array
     {
-        if (class_exists(\Http\Discovery\Psr18ClientDiscovery::class) && class_exists(\Http\Discovery\Psr17FactoryDiscovery::class)) {
+        if (class_exists(\Http\Discovery\Psr18ClientDiscovery::class)
+            && class_exists(\Http\Discovery\Psr17FactoryDiscovery::class)
+            && class_exists(\Http\Discovery\Exception\NotFoundException::class)) {
             $result = [];
             try {
                 $result['client'] = \Http\Discovery\Psr18ClientDiscovery::find();
