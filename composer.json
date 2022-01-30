@@ -20,12 +20,8 @@
         }
     ],
     "require": {
-        "guzzlehttp/psr7": "^1.5 || ^2.0",
-        "laravel/framework": "^7.0 || ^8.0",
+        "illuminate/support": "^7.0 || ^8.0",
         "php-http/discovery": "^1.6",
-        "php-http/httplug": "^1.0 || ^2.0",
-        "php-http/message": "^1.7",
-        "psr/http-client": "^1.0",
         "thecodingmachine/safe": "^1.0",
         "web-auth/cose-lib": "^3.0",
         "web-auth/webauthn-lib": "^3.0",
@@ -40,7 +36,7 @@
         "phpstan/phpstan-deprecation-rules": "^1.0",
         "phpstan/phpstan-phpunit": "^1.0",
         "phpstan/phpstan-strict-rules": "^1.0",
-        "phpunit/phpunit": "^8.0 || ^9.0",
+        "phpunit/phpunit": "^9.0",
         "psalm/plugin-laravel": "^1.4",
         "thecodingmachine/phpstan-safe-rule": "^1.0",
         "vimeo/psalm": "^4.0"

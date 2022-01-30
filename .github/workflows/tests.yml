@@ -19,19 +19,20 @@ env:
   default-php-version: '8.1'
   default-laravel-version: '8.*'
   semantic-node-version: 16
+
 jobs:
   tests:
     runs-on: ubuntu-latest
-    name: PHP ${{ matrix.php-version }} | Laravel ${{ matrix.laravel_version }}
+    name: PHP ${{ matrix.php-version }} | Laravel ${{ matrix.laravel-version }}
 
     strategy:
       fail-fast: false
       matrix:
         php-version: ['7.4', '8.0', '8.1']
-        laravel_version: [7.*, 8.*]
+        laravel-version: [7.*, 8.*]
         exclude:
           - php-version: '8.1'
-            laravel_version: '7.*'
+            laravel-version: '7.*'
 
     steps:
       - name: Checkout sources
@@ -60,17 +61,18 @@ jobs:
         uses: actions/cache@v2.1.7
         with:
           path: ${{ steps.composer-cache.outputs.dir }}
-          key: ${{ runner.os }}-composer-v4-${{ hashFiles('**/composer.json') }}-${{ matrix.php-version }}-${{ matrix.laravel_version }}
+          key: ${{ runner.os }}-composer-v4-${{ hashFiles('**/composer.json') }}-${{ matrix.php-version }}-${{ matrix.laravel-version }}
           restore-keys: |
-            ${{ runner.os }}-composer-v4-${{ hashFiles('**/composer.json') }}-${{ matrix.php-version }}-${{ matrix.laravel_version }}
+            ${{ runner.os }}-composer-v4-${{ hashFiles('**/composer.json') }}-${{ matrix.php-version }}-${{ matrix.laravel-version }}
             ${{ runner.os }}-composer-v4-${{ hashFiles('**/composer.json') }}-${{ matrix.php-version }}
             ${{ runner.os }}-composer-v4-${{ hashFiles('**/composer.json') }}
             ${{ runner.os }}-composer-v4-
 
-      - name: Install dependencies with Laravel ${{ matrix.laravel_version }}
+      - name: Install dependencies with Laravel ${{ matrix.laravel-version }}
         run: |
-          export COMPOSER_ROOT_VERSION=dev-master
-          composer require "laravel/framework:${{ matrix.laravel_version }}" --no-interaction --no-progress --prefer-stable --prefer-dist
+          export COMPOSER_ROOT_VERSION=dev-main
+          composer require "illuminate/support:${{ matrix.laravel-version }}" --no-update
+          composer update --no-interaction --no-progress --prefer-dist
 
       - name: Run test suite
         run: phpdbg -dmemory_limit=4G -qrr vendor/bin/phpunit -c phpunit.xml --log-junit ./results/results.xml --coverage-clover ./results/coverage.xml
@@ -80,7 +82,7 @@ jobs:
         working-directory: results
 
       - name: Store results
-        if: matrix.php-version == env.default-php-version && matrix.laravel_version == env.default-laravel-version
+        if: matrix.php-version == env.default-php-version && matrix.laravel-version == env.default-laravel-version
         uses: actions/upload-artifact@v2
         with:
           name: results
