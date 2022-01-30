@@ -9,7 +9,7 @@ use LaravelWebauthn\Actions\LoginAttempt;
 use LaravelWebauthn\Actions\LoginPrepare;
 use LaravelWebauthn\Contracts\LoginSuccessResponse;
 use LaravelWebauthn\Contracts\LoginViewResponse;
-use LaravelWebauthn\Http\Requests\LoginRequest;
+use LaravelWebauthn\Http\Requests\WebauthnLoginRequest;
 use LaravelWebauthn\Services\Webauthn as WebauthnService;
 
 class AuthenticateController extends Controller
@@ -32,10 +32,10 @@ class AuthenticateController extends Controller
     /**
      * Authenticate a webauthn request.
      *
-     * @param  LoginRequest  $request
+     * @param  WebauthnLoginRequest  $request
      * @return LoginSuccessResponse
      */
-    public function auth(LoginRequest $request)
+    public function auth(WebauthnLoginRequest $request)
     {
         $publicKey = $request->session()->pull(WebauthnService::SESSION_PUBLICKEY_REQUEST);
 

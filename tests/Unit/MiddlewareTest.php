@@ -36,7 +36,7 @@ class MiddlewareTest extends FeatureTestCase
         $user = $this->signIn();
         $request = $this->getRequest($user);
 
-        $this->app->make(Webauthn::class)->forceAuthenticate();
+        $this->app->make(Webauthn::class)->login();
 
         $result = $this->app->make(WebauthnMiddleware::class)->handle($request, function () {
             return 'next';

@@ -6,8 +6,8 @@ use Illuminate\Support\Facades\Facade;
 
 /**
  * @method static \LaravelWebauthn\Models\WebauthnKey create(\Illuminate\Contracts\Auth\Authenticatable $user, string $keyName, \Webauthn\PublicKeyCredentialSource $publicKeyCredentialSource)
- * @method static void forceAuthenticate()
- * @method static void forgetAuthenticate()
+ * @method static void login()
+ * @method static void logout()
  * @method static bool check()
  * @method static bool webauthnEnabled()
  * @method static bool enabled(\Illuminate\Contracts\Auth\Authenticatable $user)

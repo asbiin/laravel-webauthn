@@ -20,10 +20,11 @@ final class PublicKeyCredentialRequestOptionsFactory extends AbstractOptionsFact
             random_bytes($this->config->get('webauthn.challenge_length', 32)),
             $this->config->get('webauthn.timeout', 60000),
             null,
-            $this->repository->getRegisteredKeys($user),
+            [],
             null,
             $this->createExtensions()
         ))
+            ->allowCredentials($this->repository->getRegisteredKeys($user))
             ->setRpId(Request::getHttpHost())
             ->setUserVerification($this->config->get('webauthn.user_verification', 'preferred'));
     }

@@ -4,7 +4,7 @@ namespace LaravelWebauthn\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class LoginRequest extends FormRequest
+class WebauthnRegisterRequest extends FormRequest
 {
     /**
      * Get the validation rules that apply to the request.
@@ -14,7 +14,8 @@ class LoginRequest extends FormRequest
     public function rules()
     {
         return [
-            'data' => 'required|string',
+            'register' => 'required|string',
+            'name' => 'required|string',
         ];
     }
 }

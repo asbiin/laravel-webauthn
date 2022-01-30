@@ -68,7 +68,7 @@ class WebauthnControllerTest extends FeatureTestCase
         $this->session(['webauthn.publicKeyRequest' => app(LoginPrepare::class)($user)]);
         $this->mock(LoginAttempt::class, function (MockInterface $mock) {
             $mock->shouldReceive('__invoke')->andReturnUsing(function () {
-                Webauthn::forceAuthenticate();
+                Webauthn::login();
 
                 return true;
             });
