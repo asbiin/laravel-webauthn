@@ -107,7 +107,7 @@ jobs:
         working-directory: results
 
       - name: Store results
-        if: matrix.php-version == env.default-php-version && matrix.laravel-version == env.default-laravel-version
+        if: matrix.php-version == env.default-php-version && matrix.laravel-version == env.default-laravel-version && matrix.psr7 == 'guzzle'
         uses: actions/upload-artifact@v2
         with:
           name: results
