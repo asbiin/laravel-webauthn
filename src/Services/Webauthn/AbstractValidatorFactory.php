@@ -88,6 +88,7 @@ abstract class AbstractValidatorFactory extends AbstractFactory
                 Log::error('Could not find PSR-17 Request Factory.', ['exception' => $e]);
                 throw new BindingResolutionException('Unable to resolve PSR-17 Request Factory. Please install psr/http-factory-implementation implementation like \'guzzlehttp/psr7\'.');
             }
+
             return $result;
         }
 
