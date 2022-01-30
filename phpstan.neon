@@ -1,7 +1,6 @@
 includes:
     - ./vendor/nunomaduro/larastan/extension.neon
     - ./vendor/thecodingmachine/phpstan-safe-rule/phpstan-safe-rule.neon
-    - ./vendor/phpstan/phpstan-phpunit/extension.neon
     - ./vendor/phpstan/phpstan-deprecation-rules/rules.neon
     - ./vendor/phpstan/phpstan-strict-rules/rules.neon
 
@@ -12,8 +11,9 @@ parameters:
     level: 5
     ignoreErrors:
         # Level 2
+        - '#Access to an undefined property LaravelWebauthn\\Models\\WebauthnKey::.*\.#'
         - '#Access to an undefined property Illuminate\\Contracts\\Auth\\Authenticatable::\$email\.#'
         - '#Dynamic call to static method Illuminate\\Database\\Eloquent\\Builder<LaravelWebauthn\\Models\\WebauthnKey>::count\(\)\.#'
-        - '#Parameter \#.* of class Webauthn\\PublicKeyCredentialSource constructor expects .*, LaravelWebauthn\\Models\\Casts\\.* given\.#'
-        - '#Property LaravelWebauthn\\Models\\WebauthnKey::.* \(LaravelWebauthn\\Models\\Casts\\.*\) does not accept .*\.#'
+#        - '#Parameter \#.* of class Webauthn\\PublicKeyCredentialSource constructor expects .*, LaravelWebauthn\\Models\\Casts\\.* given\.#'
+#        - '#Property LaravelWebauthn\\Models\\WebauthnKey::.* \(LaravelWebauthn\\Models\\Casts\\.*\) does not accept .*\.#'
     excludes_analyse:

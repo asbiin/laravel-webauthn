@@ -150,7 +150,7 @@ class WebauthnControllerTest extends FeatureTestCase
             'result' => true,
         ]);
 
-        $this->assertDataBaseHas('webauthn_keys', [
+        $this->assertDatabaseHas('webauthn_keys', [
             'user_id' => $user->getAuthIdentifier(),
         ]);
     }
@@ -208,7 +208,7 @@ class WebauthnControllerTest extends FeatureTestCase
             ],
         ]);
 
-        $this->assertDataBaseHas('webauthn_keys', [
+        $this->assertDatabaseHas('webauthn_keys', [
             'id' => $webauthnKey->id,
             'user_id' => $user->getAuthIdentifier(),
         ]);
@@ -234,7 +234,7 @@ class WebauthnControllerTest extends FeatureTestCase
             ],
         ]);
 
-        $this->assertDataBaseHas('webauthn_keys', [
+        $this->assertDatabaseHas('webauthn_keys', [
             'id' => $webauthnKey->id,
             'user_id' => $user->getAuthIdentifier(),
         ]);
