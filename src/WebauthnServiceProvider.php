@@ -120,10 +120,6 @@ class WebauthnServiceProvider extends ServiceProvider
     private function configurePublishing()
     {
         if ($this->app->runningInConsole()) {
-            $this->commands([
-                Console\PublishCommand::class,
-            ]);
-
             $this->publishes([
                 __DIR__.'/../config/webauthn.php' => config_path('webauthn.php'),
             ], 'webauthn-config');
