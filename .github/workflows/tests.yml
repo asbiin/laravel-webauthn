@@ -30,6 +30,7 @@ jobs:
       matrix:
         php-version: ['7.4', '8.0', '8.1']
         laravel-version: [7.*, 8.*]
+        psr7: ['guzzle', 'nyholm', 'discovery']
         exclude:
           - php-version: '8.1'
             laravel-version: '7.*'
@@ -67,6 +68,18 @@ jobs:
             ${{ runner.os }}-composer-v4-${{ hashFiles('**/composer.json') }}-${{ matrix.php-version }}
             ${{ runner.os }}-composer-v4-${{ hashFiles('**/composer.json') }}
             ${{ runner.os }}-composer-v4-
+
+      - name: Install psr7 variant (nyholm)
+        if: matrix.psr7 == 'nyholm'
+        run: |
+          composer remove --dev guzzlehttp/psr7
+          composer require --dev symfony/psr-http-message-bridge nyholm/psr7
+
+      - name: Install psr7 variant (with php-http/discovery)
+        if: matrix.psr7 == 'discovery'
+        run: |
+          composer remove --dev guzzlehttp/psr7
+          composer require --dev symfony/psr-http-message-bridge php-http/discovery http-interop/http-factory-guzzle
 
       - name: Install dependencies with Laravel ${{ matrix.laravel-version }}
         run: |

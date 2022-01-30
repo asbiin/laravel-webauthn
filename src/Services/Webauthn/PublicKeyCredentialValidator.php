@@ -4,9 +4,10 @@ namespace LaravelWebauthn\Services\Webauthn;
 
 use Cose\Algorithm\Manager;
 use Cose\Algorithm\Signature;
-use GuzzleHttp\Psr7\ServerRequest;
 use Illuminate\Contracts\Auth\Authenticatable as User;
+use Illuminate\Contracts\Container\BindingResolutionException;
 use LaravelWebauthn\Exceptions\ResponseMismatchException;
+use Psr\Http\Message\ServerRequestInterface;
 use Webauthn\AttestationStatement\AttestationStatementSupportManager;
 use Webauthn\AuthenticationExtensions\ExtensionOutputCheckerHandler;
 use Webauthn\AuthenticatorAssertionResponse;
@@ -55,7 +56,7 @@ class PublicKeyCredentialValidator extends AbstractValidatorFactory
         return $authenticatorAttestationResponseValidator->check(
             $response,
             $publicKeyCredentialCreationOptions,
-            ServerRequest::fromGlobals()
+            $this->getServerRequestInterface()
         );
     }
 
@@ -96,7 +97,7 @@ class PublicKeyCredentialValidator extends AbstractValidatorFactory
             $publicKeyCredential->getRawId(),
             $response,
             $publicKeyCredentialRequestOptions,
-            ServerRequest::fromGlobals(),
+            $this->getServerRequestInterface(),
             $user->getAuthIdentifier()
         );
 
@@ -164,5 +165,26 @@ class PublicKeyCredentialValidator extends AbstractValidatorFactory
         $coseAlgorithmManager->add(new Signature\RSA\RS512());
 
         return $coseAlgorithmManager;
+    }
+
+    private function getServerRequestInterface(): ServerRequestInterface
+    {
+        if (class_exists(\GuzzleHttp\Psr7\ServerRequest::class)) {
+            return \GuzzleHttp\Psr7\ServerRequest::fromGlobals();
+        } elseif (class_exists(\Symfony\Bridge\PsrHttpMessage\Factory\PsrHttpFactory::class)) {
+            if (class_exists(\Nyholm\Psr7\Factory\Psr17Factory::class)) {
+                return app(ServerRequestInterface::class);
+            } elseif (class_exists(\Http\Discovery\Psr17FactoryDiscovery::class)) {
+                $uploadFileFactory = \Http\Discovery\Psr17FactoryDiscovery::findUploadedFileFactory();
+                $responseFactory = \Http\Discovery\Psr17FactoryDiscovery::findResponseFactory();
+                $serverRequestFactory = \Http\Discovery\Psr17FactoryDiscovery::findServerRequestFactory();
+                $streamFactory = \Http\Discovery\Psr17FactoryDiscovery::findStreamFactory();
+
+                return (new \Symfony\Bridge\PsrHttpMessage\Factory\PsrHttpFactory($serverRequestFactory, $streamFactory, $uploadFileFactory, $responseFactory))
+                        ->createRequest(app('request'));
+            }
+        }
+
+        throw new BindingResolutionException('Unable to resolve PSR request. Please install the guzzlehttp/psr7 or symfony/psr-http-message-bridge and a psr/http-factory-implementation implementation.');
     }
 }

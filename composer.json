@@ -21,7 +21,7 @@
     ],
     "require": {
         "illuminate/support": "^7.0 || ^8.0",
-        "php-http/discovery": "^1.6",
+        "psr/http-factory-implementation": "1.0",
         "thecodingmachine/safe": "^1.0",
         "web-auth/cose-lib": "^3.0",
         "web-auth/webauthn-lib": "^3.0",
@@ -29,6 +29,7 @@
     },
     "require-dev": {
         "ext-sqlite3": "*",
+        "guzzlehttp/psr7": "^2.1",
         "laravel/legacy-factories": "^1.0",
         "nunomaduro/larastan": "^1.0",
         "ocramius/package-versions": "^1.5 || ^2.0",
@@ -42,8 +43,10 @@
         "vimeo/psalm": "^4.0"
     },
     "suggest": {
+        "guzzlehttp/psr7": "",
+        "symfony/psr-http-message-bridge": "",
+        "php-http/discovery": "^1.6",
         "psr/http-client-implementation": "Required for the AndroidSafetyNet Attestation Statement support",
-        "psr/http-factory-implementation": "Required for the AndroidSafetyNet Attestation Statement support",
         "web-token/jwt-signature-algorithm-rsa": "Required for the AndroidSafetyNet Attestation Statement support",
         "web-token/jwt-signature-algorithm-ecdsa": "Required for the AndroidSafetyNet Attestation Statement support",
         "web-token/jwt-signature-algorithm-eddsa": "Required for the AndroidSafetyNet Attestation Statement support",
