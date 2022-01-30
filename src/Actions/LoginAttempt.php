@@ -28,7 +28,7 @@ class LoginAttempt
                 ->check($user, $publicKey, $data);
 
             if ($result === true) {
-                Webauthn::forceAuthenticate();
+                Webauthn::login();
 
                 WebauthnLogin::dispatch($user);
 

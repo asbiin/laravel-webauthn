@@ -38,12 +38,12 @@ class FakeWebauthn extends WebauthnRepository
         $this->authenticate = $authenticate;
     }
 
-    public function forceAuthenticate()
+    public function login()
     {
         $this->app['session']->put([$this->sessionName() => true]);
     }
 
-    public function forgetAuthenticate()
+    public function logout()
     {
         $this->app['session']->forget($this->sessionName());
     }

@@ -21,6 +21,7 @@ use LaravelWebauthn\Http\Responses\RegisterViewResponse;
 use LaravelWebauthn\Http\Responses\UpdateResponse;
 use LaravelWebauthn\Services\Webauthn;
 use LaravelWebauthn\Services\Webauthn\CredentialRepository;
+use Webauthn\PublicKeyCredentialSourceRepository;
 
 class WebauthnServiceProvider extends ServiceProvider
 {
@@ -50,7 +51,7 @@ class WebauthnServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->singleton(CredentialRepository::class, CredentialRepository::class);
+        $this->app->bind(PublicKeyCredentialSourceRepository::class, CredentialRepository::class);
         $this->app->singleton(WebauthnFacade::class, Webauthn::class);
 
         $this->registerResponseBindings();

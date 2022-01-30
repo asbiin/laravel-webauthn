@@ -4,8 +4,8 @@ namespace LaravelWebauthn\Tests\Unit;
 
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use LaravelWebauthn\Models\WebauthnKey;
-use LaravelWebauthn\Services\Webauthn\CredentialRepository;
 use LaravelWebauthn\Tests\FeatureTestCase;
+use Webauthn\PublicKeyCredentialSourceRepository;
 use Webauthn\PublicKeyCredentialUserEntity;
 
 class CredentialRepositoryTest extends FeatureTestCase
@@ -19,7 +19,7 @@ class CredentialRepositoryTest extends FeatureTestCase
             'user_id' => $user->getAuthIdentifier(),
         ]);
 
-        $publicKey = $this->app->make(CredentialRepository::class)
+        $publicKey = $this->app->make(PublicKeyCredentialSourceRepository::class)
             ->findOneByCredentialId($webauthnKey->credentialId);
 
         $this->assertNotNull($publicKey);
@@ -29,7 +29,7 @@ class CredentialRepositoryTest extends FeatureTestCase
     {
         $user = $this->signIn();
 
-        $publicKey = $this->app->make(CredentialRepository::class)
+        $publicKey = $this->app->make(PublicKeyCredentialSourceRepository::class)
             ->findOneByCredentialId('123');
 
         $this->assertNull($publicKey);
@@ -42,7 +42,7 @@ class CredentialRepositoryTest extends FeatureTestCase
             'user_id' => '1',
         ]);
 
-        $publicKey = $this->app->make(CredentialRepository::class)
+        $publicKey = $this->app->make(PublicKeyCredentialSourceRepository::class)
             ->findOneByCredentialId($webauthnKey->credentialId);
 
         $this->assertNull($publicKey);
@@ -58,7 +58,7 @@ class CredentialRepositoryTest extends FeatureTestCase
             'user_id' => $user->getAuthIdentifier(),
         ]);
 
-        $publicKeys = $this->app->make(CredentialRepository::class)
+        $publicKeys = $this->app->make(PublicKeyCredentialSourceRepository::class)
             ->findAllForUserEntity(new PublicKeyCredentialUserEntity('name', $user->getAuthIdentifier(), 'name'));
 
         $this->assertNotNull($publicKeys);
@@ -75,7 +75,7 @@ class CredentialRepositoryTest extends FeatureTestCase
         $publicKeyCredentialSource = $webauthnKey->publicKeyCredentialSource;
         $publicKeyCredentialSource->setCounter(154);
 
-        $this->app->make(CredentialRepository::class)
+        $this->app->make(PublicKeyCredentialSourceRepository::class)
             ->saveCredentialSource($publicKeyCredentialSource);
 
         $this->assertDatabaseHas('webauthn_keys', [

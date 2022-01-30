@@ -37,7 +37,7 @@ class RegisterKeyStore
 
             WebauthnRegister::dispatch($webauthnKey);
 
-            Webauthn::forceAuthenticate();
+            Webauthn::login();
 
             return $webauthnKey;
         } catch (Exception $e) {

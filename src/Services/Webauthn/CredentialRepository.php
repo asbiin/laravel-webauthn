@@ -2,6 +2,7 @@
 
 namespace LaravelWebauthn\Services\Webauthn;
 
+use Base64Url\Base64Url;
 use Illuminate\Contracts\Auth\Authenticatable as User;
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -40,7 +41,7 @@ class CredentialRepository implements PublicKeyCredentialSourceRepository
     {
         try {
             $webauthnKey = $this->model($publicKeyCredentialId);
-            if (! is_null($webauthnKey)) {
+            if ($webauthnKey !== null) {
                 return $webauthnKey->publicKeyCredentialSource;
             }
         } catch (ModelNotFoundException $e) {
@@ -72,7 +73,7 @@ class CredentialRepository implements PublicKeyCredentialSourceRepository
     public function saveCredentialSource(PublicKeyCredentialSource $publicKeyCredentialSource): void
     {
         $webauthnKey = $this->model($publicKeyCredentialSource->getPublicKeyCredentialId());
-        if (! is_null($webauthnKey)) {
+        if ($webauthnKey !== null) {
             $webauthnKey->publicKeyCredentialSource = $publicKeyCredentialSource;
             $webauthnKey->save();
         }
@@ -88,9 +89,8 @@ class CredentialRepository implements PublicKeyCredentialSourceRepository
     {
         return WebauthnKey::where('user_id', $userId)
             ->get()
-            ->map(function ($webauthnKey): PublicKeyCredentialSource {
-                return $webauthnKey->publicKeyCredentialSource;
-            });
+            ->map
+            ->publicKeyCredentialSource;
     }
 
     /**
@@ -102,9 +102,8 @@ class CredentialRepository implements PublicKeyCredentialSourceRepository
     public function getRegisteredKeys(User $user): array
     {
         return $this->getAllRegisteredKeys($user->getAuthIdentifier())
-            ->map(function ($publicKey) {
-                return $publicKey->getPublicKeyCredentialDescriptor();
-            })
+            ->map
+            ->getPublicKeyCredentialDescriptor()
             ->toArray();
     }
 
@@ -122,7 +121,7 @@ class CredentialRepository implements PublicKeyCredentialSourceRepository
             /** @var WebauthnKey */
             $webauthnKey = WebauthnKey::where([
                 'user_id' => $this->guard->id(),
-                'credentialId' => base64_encode($credentialId),
+                'credentialId' => Base64Url::encode($credentialId),
             ])->firstOrFail();
 
             return $webauthnKey;

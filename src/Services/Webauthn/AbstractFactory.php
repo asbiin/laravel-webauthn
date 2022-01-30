@@ -3,6 +3,7 @@
 namespace LaravelWebauthn\Services\Webauthn;
 
 use Illuminate\Contracts\Config\Repository as Config;
+use Webauthn\PublicKeyCredentialSourceRepository;
 
 abstract class AbstractFactory
 {
@@ -20,10 +21,11 @@ abstract class AbstractFactory
      */
     protected $repository;
 
-    public function __construct(Config $config, CredentialRepository $repository)
+    public function __construct(Config $config, PublicKeyCredentialSourceRepository $repository)
     {
         $this->config = $config;
-        // Credential Repository
-        $this->repository = $repository;
+        if ($repository instanceof CredentialRepository) {
+            $this->repository = $repository;
+        }
     }
 }

@@ -51,13 +51,13 @@ class WebauthnTest extends FeatureTestCase
         $this->assertDatabaseHas('webauthn_keys', [
             'user_id' => $user->getAuthIdentifier(),
             'name' => 'name',
-            'credentialId' => 'MA==',
+            'credentialId' => 'MA',
             'type' => 'public-key',
             'transports' => '[]',
             'attestationType' => 'none',
             'trustPath' => '{"type":"Webauthn\\\\TrustPath\\\\EmptyTrustPath"}',
             'aaguid' => '00000000-0000-0000-0000-000000000000',
-            'credentialPublicKey' => 'oWNrZXlldmFsdWU=',
+            'credentialPublicKey' => 'oWNrZXlldmFsdWU',
             'counter' => '1',
         ]);
     }
@@ -200,7 +200,7 @@ class WebauthnTest extends FeatureTestCase
     {
         $this->assertFalse($this->app->make(Webauthn::class)->check());
 
-        $this->app->make(Webauthn::class)->forceAuthenticate();
+        $this->app->make(Webauthn::class)->login();
 
         $this->assertTrue($this->app->make(Webauthn::class)->check());
     }

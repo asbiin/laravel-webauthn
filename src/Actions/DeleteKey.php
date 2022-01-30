@@ -22,7 +22,7 @@ class DeleteKey
             ->delete();
 
         if (! Webauthn::hasKey($user)) {
-            Webauthn::forgetAuthenticate();
+            Webauthn::logout();
         }
     }
 }

@@ -13,8 +13,8 @@ use LaravelWebauthn\Contracts\DestroyResponse;
 use LaravelWebauthn\Contracts\RegisterSuccessResponse;
 use LaravelWebauthn\Contracts\RegisterViewResponse;
 use LaravelWebauthn\Contracts\UpdateResponse;
-use LaravelWebauthn\Http\Requests\RegisterRequest;
-use LaravelWebauthn\Http\Requests\UpdateRequest;
+use LaravelWebauthn\Http\Requests\WebauthnRegisterRequest;
+use LaravelWebauthn\Http\Requests\WebauthnUpdateRequest;
 use LaravelWebauthn\Services\Webauthn;
 
 class WebauthnKeyController extends Controller
@@ -37,10 +37,10 @@ class WebauthnKeyController extends Controller
     /**
      * Validate and create the Webauthn request.
      *
-     * @param  RegisterRequest  $request
+     * @param  WebauthnRegisterRequest  $request
      * @return RegisterSuccessResponse
      */
-    public function store(RegisterRequest $request)
+    public function store(WebauthnRegisterRequest $request)
     {
         $publicKey = $request->session()->pull(Webauthn::SESSION_PUBLICKEY_CREATION);
 
@@ -67,11 +67,11 @@ class WebauthnKeyController extends Controller
     /**
      * Update an existing Webauthn key.
      *
-     * @param  UpdateRequest  $request
+     * @param  WebauthnUpdateRequest  $request
      * @param  int  $webauthnKeyId
      * @return UpdateResponse
      */
-    public function update(UpdateRequest $request, int $webauthnKeyId)
+    public function update(WebauthnUpdateRequest $request, int $webauthnKeyId)
     {
         app(UpdateKey::class)(
             $request->user(),

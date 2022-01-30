@@ -94,23 +94,45 @@ class Webauthn extends WebauthnRepository
     }
 
     /**
-     * Force authentication in session.
+     * Save authentication in session.
      *
      * @return void
      */
-    public function forceAuthenticate()
+    public function login()
     {
         $this->session->put([$this->sessionName() => true]);
+    }
+
+    /**
+     * Remove authentication from session.
+     *
+     * @return void
+     */
+    public function logout()
+    {
+        $this->session->forget($this->sessionName());
+    }
+
+    /**
+     * Force authentication in session.
+     *
+     * @return void
+     * @deprecated use login() instead
+     */
+    public function forceAuthenticate()
+    {
+        $this->login();
     }
 
     /**
      * Force remove authentication in session.
      *
      * @return void
+     * @deprecated use logout() instead
      */
     public function forgetAuthenticate()
     {
-        $this->session->forget($this->sessionName());
+        $this->logout();
     }
 
     /**
