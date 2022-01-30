@@ -167,6 +167,9 @@ class PublicKeyCredentialValidator extends AbstractValidatorFactory
         return $coseAlgorithmManager;
     }
 
+    /**
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     */
     private function getServerRequestInterface(): ServerRequestInterface
     {
         if (class_exists(\GuzzleHttp\Psr7\ServerRequest::class)) {
@@ -181,10 +184,10 @@ class PublicKeyCredentialValidator extends AbstractValidatorFactory
                 $streamFactory = \Http\Discovery\Psr17FactoryDiscovery::findStreamFactory();
 
                 return (new \Symfony\Bridge\PsrHttpMessage\Factory\PsrHttpFactory($serverRequestFactory, $streamFactory, $uploadFileFactory, $responseFactory))
-                        ->createRequest(app('request'));
+                        ->createRequest(request());
             }
         }
 
-        throw new BindingResolutionException('Unable to resolve PSR request. Please install the guzzlehttp/psr7 or symfony/psr-http-message-bridge and a psr/http-factory-implementation implementation.');
+        throw new BindingResolutionException('Unable to resolve PSR-17 request. Please install the guzzlehttp/psr7 or symfony/psr-http-message-bridge, php-http/discovery and a psr/http-factory-implementation implementation.');
     }
 }

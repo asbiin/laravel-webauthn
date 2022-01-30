@@ -3,6 +3,7 @@
 namespace LaravelWebauthn\Services\Webauthn;
 
 use Cose\Algorithm\Manager;
+use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Support\Facades\Log;
 use Webauthn\AttestationStatement\AndroidKeyAttestationStatementSupport;
 use Webauthn\AttestationStatement\AndroidSafetyNetAttestationStatementSupport;
@@ -34,17 +35,11 @@ abstract class AbstractValidatorFactory extends AbstractFactory
 
         // https://www.w3.org/TR/webauthn/#sctn-android-safetynet-attestation
         if (($google_safetynet_api_key = $this->config->get('webauthn.google_safetynet_api_key')) !== null) {
-            try {
-                $client = \Http\Discovery\Psr18ClientDiscovery::find();
-                $requestFactory = \Http\Discovery\Psr17FactoryDiscovery::findRequestFactory();
-                $attestationStatementSupportManager->add(
-                    (new AndroidSafetyNetAttestationStatementSupport())
-                        ->enableApiVerification($client, $google_safetynet_api_key, $requestFactory)
-                );
-            } catch (\Http\Discovery\Exception\NotFoundException $e) {
-                Log::error('Either Psr18Client or Psr17Factory not found.', ['exception' => $e]);
-                // ignore
-            }
+            $psr = $this->getPsrInterfaces();
+            $attestationStatementSupportManager->add(
+                (new AndroidSafetyNetAttestationStatementSupport())
+                    ->enableApiVerification($psr['client'], $google_safetynet_api_key, $psr['requestFactory'])
+            );
         }
 
         // https://www.w3.org/TR/webauthn/#sctn-android-key-attestation
@@ -72,5 +67,30 @@ abstract class AbstractValidatorFactory extends AbstractFactory
 
         // Public Key Credential Loader
         return new PublicKeyCredentialLoader($attestationObjectLoader);
+    }
+
+    /**
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     */
+    private function getPsrInterfaces(): array
+    {
+        if (class_exists(\Http\Discovery\Psr18ClientDiscovery::class) && class_exists(\Http\Discovery\Psr17FactoryDiscovery::class)) {
+            $result = [];
+            try {
+                $result['client'] = \Http\Discovery\Psr18ClientDiscovery::find();
+            } catch (\Http\Discovery\Exception\NotFoundException $e) {
+                Log::error('Could not find PSR-18 Client Factory.', ['exception' => $e]);
+                throw new BindingResolutionException('Unable to resolve PSR-18 Client Factory. Please install a psr/http-client-implementation implementation like \'guzzlehttp/guzzle\'.');
+            }
+            try {
+                $result['requestFactory'] = \Http\Discovery\Psr17FactoryDiscovery::findRequestFactory();
+            } catch (\Http\Discovery\Exception\NotFoundException $e) {
+                Log::error('Could not find PSR-17 Request Factory.', ['exception' => $e]);
+                throw new BindingResolutionException('Unable to resolve PSR-17 Request Factory. Please install psr/http-factory-implementation implementation like \'guzzlehttp/psr7\'.');
+            }
+            return $result;
+        }
+
+        throw new BindingResolutionException('Unable to resolve PSR request. Please install php-http/discovery and implementations for psr/http-factory-implementation and psr/http-client-implementation.');
     }
 }
