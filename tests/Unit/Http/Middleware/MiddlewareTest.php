@@ -1,6 +1,6 @@
 <?php
 
-namespace LaravelWebauthn\Tests\Unit;
+namespace LaravelWebauthn\Tests\Unit\Http\Middleware;
 
 use Illuminate\Http\Request;
 use LaravelWebauthn\Http\Middleware\WebauthnMiddleware;
@@ -15,7 +15,7 @@ class MiddlewareTest extends FeatureTestCase
         $request = new Request();
 
         $this->expectException(\Symfony\Component\HttpKernel\Exception\HttpException::class);
-        $this->app->make(WebauthnMiddleware::class)->handle($request, function () {
+        $this->app[WebauthnMiddleware::class]->handle($request, function () {
         });
     }
 
@@ -24,7 +24,7 @@ class MiddlewareTest extends FeatureTestCase
         $user = $this->signIn();
         $request = $this->getRequest($user);
 
-        $result = $this->app->make(WebauthnMiddleware::class)->handle($request, function () {
+        $result = $this->app[WebauthnMiddleware::class]->handle($request, function () {
             return 'next';
         });
 
@@ -36,9 +36,9 @@ class MiddlewareTest extends FeatureTestCase
         $user = $this->signIn();
         $request = $this->getRequest($user);
 
-        $this->app->make(Webauthn::class)->login();
+        $this->app[Webauthn::class]->login();
 
-        $result = $this->app->make(WebauthnMiddleware::class)->handle($request, function () {
+        $result = $this->app[WebauthnMiddleware::class]->handle($request, function () {
             return 'next';
         });
 
@@ -54,7 +54,7 @@ class MiddlewareTest extends FeatureTestCase
 
         $request = $this->getRequest($user);
 
-        $result = $this->app->make(WebauthnMiddleware::class)->handle($request, function () {
+        $result = $this->app[WebauthnMiddleware::class]->handle($request, function () {
             return 'next';
         });
 

@@ -9,11 +9,29 @@ use LaravelWebauthn\Events\WebauthnRegister;
 use LaravelWebauthn\Events\WebauthnRegisterFailed;
 use LaravelWebauthn\Facades\Webauthn;
 use LaravelWebauthn\Models\WebauthnKey;
-use LaravelWebauthn\Services\Webauthn\PublicKeyCredentialValidator;
+use LaravelWebauthn\Services\Webauthn\CredentialAttestationValidator;
 use Webauthn\PublicKeyCredentialCreationOptions;
+use Illuminate\Contracts\Foundation\Application;
 
 class RegisterKeyStore
 {
+    /**
+     * The Illuminate application instance.
+     *
+     * @var \Illuminate\Contracts\Foundation\Application
+     */
+    protected $app;
+
+    /**
+     * Create a new action.
+     *
+     * @param  \Illuminate\Contracts\Foundation\Application  $app
+     */
+    public function __construct(Application $app)
+    {
+        $this->app = $app;
+    }
+
     /**
      * Register a new key.
      *
@@ -30,8 +48,7 @@ class RegisterKeyStore
         }
 
         try {
-            $publicKeyCredentialSource = app(PublicKeyCredentialValidator::class)
-                ->validate($publicKey, $data);
+            $publicKeyCredentialSource = $this->app[CredentialAttestationValidator::class]($publicKey, $data);
 
             $webauthnKey = Webauthn::create($user, $keyName, $publicKeyCredentialSource);
 

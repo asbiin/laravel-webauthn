@@ -1,6 +1,6 @@
 <?php
 
-namespace LaravelWebauthn\Tests\Unit;
+namespace LaravelWebauthn\Tests\Unit\Services;
 
 use Base64Url\Base64Url;
 use CBOR\ListObject;
@@ -25,7 +25,7 @@ class WebauthnTest extends FeatureTestCase
     {
         $user = $this->signIn();
 
-        $publicKey = $this->app->make(RegisterKeyPrepare::class)($user);
+        $publicKey = $this->app[RegisterKeyPrepare::class]($user);
 
         $this->assertInstanceOf(\Webauthn\PublicKeyCredentialCreationOptions::class, $publicKey);
 
@@ -41,12 +41,12 @@ class WebauthnTest extends FeatureTestCase
     {
         $user = $this->signIn();
 
-        $publicKey = $this->app->make(RegisterKeyPrepare::class)($user);
+        $publicKey = $this->app[RegisterKeyPrepare::class]($user);
         $this->assertInstanceOf(\Webauthn\PublicKeyCredentialCreationOptions::class, $publicKey);
 
         $data = $this->getAttestationData($publicKey);
 
-        $this->app->make(RegisterKeyStore::class)($user, $publicKey, json_encode($data), 'name');
+        $this->app[RegisterKeyStore::class]($user, $publicKey, json_encode($data), 'name');
 
         $this->assertDatabaseHas('webauthn_keys', [
             'user_id' => $user->getAuthIdentifier(),
@@ -69,7 +69,7 @@ class WebauthnTest extends FeatureTestCase
             'user_id' => $user->getAuthIdentifier(),
         ]);
 
-        $publicKey = $this->app->make(LoginPrepare::class)($user);
+        $publicKey = $this->app[LoginPrepare::class]($user);
 
         $this->assertInstanceOf(\Webauthn\PublicKeyCredentialRequestOptions::class, $publicKey);
 
@@ -99,7 +99,7 @@ class WebauthnTest extends FeatureTestCase
             ]),
         ]);
 
-        $publicKey = $this->app->make(LoginPrepare::class)($user);
+        $publicKey = $this->app[LoginPrepare::class]($user);
         $this->assertInstanceOf(\Webauthn\PublicKeyCredentialRequestOptions::class, $publicKey);
 
         $data = [
@@ -135,7 +135,7 @@ class WebauthnTest extends FeatureTestCase
         ];
 
         $this->expectException(\Illuminate\Validation\ValidationException::class);
-        $result = $this->app->make(LoginAttempt::class)($user, $publicKey, json_encode($data));
+        $result = $this->app[LoginAttempt::class]($user, $publicKey, json_encode($data));
 
         $this->assertTrue($result); // Not yet ...
     }
@@ -147,13 +147,13 @@ class WebauthnTest extends FeatureTestCase
             'user_id' => $user->getAuthIdentifier(),
         ]);
 
-        $publicKey = $this->app->make(LoginPrepare::class)($user);
+        $publicKey = $this->app[LoginPrepare::class]($user);
         $this->assertInstanceOf(\Webauthn\PublicKeyCredentialRequestOptions::class, $publicKey);
 
         $data = $this->getAttestationData($publicKey);
 
         $this->expectException(\Illuminate\Validation\ValidationException::class);
-        $result = $this->app->make(LoginAttempt::class)($user, $publicKey, json_encode($data));
+        $result = $this->app[LoginAttempt::class]($user, $publicKey, json_encode($data));
     }
 
     private function getAttestationData($publicKey)
@@ -198,24 +198,24 @@ class WebauthnTest extends FeatureTestCase
 
     public function test_force_authenticate()
     {
-        $this->assertFalse($this->app->make(Webauthn::class)->check());
+        $this->assertFalse($this->app[Webauthn::class]->check());
 
-        $this->app->make(Webauthn::class)->login();
+        $this->app[Webauthn::class]->login();
 
-        $this->assertTrue($this->app->make(Webauthn::class)->check());
+        $this->assertTrue($this->app[Webauthn::class]->check());
     }
 
     public function test_enabled()
     {
         $user = $this->signIn();
 
-        $this->assertFalse($this->app->make(Webauthn::class)->enabled($user));
+        $this->assertFalse($this->app[Webauthn::class]->enabled($user));
 
         factory(WebauthnKey::class)->create([
             'user_id' => $user->getAuthIdentifier(),
         ]);
 
-        $this->assertTrue($this->app->make(Webauthn::class)->enabled($user));
+        $this->assertTrue($this->app[Webauthn::class]->enabled($user));
     }
 
     public function test_aaguid_null()

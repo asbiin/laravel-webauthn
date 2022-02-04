@@ -4,11 +4,29 @@ namespace LaravelWebauthn\Actions;
 
 use Illuminate\Contracts\Auth\Authenticatable;
 use LaravelWebauthn\Events\WebauthnLoginData;
-use LaravelWebauthn\Services\Webauthn\PublicKeyCredentialRequestOptionsFactory;
+use LaravelWebauthn\Services\Webauthn\RequestOptionsFactory;
 use Webauthn\PublicKeyCredentialRequestOptions;
+use Illuminate\Contracts\Foundation\Application;
 
 class LoginPrepare
 {
+    /**
+     * The Illuminate application instance.
+     *
+     * @var \Illuminate\Contracts\Foundation\Application
+     */
+    protected $app;
+
+    /**
+     * Create a new action.
+     *
+     * @param  \Illuminate\Contracts\Foundation\Application  $app
+     */
+    public function __construct(Application $app)
+    {
+        $this->app = $app;
+    }
+
     /**
      * Get data to authenticate a user.
      *
@@ -17,7 +35,7 @@ class LoginPrepare
      */
     public function __invoke(Authenticatable $user): PublicKeyCredentialRequestOptions
     {
-        $publicKey = app(PublicKeyCredentialRequestOptionsFactory::class)($user);
+        $publicKey = $this->app[RequestOptionsFactory::class]($user);
 
         WebauthnLoginData::dispatch($user, $publicKey);
 

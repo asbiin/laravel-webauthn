@@ -4,15 +4,33 @@ namespace LaravelWebauthn\Actions;
 
 use Exception;
 use Illuminate\Contracts\Auth\Authenticatable;
+use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Validation\ValidationException;
 use LaravelWebauthn\Events\WebauthnLogin;
 use LaravelWebauthn\Events\WebauthnLoginFailed;
 use LaravelWebauthn\Facades\Webauthn;
-use LaravelWebauthn\Services\Webauthn\PublicKeyCredentialValidator;
+use LaravelWebauthn\Services\Webauthn\CredentialAssertionValidator;
 use Webauthn\PublicKeyCredentialRequestOptions;
 
 class LoginAttempt
 {
+    /**
+     * The Illuminate application instance.
+     *
+     * @var \Illuminate\Contracts\Foundation\Application
+     */
+    protected $app;
+
+    /**
+     * Create a new action.
+     *
+     * @param  \Illuminate\Contracts\Foundation\Application  $app
+     */
+    public function __construct(Application $app)
+    {
+        $this->app = $app;
+    }
+
     /**
      * Authenticate a user.
      *
@@ -24,8 +42,7 @@ class LoginAttempt
     public function __invoke(Authenticatable $user, PublicKeyCredentialRequestOptions $publicKey, string $data): bool
     {
         try {
-            $result = app(PublicKeyCredentialValidator::class)
-                ->check($user, $publicKey, $data);
+            $result = $this->app[CredentialAssertionValidator::class]($user, $publicKey, $data);
 
             if ($result === true) {
                 Webauthn::login();

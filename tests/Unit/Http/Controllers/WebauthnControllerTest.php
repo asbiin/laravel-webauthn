@@ -1,6 +1,6 @@
 <?php
 
-namespace LaravelWebauthn\Tests\Unit;
+namespace LaravelWebauthn\Tests\Unit\Http\Controllers;
 
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use LaravelWebauthn\Actions\LoginAttempt;
@@ -9,7 +9,7 @@ use LaravelWebauthn\Actions\RegisterKeyPrepare;
 use LaravelWebauthn\Actions\RegisterKeyStore;
 use LaravelWebauthn\Facades\Webauthn;
 use LaravelWebauthn\Models\WebauthnKey;
-use LaravelWebauthn\Services\Webauthn\PublicKeyCredentialValidator;
+use LaravelWebauthn\Services\Webauthn\CredentialAssertionValidator;
 use LaravelWebauthn\Tests\Fake\FakeWebauthn;
 use LaravelWebauthn\Tests\FeatureTestCase;
 use Mockery\MockInterface;
@@ -97,8 +97,8 @@ class WebauthnControllerTest extends FeatureTestCase
 
         $user = $this->signIn();
         $this->session(['webauthn.publicKeyRequest' => app(LoginPrepare::class)($user)]);
-        $this->mock(PublicKeyCredentialValidator::class, function (MockInterface $mock) {
-            $mock->shouldReceive('check')->andReturn(true);
+        $this->mock(CredentialAssertionValidator::class, function (MockInterface $mock) {
+            $mock->shouldReceive('__invoke')->andReturn(true);
         });
 
         $response = $this->post('/webauthn/auth', ['data' => 'x']);

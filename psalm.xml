@@ -55,15 +55,15 @@
 
         <NoInterfaceProperties>
             <errorLevel type="suppress">
-                <file name="src/Services/Webauthn/PublicKeyCredentialCreationOptionsFactory.php"/>
+                <file name="src/Services/Webauthn/CreationOptionsFactory.php"/>
             </errorLevel>
         </NoInterfaceProperties>
 
-        <UndefinedClass>
+        <!-- <UndefinedClass>
             <errorLevel type="suppress">
-                <file name="src/Services/Webauthn/AbstractValidatorFactory.php"/>
+                <file name="src/Services/Http/PsrHelper.php"/>
             </errorLevel>
-        </UndefinedClass>
+        </UndefinedClass> -->
 
     </issueHandlers>
 </psalm>

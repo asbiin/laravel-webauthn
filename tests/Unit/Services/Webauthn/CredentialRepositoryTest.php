@@ -1,6 +1,6 @@
 <?php
 
-namespace LaravelWebauthn\Tests\Unit;
+namespace LaravelWebauthn\Tests\Unit\Services\Webauthn;
 
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use LaravelWebauthn\Models\WebauthnKey;
@@ -19,7 +19,7 @@ class CredentialRepositoryTest extends FeatureTestCase
             'user_id' => $user->getAuthIdentifier(),
         ]);
 
-        $publicKey = $this->app->make(PublicKeyCredentialSourceRepository::class)
+        $publicKey = $this->app[PublicKeyCredentialSourceRepository::class]
             ->findOneByCredentialId($webauthnKey->credentialId);
 
         $this->assertNotNull($publicKey);
@@ -29,7 +29,7 @@ class CredentialRepositoryTest extends FeatureTestCase
     {
         $user = $this->signIn();
 
-        $publicKey = $this->app->make(PublicKeyCredentialSourceRepository::class)
+        $publicKey = $this->app[PublicKeyCredentialSourceRepository::class]
             ->findOneByCredentialId('123');
 
         $this->assertNull($publicKey);
@@ -42,7 +42,7 @@ class CredentialRepositoryTest extends FeatureTestCase
             'user_id' => '1',
         ]);
 
-        $publicKey = $this->app->make(PublicKeyCredentialSourceRepository::class)
+        $publicKey = $this->app[PublicKeyCredentialSourceRepository::class]
             ->findOneByCredentialId($webauthnKey->credentialId);
 
         $this->assertNull($publicKey);
@@ -58,7 +58,7 @@ class CredentialRepositoryTest extends FeatureTestCase
             'user_id' => $user->getAuthIdentifier(),
         ]);
 
-        $publicKeys = $this->app->make(PublicKeyCredentialSourceRepository::class)
+        $publicKeys = $this->app[PublicKeyCredentialSourceRepository::class]
             ->findAllForUserEntity(new PublicKeyCredentialUserEntity('name', $user->getAuthIdentifier(), 'name'));
 
         $this->assertNotNull($publicKeys);
@@ -75,7 +75,7 @@ class CredentialRepositoryTest extends FeatureTestCase
         $publicKeyCredentialSource = $webauthnKey->publicKeyCredentialSource;
         $publicKeyCredentialSource->setCounter(154);
 
-        $this->app->make(PublicKeyCredentialSourceRepository::class)
+        $this->app[PublicKeyCredentialSourceRepository::class]
             ->saveCredentialSource($publicKeyCredentialSource);
 
         $this->assertDatabaseHas('webauthn_keys', [

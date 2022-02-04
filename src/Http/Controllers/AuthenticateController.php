@@ -2,6 +2,7 @@
 
 namespace LaravelWebauthn\Http\Controllers;
 
+use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Log;
@@ -15,6 +16,23 @@ use LaravelWebauthn\Services\Webauthn as WebauthnService;
 class AuthenticateController extends Controller
 {
     /**
+     * The Illuminate application instance.
+     *
+     * @var \Illuminate\Contracts\Foundation\Application
+     */
+    protected $app;
+
+    /**
+     * Create a new controller.
+     *
+     * @param  \Illuminate\Contracts\Foundation\Application  $app
+     */
+    public function __construct(Application $app)
+    {
+        $this->app = $app;
+    }
+
+    /**
      * Show the login Webauthn request after a login authentication.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -22,11 +40,11 @@ class AuthenticateController extends Controller
      */
     public function login(Request $request)
     {
-        $publicKey = app(LoginPrepare::class)($request->user());
+        $publicKey = $this->app[LoginPrepare::class]($request->user());
 
         $request->session()->put(WebauthnService::SESSION_PUBLICKEY_REQUEST, $publicKey);
 
-        return app(LoginViewResponse::class);
+        return $this->app[LoginViewResponse::class];
     }
 
     /**
@@ -44,12 +62,12 @@ class AuthenticateController extends Controller
             abort(404);
         }
 
-        app(LoginAttempt::class)(
+        $this->app[LoginAttempt::class](
             $request->user(),
             $publicKey,
             $request->input('data')
         );
 
-        return app(LoginSuccessResponse::class);
+        return $this->app[LoginSuccessResponse::class];
     }
 }

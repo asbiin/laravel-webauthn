@@ -2,6 +2,7 @@
 
 namespace LaravelWebauthn\Http\Controllers;
 
+use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Log;
@@ -20,6 +21,23 @@ use LaravelWebauthn\Services\Webauthn;
 class WebauthnKeyController extends Controller
 {
     /**
+     * The Illuminate application instance.
+     *
+     * @var \Illuminate\Contracts\Foundation\Application
+     */
+    protected $app;
+
+    /**
+     * Create a new controller.
+     *
+     * @param  \Illuminate\Contracts\Foundation\Application  $app
+     */
+    public function __construct(Application $app)
+    {
+        $this->app = $app;
+    }
+
+    /**
      * Return the register data to attempt a Webauthn registration.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -27,11 +45,11 @@ class WebauthnKeyController extends Controller
      */
     public function create(Request $request)
     {
-        $publicKey = app(RegisterKeyPrepare::class)($request->user());
+        $publicKey = $this->app[RegisterKeyPrepare::class]($request->user());
 
         $request->session()->put(Webauthn::SESSION_PUBLICKEY_CREATION, $publicKey);
 
-        return app(RegisterViewResponse::class);
+        return $this->app[RegisterViewResponse::class];
     }
 
     /**
@@ -50,7 +68,7 @@ class WebauthnKeyController extends Controller
         }
 
         /** @var \LaravelWebauthn\Models\WebauthnKey|null */
-        $webauthnKey = app(RegisterKeyStore::class)(
+        $webauthnKey = $this->app[RegisterKeyStore::class](
             $request->user(),
             $publicKey,
             $request->input('register'),
@@ -61,7 +79,7 @@ class WebauthnKeyController extends Controller
             $request->session()->put(Webauthn::SESSION_WEBAUTHNID_CREATED, $webauthnKey->id);
         }
 
-        return app(RegisterSuccessResponse::class);
+        return $this->app[RegisterSuccessResponse::class];
     }
 
     /**
@@ -73,13 +91,13 @@ class WebauthnKeyController extends Controller
      */
     public function update(WebauthnUpdateRequest $request, int $webauthnKeyId)
     {
-        app(UpdateKey::class)(
+        $this->app[UpdateKey::class](
             $request->user(),
             $webauthnKeyId,
             $request->input('name')
         );
 
-        return app(UpdateResponse::class);
+        return $this->app[UpdateResponse::class];
     }
 
     /**
@@ -91,11 +109,11 @@ class WebauthnKeyController extends Controller
      */
     public function destroy(Request $request, int $webauthnKeyId)
     {
-        app(DeleteKey::class)(
+        $this->app[DeleteKey::class](
             $request->user(),
             $webauthnKeyId
         );
 
-        return app(DestroyResponse::class);
+        return $this->app[DestroyResponse::class];
     }
 }

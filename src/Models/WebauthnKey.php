@@ -2,6 +2,7 @@
 
 namespace LaravelWebauthn\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use LaravelWebauthn\Exceptions\WrongUserHandleException;
 use LaravelWebauthn\Models\Casts\Base64;
@@ -12,6 +13,8 @@ use Webauthn\PublicKeyCredentialSource;
 
 class WebauthnKey extends Model
 {
+    use HasFactory;
+
     protected $table = 'webauthn_keys';
 
     /**
@@ -38,6 +41,20 @@ class WebauthnKey extends Model
         'credentialPublicKey',
         'counter',
         'timestamp',
+    ];
+
+    /**
+     * The attributes that should be visible in serialization.
+     *
+     * @var array
+     */
+    protected $visible = [
+        'id',
+        'name',
+        'type',
+        'transports',
+        'created_at',
+        'updated_at',
     ];
 
     /**
