@@ -5,8 +5,8 @@ namespace LaravelWebauthn\Services\Http;
 use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Support\Facades\Log;
 use Psr\Http\Client\ClientInterface;
-use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\RequestFactoryInterface;
+use Psr\Http\Message\ServerRequestInterface;
 
 /**
  * @psalm-suppress UndefinedClass
@@ -17,6 +17,7 @@ class PsrHelper
      * Get the PSR-18 Client.
      *
      * @return \Psr\Http\Client\ClientInterface
+     *
      * @throws \Illuminate\Contracts\Container\BindingResolutionException
      */
     public static function getClient(): ClientInterface
@@ -38,6 +39,7 @@ class PsrHelper
      * Get the PSR-17 Request Factory.
      *
      * @return \Psr\Http\Message\RequestFactoryInterface
+     *
      * @throws \Illuminate\Contracts\Container\BindingResolutionException
      */
     public static function getRequestFactory(): RequestFactoryInterface
@@ -59,6 +61,7 @@ class PsrHelper
      * Get the PSR-7 Server Request.
      *
      * @return \Psr\Http\Message\ServerRequestInterface
+     *
      * @throws \Illuminate\Contracts\Container\BindingResolutionException
      */
     public static function getServerRequestInterface(): ServerRequestInterface

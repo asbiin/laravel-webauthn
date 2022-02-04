@@ -2,6 +2,11 @@
 
 namespace LaravelWebauthn;
 
+use Cose\Algorithm\Manager as CoseAlgorithmManager;
+use Cose\Algorithm\ManagerFactory as CoseAlgorithmManagerFactory;
+use Cose\Algorithm\Signature\ECDSA;
+use Cose\Algorithm\Signature\EdDSA;
+use Cose\Algorithm\Signature\RSA;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 use LaravelWebauthn\Contracts\DestroyResponse as DestroyResponseContract;
@@ -19,20 +24,18 @@ use LaravelWebauthn\Http\Responses\LoginViewResponse;
 use LaravelWebauthn\Http\Responses\RegisterSuccessResponse;
 use LaravelWebauthn\Http\Responses\RegisterViewResponse;
 use LaravelWebauthn\Http\Responses\UpdateResponse;
+use LaravelWebauthn\Services\Http\PsrHelper;
 use LaravelWebauthn\Services\Webauthn;
 use LaravelWebauthn\Services\Webauthn\CredentialRepository;
 use Webauthn\AttestationStatement\AndroidKeyAttestationStatementSupport;
+use Webauthn\AttestationStatement\AndroidSafetyNetAttestationStatementSupport;
+use Webauthn\AttestationStatement\AppleAttestationStatementSupport;
 use Webauthn\AttestationStatement\AttestationObjectLoader;
 use Webauthn\AttestationStatement\AttestationStatementSupportManager;
 use Webauthn\AttestationStatement\FidoU2FAttestationStatementSupport;
 use Webauthn\AttestationStatement\NoneAttestationStatementSupport;
 use Webauthn\AttestationStatement\PackedAttestationStatementSupport;
 use Webauthn\AttestationStatement\TPMAttestationStatementSupport;
-use Webauthn\PublicKeyCredentialSourceRepository;
-use Webauthn\PublicKeyCredentialLoader;
-use Webauthn\TokenBinding\TokenBindingHandler;
-use Cose\Algorithm\Manager as CoseAlgorithmManager;
-use Cose\Algorithm\ManagerFactory as CoseAlgorithmManagerFactory;
 use Webauthn\AuthenticationExtensions\AuthenticationExtensionsClientInputs;
 use Webauthn\AuthenticationExtensions\ExtensionOutputCheckerHandler;
 use Webauthn\AuthenticatorAssertionResponseValidator;
@@ -40,14 +43,11 @@ use Webauthn\AuthenticatorAttestationResponseValidator;
 use Webauthn\AuthenticatorSelectionCriteria;
 use Webauthn\Counter\CounterChecker;
 use Webauthn\Counter\ThrowExceptionIfInvalid;
+use Webauthn\PublicKeyCredentialLoader;
 use Webauthn\PublicKeyCredentialRpEntity;
-use Webauthn\AttestationStatement\AndroidSafetyNetAttestationStatementSupport;
+use Webauthn\PublicKeyCredentialSourceRepository;
 use Webauthn\TokenBinding\IgnoreTokenBindingHandler;
-use Cose\Algorithm\Signature\ECDSA;
-use Cose\Algorithm\Signature\EdDSA;
-use Cose\Algorithm\Signature\RSA;
-use LaravelWebauthn\Services\Http\PsrHelper;
-use Webauthn\AttestationStatement\AppleAttestationStatementSupport;
+use Webauthn\TokenBinding\TokenBindingHandler;
 
 class WebauthnServiceProvider extends ServiceProvider
 {
@@ -174,29 +174,29 @@ class WebauthnServiceProvider extends ServiceProvider
         $this->app->bind(
             AttestationStatementSupportManager::class,
             fn ($app) => tap(new AttestationStatementSupportManager(), function ($manager) use ($app) {
-                    // https://www.w3.org/TR/webauthn/#sctn-none-attestation
-                    $manager->add($app[NoneAttestationStatementSupport::class]);
+                // https://www.w3.org/TR/webauthn/#sctn-none-attestation
+                $manager->add($app[NoneAttestationStatementSupport::class]);
 
-                    // https://www.w3.org/TR/webauthn/#sctn-fido-u2f-attestation
-                    $manager->add($app[FidoU2FAttestationStatementSupport::class]);
+                // https://www.w3.org/TR/webauthn/#sctn-fido-u2f-attestation
+                $manager->add($app[FidoU2FAttestationStatementSupport::class]);
 
-                    // https://www.w3.org/TR/webauthn/#sctn-android-key-attestation
-                    $manager->add($app[AndroidKeyAttestationStatementSupport::class]);
+                // https://www.w3.org/TR/webauthn/#sctn-android-key-attestation
+                $manager->add($app[AndroidKeyAttestationStatementSupport::class]);
 
-                    // https://www.w3.org/TR/webauthn/#sctn-tpm-attestation
-                    $manager->add($app[TPMAttestationStatementSupport::class]);
+                // https://www.w3.org/TR/webauthn/#sctn-tpm-attestation
+                $manager->add($app[TPMAttestationStatementSupport::class]);
 
-                    // https://www.w3.org/TR/webauthn/#sctn-packed-attestation
-                    $manager->add($app[PackedAttestationStatementSupport::class]);
+                // https://www.w3.org/TR/webauthn/#sctn-packed-attestation
+                $manager->add($app[PackedAttestationStatementSupport::class]);
 
-                    // https://www.w3.org/TR/webauthn/#sctn-android-safetynet-attestation
-                    if ($app['config']->get('webauthn.google_safetynet_api_key') !== null) {
-                        $manager->add($app[AndroidSafetyNetAttestationStatementSupport::class]);
-                    }
+                // https://www.w3.org/TR/webauthn/#sctn-android-safetynet-attestation
+                if ($app['config']->get('webauthn.google_safetynet_api_key') !== null) {
+                    $manager->add($app[AndroidSafetyNetAttestationStatementSupport::class]);
+                }
 
-                    // https://www.w3.org/TR/webauthn/#sctn-apple-anonymous-attestation
-                    $manager->add($app[AppleAttestationStatementSupport::class]);
-                })
+                // https://www.w3.org/TR/webauthn/#sctn-apple-anonymous-attestation
+                $manager->add($app[AppleAttestationStatementSupport::class]);
+            })
         );
 
         $this->app->bind(
@@ -218,29 +218,28 @@ class WebauthnServiceProvider extends ServiceProvider
         $this->app->bind(
             CoseAlgorithmManagerFactory::class,
             fn () => tap(new CoseAlgorithmManagerFactory, function ($factory) {
-                    $algorithms = [
-                        RSA\RS1::class,
-                        RSA\RS256::class,
-                        RSA\RS384::class,
-                        RSA\RS512::class,
-                        RSA\PS256::class,
-                        RSA\PS384::class,
-                        RSA\PS512::class,
-                        ECDSA\ES256::class,
-                        ECDSA\ES256K::class,
-                        ECDSA\ES384::class,
-                        ECDSA\ES512::class,
-                        EdDSA\ED256::class,
-                        EdDSA\ED512::class,
-                        EdDSA\Ed25519::class,
-                        EdDSA\EdDSA::class,
-                    ];
+                $algorithms = [
+                    RSA\RS1::class,
+                    RSA\RS256::class,
+                    RSA\RS384::class,
+                    RSA\RS512::class,
+                    RSA\PS256::class,
+                    RSA\PS384::class,
+                    RSA\PS512::class,
+                    ECDSA\ES256::class,
+                    ECDSA\ES256K::class,
+                    ECDSA\ES384::class,
+                    ECDSA\ES512::class,
+                    EdDSA\ED256::class,
+                    EdDSA\ED512::class,
+                    EdDSA\Ed25519::class,
+                    EdDSA\EdDSA::class,
+                ];
 
-                    foreach ($algorithms as $algorithm)
-                    {
-                        $factory->add((string) $algorithm::identifier(), new $algorithm);
-                    }
-                })
+                foreach ($algorithms as $algorithm) {
+                    $factory->add((string) $algorithm::identifier(), new $algorithm);
+                }
+            })
         );
 
         $this->app->bind(
@@ -289,14 +288,14 @@ class WebauthnServiceProvider extends ServiceProvider
         $this->app->bind(
             AuthenticatorSelectionCriteria::class,
             fn ($app) => tap(new AuthenticatorSelectionCriteria(), function ($authenticatorSelectionCriteria) use ($app) {
-                    $authenticatorSelectionCriteria
+                $authenticatorSelectionCriteria
                         ->setAuthenticatorAttachment($app['config']->get('webauthn.attachment_mode', 'null'))
                         ->setUserVerification($app['config']->get('webauthn.user_verification', 'preferred'));
 
-                    if (($userless = $app['config']->get('webauthn.userless')) !== null) {
-                        $authenticatorSelectionCriteria->setResidentKey($userless);
-                    }
-                })
+                if (($userless = $app['config']->get('webauthn.userless')) !== null) {
+                    $authenticatorSelectionCriteria->setResidentKey($userless);
+                }
+            })
         );
     }
 

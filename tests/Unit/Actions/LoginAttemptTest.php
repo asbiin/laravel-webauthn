@@ -6,8 +6,8 @@ use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Validation\ValidationException;
 use LaravelWebauthn\Actions\LoginAttempt;
 use LaravelWebauthn\FAcades\Webauthn;
-use LaravelWebauthn\Services\Webauthn\RequestOptionsFactory;
 use LaravelWebauthn\Services\Webauthn\CredentialAssertionValidator;
+use LaravelWebauthn\Services\Webauthn\RequestOptionsFactory;
 use LaravelWebauthn\Tests\FeatureTestCase;
 use Mockery\MockInterface;
 

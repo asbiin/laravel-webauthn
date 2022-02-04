@@ -9,18 +9,21 @@ abstract class OptionsFactory
 {
     /**
      * Public Key Credential Source Repository.
+     *
      * @var CredentialRepository
      */
     protected $repository;
 
     /**
      * Number random bytes.
+     *
      * @var int
      */
     protected $challengeLength;
 
     /**
      * Timeout in seconds.
+     *
      * @var int
      */
     protected $timeout;

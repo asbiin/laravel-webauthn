@@ -7,8 +7,8 @@ use LaravelWebauthn\Services\Http\PsrHelper;
 use Webauthn\AuthenticatorAttestationResponse;
 use Webauthn\AuthenticatorAttestationResponseValidator;
 use Webauthn\PublicKeyCredentialCreationOptions;
-use Webauthn\PublicKeyCredentialSource;
 use Webauthn\PublicKeyCredentialLoader;
+use Webauthn\PublicKeyCredentialSource;
 
 class CredentialAttestationValidator
 {

@@ -4,6 +4,7 @@ namespace LaravelWebauthn\Actions;
 
 use Exception;
 use Illuminate\Contracts\Auth\Authenticatable;
+use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Validation\ValidationException;
 use LaravelWebauthn\Events\WebauthnRegister;
 use LaravelWebauthn\Events\WebauthnRegisterFailed;
@@ -11,7 +12,6 @@ use LaravelWebauthn\Facades\Webauthn;
 use LaravelWebauthn\Models\WebauthnKey;
 use LaravelWebauthn\Services\Webauthn\CredentialAttestationValidator;
 use Webauthn\PublicKeyCredentialCreationOptions;
-use Illuminate\Contracts\Foundation\Application;
 
 class RegisterKeyStore
 {

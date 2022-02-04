@@ -2,16 +2,16 @@
 
 namespace LaravelWebauthn\Services\Webauthn;
 
+use Cose\Algorithm\Manager as CoseAlgorithmManager;
 use Illuminate\Contracts\Auth\Authenticatable as User;
+use Illuminate\Contracts\Config\Repository as Config;
 use Webauthn\AuthenticatorSelectionCriteria;
 use Webauthn\PublicKeyCredentialCreationOptions;
 use Webauthn\PublicKeyCredentialDescriptor;
 use Webauthn\PublicKeyCredentialParameters;
 use Webauthn\PublicKeyCredentialRpEntity;
-use Webauthn\PublicKeyCredentialUserEntity;
-use Cose\Algorithm\Manager as CoseAlgorithmManager;
-use Illuminate\Contracts\Config\Repository as Config;
 use Webauthn\PublicKeyCredentialSourceRepository;
+use Webauthn\PublicKeyCredentialUserEntity;
 
 final class CreationOptionsFactory extends OptionsFactory
 {
@@ -32,6 +32,7 @@ final class CreationOptionsFactory extends OptionsFactory
 
     /**
      * Attestation Conveyance preference.
+     *
      * @var string
      */
     protected $attestationConveyance;
@@ -69,7 +70,6 @@ final class CreationOptionsFactory extends OptionsFactory
      * Return the credential user entity.
      *
      * @param  \Illuminate\Contracts\Auth\Authenticatable  $user
-     *
      * @return PublicKeyCredentialUserEntity
      */
     private function getUserEntity(User $user): PublicKeyCredentialUserEntity

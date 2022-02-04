@@ -3,10 +3,10 @@
 namespace LaravelWebauthn\Actions;
 
 use Illuminate\Contracts\Auth\Authenticatable;
+use Illuminate\Contracts\Foundation\Application;
 use LaravelWebauthn\Events\WebauthnLoginData;
 use LaravelWebauthn\Services\Webauthn\RequestOptionsFactory;
 use Webauthn\PublicKeyCredentialRequestOptions;
-use Illuminate\Contracts\Foundation\Application;
 
 class LoginPrepare
 {

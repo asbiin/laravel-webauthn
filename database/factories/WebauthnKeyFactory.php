@@ -26,6 +26,7 @@ class WebauthnKeyFactory extends Factory
             'user_id' => function (array $attributes) {
                 $user = new Authenticated();
                 $user->email = 'john@doe.com';
+
                 return $user->getAuthIdentifier();
             },
             'name' => 'key',

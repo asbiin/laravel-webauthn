@@ -7,8 +7,8 @@ use LaravelWebauthn\Exceptions\ResponseMismatchException;
 use LaravelWebauthn\Services\Http\PsrHelper;
 use Webauthn\AuthenticatorAssertionResponse;
 use Webauthn\AuthenticatorAssertionResponseValidator;
-use Webauthn\PublicKeyCredentialRequestOptions;
 use Webauthn\PublicKeyCredentialLoader;
+use Webauthn\PublicKeyCredentialRequestOptions;
 
 class CredentialAssertionValidator
 {

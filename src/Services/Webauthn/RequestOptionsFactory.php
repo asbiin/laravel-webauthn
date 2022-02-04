@@ -3,8 +3,8 @@
 namespace LaravelWebauthn\Services\Webauthn;
 
 use Illuminate\Contracts\Auth\Authenticatable as User;
-use Webauthn\PublicKeyCredentialRequestOptions;
 use Illuminate\Contracts\Config\Repository as Config;
+use Webauthn\PublicKeyCredentialRequestOptions;
 use Webauthn\PublicKeyCredentialRpEntity;
 use Webauthn\PublicKeyCredentialSourceRepository;
 
