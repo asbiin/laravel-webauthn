@@ -100,14 +100,14 @@ jobs:
           composer update --no-interaction --no-progress --prefer-dist
 
       - name: Run test suite
-        run: phpdbg -dmemory_limit=4G -qrr vendor/bin/phpunit -c phpunit.xml --log-junit ./results/results.xml --coverage-clover ./results/coverage.xml
+        run: phpdbg -dmemory_limit=4G -qrr vendor/bin/phpunit -c phpunit.xml --log-junit ./results/results_${{ matrix.psr7 }}.xml --coverage-clover ./results/coverage_${{ matrix.psr7 }}.xml
 
       - name: Fix results files
         run: sed -i -e "s%$GITHUB_WORKSPACE/%%g" *.xml
         working-directory: results
 
       - name: Store results
-        if: matrix.php-version == env.default-php-version && matrix.laravel-version == env.default-laravel-version && matrix.psr7 == 'guzzle'
+        if: matrix.php-version == env.default-php-version && matrix.laravel-version == env.default-laravel-version
         uses: actions/upload-artifact@v2
         with:
           name: results
@@ -136,12 +136,22 @@ jobs:
           name: results
           path: results
 
+      - name: Set coverage list
+        id: coverage
+        run: |
+          SONAR_COVERAGE=$(ls -m --format=comma results/coverage*.xml | sed -e ':a;N;$!ba;s/\n//g; s/ //g;')
+          echo "::set-output name=list::$SONAR_COVERAGE"
+
       - name: SonarCloud Scan
         if: env.SONAR_TOKEN != ''
         uses: SonarSource/sonarcloud-github-action@v1.6
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        with:
+          args: |
+            -Dsonar.php.tests.reportPath=./results/results_guzzle.xml
+            -Dsonar.php.coverage.reportPaths=${{ steps.coverage.outputs.list }}
 
 
   ####################

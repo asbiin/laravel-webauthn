@@ -1,6 +1,6 @@
 <?php
 
-namespace LaravelWebauthn\Services\Http;
+namespace LaravelWebauthn\Http\Helpers;
 
 use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Support\Facades\Log;

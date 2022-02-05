@@ -3,7 +3,7 @@
 namespace LaravelWebauthn\Services\Webauthn;
 
 use LaravelWebauthn\Exceptions\ResponseMismatchException;
-use LaravelWebauthn\Services\Http\PsrHelper;
+use LaravelWebauthn\Http\Helpers\PsrHelper;
 use Webauthn\AuthenticatorAttestationResponse;
 use Webauthn\AuthenticatorAttestationResponseValidator;
 use Webauthn\PublicKeyCredentialCreationOptions;

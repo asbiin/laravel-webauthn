@@ -24,7 +24,7 @@ use LaravelWebauthn\Http\Responses\LoginViewResponse;
 use LaravelWebauthn\Http\Responses\RegisterSuccessResponse;
 use LaravelWebauthn\Http\Responses\RegisterViewResponse;
 use LaravelWebauthn\Http\Responses\UpdateResponse;
-use LaravelWebauthn\Services\Http\PsrHelper;
+use LaravelWebauthn\Http\Helpers\PsrHelper;
 use LaravelWebauthn\Services\Webauthn;
 use LaravelWebauthn\Services\Webauthn\CredentialRepository;
 use Webauthn\AttestationStatement\AndroidKeyAttestationStatementSupport;

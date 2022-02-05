@@ -4,7 +4,7 @@ namespace LaravelWebauthn\Services\Webauthn;
 
 use Illuminate\Contracts\Auth\Authenticatable as User;
 use LaravelWebauthn\Exceptions\ResponseMismatchException;
-use LaravelWebauthn\Services\Http\PsrHelper;
+use LaravelWebauthn\Http\Helpers\PsrHelper;
 use Webauthn\AuthenticatorAssertionResponse;
 use Webauthn\AuthenticatorAssertionResponseValidator;
 use Webauthn\PublicKeyCredentialLoader;
