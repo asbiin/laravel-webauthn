@@ -17,11 +17,12 @@ LaravelWebauthn is an adapter to use Webauthn as 2FA (second-factor authenticati
 - [Usage](#usage)
   - [Authenticate](#authenticate)
   - [Register a new key](#register-a-new-key)
-  - [Compatibility](#compatibility)
   - [Important](#important)
     - [Homestead](#homestead)
   - [Routes](#routes)
   - [Events](#events)
+  - [View response](#view-response)
+- [Compatibility](#compatibility)
 - [License](#license)
 
 # Installation
@@ -182,14 +183,6 @@ If `postSuccessRedirectRoute` is empty, the return will be JSON form:
 }
 ```
 
-## Compatibility
-
-| Laravel  | [asbiin/laravel-webauthn](https://github.com/asbiin/laravel-webauthn) |
-|----------|----------|
-| 5.8-8.x  | <= 1.2.0 |
-| 7.x-8.x  |  2.0.0   |
-
-
 ## Important
 
 Your browser will refuse to negotiate a relay to your security device without the following:
@@ -252,6 +245,58 @@ Events are dispatched by LaravelWebauthn:
 * `\LaravelWebauthn\Events\WebauthnRegisterData` on preparing register data
 * `\LaravelWebauthn\Events\WebauthnRegister` on registering a new key
 * `\LaravelWebauthn\Events\WebauthnRegisterFailed` on failing registering a new key
+
+
+## View response
+
+You can easily change the view responses with the Webauthn service:
+
+```php
+use LaravelWebauthn\Services\Webauthn;
+
+class AppServiceProvider extends ServiceProvider
+{
+    public function register()
+    {
+        Webauthn::loginViewResponseUsing(LoginViewResponse::class);
+    }
+}
+```
+
+```php
+use LaravelWebauthn\Http\Responses\LoginViewResponse as LoginViewResponseBase;
+
+class LoginViewResponse extends LoginViewResponseBase
+{
+    public function toResponse($request)
+    {
+        $publicKey = $this->publicKeyRequest($request);
+
+        return Inertia::render('Webauthn/WebauthnLogin', [
+            'publicKey' => $publicKey
+        ]);
+    }
+}
+```
+
+List of methods and their expected response contracts:
+
+| Webauthn                     | LaravelWebauthn\Contracts       |
+|------------------------------|---------------------------------|
+| loginViewResponseUsing       | LoginViewResponseContract       |
+| loginSuccessResponseUsing    | LoginSuccessResponseContract    |
+| registerViewResponseUsing    | RegisterViewResponseContract    |
+| registerSuccessResponseUsing | RegisterSuccessResponseContract |
+| destroyViewResponseUsing     | DestroyResponseContract         |
+| updateViewResponseUsing      | UpdateResponseContract          |
+
+
+# Compatibility
+
+| Laravel  | [asbiin/laravel-webauthn](https://github.com/asbiin/laravel-webauthn) |
+|----------|----------|
+| 5.8-8.x  | <= 1.2.0 |
+| 7.x-8.x  |  2.0.0   |
 
 
 # License

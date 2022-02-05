@@ -214,7 +214,7 @@ class Webauthn extends WebauthnRepository
     }
 
     /**
-     * Register a class / callback that should be used to the destroy view response.
+     * Register a class / callback that should be used to the login success view response.
      *
      * @param  string  $callback
      * @return void
@@ -226,7 +226,7 @@ class Webauthn extends WebauthnRepository
     }
 
     /**
-     * Register a class / callback that should be used to the destroy view response.
+     * Register a class / callback that should be used to the login view response.
      *
      * @param  string  $callback
      * @return void
@@ -238,7 +238,7 @@ class Webauthn extends WebauthnRepository
     }
 
     /**
-     * Register a class / callback that should be used to the destroy view response.
+     * Register a class / callback that should be used to the register key success view response.
      *
      * @param  string  $callback
      * @return void
@@ -250,7 +250,7 @@ class Webauthn extends WebauthnRepository
     }
 
     /**
-     * Register a class / callback that should be used to the destroy view response.
+     * Register a class / callback that should be used to the register creation view response.
      *
      * @param  string  $callback
      * @return void
