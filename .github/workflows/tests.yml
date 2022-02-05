@@ -93,7 +93,7 @@ jobs:
         run: |
           composer remove psr/http-factory-implementation --no-update
           composer remove --dev guzzlehttp/psr7 --no-update
-          composer require --dev symfony/psr-http-message-bridge php-http/discovery http-interop/http-factory-guzzle --no-update
+          composer require --dev symfony/psr-http-message-bridge php-http/discovery laminas/laminas-diactoros php-http/curl-client --no-update
 
       - name: Install dependencies
         run: |
