@@ -50,7 +50,10 @@ class WebauthnControllerTest extends FeatureTestCase
         Webauthn::swap(new FakeWebauthn($this->app));
     }
 
-    public function test_auth_get()
+    /**
+     * @test
+     */
+    public function it_auth_get()
     {
         $user = $this->signIn();
 
@@ -62,7 +65,10 @@ class WebauthnControllerTest extends FeatureTestCase
         ]);
     }
 
-    public function test_auth_success()
+    /**
+     * @test
+     */
+    public function it_auth_success()
     {
         $user = $this->signIn();
         $this->session(['webauthn.publicKeyRequest' => app(LoginPrepare::class)($user)]);
@@ -82,7 +88,10 @@ class WebauthnControllerTest extends FeatureTestCase
         ]);
     }
 
-    public function test_auth_exception()
+    /**
+     * @test
+     */
+    public function it_auth_exception()
     {
         $user = $this->signIn();
 
@@ -91,7 +100,10 @@ class WebauthnControllerTest extends FeatureTestCase
         $response->assertStatus(404);
     }
 
-    public function test_auth_success_with_redirect()
+    /**
+     * @test
+     */
+    public function it_auth_success_with_redirect()
     {
         config(['webauthn.redirects.login' => 'redirect']);
 
@@ -107,7 +119,10 @@ class WebauthnControllerTest extends FeatureTestCase
         $response->assertRedirect('redirect');
     }
 
-    public function test_register_get_data()
+    /**
+     * @test
+     */
+    public function it_register_get_data()
     {
         $user = $this->signIn();
 
@@ -119,7 +134,10 @@ class WebauthnControllerTest extends FeatureTestCase
         ]);
     }
 
-    public function test_register_create_without_check()
+    /**
+     * @test
+     */
+    public function it_register_create_without_check()
     {
         $user = $this->signIn();
         $response = $this->post('/webauthn/keys', [
@@ -130,7 +148,10 @@ class WebauthnControllerTest extends FeatureTestCase
         $response->assertStatus(404);
     }
 
-    public function test_register_create()
+    /**
+     * @test
+     */
+    public function it_register_create()
     {
         $user = $this->signIn();
         $this->session(['webauthn.publicKeyCreation' => app(RegisterKeyPrepare::class)($user)]);
@@ -155,7 +176,10 @@ class WebauthnControllerTest extends FeatureTestCase
         ]);
     }
 
-    public function test_register_create_exception()
+    /**
+     * @test
+     */
+    public function it_register_create_exception()
     {
         $user = $this->signIn();
 
@@ -175,7 +199,10 @@ class WebauthnControllerTest extends FeatureTestCase
         ]);
     }
 
-    public function test_destroy()
+    /**
+     * @test
+     */
+    public function it_destroy_key()
     {
         $user = $this->signIn();
         $webauthnKey = factory(WebauthnKey::class)->create([
@@ -191,7 +218,10 @@ class WebauthnControllerTest extends FeatureTestCase
         ]);
     }
 
-    public function test_destroy_wrong_id()
+    /**
+     * @test
+     */
+    public function it_destroy_wrong_id()
     {
         $user = $this->signIn();
         $webauthnKey = factory(WebauthnKey::class)->create([
@@ -214,7 +244,10 @@ class WebauthnControllerTest extends FeatureTestCase
         ]);
     }
 
-    public function test_destroy_wrong_user()
+    /**
+     * @test
+     */
+    public function it_destroy_wrong_user()
     {
         $user = $this->signIn();
         $webauthnKey = factory(WebauthnKey::class)->create([
@@ -237,6 +270,91 @@ class WebauthnControllerTest extends FeatureTestCase
         $this->assertDatabaseHas('webauthn_keys', [
             'id' => $webauthnKey->id,
             'user_id' => $user->getAuthIdentifier(),
+        ]);
+    }
+
+    /**
+     * @test
+     */
+    public function it_update_webauthnkey()
+    {
+        $user = $this->signIn();
+        $webauthnKey = factory(WebauthnKey::class)->create([
+            'user_id' => $user->getAuthIdentifier(),
+        ]);
+
+        $response = $this->put('/webauthn/keys/'.$webauthnKey->id, [
+            'name' => 'new name',
+        ], ['accept' => 'application/json']);
+
+        $response->assertStatus(204);
+
+        $this->assertDataBaseHas('webauthn_keys', [
+            'user_id' => $user->getAuthIdentifier(),
+            'name' => 'new name',
+        ]);
+    }
+
+    /**
+     * @test
+     */
+    public function it_not_update_wrong_id()
+    {
+        $user = $this->signIn();
+        $webauthnKey = factory(WebauthnKey::class)->create([
+            'user_id' => $user->getAuthIdentifier(),
+            'name' => 'name',
+        ]);
+
+        $this->expectException(\Illuminate\Database\Eloquent\ModelNotFoundException::class);
+        $response = $this->put('/webauthn/keys/0', [
+            'name' => 'new name',
+        ]);
+
+        $response->assertStatus(404);
+        $response->assertJson([
+            'error' => [
+                'message' => 'Object not found',
+            ],
+        ]);
+
+        $this->assertDatabaseHas('webauthn_keys', [
+            'id' => $webauthnKey->id,
+            'user_id' => $user->getAuthIdentifier(),
+            'name' => 'name',
+        ]);
+    }
+
+    /**
+     * @test
+     */
+    public function it_not_update_wrong_user()
+    {
+        $user = $this->signIn();
+        $webauthnKey = factory(WebauthnKey::class)->create([
+            'user_id' => $user->getAuthIdentifier(),
+            'name' => 'name',
+        ]);
+        $otherWebauthnKey = factory(WebauthnKey::class)->create([
+            'user_id' => $this->user()->getAuthIdentifier(),
+        ]);
+
+        $this->expectException(\Illuminate\Database\Eloquent\ModelNotFoundException::class);
+        $response = $this->put('/webauthn/keys/'.$otherWebauthnKey->id, [
+            'name' => 'new name',
+        ]);
+
+        $response->assertStatus(404);
+        $response->assertJson([
+            'error' => [
+                'message' => 'Object not found',
+            ],
+        ]);
+
+        $this->assertDatabaseHas('webauthn_keys', [
+            'id' => $webauthnKey->id,
+            'user_id' => $user->getAuthIdentifier(),
+            'name' => 'name',
         ]);
     }
 }
