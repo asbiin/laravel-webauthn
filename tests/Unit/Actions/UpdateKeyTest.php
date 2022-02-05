@@ -18,7 +18,7 @@ class UpdateKeyTest extends FeatureTestCase
     public function it_update_key()
     {
         $user = $this->user();
-        $webauthnKey = WebauthnKey::factory()->create([
+        $webauthnKey = factory(WebauthnKey::class)->create([
             'user_id' => $user->getAuthIdentifier(),
         ]);
 
@@ -37,7 +37,7 @@ class UpdateKeyTest extends FeatureTestCase
     public function it_fails_if_wrong_user()
     {
         $user = $this->user();
-        $webauthnKey = WebauthnKey::factory()->create();
+        $webauthnKey = factory(WebauthnKey::class)->create();
 
         $this->expectException(ModelNotFoundException::class);
         app(UpdateKey::class)($user, $webauthnKey->id, 'new-name');

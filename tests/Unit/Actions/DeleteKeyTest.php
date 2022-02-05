@@ -18,7 +18,7 @@ class DeleteKeyTest extends FeatureTestCase
     public function it_delete_key()
     {
         $user = $this->user();
-        $webauthnKey = WebauthnKey::factory()->create([
+        $webauthnKey = factory(WebauthnKey::class)->create([
             'user_id' => $user->getAuthIdentifier(),
         ]);
 
@@ -35,7 +35,7 @@ class DeleteKeyTest extends FeatureTestCase
     public function it_fails_if_wrong_user()
     {
         $user = $this->user();
-        $webauthnKey = WebauthnKey::factory()->create();
+        $webauthnKey = factory(WebauthnKey::class)->create();
 
         $this->expectException(ModelNotFoundException::class);
         app(DeleteKey::class)($user, $webauthnKey->id);

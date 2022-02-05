@@ -2,7 +2,6 @@
 
 namespace LaravelWebauthn\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use LaravelWebauthn\Exceptions\WrongUserHandleException;
 use LaravelWebauthn\Models\Casts\Base64;
@@ -13,8 +12,6 @@ use Webauthn\PublicKeyCredentialSource;
 
 class WebauthnKey extends Model
 {
-    use HasFactory;
-
     protected $table = 'webauthn_keys';
 
     /**
