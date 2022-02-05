@@ -7,9 +7,9 @@ use Cose\Algorithm\ManagerFactory as CoseAlgorithmManagerFactory;
 use Cose\Algorithm\Signature\ECDSA;
 use Cose\Algorithm\Signature\EdDSA;
 use Cose\Algorithm\Signature\RSA;
-use Http\Discovery\Psr18ClientDiscovery;
-use Http\Discovery\Psr17FactoryDiscovery;
 use Http\Discovery\Exception\NotFoundException;
+use Http\Discovery\Psr17FactoryDiscovery;
+use Http\Discovery\Psr18ClientDiscovery;
 use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
@@ -31,14 +31,14 @@ use LaravelWebauthn\Http\Responses\RegisterViewResponse;
 use LaravelWebauthn\Http\Responses\UpdateResponse;
 use LaravelWebauthn\Services\Webauthn;
 use LaravelWebauthn\Services\Webauthn\CredentialRepository;
-use Symfony\Bridge\PsrHttpMessage\Factory\PsrHttpFactory;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestFactoryInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
-use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ServerRequestFactoryInterface;
+use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\StreamFactoryInterface;
 use Psr\Http\Message\UploadedFileFactoryInterface;
+use Symfony\Bridge\PsrHttpMessage\Factory\PsrHttpFactory;
 use Webauthn\AttestationStatement\AndroidKeyAttestationStatementSupport;
 use Webauthn\AttestationStatement\AndroidSafetyNetAttestationStatementSupport;
 use Webauthn\AttestationStatement\AppleAttestationStatementSupport;
@@ -365,7 +365,7 @@ class WebauthnServiceProvider extends ServiceProvider
                  */
                 $psr17Factory = new \Nyholm\Psr7\Factory\Psr17Factory;
 
-                return (new PsrHttpFactory($psr17Factory, $psr17Factory, $psr17Factory, $psr17Factory));
+                return new PsrHttpFactory($psr17Factory, $psr17Factory, $psr17Factory, $psr17Factory);
             } elseif (class_exists(Psr17FactoryDiscovery::class)
                 && class_exists(NotFoundException::class)) {
                 try {
@@ -374,7 +374,7 @@ class WebauthnServiceProvider extends ServiceProvider
                     $serverRequestFactory = Psr17FactoryDiscovery::findServerRequestFactory();
                     $streamFactory = Psr17FactoryDiscovery::findStreamFactory();
 
-                    return (new PsrHttpFactory($serverRequestFactory, $streamFactory, $uploadFileFactory, $responseFactory));
+                    return new PsrHttpFactory($serverRequestFactory, $streamFactory, $uploadFileFactory, $responseFactory);
                     // @codeCoverageIgnoreStart
                 } catch (NotFoundException $e) {
                     Log::error('Could not find PSR-17 Factory.', ['exception' => $e]);
