@@ -1,8 +1,7 @@
 <?php
 
-namespace LaravelWebauthn\Tests\Unit\Http\Helper;
+namespace LaravelWebauthn\Tests\Unit\Services;
 
-use LaravelWebauthn\Http\Helpers\PsrHelper;
 use LaravelWebauthn\Tests\FeatureTestCase;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestFactoryInterface;
@@ -21,7 +20,7 @@ class PsrHelpersTest extends FeatureTestCase
             return;
         }
 
-        $client = PsrHelper::getClient();
+        $client = app(ClientInterface::class);
 
         $this->assertInstanceOf(ClientInterface::class, $client);
     }
@@ -37,7 +36,7 @@ class PsrHelpersTest extends FeatureTestCase
             return;
         }
 
-        $requestFactory = PsrHelper::getRequestFactory();
+        $requestFactory = app(RequestFactoryInterface::class);
 
         $this->assertInstanceOf(RequestFactoryInterface::class, $requestFactory);
     }
@@ -47,7 +46,7 @@ class PsrHelpersTest extends FeatureTestCase
      */
     public function it_get_server_request_interface()
     {
-        $serverRequest = PsrHelper::getServerRequestInterface();
+        $serverRequest = app(ServerRequestInterface::class);
 
         $this->assertInstanceOf(ServerRequestInterface::class, $serverRequest);
     }

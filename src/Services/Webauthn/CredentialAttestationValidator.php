@@ -3,7 +3,7 @@
 namespace LaravelWebauthn\Services\Webauthn;
 
 use LaravelWebauthn\Exceptions\ResponseMismatchException;
-use LaravelWebauthn\Http\Helpers\PsrHelper;
+use Psr\Http\Message\ServerRequestInterface;
 use Webauthn\AuthenticatorAttestationResponse;
 use Webauthn\AuthenticatorAttestationResponseValidator;
 use Webauthn\PublicKeyCredentialCreationOptions;
@@ -12,6 +12,11 @@ use Webauthn\PublicKeyCredentialSource;
 
 class CredentialAttestationValidator
 {
+    /**
+     * @var ServerRequestInterface
+     */
+    protected $serverRequest;
+
     /**
      * @var PublicKeyCredentialLoader
      */
@@ -22,8 +27,9 @@ class CredentialAttestationValidator
      */
     protected $authenticatorAttestationResponseValidator;
 
-    public function __construct(PublicKeyCredentialLoader $publicKeyCredentialLoader, AuthenticatorAttestationResponseValidator $authenticatorAttestationResponseValidator)
+    public function __construct(ServerRequestInterface $serverRequest, PublicKeyCredentialLoader $publicKeyCredentialLoader, AuthenticatorAttestationResponseValidator $authenticatorAttestationResponseValidator)
     {
+        $this->serverRequest = $serverRequest;
         $this->publicKeyCredentialLoader = $publicKeyCredentialLoader;
         $this->authenticatorAttestationResponseValidator = $authenticatorAttestationResponseValidator;
     }
@@ -53,7 +59,7 @@ class CredentialAttestationValidator
         return $this->authenticatorAttestationResponseValidator->check(
             $response,
             $publicKeyCredentialCreationOptions,
-            PsrHelper::getServerRequestInterface()
+            $this->serverRequest
         );
     }
 }

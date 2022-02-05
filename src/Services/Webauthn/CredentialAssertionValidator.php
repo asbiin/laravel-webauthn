@@ -4,7 +4,7 @@ namespace LaravelWebauthn\Services\Webauthn;
 
 use Illuminate\Contracts\Auth\Authenticatable as User;
 use LaravelWebauthn\Exceptions\ResponseMismatchException;
-use LaravelWebauthn\Http\Helpers\PsrHelper;
+use Psr\Http\Message\ServerRequestInterface;
 use Webauthn\AuthenticatorAssertionResponse;
 use Webauthn\AuthenticatorAssertionResponseValidator;
 use Webauthn\PublicKeyCredentialLoader;
@@ -12,6 +12,11 @@ use Webauthn\PublicKeyCredentialRequestOptions;
 
 class CredentialAssertionValidator
 {
+    /**
+     * @var ServerRequestInterface
+     */
+    protected $serverRequest;
+
     /**
      * @var PublicKeyCredentialLoader
      */
@@ -22,8 +27,9 @@ class CredentialAssertionValidator
      */
     protected $validator;
 
-    public function __construct(PublicKeyCredentialLoader $loader, AuthenticatorAssertionResponseValidator $validator)
+    public function __construct(ServerRequestInterface $serverRequest, PublicKeyCredentialLoader $loader, AuthenticatorAssertionResponseValidator $validator)
     {
+        $this->serverRequest = $serverRequest;
         $this->loader = $loader;
         $this->validator = $validator;
     }
@@ -55,7 +61,7 @@ class CredentialAssertionValidator
             $publicKeyCredentials->getRawId(),
             $response,
             $requestOptions,
-            PsrHelper::getServerRequestInterface(),
+            $this->serverRequest,
             $user->getAuthIdentifier()
         );
 
