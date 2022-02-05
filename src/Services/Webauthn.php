@@ -194,6 +194,7 @@ class Webauthn extends WebauthnRepository
      *
      * @param  string  $callback
      * @return void
+     * @codeCoverageIgnore
      */
     public static function destroyViewResponseUsing(string $callback)
     {
@@ -205,6 +206,7 @@ class Webauthn extends WebauthnRepository
      *
      * @param  string  $callback
      * @return void
+     * @codeCoverageIgnore
      */
     public static function updateViewResponseUsing(string $callback)
     {
@@ -216,6 +218,7 @@ class Webauthn extends WebauthnRepository
      *
      * @param  string  $callback
      * @return void
+     * @codeCoverageIgnore
      */
     public static function loginSuccessResponseUsing(string $callback)
     {
@@ -227,6 +230,7 @@ class Webauthn extends WebauthnRepository
      *
      * @param  string  $callback
      * @return void
+     * @codeCoverageIgnore
      */
     public static function loginViewResponseUsing(string $callback)
     {
@@ -238,6 +242,7 @@ class Webauthn extends WebauthnRepository
      *
      * @param  string  $callback
      * @return void
+     * @codeCoverageIgnore
      */
     public static function registerSuccessResponseUsing(string $callback)
     {
@@ -249,6 +254,7 @@ class Webauthn extends WebauthnRepository
      *
      * @param  string  $callback
      * @return void
+     * @codeCoverageIgnore
      */
     public static function registerViewResponseUsing(string $callback)
     {

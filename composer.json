@@ -43,9 +43,9 @@
         "vimeo/psalm": "^4.0"
     },
     "suggest": {
-        "guzzlehttp/psr7": "",
-        "symfony/psr-http-message-bridge": "",
-        "php-http/discovery": "^1.6",
+        "guzzlehttp/psr7": "To provide a psr/http-factory-implementation implementation",
+        "symfony/psr-http-message-bridge": "To find a psr/http-factory-implementation implementation",
+        "php-http/discovery": "To find a psr/http-factory-implementation implementation",
         "psr/http-client-implementation": "Required for the AndroidSafetyNet Attestation Statement support",
         "web-token/jwt-signature-algorithm-rsa": "Required for the AndroidSafetyNet Attestation Statement support",
         "web-token/jwt-signature-algorithm-ecdsa": "Required for the AndroidSafetyNet Attestation Statement support",
