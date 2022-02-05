@@ -358,32 +358,34 @@ class WebauthnServiceProvider extends ServiceProvider
             throw new BindingResolutionException('Unable to resolve PSR-7 Server Request. Please install the guzzlehttp/psr7 or symfony/psr-http-message-bridge, php-http/discovery and a psr/http-factory-implementation implementation.'); // @codeCoverageIgnore
         });
 
-        $this->app->bind(PsrHttpFactory::class, function () {
-            if (class_exists(\Nyholm\Psr7\Factory\Psr17Factory::class)) {
-                /**
-                 * @var ServerRequestFactoryInterface|StreamFactoryInterface|UploadedFileFactoryInterface|ResponseFactoryInterface
-                 */
-                $psr17Factory = new \Nyholm\Psr7\Factory\Psr17Factory;
+        if (class_exists(PsrHttpFactory::class)) {
+            $this->app->bind(PsrHttpFactory::class, function () {
+                if (class_exists(\Nyholm\Psr7\Factory\Psr17Factory::class)) {
+                    /**
+                     * @var ServerRequestFactoryInterface|StreamFactoryInterface|UploadedFileFactoryInterface|ResponseFactoryInterface
+                     */
+                    $psr17Factory = new \Nyholm\Psr7\Factory\Psr17Factory;
 
-                return new PsrHttpFactory($psr17Factory, $psr17Factory, $psr17Factory, $psr17Factory);
-            } elseif (class_exists(Psr17FactoryDiscovery::class)
-                && class_exists(NotFoundException::class)) {
-                try {
-                    $uploadFileFactory = Psr17FactoryDiscovery::findUploadedFileFactory();
-                    $responseFactory = Psr17FactoryDiscovery::findResponseFactory();
-                    $serverRequestFactory = Psr17FactoryDiscovery::findServerRequestFactory();
-                    $streamFactory = Psr17FactoryDiscovery::findStreamFactory();
+                    return new PsrHttpFactory($psr17Factory, $psr17Factory, $psr17Factory, $psr17Factory);
+                } elseif (class_exists(Psr17FactoryDiscovery::class)
+                    && class_exists(NotFoundException::class)) {
+                    try {
+                        $uploadFileFactory = Psr17FactoryDiscovery::findUploadedFileFactory();
+                        $responseFactory = Psr17FactoryDiscovery::findResponseFactory();
+                        $serverRequestFactory = Psr17FactoryDiscovery::findServerRequestFactory();
+                        $streamFactory = Psr17FactoryDiscovery::findStreamFactory();
 
-                    return new PsrHttpFactory($serverRequestFactory, $streamFactory, $uploadFileFactory, $responseFactory);
-                    // @codeCoverageIgnoreStart
-                } catch (NotFoundException $e) {
-                    Log::error('Could not find PSR-17 Factory.', ['exception' => $e]);
+                        return new PsrHttpFactory($serverRequestFactory, $streamFactory, $uploadFileFactory, $responseFactory);
+                        // @codeCoverageIgnoreStart
+                    } catch (NotFoundException $e) {
+                        Log::error('Could not find PSR-17 Factory.', ['exception' => $e]);
+                    }
                 }
-            }
 
-            throw new BindingResolutionException('Unable to resolve PSR-17 Factory. Please install psr/http-factory-implementation implementation like \'guzzlehttp/psr7\'.');
-            // @codeCoverageIgnoreEnd
-        });
+                throw new BindingResolutionException('Unable to resolve PSR-17 Factory. Please install psr/http-factory-implementation implementation like \'guzzlehttp/psr7\'.');
+                // @codeCoverageIgnoreEnd
+            });
+        }
     }
 
     /**
