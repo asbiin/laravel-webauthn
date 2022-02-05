@@ -7,19 +7,37 @@ use Illuminate\Contracts\Config\Repository as Config;
 use Illuminate\Contracts\Events\Dispatcher;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\Session\Session;
-use LaravelWebauthn\Events\WebauthnLogin;
-use LaravelWebauthn\Events\WebauthnLoginData;
-use LaravelWebauthn\Events\WebauthnRegister;
-use LaravelWebauthn\Events\WebauthnRegisterData;
-use LaravelWebauthn\Models\WebauthnKey;
-use LaravelWebauthn\Services\Webauthn\PublicKeyCredentialCreationOptionsFactory;
-use LaravelWebauthn\Services\Webauthn\PublicKeyCredentialRequestOptionsFactory;
-use LaravelWebauthn\Services\Webauthn\PublicKeyCredentialValidator;
-use Webauthn\PublicKeyCredentialCreationOptions;
-use Webauthn\PublicKeyCredentialRequestOptions;
 
 class Webauthn extends WebauthnRepository
 {
+    /**
+     * PublicKey Creation session name.
+     *
+     * @var string
+     */
+    public const SESSION_PUBLICKEY_CREATION = 'webauthn.publicKeyCreation';
+
+    /**
+     * Webauthn Created ID.
+     *
+     * @var string
+     */
+    public const SESSION_WEBAUTHNID_CREATED = 'webauthn.idCreated';
+
+    /**
+     * PublicKey Request session name.
+     *
+     * @var string
+     */
+    public const SESSION_PUBLICKEY_REQUEST = 'webauthn.publicKeyRequest';
+
+    /**
+     * PublicKey Request session name.
+     *
+     * @var string
+     */
+    public const SESSION_AUTH_RESULT = 'webauthn.publicKeyRequest';
+
     /**
      * Laravel application.
      *
@@ -65,92 +83,58 @@ class Webauthn extends WebauthnRepository
     }
 
     /**
-     * Get datas to register a new key.
+     * Get a completion redirect path for a specific feature.
      *
-     * @param  User  $user
-     * @return PublicKeyCredentialCreationOptions
+     * @param  string  $redirect
+     * @return string
      */
-    public function getRegisterData(User $user): PublicKeyCredentialCreationOptions
+    public static function redirects(string $redirect, $default = null)
     {
-        $publicKey = $this->app->make(PublicKeyCredentialCreationOptionsFactory::class)
-            ->create($user);
-
-        $this->events->dispatch(new WebauthnRegisterData($user, $publicKey));
-
-        return $publicKey;
+        return config('webauthn.redirects.'.$redirect) ?? $default ?? config('webauthn.home');
     }
 
     /**
-     * Register a new key.
+     * Save authentication in session.
      *
-     * @param  User  $user
-     * @param  PublicKeyCredentialCreationOptions  $publicKey
-     * @param  string  $data
-     * @param  string  $keyName
-     * @return WebauthnKey
+     * @return void
      */
-    public function doRegister(User $user, PublicKeyCredentialCreationOptions $publicKey, string $data, string $keyName): WebauthnKey
+    public function login()
     {
-        $publicKeyCredentialSource = $this->app->make(PublicKeyCredentialValidator::class)
-            ->validate($publicKey, $data);
-
-        $webauthnKey = $this->create($user, $keyName, $publicKeyCredentialSource);
-
-        $this->forceAuthenticate();
-
-        $this->events->dispatch(new WebauthnRegister($webauthnKey));
-
-        return $webauthnKey;
+        $this->session->put([$this->sessionName() => true]);
     }
 
     /**
-     * Get datas to authenticate a user.
+     * Remove authentication from session.
      *
-     * @param  User  $user
-     * @return PublicKeyCredentialRequestOptions
+     * @return void
      */
-    public function getAuthenticateData(User $user): PublicKeyCredentialRequestOptions
+    public function logout()
     {
-        $publicKey = $this->app->make(PublicKeyCredentialRequestOptionsFactory::class)
-            ->create($user);
-
-        $this->events->dispatch(new WebauthnLoginData($user, $publicKey));
-
-        return $publicKey;
-    }
-
-    /**
-     * Authenticate a user.
-     *
-     * @param  User  $user
-     * @param  PublicKeyCredentialRequestOptions  $publicKey
-     * @param  string  $data
-     * @return bool
-     */
-    public function doAuthenticate(User $user, PublicKeyCredentialRequestOptions $publicKey, string $data): bool
-    {
-        $result = $this->app->make(PublicKeyCredentialValidator::class)
-            ->check($user, $publicKey, $data);
-
-        if ($result) {
-            $this->forceAuthenticate();
-
-            $this->events->dispatch(new WebauthnLogin($user));
-
-            return true;
-        }
-
-        return false;
+        $this->session->forget($this->sessionName());
     }
 
     /**
      * Force authentication in session.
      *
      * @return void
+     *
+     * @deprecated use login() instead
      */
     public function forceAuthenticate()
     {
-        $this->session->put([$this->config->get('webauthn.sessionName') => true]);
+        $this->login();
+    }
+
+    /**
+     * Force remove authentication in session.
+     *
+     * @return void
+     *
+     * @deprecated use logout() instead
+     */
+    public function forgetAuthenticate()
+    {
+        $this->logout();
     }
 
     /**
@@ -160,28 +144,120 @@ class Webauthn extends WebauthnRepository
      */
     public function check(): bool
     {
-        return (bool) $this->session->get($this->config->get('webauthn.sessionName'), false);
+        return (bool) $this->session->get($this->sessionName(), false);
     }
 
     /**
-     * Test if the user has one webauthn key set or more.
+     * Get webauthn session store name.
+     *
+     * @return string
+     */
+    private function sessionName(): string
+    {
+        return $this->config->get('webauthn.sessionName');
+    }
+
+    /**
+     * Test if the user has one or more webauthn key.
      *
      * @param  \Illuminate\Contracts\Auth\Authenticatable  $user
      * @return bool
      */
     public function enabled(User $user): bool
     {
-        return (bool) $this->config->get('webauthn.enable', true) && $this->hasKey($user);
+        return $this->webauthnEnabled() && $this->hasKey($user);
     }
 
     /**
-     * Test if the user can register a new token.
+     * Test if the user can register a new key.
      *
      * @param  \Illuminate\Contracts\Auth\Authenticatable  $user
      * @return bool
      */
     public function canRegister(User $user): bool
     {
-        return ! $this->enabled($user) || $this->check();
+        return $this->webauthnEnabled() && (! $this->enabled($user) || $this->check());
+    }
+
+    /**
+     * Test if webauthn is enabled.
+     *
+     * @return bool
+     */
+    public function webauthnEnabled(): bool
+    {
+        return (bool) $this->config->get('webauthn.enable', true);
+    }
+
+    /**
+     * Register a class / callback that should be used to the destroy view response.
+     *
+     * @param  string  $callback
+     * @return void
+     * @codeCoverageIgnore
+     */
+    public static function destroyViewResponseUsing(string $callback)
+    {
+        app()->singleton(\LaravelWebauthn\Contracts\DestroyResponse::class, $callback);
+    }
+
+    /**
+     * Register a class / callback that should be used to the update view response.
+     *
+     * @param  string  $callback
+     * @return void
+     * @codeCoverageIgnore
+     */
+    public static function updateViewResponseUsing(string $callback)
+    {
+        app()->singleton(\LaravelWebauthn\Contracts\UpdateResponse::class, $callback);
+    }
+
+    /**
+     * Register a class / callback that should be used to the login success view response.
+     *
+     * @param  string  $callback
+     * @return void
+     * @codeCoverageIgnore
+     */
+    public static function loginSuccessResponseUsing(string $callback)
+    {
+        app()->singleton(\LaravelWebauthn\Contracts\LoginSuccessResponse::class, $callback);
+    }
+
+    /**
+     * Register a class / callback that should be used to the login view response.
+     *
+     * @param  string  $callback
+     * @return void
+     * @codeCoverageIgnore
+     */
+    public static function loginViewResponseUsing(string $callback)
+    {
+        app()->singleton(\LaravelWebauthn\Contracts\LoginViewResponse::class, $callback);
+    }
+
+    /**
+     * Register a class / callback that should be used to the register key success view response.
+     *
+     * @param  string  $callback
+     * @return void
+     * @codeCoverageIgnore
+     */
+    public static function registerSuccessResponseUsing(string $callback)
+    {
+        app()->singleton(\LaravelWebauthn\Contracts\RegisterSuccessResponse::class, $callback);
+    }
+
+    /**
+     * Register a class / callback that should be used to the register creation view response.
+     *
+     * @param  string  $callback
+     * @return void
+     * @codeCoverageIgnore
+     */
+    public static function registerViewResponseUsing(string $callback)
+    {
+        app()->singleton(\LaravelWebauthn\Contracts\RegisterViewResponse::class, $callback);
     }
 }

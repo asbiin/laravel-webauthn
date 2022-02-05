@@ -20,12 +20,8 @@
         }
     ],
     "require": {
-        "guzzlehttp/psr7": "^1.5 || ^2.0",
-        "laravel/framework": "^5.8 || ^6.0 || ^7.0 || ^8.0",
-        "php-http/discovery": "^1.6",
-        "php-http/httplug": "^1.0 || ^2.0",
-        "php-http/message": "^1.7",
-        "psr/http-client": "^1.0",
+        "illuminate/support": "^7.0 || ^8.0",
+        "psr/http-factory-implementation": "1.0",
         "thecodingmachine/safe": "^1.0",
         "web-auth/cose-lib": "^3.0",
         "web-auth/webauthn-lib": "^3.0",
@@ -33,23 +29,28 @@
     },
     "require-dev": {
         "ext-sqlite3": "*",
+        "guzzlehttp/psr7": "^2.1",
         "laravel/legacy-factories": "^1.0",
-        "nunomaduro/larastan": "^0.4 || ^0.5 || ^0.6 || ^0.7",
+        "nunomaduro/larastan": "^1.0",
         "ocramius/package-versions": "^1.5 || ^2.0",
-        "orchestra/testbench": "^3.5 || ^5.0 || ^6.0",
-        "phpstan/phpstan-deprecation-rules": "^0.12",
-        "phpstan/phpstan-phpunit": "^0.12",
-        "phpstan/phpstan-strict-rules": "^0.12",
-        "phpunit/phpunit": "^6.0 || ^7.0 || ^8.0 || ^9.0",
+        "orchestra/testbench": "^5.0 || ^6.0",
+        "phpstan/phpstan-deprecation-rules": "^1.0",
+        "phpstan/phpstan-phpunit": "^1.0",
+        "phpstan/phpstan-strict-rules": "^1.0",
+        "phpunit/phpunit": "^9.0",
         "psalm/plugin-laravel": "^1.4",
         "thecodingmachine/phpstan-safe-rule": "^1.0",
-        "vimeo/psalm": "^3.9 || ^4.0"
+        "vimeo/psalm": "^4.0"
     },
     "suggest": {
-        "php-http/client-implementation": "Recommended for the AndroidSafetyNet Attestation Statement support",
-        "web-token/jwt-signature-algorithm-rsa": "Mandatory for the AndroidSafetyNet Attestation Statement support",
-        "web-token/jwt-signature-algorithm-ecdsa": "Recommended for the AndroidSafetyNet Attestation Statement support",
-        "web-token/jwt-signature-algorithm-eddsa": "Recommended for the AndroidSafetyNet Attestation Statement support"
+        "guzzlehttp/psr7": "To provide a psr/http-factory-implementation implementation",
+        "symfony/psr-http-message-bridge": "To find a psr/http-factory-implementation implementation",
+        "php-http/discovery": "To find a psr/http-factory-implementation implementation",
+        "psr/http-client-implementation": "Required for the AndroidSafetyNet Attestation Statement support",
+        "web-token/jwt-signature-algorithm-rsa": "Required for the AndroidSafetyNet Attestation Statement support",
+        "web-token/jwt-signature-algorithm-ecdsa": "Required for the AndroidSafetyNet Attestation Statement support",
+        "web-token/jwt-signature-algorithm-eddsa": "Required for the AndroidSafetyNet Attestation Statement support",
+        "web-token/jwt-key-mgmt": "Required for the AndroidSafetyNet Attestation Statement support"
     },
     "autoload": {
         "psr-4": {
@@ -58,19 +59,22 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "LaravelWebauthn\\Tests\\": "tests"
+            "LaravelWebauthn\\Tests\\": "tests",
+            "Database\\Factories\\LaravelWebauthn\\Models\\": "database/factories/"
         }
     },
     "extra": {
         "laravel": {
             "providers": [
-                "LaravelWebauthn\\SingletonServiceProvider",
                 "LaravelWebauthn\\WebauthnServiceProvider"
             ]
         }
     },
     "config": {
-        "sort-packages": true
+        "sort-packages": true,
+        "allow-plugins": {
+            "composer/package-versions-deprecated": true
+        }
     },
     "minimum-stability": "dev",
     "prefer-stable": true

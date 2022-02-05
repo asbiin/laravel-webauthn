@@ -2,21 +2,11 @@
 
 namespace LaravelWebauthn\Events;
 
-use Illuminate\Contracts\Auth\Authenticatable as User;
-use Illuminate\Queue\SerializesModels;
+use Illuminate\Contracts\Auth\Authenticatable;
 use Webauthn\PublicKeyCredentialRequestOptions;
 
-class WebauthnLoginData
+class WebauthnLoginData extends EventUser
 {
-    use SerializesModels;
-
-    /**
-     * The authenticated user.
-     *
-     * @var \Illuminate\Contracts\Auth\Authenticatable
-     */
-    public $user;
-
     /**
      * The authentication data.
      *
@@ -30,9 +20,9 @@ class WebauthnLoginData
      * @param  \Illuminate\Contracts\Auth\Authenticatable  $user
      * @param  PublicKeyCredentialRequestOptions  $publicKey
      */
-    public function __construct(User $user, PublicKeyCredentialRequestOptions $publicKey)
+    public function __construct(Authenticatable $user, PublicKeyCredentialRequestOptions $publicKey)
     {
-        $this->user = $user;
+        parent::__construct($user);
         $this->publicKey = $publicKey;
     }
 }

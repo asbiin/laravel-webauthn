@@ -2,12 +2,13 @@
 
 namespace LaravelWebauthn\Events;
 
+use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 use LaravelWebauthn\Models\WebauthnKey;
 
 class WebauthnRegister
 {
-    use SerializesModels;
+    use SerializesModels, Dispatchable;
 
     /**
      * The new WebauthnKey.

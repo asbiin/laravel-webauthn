@@ -63,7 +63,7 @@
         </div>
       </div>
 
-      <form method="POST" action="{{ route('webauthn.create') }}" id="form">
+      <form method="POST" action="{{ route('webauthn.store') }}" id="form">
         @csrf
         <input type="hidden" name="register" id="register">
         <input type="hidden" name="name" id="name" value="{{ $name }}">

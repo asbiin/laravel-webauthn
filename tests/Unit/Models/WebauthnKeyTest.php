@@ -1,6 +1,6 @@
 <?php
 
-namespace LaravelWebauthn\Tests\Unit;
+namespace LaravelWebauthn\Tests\Unit\Models;
 
 use LaravelWebauthn\Models\WebauthnKey;
 use LaravelWebauthn\Tests\FeatureTestCase;
