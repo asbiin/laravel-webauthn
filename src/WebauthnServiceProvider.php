@@ -314,8 +314,7 @@ class WebauthnServiceProvider extends ServiceProvider
     protected function bindPsrInterfaces(): void
     {
         $this->app->bind(ClientInterface::class, function () {
-            if (class_exists(Psr18ClientDiscovery::class)
-                && class_exists(NotFoundException::class)) {
+            if (class_exists(Psr18ClientDiscovery::class) && class_exists(NotFoundException::class)) {
                 try {
                     return Psr18ClientDiscovery::find();
                     // @codeCoverageIgnoreStart
@@ -330,8 +329,7 @@ class WebauthnServiceProvider extends ServiceProvider
         });
 
         $this->app->bind(RequestFactoryInterface::class, function () {
-            if (class_exists(Psr17FactoryDiscovery::class)
-                && class_exists(NotFoundException::class)) {
+            if (class_exists(Psr17FactoryDiscovery::class) && class_exists(NotFoundException::class)) {
                 try {
                     return Psr17FactoryDiscovery::findRequestFactory();
                     // @codeCoverageIgnoreStart
@@ -360,7 +358,7 @@ class WebauthnServiceProvider extends ServiceProvider
 
         if (class_exists(PsrHttpFactory::class)) {
             $this->app->bind(PsrHttpFactory::class, function () {
-                if (class_exists(\Nyholm\Psr7\Factory\Psr17Factory::class)) {
+                if (class_exists(\Nyholm\Psr7\Factory\Psr17Factory::class) && class_exists(PsrHttpFactory::class)) {
                     /**
                      * @var ServerRequestFactoryInterface|StreamFactoryInterface|UploadedFileFactoryInterface|ResponseFactoryInterface
                      */
@@ -368,7 +366,8 @@ class WebauthnServiceProvider extends ServiceProvider
 
                     return new PsrHttpFactory($psr17Factory, $psr17Factory, $psr17Factory, $psr17Factory);
                 } elseif (class_exists(Psr17FactoryDiscovery::class)
-                    && class_exists(NotFoundException::class)) {
+                    && class_exists(NotFoundException::class)
+                    && class_exists(PsrHttpFactory::class)) {
                     try {
                         $uploadFileFactory = Psr17FactoryDiscovery::findUploadedFileFactory();
                         $responseFactory = Psr17FactoryDiscovery::findResponseFactory();
