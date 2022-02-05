@@ -1,8 +1,6 @@
 Webauthn adapter for Laravel <!-- omit in toc -->
 ============================
 
-LaravelWebauthn is an adapter to use Webauthn as 2FA (second-factor authentication) on Laravel.
-
 [![Latest Version](https://img.shields.io/packagist/v/asbiin/laravel-webauthn.svg?style=flat-square&label=Latest%20Version)](https://github.com/asbiin/laravel-webauthn/releases)
 [![Downloads](https://img.shields.io/packagist/dt/asbiin/laravel-webauthn.svg?style=flat-square&label=Downloads)](https://packagist.org/packages/asbiin/laravel-webauthn)
 [![Workflow Status](https://img.shields.io/github/workflow/status/asbiin/laravel-webauthn/Laravel%20WebAuthn%20workflow?style=flat-square&label=Workflow%20Status)](https://github.com/asbiin/laravel-webauthn/actions?query=branch%3Amain)
@@ -24,6 +22,12 @@ LaravelWebauthn is an adapter to use Webauthn as 2FA (second-factor authenticati
   - [View response](#view-response)
 - [Compatibility](#compatibility)
 - [License](#license)
+
+
+**LaravelWebauthn** is an adapter to use Webauthn as 2FA (second-factor authentication) on Laravel.
+
+**Try it now on this [demo application](https://laravel-webauthn-example.herokuapp.com/).**
+
 
 # Installation
 
@@ -89,8 +93,7 @@ class EventServiceProvider extends ServiceProvider
 
 # Usage
 
-You will find an example of usage on this repository: [asbiin/laravel-webauthn-example](https://github.com/asbiin/laravel-webauthn-example).
-
+You will find an example of usage on [asbiin/laravel-webauthn-example](https://github.com/asbiin/laravel-webauthn-example). You can try it right now on the [demo application](https://laravel-webauthn-example.herokuapp.com/).
 
 ## Authenticate
 
