@@ -35,9 +35,7 @@ class FakeCredentialRepository extends CredentialRepository
     public function getRegisteredKeys(User $user): array
     {
         return collect($this->publicKeyCredentialSources)
-            ->map(function ($publicKey) {
-                return $publicKey->getPublicKeyCredentialDescriptor();
-            })
+            ->map->getPublicKeyCredentialDescriptor()
             ->toArray();
     }
 

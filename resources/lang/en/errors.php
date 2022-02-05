@@ -1,10 +1,11 @@
 <?php
 
 return [
+    'login_failed' => 'Authentication failed',
     'user_unauthenticated' => 'You need to log in before doing a Webauthn authentication',
     'auth_data_not_found' => 'Authentication data not found',
     'create_data_not_found' => 'Register data not found',
-    'cannot_register_new_key' => 'You need to log in before adding a new Webauthn authentication',
+    'cannot_register_new_key' => 'The user cannot register a new key at this time',
     'object_not_found' => 'Object not found',
 
     'not_supported' => 'Your browser doesn’t currently support WebAuthn.',

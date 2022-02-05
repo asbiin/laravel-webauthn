@@ -1,7 +1,6 @@
 includes:
     - ./vendor/nunomaduro/larastan/extension.neon
     - ./vendor/thecodingmachine/phpstan-safe-rule/phpstan-safe-rule.neon
-    - ./vendor/phpstan/phpstan-phpunit/extension.neon
     - ./vendor/phpstan/phpstan-deprecation-rules/rules.neon
     - ./vendor/phpstan/phpstan-strict-rules/rules.neon
 
@@ -12,8 +11,7 @@ parameters:
     level: 5
     ignoreErrors:
         # Level 2
-        - '#Call to an undefined method Illuminate\\View\\View::with[a-zA-Z0-9\\_]+\(\)\.#'
-        - '#Access to an undefined property LaravelWebauthn\\Models\\WebauthnKey::\$.*\.#'
+        - '#Access to an undefined property LaravelWebauthn\\Models\\WebauthnKey::.*\.#'
         - '#Access to an undefined property Illuminate\\Contracts\\Auth\\Authenticatable::\$email\.#'
         - '#Dynamic call to static method Illuminate\\Database\\Eloquent\\Builder<LaravelWebauthn\\Models\\WebauthnKey>::count\(\)\.#'
     excludes_analyse:

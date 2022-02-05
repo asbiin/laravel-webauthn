@@ -5,12 +5,9 @@ namespace LaravelWebauthn\Tests\Fake;
 use Illuminate\Contracts\Auth\Authenticatable as User;
 use Illuminate\Contracts\Foundation\Application;
 use LaravelWebauthn\Models\WebauthnKey;
-use LaravelWebauthn\Services\Webauthn\PublicKeyCredentialCreationOptionsFactory;
-use LaravelWebauthn\Services\Webauthn\PublicKeyCredentialRequestOptionsFactory;
-use Webauthn\PublicKeyCredentialCreationOptions;
-use Webauthn\PublicKeyCredentialRequestOptions;
+use LaravelWebauthn\Services\WebauthnRepository;
 
-class FakeWebauthn
+class FakeWebauthn extends WebauthnRepository
 {
     /**
      * Laravel application.
@@ -31,39 +28,9 @@ class FakeWebauthn
 
     protected $authenticate = true;
 
-    public function getRegisterData(User $user): PublicKeyCredentialCreationOptions
+    public static function redirects(string $redirect, $default = null)
     {
-        $publicKey = $this->app->make(PublicKeyCredentialCreationOptionsFactory::class)
-            ->create($user);
-
-        return $publicKey;
-    }
-
-    public function doRegister(User $user, PublicKeyCredentialCreationOptions $publicKey, string $data, string $keyName): WebauthnKey
-    {
-        $webauthnKey = factory(WebauthnKey::class)->create([
-            'user_id' => $user->getAuthIdentifier(),
-            'name' => $keyName,
-        ]);
-
-        $this->forceAuthenticate();
-
-        return $webauthnKey;
-    }
-
-    public function getAuthenticateData(User $user): PublicKeyCredentialRequestOptions
-    {
-        return $this->app->make(PublicKeyCredentialRequestOptionsFactory::class)
-            ->create($user);
-    }
-
-    public function doAuthenticate(User $user, PublicKeyCredentialRequestOptions $publicKey, string $data): bool
-    {
-        if ($this->authenticate) {
-            $this->forceAuthenticate();
-        }
-
-        return $this->authenticate;
+        return config('webauthn.redirects.'.$redirect) ?? $default ?? config('webauthn.home');
     }
 
     public function setAuthenticate(bool $authenticate)
@@ -71,14 +38,24 @@ class FakeWebauthn
         $this->authenticate = $authenticate;
     }
 
-    public function forceAuthenticate()
+    public function login()
     {
-        $this->app['session']->put([$this->app['config']->get('webauthn.sessionName') => true]);
+        $this->app['session']->put([$this->sessionName() => true]);
+    }
+
+    public function logout()
+    {
+        $this->app['session']->forget($this->sessionName());
+    }
+
+    private function sessionName(): string
+    {
+        return $this->app['config']->get('webauthn.sessionName');
     }
 
     public function check(): bool
     {
-        return (bool) $this->app['session']->get($this->app['config']->get('webauthn.sessionName'), false);
+        return (bool) $this->app['session']->get($this->sessionName(), false);
     }
 
     public function enabled(User $user): bool
@@ -90,5 +67,10 @@ class FakeWebauthn
     public function canRegister(User $user): bool
     {
         return (bool) ! $this->enabled($user) || $this->check();
+    }
+
+    public function hasKey(User $user): bool
+    {
+        return WebauthnKey::where('user_id', $user->getAuthIdentifier())->count() > 0;
     }
 }

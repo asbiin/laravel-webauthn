@@ -14,7 +14,7 @@ class AddWebauthn extends Migration
     public function up()
     {
         Schema::create('webauthn_keys', function (Blueprint $table) {
-            $table->increments('id');
+            $table->id();
             $table->bigInteger('user_id')->unsigned();
 
             $table->string('name')->default('key');
@@ -25,7 +25,7 @@ class AddWebauthn extends Migration
             $table->text('trustPath');
             $table->text('aaguid');
             $table->text('credentialPublicKey');
-            $table->integer('counter');
+            $table->bigInteger('counter')->unsigned();
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');

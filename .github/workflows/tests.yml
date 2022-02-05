@@ -23,20 +23,26 @@ env:
 jobs:
   tests:
     runs-on: ubuntu-latest
-    name: PHP ${{ matrix.php-version }} | Laravel ${{ matrix.laravel_version }}
+    name: PHP ${{ matrix.php-version }} | Laravel ${{ matrix.laravel-version }} (${{ matrix.psr7 }})
 
     strategy:
       fail-fast: false
       matrix:
         php-version: ['7.4', '8.0', '8.1']
-        laravel_version: [6.*, 7.*, 8.*, 9.*]
+        laravel-version: [7.*, 8.*]
+        psr7: ['guzzle']
         exclude:
           - php-version: '7.4'
             laravel_version: '9.*'
           - php-version: '8.1'
-            laravel_version: '6.*'
+            laravel-version: '7.*'
+        include:
           - php-version: '8.1'
-            laravel_version: '7.*'
+            laravel-version: '8.*'
+            psr7: 'nyholm'
+          - php-version: '8.1'
+            laravel-version: '8.*'
+            psr7: 'discovery'
 
     steps:
       - name: Checkout sources
@@ -65,29 +71,45 @@ jobs:
         uses: actions/cache@v2.1.7
         with:
           path: ${{ steps.composer-cache.outputs.dir }}
-          key: ${{ runner.os }}-composer-v4-${{ hashFiles('**/composer.json') }}-${{ matrix.php-version }}-${{ matrix.laravel_version }}
+          key: ${{ runner.os }}-composer-v4-${{ hashFiles('**/composer.json') }}-${{ matrix.php-version }}-${{ matrix.laravel-version }}
           restore-keys: |
-            ${{ runner.os }}-composer-v4-${{ hashFiles('**/composer.json') }}-${{ matrix.php-version }}-${{ matrix.laravel_version }}
+            ${{ runner.os }}-composer-v4-${{ hashFiles('**/composer.json') }}-${{ matrix.php-version }}-${{ matrix.laravel-version }}
             ${{ runner.os }}-composer-v4-${{ hashFiles('**/composer.json') }}-${{ matrix.php-version }}
             ${{ runner.os }}-composer-v4-${{ hashFiles('**/composer.json') }}
             ${{ runner.os }}-composer-v4-
 
-      - name: Install dependencies with Laravel ${{ matrix.laravel_version }}
+      - name: Update dependencies with Laravel ${{ matrix.laravel-version }}
         run: |
-          export COMPOSER_ROOT_VERSION=dev-master
-          mv composer.json composer.json.bak
-          grep -v "psalm/plugin-laravel" composer.json.bak > composer.json
-          composer require "laravel/framework:${{ matrix.laravel_version }}" --no-interaction --no-progress --prefer-stable --prefer-dist
+          export COMPOSER_ROOT_VERSION=dev-main
+          composer require "illuminate/support:${{ matrix.laravel-version }}" --no-update
+
+      - name: Use psr7 variant (nyholm)
+        if: matrix.psr7 == 'nyholm'
+        run: |
+          composer remove psr/http-factory-implementation --no-update
+          composer remove --dev guzzlehttp/psr7 --no-update
+          composer require --dev symfony/psr-http-message-bridge nyholm/psr7 --no-update
+
+      - name: Use psr7 variant (with php-http/discovery)
+        if: matrix.psr7 == 'discovery'
+        run: |
+          composer remove psr/http-factory-implementation --no-update
+          composer remove --dev guzzlehttp/psr7 --no-update
+          composer require --dev symfony/psr-http-message-bridge php-http/discovery laminas/laminas-diactoros php-http/curl-client --no-update
+
+      - name: Install dependencies
+        run: |
+          composer update --no-interaction --no-progress --prefer-dist
 
       - name: Run test suite
-        run: phpdbg -dmemory_limit=4G -qrr vendor/bin/phpunit -c phpunit.xml --log-junit ./results/results.xml --coverage-clover ./results/coverage.xml
+        run: phpdbg -dmemory_limit=4G -qrr vendor/bin/phpunit -c phpunit.xml --log-junit ./results/results_${{ matrix.psr7 }}.xml --coverage-clover ./results/coverage_${{ matrix.psr7 }}.xml
 
       - name: Fix results files
         run: sed -i -e "s%$GITHUB_WORKSPACE/%%g" *.xml
         working-directory: results
 
       - name: Store results
-        if: matrix.php-version == env.default-php-version && matrix.laravel_version == env.default-laravel-version
+        if: matrix.php-version == env.default-php-version && matrix.laravel-version == env.default-laravel-version
         uses: actions/upload-artifact@v2
         with:
           name: results
@@ -116,12 +138,22 @@ jobs:
           name: results
           path: results
 
+      - name: Set coverage list
+        id: coverage
+        run: |
+          SONAR_COVERAGE=$(ls -m --format=comma results/coverage*.xml | sed -e ':a;N;$!ba;s/\n//g; s/ //g;')
+          echo "::set-output name=list::$SONAR_COVERAGE"
+
       - name: SonarCloud Scan
         if: env.SONAR_TOKEN != ''
         uses: SonarSource/sonarcloud-github-action@v1.6
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        with:
+          args: |
+            -Dsonar.php.tests.reportPath=./results/results_guzzle.xml
+            -Dsonar.php.coverage.reportPaths=${{ steps.coverage.outputs.list }}
 
 
   ####################

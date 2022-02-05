@@ -1,4 +1,4 @@
-Webauthn adapter for Laravel
+Webauthn adapter for Laravel <!-- omit in toc -->
 ============================
 
 LaravelWebauthn is an adapter to use Webauthn as 2FA (second-factor authentication) on Laravel.
@@ -10,6 +10,21 @@ LaravelWebauthn is an adapter to use Webauthn as 2FA (second-factor authenticati
 [![Coverage Status](https://img.shields.io/sonar/coverage/asbiin_laravel-webauthn?server=https%3A%2F%2Fsonarcloud.io&style=flat-square&label=Coverage%20Status)](https://sonarcloud.io/dashboard?id=asbiin_laravel-webauthn)
 
 
+- [Installation](#installation)
+  - [Configuration](#configuration)
+    - [Add LaravelWebauthn middleware](#add-laravelwebauthn-middleware)
+    - [Login via remember](#login-via-remember)
+- [Usage](#usage)
+  - [Authenticate](#authenticate)
+  - [Register a new key](#register-a-new-key)
+  - [Important](#important)
+    - [Homestead](#homestead)
+  - [Routes](#routes)
+  - [Events](#events)
+  - [View response](#view-response)
+- [Compatibility](#compatibility)
+- [License](#license)
+
 # Installation
 
 You may use Composer to install this package into your Laravel project:
@@ -20,39 +35,6 @@ composer require asbiin/laravel-webauthn
 
 You don't need to add this package to your service providers.
 
-## Support
-
-This package supports Laravel 5.8 and newer, and has been tested with php 7.2 and newer versions.
-
-It's based on [web-auth/webauthn-framework](https://github.com/web-auth/webauthn-framework).
-
-
-## Important
-
-Your browser will refuse to negotiate a relay to your security device without the following:
-
-- domain (localhost and 127.0.0.1 will be rejected by `webauthn.js`)
-- an SSL/TLS certificate trusted by your browser (self-signed is okay)
-- connected HTTPS on port 443 (ports other than 443 will be rejected)
-
-### Homestead
-If you are a Laravel Homestead user, the default is to forward ports. You can switch from NAT/port forwarding to a private network with similar `Homestead.yaml` options:
-
-```yaml
-sites:
-  - map: homestead.test
-networks:
-  - type: "private_network"
-    ip: "192.168.254.2"
-```
-
-Re-provisioning vagrant will inform your virtual machine of the new network and install self-signed SSL/TLS certificates automatically: `vagrant reload --provision`
-
-If you haven't done so already, describe your site domain and network in your hosts file:
-```
-192.168.254.2 homestead.test
-```
-
 
 ## Configuration
 
@@ -60,7 +42,7 @@ You can publish the LaravelWebauthn configuration in a file named `config/webaut
 Just run this artisan command:
 
 ```sh
-php artisan laravelwebauthn:publish
+php artisan vendor:publish --provider="LaravelWebauthn\WebauthnServiceProvider"
 ```
 
 If desired, you may disable LaravelWebauthn entirely using the `enabled` configuration option:
@@ -87,6 +69,23 @@ Route::middleware(['auth', 'webauthn'])->group(function () {
 This way users would have to validate their key on login.
 
 
+### Login via remember
+
+When session expires, but the user set the `remember` token, you can revalidate webauthn session by adding this in your `App\Providers\EventServiceProvider` file:
+
+```php
+use Illuminate\Auth\Events\Login;
+use LaravelWebauthn\Listeners\LoginViaRemember;
+
+class EventServiceProvider extends ServiceProvider
+{
+    protected $listen = [
+        Login::class => [
+            LoginViaRemember::class,
+        ],
+    ];
+...
+```
 
 # Usage
 
@@ -184,10 +183,36 @@ If `postSuccessRedirectRoute` is empty, the return will be JSON form:
 }
 ```
 
+## Important
 
-## Urls
+Your browser will refuse to negotiate a relay to your security device without the following:
 
-These url are used
+- domain (localhost and 127.0.0.1 will be rejected by `webauthn.js`)
+- an SSL/TLS certificate trusted by your browser (self-signed is okay)
+- connected HTTPS on port 443 (ports other than 443 will be rejected)
+
+### Homestead
+If you are a Laravel Homestead user, the default is to forward ports. You can switch from NAT/port forwarding to a private network with similar `Homestead.yaml` options:
+
+```yaml
+sites:
+  - map: homestead.test
+networks:
+  - type: "private_network"
+    ip: "192.168.254.2"
+```
+
+Re-provisioning vagrant will inform your virtual machine of the new network and install self-signed SSL/TLS certificates automatically: `vagrant reload --provision`
+
+If you haven't done so already, describe your site domain and network in your hosts file:
+```
+192.168.254.2 homestead.test
+```
+
+
+## Routes
+
+These reoutes are defined:
 
 * GET `/webauthn/auth` / `route('webauthn.login')`
   The login page.
@@ -195,24 +220,83 @@ These url are used
 * POST `/webauthn/auth` / `route('webauthn.auth')`
   Post datas after a WebAuthn login validate.
 
-* GET `/webauthn/register` / `route('webauthn.register')`
+* GET `/webauthn/keys/create` / `route('webauthn.create')`
   Get datas to register a new key
 
-* POST `/webauthn/register` / `route('webauthn.create')`
+* POST `/webauthn/keys` / `route('webauthn.store')`
   Post datas after a WebAuthn register check
 
-* DELETE `/webauthn/{id}` / `route('webauthn.destroy')`
-  Get register datas
+* DELETE `/webauthn/keys/{id}` / `route('webauthn.destroy')`
+  Delete an existing key
 
+* UPDATE `/webauthn/keys/{id}` / `route('webauthn.update')`
+  Update key properties
+
+
+You can modify the first part of the url by setting `prefix` value in the config file.
 
 ## Events
 
 Events are dispatched by LaravelWebauthn:
 
-* `\LaravelWebauthn\Events\WebauthnLoginData` on creating authentication datas
-* `\LaravelWebauthn\Events\WebauthnLogin` on login with WebAuthn check
-* `\LaravelWebauthn\Events\WebauthnRegisterData` on creating register datas
+* `\LaravelWebauthn\Events\WebauthnLoginData` on preparing authentication data
+* `\LaravelWebauthn\Events\WebauthnLogin` on login with Webauthn check
+* `\LaravelWebauthn\Events\WebauthnLoginFailed` on a failed login check
+* `\LaravelWebauthn\Events\WebauthnRegisterData` on preparing register data
 * `\LaravelWebauthn\Events\WebauthnRegister` on registering a new key
+* `\LaravelWebauthn\Events\WebauthnRegisterFailed` on failing registering a new key
+
+
+## View response
+
+You can easily change the view responses with the Webauthn service:
+
+```php
+use LaravelWebauthn\Services\Webauthn;
+
+class AppServiceProvider extends ServiceProvider
+{
+    public function register()
+    {
+        Webauthn::loginViewResponseUsing(LoginViewResponse::class);
+    }
+}
+```
+
+```php
+use LaravelWebauthn\Http\Responses\LoginViewResponse as LoginViewResponseBase;
+
+class LoginViewResponse extends LoginViewResponseBase
+{
+    public function toResponse($request)
+    {
+        $publicKey = $this->publicKeyRequest($request);
+
+        return Inertia::render('Webauthn/WebauthnLogin', [
+            'publicKey' => $publicKey
+        ]);
+    }
+}
+```
+
+List of methods and their expected response contracts:
+
+| Webauthn                     | LaravelWebauthn\Contracts       |
+|------------------------------|---------------------------------|
+| loginViewResponseUsing       | LoginViewResponseContract       |
+| loginSuccessResponseUsing    | LoginSuccessResponseContract    |
+| registerViewResponseUsing    | RegisterViewResponseContract    |
+| registerSuccessResponseUsing | RegisterSuccessResponseContract |
+| destroyViewResponseUsing     | DestroyResponseContract         |
+| updateViewResponseUsing      | UpdateResponseContract          |
+
+
+# Compatibility
+
+| Laravel  | [asbiin/laravel-webauthn](https://github.com/asbiin/laravel-webauthn) |
+|----------|----------|
+| 5.8-8.x  | <= 1.2.0 |
+| 7.x-8.x  |  2.0.0   |
 
 
 # License
