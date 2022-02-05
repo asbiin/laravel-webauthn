@@ -33,7 +33,7 @@ jobs:
         psr7: ['guzzle']
         exclude:
           - php-version: '7.4'
-            laravel_version: '9.*'
+            laravel-version: '9.*'
           - php-version: '8.1'
             laravel-version: '7.*'
         include:
