@@ -1,3 +1,15 @@
+# [2.0.0](https://github.com/asbiin/laravel-webauthn/compare/1.2.0...2.0.0) (2022-02-05)
+
+
+### Features
+
+* rewrite for more customizable library ([#355](https://github.com/asbiin/laravel-webauthn/issues/355)) ([424caae](https://github.com/asbiin/laravel-webauthn/commit/424caae085bed85781ad7eef8904d644517d02f2))
+
+
+### BREAKING CHANGES
+
+* This new version is a rewrite with a lot of breaking changes, see details in https://github.com/asbiin/laravel-webauthn/blob/main/docs/migration-v1-to-v2.md
+
 # [1.2.0](https://github.com/asbiin/laravel-webauthn/compare/1.1.0...1.2.0) (2021-12-20)
 
 
