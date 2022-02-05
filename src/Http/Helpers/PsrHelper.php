@@ -66,9 +66,7 @@ class PsrHelper
      */
     public static function getServerRequestInterface(): ServerRequestInterface
     {
-        if (class_exists(\GuzzleHttp\Psr7\ServerRequest::class)) {
-            return \GuzzleHttp\Psr7\ServerRequest::fromGlobals();
-        } elseif (class_exists(\Symfony\Bridge\PsrHttpMessage\Factory\PsrHttpFactory::class)) {
+        if (class_exists(\Symfony\Bridge\PsrHttpMessage\Factory\PsrHttpFactory::class)) {
             if (class_exists(\Nyholm\Psr7\Factory\Psr17Factory::class)) {
                 return app(ServerRequestInterface::class);
             } elseif (class_exists(\Http\Discovery\Psr17FactoryDiscovery::class)
@@ -86,6 +84,8 @@ class PsrHelper
                     throw new BindingResolutionException('Unable to resolve PSR-17 Factory. Please install psr/http-factory-implementation implementation like \'guzzlehttp/psr7\'.');
                 }
             }
+        } elseif (class_exists(\GuzzleHttp\Psr7\ServerRequest::class)) {
+            return \GuzzleHttp\Psr7\ServerRequest::fromGlobals();
         }
 
         throw new BindingResolutionException('Unable to resolve PSR-7 Server Request. Please install the guzzlehttp/psr7 or symfony/psr-http-message-bridge, php-http/discovery and a psr/http-factory-implementation implementation.');
