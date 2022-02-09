@@ -70,6 +70,52 @@ Note that redirects are not used in case of application/json requests.
     - hasKey(\Illuminate\Contracts\Auth\Authenticatable $user)
 
 
+### Existing Keys
+
+If your application has users with existing Webauthn Keys then you will need to update the encoding of the `credentialId` column in the `webauthn_keys` table from base64 to base64URL, otherwise their key will not be found when they attempt to authenticate. This is because the casting has been updated for the `WebauthnKey` model.
+
+A simple migration that retrieves and updates the encoding is shown below:
+
+```php
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use LaravelWebauthn\Models\WebauthnKey;
+
+class UpdateCredentialIdValueInWebauthnKeysTable extends Migration
+{
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
+    public function up()
+    {
+        WebauthnKey::select(['id', 'credentialId'])->chunk(200, function ($keys) {
+            foreach ($keys as $key) {
+                $key->update(['credentialId' => $key->credentialId]);
+            }
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        WebauthnKey::select(['id', 'credentialId'])->chunk(200, function ($keys) {
+            foreach ($keys as $key) {
+                $key->setRawAttributes(['credentialId' => base64_encode($key->credentialId)]);
+                $key->save();
+            }
+        });
+    }
+}
+```
+
+
 ## Dependencies
 
 ### Laravel
