@@ -5,7 +5,6 @@ namespace LaravelWebauthn\Tests\Unit\Http\Controllers;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use LaravelWebauthn\Actions\AttemptToAuthenticate;
 use LaravelWebauthn\Facades\Webauthn;
-use LaravelWebauthn\Services\Webauthn\CredentialAssertionValidator;
 use LaravelWebauthn\Tests\FeatureTestCase;
 use Mockery\MockInterface;
 use Webauthn\PublicKeyCredentialRequestOptions;

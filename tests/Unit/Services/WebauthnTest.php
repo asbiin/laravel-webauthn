@@ -8,7 +8,6 @@ use CBOR\MapItem;
 use CBOR\MapObject;
 use CBOR\TextStringObject;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
-use LaravelWebauthn\Actions\AttemptToAuthenticate;
 use LaravelWebauthn\Actions\PrepareAssertionData;
 use LaravelWebauthn\Actions\PrepareCreationData;
 use LaravelWebauthn\Actions\ValidateKeyCreation;

@@ -51,7 +51,6 @@ class LoginUserRetrieval
         return null;
     }
 
-
     /**
      * Return the user that should authenticate via WebAuthn.
      *

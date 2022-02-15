@@ -27,7 +27,6 @@ class EloquentWebAuthnProvider extends EloquentUserProvider
      */
     protected CredentialAssertionValidator $validator;
 
-
     /**
      * Create a new database user provider.
      *
@@ -53,10 +52,9 @@ class EloquentWebAuthnProvider extends EloquentUserProvider
     public function retrieveByCredentials(array $credentials)
     {
         if ($this->isSignedChallenge($credentials)) {
-
             try {
                 $webauthnKey = WebauthnKey::where([
-                    'credentialId' => $credentials['id']
+                    'credentialId' => $credentials['id'],
                 ])->firstOrFail();
 
                 return $this->retrieveById($webauthnKey->user_id);
@@ -69,7 +67,7 @@ class EloquentWebAuthnProvider extends EloquentUserProvider
     }
 
     /**
-     * Check if the credentials are for a public key signed challenge
+     * Check if the credentials are for a public key signed challenge.
      *
      * @param  array  $credentials
      * @return bool

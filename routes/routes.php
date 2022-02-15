@@ -12,7 +12,7 @@ Route::group([
     'middleware' => array_filter([
         config('webauthn.guard', 'web'),
         $limiterMiddleware,
-    ])
+    ]),
 ], function () {
 
     // Authentication
@@ -29,7 +29,7 @@ Route::group([
         [
             config('webauthn.auth_middleware', 'auth').':'.config('webauthn.guard', 'web'),
         ]
-    ))
+    )),
 ], function () {
 
     // Webauthn key registration

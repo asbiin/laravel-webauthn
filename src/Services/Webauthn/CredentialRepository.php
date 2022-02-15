@@ -105,6 +105,7 @@ class CredentialRepository implements PublicKeyCredentialSourceRepository
      *
      * @param  string  $credentialId
      * @return WebauthnKey
+     *
      * @throws ModelNotFoundException
      */
     private function model(string $credentialId): WebauthnKey

@@ -7,8 +7,8 @@ use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\StatefulGuard;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
-use LaravelWebauthn\Services\LoginRateLimiter;
 use LaravelWebauthn\Facades\Webauthn as WebauthnFacade;
+use LaravelWebauthn\Services\LoginRateLimiter;
 use LaravelWebauthn\Services\Webauthn;
 
 class AttemptToAuthenticate
@@ -68,7 +68,6 @@ class AttemptToAuthenticate
      *
      * @param  array  $challenge
      * @param  bool  $remember
-     *
      * @return bool
      */
     protected function attemptLogin(array $challenge, bool $remember = false): bool

@@ -3,8 +3,8 @@
 namespace LaravelWebauthn\Actions;
 
 use Illuminate\Auth\Events\Lockout;
-use LaravelWebauthn\Services\LoginRateLimiter;
 use LaravelWebauthn\Contracts\LockoutResponse;
+use LaravelWebauthn\Services\LoginRateLimiter;
 
 class EnsureLoginIsNotThrottled
 {

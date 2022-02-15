@@ -46,6 +46,7 @@ class CredentialAttestationValidator extends CredentialValidator
      * @param  \Illuminate\Contracts\Auth\Authenticatable  $user
      * @param  array  $data
      * @return PublicKeyCredentialSource
+     *
      * @throws ResponseMismatchException
      */
     public function __invoke(User $user, array $data): PublicKeyCredentialSource
@@ -80,7 +81,7 @@ class CredentialAttestationValidator extends CredentialValidator
     /**
      * Get authenticator response.
      *
-     * @param \Webauthn\PublicKeyCredential $publicKeyCredential
+     * @param  \Webauthn\PublicKeyCredential  $publicKeyCredential
      * @return \Webauthn\AuthenticatorAttestationResponse
      */
     protected function getResponse(PublicKeyCredential $publicKeyCredential): AuthenticatorAttestationResponse

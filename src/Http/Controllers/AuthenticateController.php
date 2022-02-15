@@ -2,12 +2,12 @@
 
 namespace LaravelWebauthn\Http\Controllers;
 
-use Illuminate\Routing\Controller;
 use Illuminate\Pipeline\Pipeline;
+use Illuminate\Routing\Controller;
 use LaravelWebauthn\Actions\AttemptToAuthenticate;
 use LaravelWebauthn\Actions\EnsureLoginIsNotThrottled;
-use LaravelWebauthn\Actions\PrepareAssertionData;
 use LaravelWebauthn\Actions\LoginUserRetrieval;
+use LaravelWebauthn\Actions\PrepareAssertionData;
 use LaravelWebauthn\Actions\PrepareAuthenticatedSession;
 use LaravelWebauthn\Contracts\LoginSuccessResponse;
 use LaravelWebauthn\Contracts\LoginViewResponse;
@@ -90,6 +90,5 @@ class AuthenticateController extends Controller
             AttemptToAuthenticate::class,
             PrepareAuthenticatedSession::class,
         ]));
-
     }
 }

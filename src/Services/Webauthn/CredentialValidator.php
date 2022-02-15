@@ -2,8 +2,8 @@
 
 namespace LaravelWebauthn\Services\Webauthn;
 
-use Illuminate\Contracts\Cache\Repository as Cache;
 use Illuminate\Contracts\Auth\Authenticatable;
+use Illuminate\Contracts\Cache\Repository as Cache;
 use Illuminate\Http\Request;
 
 abstract class CredentialValidator
@@ -47,8 +47,8 @@ abstract class CredentialValidator
             '|',
             [
                 self::CACHE_PUBLICKEY_REQUEST,
-                get_class($user) . ':' . $user->getAuthIdentifier(),
-                sha1($this->request->getHost() . '|' . $this->request->ip()),
+                get_class($user).':'.$user->getAuthIdentifier(),
+                sha1($this->request->getHost().'|'.$this->request->ip()),
             ]
         );
     }

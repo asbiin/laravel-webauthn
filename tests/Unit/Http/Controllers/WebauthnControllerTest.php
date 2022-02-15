@@ -135,20 +135,20 @@ class WebauthnControllerTest extends FeatureTestCase
             'message' => 'The given data was invalid.',
             'errors' => [
                 'id' => [
-                    'The id field is required.'
+                    'The id field is required.',
                 ],
                 'type' => [
-                    'The type field is required.'
+                    'The type field is required.',
                 ],
                 'rawId' => [
-                    'The raw id field is required.'
+                    'The raw id field is required.',
                 ],
                 'response.attestationObject' => [
-                    'The response.attestation object field is required.'
+                    'The response.attestation object field is required.',
                 ],
                 'response.clientDataJSON' => [
-                    'The response.client data j s o n field is required.'
-                ]
+                    'The response.client data j s o n field is required.',
+                ],
             ],
         ]);
     }

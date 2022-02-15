@@ -2,10 +2,10 @@
 
 namespace LaravelWebauthn\Http\Responses;
 
-use LaravelWebauthn\Services\LoginRateLimiter;
 use Illuminate\Http\Response;
 use Illuminate\Validation\ValidationException;
 use LaravelWebauthn\Contracts\LockoutResponse as LockoutResponseContract;
+use LaravelWebauthn\Services\LoginRateLimiter;
 use LaravelWebauthn\Services\Webauthn;
 
 class LockoutResponse implements LockoutResponseContract

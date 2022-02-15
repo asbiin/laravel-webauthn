@@ -84,7 +84,7 @@ class CredentialAssertionValidator extends CredentialValidator
     /**
      * Get authenticator response.
      *
-     * @param \Webauthn\PublicKeyCredential $publicKeyCredential
+     * @param  \Webauthn\PublicKeyCredential  $publicKeyCredential
      * @return \Webauthn\AuthenticatorAssertionResponse
      */
     protected function getResponse(PublicKeyCredential $publicKeyCredential): AuthenticatorAssertionResponse

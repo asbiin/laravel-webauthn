@@ -5,7 +5,6 @@ namespace LaravelWebauthn\Http\Responses;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Response;
 use LaravelWebauthn\Contracts\LoginViewResponse as LoginViewResponseContract;
-use LaravelWebauthn\Services\Webauthn;
 use Webauthn\PublicKeyCredentialRequestOptions;
 
 class LoginViewResponse implements LoginViewResponseContract
