@@ -4,7 +4,7 @@ namespace LaravelWebauthn\Services\Webauthn;
 
 use Base64Url\Base64Url;
 use Illuminate\Contracts\Auth\Authenticatable as User;
-use Illuminate\Contracts\Auth\Guard;
+use Illuminate\Contracts\Auth\Factory as AuthFactory;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use LaravelWebauthn\Models\WebauthnKey;
 use Webauthn\PublicKeyCredentialDescriptor;
@@ -15,20 +15,15 @@ use Webauthn\PublicKeyCredentialUserEntity;
 class CredentialRepository implements PublicKeyCredentialSourceRepository
 {
     /**
-     * Guard instance;.
+     * The auth factory instance.
      *
-     * @var \Illuminate\Contracts\Auth\Guard
+     * @var \Illuminate\Contracts\Auth\Factory
      */
-    protected $guard;
+    protected AuthFactory $auth;
 
-    /**
-     * Create a new instance of Webauthn.
-     *
-     * @param  \Illuminate\Contracts\Auth\Guard  $guard
-     */
-    public function __construct(Guard $guard)
+    public function __construct(AuthFactory $auth)
     {
-        $this->guard = $guard;
+        $this->auth = $auth;
     }
 
     /**
@@ -41,9 +36,8 @@ class CredentialRepository implements PublicKeyCredentialSourceRepository
     {
         try {
             $webauthnKey = $this->model($publicKeyCredentialId);
-            if ($webauthnKey !== null) {
-                return $webauthnKey->publicKeyCredentialSource;
-            }
+
+            return $webauthnKey->publicKeyCredentialSource;
         } catch (ModelNotFoundException $e) {
             // No result
         }
@@ -73,10 +67,9 @@ class CredentialRepository implements PublicKeyCredentialSourceRepository
     public function saveCredentialSource(PublicKeyCredentialSource $publicKeyCredentialSource): void
     {
         $webauthnKey = $this->model($publicKeyCredentialSource->getPublicKeyCredentialId());
-        if ($webauthnKey !== null) {
-            $webauthnKey->publicKeyCredentialSource = $publicKeyCredentialSource;
-            $webauthnKey->save();
-        }
+
+        $webauthnKey->publicKeyCredentialSource = $publicKeyCredentialSource;
+        $webauthnKey->save();
     }
 
     /**
@@ -111,22 +104,26 @@ class CredentialRepository implements PublicKeyCredentialSourceRepository
      * Get one WebauthnKey.
      *
      * @param  string  $credentialId
-     * @return WebauthnKey|null
-     *
+     * @return WebauthnKey
      * @throws ModelNotFoundException
      */
-    private function model(string $credentialId): ?WebauthnKey
+    private function model(string $credentialId): WebauthnKey
     {
-        if (! $this->guard->guest()) {
-            /** @var WebauthnKey */
-            $webauthnKey = WebauthnKey::where([
-                'user_id' => $this->guard->id(),
+        return WebauthnKey::where(array_filter(
+            [
+                'user_id' => $this->guard()->guest() ? null : $this->guard()->id(),
                 'credentialId' => Base64Url::encode($credentialId),
-            ])->firstOrFail();
+            ]
+        ))->firstOrFail();
+    }
 
-            return $webauthnKey;
-        }
-
-        return null;
+    /**
+     * Get current guard.
+     *
+     * @return \Illuminate\Contracts\Auth\Guard|\Illuminate\Contracts\Auth\StatefulGuard
+     */
+    private function guard()
+    {
+        return $this->auth->guard();
     }
 }

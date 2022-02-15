@@ -4,57 +4,32 @@ namespace LaravelWebauthn\Actions;
 
 use Exception;
 use Illuminate\Contracts\Auth\Authenticatable;
-use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Validation\ValidationException;
-use LaravelWebauthn\Events\WebauthnRegister;
 use LaravelWebauthn\Events\WebauthnRegisterFailed;
 use LaravelWebauthn\Facades\Webauthn;
 use LaravelWebauthn\Models\WebauthnKey;
-use LaravelWebauthn\Services\Webauthn\CredentialAttestationValidator;
-use Webauthn\PublicKeyCredentialCreationOptions;
 
-class RegisterKeyStore
+class ValidateKeyCreation
 {
-    /**
-     * The Illuminate application instance.
-     *
-     * @var \Illuminate\Contracts\Foundation\Application
-     */
-    protected $app;
-
-    /**
-     * Create a new action.
-     *
-     * @param  \Illuminate\Contracts\Foundation\Application  $app
-     */
-    public function __construct(Application $app)
-    {
-        $this->app = $app;
-    }
-
     /**
      * Register a new key.
      *
      * @param  Authenticatable  $user
-     * @param  PublicKeyCredentialCreationOptions  $publicKey
-     * @param  string  $data
+     * @param  array  $data
      * @param  string  $keyName
      * @return WebauthnKey|null
      */
-    public function __invoke(Authenticatable $user, PublicKeyCredentialCreationOptions $publicKey, string $data, string $keyName): ?WebauthnKey
+    public function __invoke(Authenticatable $user, array $data, string $keyName): ?WebauthnKey
     {
         if (! Webauthn::canRegister($user)) {
             $this->throwFailedRegisterException($user);
         }
 
         try {
-            $publicKeyCredentialSource = $this->app[CredentialAttestationValidator::class]($publicKey, $data);
+            $webauthnKey = Webauthn::validateAttestation($user, $data, $keyName);
 
-            $webauthnKey = Webauthn::create($user, $keyName, $publicKeyCredentialSource);
-
-            WebauthnRegister::dispatch($webauthnKey);
-
-            Webauthn::login();
+            // Login the user immediately.
+            Webauthn::login($user);
 
             return $webauthnKey;
         } catch (Exception $e) {
@@ -78,7 +53,7 @@ class RegisterKeyStore
         WebauthnRegisterFailed::dispatch($user, $e);
 
         throw ValidationException::withMessages([
-            'register' => [trans('webauthn::errors.cannot_register_new_key')],
+            trans('webauthn::errors.cannot_register_new_key'),
         ]);
     }
 }

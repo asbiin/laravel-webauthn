@@ -2,6 +2,7 @@
 
 namespace LaravelWebauthn\Http\Responses;
 
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Response;
 use LaravelWebauthn\Contracts\RegisterSuccessResponse as RegisterSuccessResponseContract;
@@ -10,6 +11,13 @@ use LaravelWebauthn\Services\Webauthn;
 
 class RegisterSuccessResponse implements RegisterSuccessResponseContract
 {
+    /**
+     * The new Webauthn key id.
+     *
+     * @var int
+     */
+    private int $webauthnId;
+
     /**
      * Create an HTTP response that represents the object.
      *
@@ -31,23 +39,23 @@ class RegisterSuccessResponse implements RegisterSuccessResponseContract
      * @param  \Illuminate\Http\Request  $request
      * @return WebauthnKey
      */
-    protected function getWebauthnKey($request): WebauthnKey
+    protected function getWebauthnKey(Request $request): WebauthnKey
     {
-        $webauthnId = $this->webauthnId($request);
-
         return WebauthnKey::where('user_id', $request->user()->getAuthIdentifier())
-            ->findOrFail($webauthnId);
+            ->findOrFail($this->webauthnId);
     }
 
     /**
      * Get the id of the registerd key.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return int
+     * @param  int  $webauthnId
+     * @return self
      */
-    protected function webauthnId($request)
+    public function setWebauthnId(Request $request, int $webauthnId): self
     {
-        return $request->session()->pull(Webauthn::SESSION_WEBAUTHNID_CREATED);
+        $this->webauthnId = $webauthnId;
+
+        return $this;
     }
 
     /**
@@ -57,7 +65,7 @@ class RegisterSuccessResponse implements RegisterSuccessResponseContract
      * @param  WebauthnKey  $webauthnKey
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    protected function jsonResponse($request, WebauthnKey $webauthnKey)
+    protected function jsonResponse(Request $request, WebauthnKey $webauthnKey): \Symfony\Component\HttpFoundation\Response
     {
         return Response::json([
             'result' => true,

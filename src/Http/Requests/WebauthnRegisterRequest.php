@@ -14,7 +14,11 @@ class WebauthnRegisterRequest extends FormRequest
     public function rules()
     {
         return [
-            'register' => 'required|string',
+            'id' => 'required|string',
+            'type' => 'required|string',
+            'rawId' => 'required|string',
+            'response.attestationObject' => 'required|string',
+            'response.clientDataJSON' => 'required|string',
             'name' => 'required|string',
         ];
     }

@@ -2,13 +2,11 @@
 
 namespace LaravelWebauthn\Http\Controllers;
 
-use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
-use Illuminate\Support\Facades\Log;
 use LaravelWebauthn\Actions\DeleteKey;
-use LaravelWebauthn\Actions\RegisterKeyPrepare;
-use LaravelWebauthn\Actions\RegisterKeyStore;
+use LaravelWebauthn\Actions\PrepareCreationData;
+use LaravelWebauthn\Actions\ValidateKeyCreation;
 use LaravelWebauthn\Actions\UpdateKey;
 use LaravelWebauthn\Contracts\DestroyResponse;
 use LaravelWebauthn\Contracts\RegisterSuccessResponse;
@@ -16,27 +14,9 @@ use LaravelWebauthn\Contracts\RegisterViewResponse;
 use LaravelWebauthn\Contracts\UpdateResponse;
 use LaravelWebauthn\Http\Requests\WebauthnRegisterRequest;
 use LaravelWebauthn\Http\Requests\WebauthnUpdateRequest;
-use LaravelWebauthn\Services\Webauthn;
 
 class WebauthnKeyController extends Controller
 {
-    /**
-     * The Illuminate application instance.
-     *
-     * @var \Illuminate\Contracts\Foundation\Application
-     */
-    protected $app;
-
-    /**
-     * Create a new controller.
-     *
-     * @param  \Illuminate\Contracts\Foundation\Application  $app
-     */
-    public function __construct(Application $app)
-    {
-        $this->app = $app;
-    }
-
     /**
      * Return the register data to attempt a Webauthn registration.
      *
@@ -45,11 +25,10 @@ class WebauthnKeyController extends Controller
      */
     public function create(Request $request)
     {
-        $publicKey = $this->app[RegisterKeyPrepare::class]($request->user());
+        $publicKey = app(PrepareCreationData::class)($request->user());
 
-        $request->session()->put(Webauthn::SESSION_PUBLICKEY_CREATION, $publicKey);
-
-        return $this->app[RegisterViewResponse::class];
+        return app(RegisterViewResponse::class)
+            ->setPublicKey($request, $publicKey);
     }
 
     /**
@@ -60,26 +39,15 @@ class WebauthnKeyController extends Controller
      */
     public function store(WebauthnRegisterRequest $request)
     {
-        $publicKey = $request->session()->pull(Webauthn::SESSION_PUBLICKEY_CREATION);
-
-        if (! $publicKey instanceof \Webauthn\PublicKeyCredentialCreationOptions) {
-            Log::debug('Webauthn wrong publickKey type');
-            abort(404);
-        }
-
         /** @var \LaravelWebauthn\Models\WebauthnKey|null */
-        $webauthnKey = $this->app[RegisterKeyStore::class](
+        $webauthnKey = app(ValidateKeyCreation::class)(
             $request->user(),
-            $publicKey,
-            $request->input('register'),
+            $request->only(['id', 'rawId', 'response', 'type']),
             $request->input('name')
         );
 
-        if ($webauthnKey !== null) {
-            $request->session()->put(Webauthn::SESSION_WEBAUTHNID_CREATED, $webauthnKey->id);
-        }
-
-        return $this->app[RegisterSuccessResponse::class];
+        return app(RegisterSuccessResponse::class)
+            ->setWebauthnId($request, $webauthnKey !== null ? $webauthnKey->id : -1);
     }
 
     /**
@@ -91,13 +59,13 @@ class WebauthnKeyController extends Controller
      */
     public function update(WebauthnUpdateRequest $request, int $webauthnKeyId)
     {
-        $this->app[UpdateKey::class](
+        app(UpdateKey::class)(
             $request->user(),
             $webauthnKeyId,
             $request->input('name')
         );
 
-        return $this->app[UpdateResponse::class];
+        return app(UpdateResponse::class);
     }
 
     /**
@@ -109,11 +77,11 @@ class WebauthnKeyController extends Controller
      */
     public function destroy(Request $request, int $webauthnKeyId)
     {
-        $this->app[DeleteKey::class](
+        app(DeleteKey::class)(
             $request->user(),
             $webauthnKeyId
         );
 
-        return $this->app[DestroyResponse::class];
+        return app(DestroyResponse::class);
     }
 }

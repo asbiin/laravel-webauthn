@@ -16,7 +16,7 @@ abstract class WebauthnRepository
      * @param  PublicKeyCredentialSource  $publicKeyCredentialSource
      * @return WebauthnKey
      */
-    public function create(User $user, string $keyName, PublicKeyCredentialSource $publicKeyCredentialSource)
+    public static function create(User $user, string $keyName, PublicKeyCredentialSource $publicKeyCredentialSource)
     {
         $webauthnKey = new WebauthnKey();
         $webauthnKey->user_id = $user->getAuthIdentifier();
@@ -33,7 +33,7 @@ abstract class WebauthnRepository
      * @param  User  $user
      * @return bool
      */
-    public function hasKey(User $user): bool
+    public static function hasKey(User $user): bool
     {
         return WebauthnKey::where('user_id', $user->getAuthIdentifier())->count() > 0;
     }

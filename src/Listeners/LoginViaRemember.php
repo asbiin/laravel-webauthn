@@ -25,12 +25,12 @@ class LoginViaRemember
     /**
      * Force register Webauthn login.
      *
-     * @param  User  $user
+     * @param  \Illuminate\Contracts\Auth\Authenticatable  $user
      */
     private function registerWebauthn(User $user)
     {
         if (Webauthn::enabled($user)) {
-            Webauthn::login();
+            Webauthn::login($user);
         }
     }
 }

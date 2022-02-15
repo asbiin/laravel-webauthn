@@ -15,7 +15,7 @@ class WebauthnRegister
      *
      * @var WebauthnKey
      */
-    public $webauthnKey;
+    public WebauthnKey $webauthnKey;
 
     /**
      * Create a new event instance.

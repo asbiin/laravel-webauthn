@@ -2,6 +2,7 @@
 
 namespace LaravelWebauthn\Http\Responses;
 
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Response;
 use LaravelWebauthn\Contracts\LoginSuccessResponse as LoginSuccessResponseContract;
@@ -28,7 +29,7 @@ class LoginSuccessResponse implements LoginSuccessResponseContract
      * @param  \Illuminate\Http\Request  $request
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    protected function jsonResponse($request)
+    protected function jsonResponse(Request $request): \Symfony\Component\HttpFoundation\Response
     {
         $callback = $request->session()->pull('url.intended', Webauthn::redirects('login'));
 

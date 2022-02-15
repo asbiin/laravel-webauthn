@@ -3,7 +3,9 @@
 namespace LaravelWebauthn\Services\Webauthn;
 
 use Illuminate\Contracts\Auth\Authenticatable as User;
+use Illuminate\Contracts\Cache\Repository as Cache;
 use Illuminate\Contracts\Config\Repository as Config;
+use Illuminate\Http\Request;
 use Webauthn\PublicKeyCredentialRequestOptions;
 use Webauthn\PublicKeyCredentialRpEntity;
 use Webauthn\PublicKeyCredentialSourceRepository;
@@ -15,16 +17,16 @@ final class RequestOptionsFactory extends OptionsFactory
      *
      * @var string|null
      */
-    protected $userVerification;
+    protected ?string $userVerification;
 
     /**
      * @var PublicKeyCredentialRpEntity
      */
-    protected $publicKeyCredentialRpEntity;
+    protected PublicKeyCredentialRpEntity $publicKeyCredentialRpEntity;
 
-    public function __construct(Config $config, PublicKeyCredentialSourceRepository $repository, PublicKeyCredentialRpEntity $publicKeyCredentialRpEntity)
+    public function __construct(Request $request, Cache $cache, Config $config, PublicKeyCredentialSourceRepository $repository, PublicKeyCredentialRpEntity $publicKeyCredentialRpEntity)
     {
-        parent::__construct($config, $repository);
+        parent::__construct($request, $cache, $config, $repository);
         $this->publicKeyCredentialRpEntity = $publicKeyCredentialRpEntity;
         $this->userVerification = self::getUserVerification($config);
     }
@@ -37,13 +39,17 @@ final class RequestOptionsFactory extends OptionsFactory
      */
     public function __invoke(User $user): PublicKeyCredentialRequestOptions
     {
-        return (new PublicKeyCredentialRequestOptions(
+        $publicKey = (new PublicKeyCredentialRequestOptions(
             $this->getChallenge(),
             $this->timeout
         ))
             ->allowCredentials($this->getAllowedCredentials($user))
             ->setRpId($this->getRpId())
             ->setUserVerification($this->userVerification);
+
+        $this->cache->put($this->cacheKey($user), $publicKey, $this->timeout);
+
+        return $publicKey;
     }
 
     /**

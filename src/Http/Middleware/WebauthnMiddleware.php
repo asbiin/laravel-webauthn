@@ -14,7 +14,7 @@ class WebauthnMiddleware
      *
      * @var \Illuminate\Contracts\Auth\Factory
      */
-    protected $auth;
+    protected AuthFactory $auth;
 
     /**
      * Create a Webauthn.

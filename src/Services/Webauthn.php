@@ -2,84 +2,50 @@
 
 namespace LaravelWebauthn\Services;
 
-use Illuminate\Contracts\Auth\Authenticatable as User;
-use Illuminate\Contracts\Config\Repository as Config;
-use Illuminate\Contracts\Events\Dispatcher;
-use Illuminate\Contracts\Foundation\Application;
-use Illuminate\Contracts\Session\Session;
+use Illuminate\Contracts\Auth\Authenticatable;
+use LaravelWebauthn\Events\WebauthnLogin;
+use LaravelWebauthn\Events\WebauthnLoginData;
+use LaravelWebauthn\Events\WebauthnRegister;
+use LaravelWebauthn\Events\WebauthnRegisterData;
+use LaravelWebauthn\Models\WebauthnKey;
+use LaravelWebauthn\Services\Webauthn\CreationOptionsFactory;
+use LaravelWebauthn\Services\Webauthn\CredentialAssertionValidator;
+use LaravelWebauthn\Services\Webauthn\CredentialAttestationValidator;
+use LaravelWebauthn\Services\Webauthn\RequestOptionsFactory;
+use Webauthn\PublicKeyCredentialCreationOptions;
+use Webauthn\PublicKeyCredentialRequestOptions;
 
 class Webauthn extends WebauthnRepository
 {
     /**
-     * PublicKey Creation session name.
+     * The callback that is responsible for building the authentication pipeline array, if applicable.
      *
-     * @var string
+     * @var callable|null
      */
-    public const SESSION_PUBLICKEY_CREATION = 'webauthn.publicKeyCreation';
+    public static $authenticateThroughCallback;
 
     /**
-     * Webauthn Created ID.
+     * The callback that is responsible for validating authentication credentials, if applicable.
      *
-     * @var string
+     * @var callable|null
      */
-    public const SESSION_WEBAUTHNID_CREATED = 'webauthn.idCreated';
+    public static $authenticateUsingCallback;
 
     /**
-     * PublicKey Request session name.
+     * Indicates if Webauthn routes will be registered.
      *
-     * @var string
+     * @var bool
      */
-    public const SESSION_PUBLICKEY_REQUEST = 'webauthn.publicKeyRequest';
+    public static bool $registersRoutes = true;
 
     /**
-     * PublicKey Request session name.
+     * Get the username used for authentication.
      *
-     * @var string
+     * @return string
      */
-    public const SESSION_AUTH_RESULT = 'webauthn.publicKeyRequest';
-
-    /**
-     * Laravel application.
-     *
-     * @var \Illuminate\Contracts\Foundation\Application
-     */
-    protected $app;
-
-    /**
-     * Configuratoin repository.
-     *
-     * @var \Illuminate\Contracts\Config\Repository
-     */
-    protected $config;
-
-    /**
-     * Session manager.
-     *
-     * @var \Illuminate\Contracts\Session\Session
-     */
-    protected $session;
-
-    /**
-     * Event dispatcher.
-     *
-     * @var \Illuminate\Contracts\Events\Dispatcher
-     */
-    protected $events;
-
-    /**
-     * Create a new instance of Webauthn.
-     *
-     * @param  \Illuminate\Contracts\Foundation\Application  $app
-     * @param  \Illuminate\Contracts\Config\Repository  $config
-     * @param  \Illuminate\Contracts\Session\Session  $session
-     * @param  \Illuminate\Contracts\Events\Dispatcher  $events
-     */
-    public function __construct(Application $app, Config $config, Session $session, Dispatcher $events)
+    public static function username()
     {
-        $this->app = $app;
-        $this->config = $config;
-        $this->session = $session;
-        $this->events = $events;
+        return config('webauthn.username', 'email');
     }
 
     /**
@@ -96,11 +62,16 @@ class Webauthn extends WebauthnRepository
     /**
      * Save authentication in session.
      *
+     * @param  \Illuminate\Contracts\Auth\Authenticatable|null  $user
      * @return void
      */
-    public function login()
+    public static function login(?Authenticatable $user)
     {
-        $this->session->put([$this->sessionName() => true]);
+        session([static::sessionName() => true]);
+
+        if ($user !== null) {
+            WebauthnLogin::dispatch($user);
+        }
     }
 
     /**
@@ -108,9 +79,9 @@ class Webauthn extends WebauthnRepository
      *
      * @return void
      */
-    public function logout()
+    public static function logout()
     {
-        $this->session->forget($this->sessionName());
+        session()->forget(static::sessionName());
     }
 
     /**
@@ -120,9 +91,9 @@ class Webauthn extends WebauthnRepository
      *
      * @deprecated use login() instead
      */
-    public function forceAuthenticate()
+    public static function forceAuthenticate()
     {
-        $this->login();
+        static::login(null);
     }
 
     /**
@@ -132,9 +103,64 @@ class Webauthn extends WebauthnRepository
      *
      * @deprecated use logout() instead
      */
-    public function forgetAuthenticate()
+    public static function forgetAuthenticate()
     {
-        $this->logout();
+        static::logout();
+    }
+
+    /**
+     * Get publicKey data to prepare Webauthn login.
+     *
+     * @param  \Illuminate\Contracts\Auth\Authenticatable  $user
+     * @return \Webauthn\PublicKeyCredentialRequestOptions
+     */
+    public static function prepareAssertion(Authenticatable $user): PublicKeyCredentialRequestOptions
+    {
+        return tap(app(RequestOptionsFactory::class)($user), function ($publicKey) use ($user) {
+            WebauthnLoginData::dispatch($user, $publicKey);
+        });
+    }
+
+    /**
+     * Validate a Webauthn login request.
+     *
+     * @param  \Illuminate\Contracts\Auth\Authenticatable  $user
+     * @param  array  $credentials
+     * @return bool
+     */
+    public static function validateAssertion(Authenticatable $user, array $credentials): bool
+    {
+        return app(CredentialAssertionValidator::class)($user, $credentials);
+    }
+
+    /**
+     * Get publicKey data to prepare Webauthn key creation.
+     *
+     * @param  \Illuminate\Contracts\Auth\Authenticatable  $user
+     * @return \Webauthn\PublicKeyCredentialCreationOptions
+     */
+    public static function prepareAttestation(Authenticatable $user): PublicKeyCredentialCreationOptions
+    {
+        return tap(app(CreationOptionsFactory::class)($user), function ($publicKey) use ($user) {
+            WebauthnRegisterData::dispatch($user, $publicKey);
+        });
+    }
+
+    /**
+     * Validate a Webauthn key creation request.
+     *
+     * @param  \Illuminate\Contracts\Auth\Authenticatable  $user
+     * @param  array  $credentials
+     * @param  string  $keyName
+     * @return \LaravelWebauthn\Models\WebauthnKey
+     */
+    public static function validateAttestation(Authenticatable $user, array $credentials, string $keyName): WebauthnKey
+    {
+        $publicKey = app(CredentialAttestationValidator::class)($user, $credentials);
+
+        return tap(static::create($user, $keyName, $publicKey), function ($webauthnKey) {
+            WebauthnRegister::dispatch($webauthnKey);
+        });
     }
 
     /**
@@ -142,9 +168,9 @@ class Webauthn extends WebauthnRepository
      *
      * @return bool
      */
-    public function check(): bool
+    public static function check(): bool
     {
-        return (bool) $this->session->get($this->sessionName(), false);
+        return (bool) session(static::sessionName(), false);
     }
 
     /**
@@ -152,9 +178,9 @@ class Webauthn extends WebauthnRepository
      *
      * @return string
      */
-    private function sessionName(): string
+    private static function sessionName(): string
     {
-        return $this->config->get('webauthn.sessionName');
+        return config('webauthn.session_name', config('webauthn.sessionName', 'webauthn_auth'));
     }
 
     /**
@@ -163,9 +189,9 @@ class Webauthn extends WebauthnRepository
      * @param  \Illuminate\Contracts\Auth\Authenticatable  $user
      * @return bool
      */
-    public function enabled(User $user): bool
+    public static function enabled(Authenticatable $user): bool
     {
-        return $this->webauthnEnabled() && $this->hasKey($user);
+        return static::webauthnEnabled() && static::hasKey($user);
     }
 
     /**
@@ -174,9 +200,9 @@ class Webauthn extends WebauthnRepository
      * @param  \Illuminate\Contracts\Auth\Authenticatable  $user
      * @return bool
      */
-    public function canRegister(User $user): bool
+    public static function canRegister(Authenticatable $user): bool
     {
-        return $this->webauthnEnabled() && (! $this->enabled($user) || $this->check());
+        return static::webauthnEnabled() && (! static::enabled($user) || static::check());
     }
 
     /**
@@ -184,9 +210,31 @@ class Webauthn extends WebauthnRepository
      *
      * @return bool
      */
-    public function webauthnEnabled(): bool
+    public static function webauthnEnabled(): bool
     {
-        return (bool) $this->config->get('webauthn.enable', true);
+        return (bool) config('webauthn.enable', true);
+    }
+
+    /**
+     * Register a callback that is responsible for building the authentication pipeline array.
+     *
+     * @param  callable  $callback
+     * @return void
+     */
+    public static function authenticateThrough(callable $callback)
+    {
+        static::$authenticateThroughCallback = $callback;
+    }
+
+    /**
+     * Register a callback that is responsible for validating incoming authentication credentials.
+     *
+     * @param  callable  $callback
+     * @return void
+     */
+    public static function authenticateUsing(callable $callback)
+    {
+        static::$authenticateUsingCallback = $callback;
     }
 
     /**
@@ -259,5 +307,17 @@ class Webauthn extends WebauthnRepository
     public static function registerViewResponseUsing(string $callback)
     {
         app()->singleton(\LaravelWebauthn\Contracts\RegisterViewResponse::class, $callback);
+    }
+
+    /**
+     * Configure Webauthn to not register its routes.
+     *
+     * @return self
+     */
+    public static function ignoreRoutes(): self
+    {
+        static::$registersRoutes = false;
+
+        return new static;
     }
 }

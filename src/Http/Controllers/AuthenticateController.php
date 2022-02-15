@@ -2,49 +2,52 @@
 
 namespace LaravelWebauthn\Http\Controllers;
 
-use Illuminate\Contracts\Foundation\Application;
-use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
-use Illuminate\Support\Facades\Log;
-use LaravelWebauthn\Actions\LoginAttempt;
-use LaravelWebauthn\Actions\LoginPrepare;
+use Illuminate\Pipeline\Pipeline;
+use LaravelWebauthn\Actions\AttemptToAuthenticate;
+use LaravelWebauthn\Actions\EnsureLoginIsNotThrottled;
+use LaravelWebauthn\Actions\PrepareAssertionData;
+use LaravelWebauthn\Actions\LoginUserRetrieval;
+use LaravelWebauthn\Actions\PrepareAuthenticatedSession;
 use LaravelWebauthn\Contracts\LoginSuccessResponse;
 use LaravelWebauthn\Contracts\LoginViewResponse;
+use LaravelWebauthn\Http\Requests\WebauthnLoginAttemptRequest;
 use LaravelWebauthn\Http\Requests\WebauthnLoginRequest;
-use LaravelWebauthn\Services\Webauthn as WebauthnService;
+use LaravelWebauthn\Services\Webauthn;
 
 class AuthenticateController extends Controller
 {
     /**
-     * The Illuminate application instance.
+     * Show the login Webauthn request after a login authentication.
      *
-     * @var \Illuminate\Contracts\Foundation\Application
+     * @param  \LaravelWebauthn\Http\Requests\WebauthnLoginAttemptRequest  $request
+     * @return LoginViewResponse
      */
-    protected $app;
-
-    /**
-     * Create a new controller.
-     *
-     * @param  \Illuminate\Contracts\Foundation\Application  $app
-     */
-    public function __construct(Application $app)
+    public function create(WebauthnLoginAttemptRequest $request)
     {
-        $this->app = $app;
+        $user = $this->createPipeline($request)->then(function ($request) {
+            return app(LoginUserRetrieval::class)($request);
+        });
+
+        $publicKey = app(PrepareAssertionData::class)($user);
+
+        return app(LoginViewResponse::class)
+            ->setPublicKey($request, $publicKey);
     }
 
     /**
-     * Show the login Webauthn request after a login authentication.
+     * Get the authentication pipeline instance.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return LoginViewResponse
+     * @param  \LaravelWebauthn\Http\Requests\WebauthnLoginAttemptRequest  $request
+     * @return \Illuminate\Pipeline\Pipeline
      */
-    public function login(Request $request)
+    protected function createPipeline(WebauthnLoginAttemptRequest $request): Pipeline
     {
-        $publicKey = $this->app[LoginPrepare::class]($request->user());
-
-        $request->session()->put(WebauthnService::SESSION_PUBLICKEY_REQUEST, $publicKey);
-
-        return $this->app[LoginViewResponse::class];
+        return (new Pipeline(app()))
+            ->send($request)
+            ->through(array_filter([
+                config('webauthn.limiters.login') !== null ? null : EnsureLoginIsNotThrottled::class,
+            ]));
     }
 
     /**
@@ -53,21 +56,40 @@ class AuthenticateController extends Controller
      * @param  WebauthnLoginRequest  $request
      * @return LoginSuccessResponse
      */
-    public function auth(WebauthnLoginRequest $request)
+    public function store(WebauthnLoginRequest $request)
     {
-        $publicKey = $request->session()->pull(WebauthnService::SESSION_PUBLICKEY_REQUEST);
+        return $this->loginPipeline($request)->then(function ($request) {
+            Webauthn::login($request->user());
 
-        if (! $publicKey instanceof \Webauthn\PublicKeyCredentialRequestOptions) {
-            Log::debug('Webauthn wrong publickKey type');
-            abort(404);
+            return app(LoginSuccessResponse::class);
+        });
+    }
+
+    /**
+     * Get the authentication pipeline instance.
+     *
+     * @param  \LaravelWebauthn\Http\Requests\WebauthnLoginRequest  $request
+     * @return \Illuminate\Pipeline\Pipeline
+     */
+    protected function loginPipeline(WebauthnLoginRequest $request): Pipeline
+    {
+        if (Webauthn::$authenticateThroughCallback !== null) {
+            return (new Pipeline(app()))->send($request)->through(array_filter(
+                call_user_func(Webauthn::$authenticateThroughCallback, $request)
+            ));
         }
 
-        $this->app[LoginAttempt::class](
-            $request->user(),
-            $publicKey,
-            $request->input('data')
-        );
+        if (is_array($pipelines = config('webauthn.pipelines.login'))) {
+            return (new Pipeline(app()))->send($request)->through(array_filter(
+                $pipelines
+            ));
+        }
 
-        return $this->app[LoginSuccessResponse::class];
+        return (new Pipeline(app()))->send($request)->through(array_filter([
+            config('webauthn.limiters.login') !== null ? null : EnsureLoginIsNotThrottled::class,
+            AttemptToAuthenticate::class,
+            PrepareAuthenticatedSession::class,
+        ]));
+
     }
 }
