@@ -38,8 +38,9 @@ class Webauthn extends WebauthnRepository
      */
     public static bool $registersRoutes = true;
 
-
-    final public function __construct() {}
+    final public function __construct()
+    {
+    }
 
     /**
      * Get the username used for authentication.

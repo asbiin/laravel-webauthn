@@ -14,7 +14,6 @@ use LaravelWebauthn\Actions\ValidateKeyCreation;
 use LaravelWebauthn\Models\WebauthnKey;
 use LaravelWebauthn\Services\Webauthn;
 use LaravelWebauthn\Tests\FeatureTestCase;
-use Mockery\MockInterface;
 use Ramsey\Uuid\Uuid;
 use Webauthn\PublicKeyCredentialSource;
 
@@ -345,5 +344,4 @@ class WebauthnTest extends FeatureTestCase
 
 class WebauthnKeyTest extends WebauthnKey
 {
-
 }

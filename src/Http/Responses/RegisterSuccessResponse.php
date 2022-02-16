@@ -6,8 +6,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Response;
 use LaravelWebauthn\Contracts\RegisterSuccessResponse as RegisterSuccessResponseContract;
-use LaravelWebauthn\Models\WebauthnKey;
 use LaravelWebauthn\Facades\Webauthn;
+use LaravelWebauthn\Models\WebauthnKey;
 
 class RegisterSuccessResponse implements RegisterSuccessResponseContract
 {

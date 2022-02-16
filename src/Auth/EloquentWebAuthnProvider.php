@@ -8,7 +8,6 @@ use Illuminate\Contracts\Config\Repository as Config;
 use Illuminate\Contracts\Hashing\Hasher;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use LaravelWebauthn\Facades\Webauthn;
-use LaravelWebauthn\Models\WebauthnKey;
 use LaravelWebauthn\Services\Webauthn\CredentialAssertionValidator;
 
 class EloquentWebAuthnProvider extends EloquentUserProvider
