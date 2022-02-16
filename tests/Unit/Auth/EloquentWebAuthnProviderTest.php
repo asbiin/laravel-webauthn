@@ -9,8 +9,8 @@ use LaravelWebauthn\Auth\EloquentWebAuthnProvider;
 use LaravelWebauthn\Facades\Webauthn;
 use LaravelWebauthn\Models\WebauthnKey;
 use LaravelWebauthn\Services\Webauthn\CredentialAssertionValidator;
-use LaravelWebauthn\Tests\User;
 use LaravelWebauthn\Tests\FeatureTestCase;
+use LaravelWebauthn\Tests\User;
 
 class EloquentWebAuthnProviderTest extends FeatureTestCase
 {
@@ -36,7 +36,7 @@ class EloquentWebAuthnProviderTest extends FeatureTestCase
             'id' => 'id',
             'rawId' => 'rawId',
             'type' => 'type',
-            'response' => 'response'
+            'response' => 'response',
         ]);
 
         $this->assertTrue($result);
