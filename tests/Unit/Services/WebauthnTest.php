@@ -33,7 +33,7 @@ class WebauthnTest extends FeatureTestCase
 
         $this->assertInstanceOf(\Webauthn\PublicKeyCredentialUserEntity::class, $publicKey->getUser());
         $this->assertEquals($user->getAuthIdentifier(), $publicKey->getUser()->getId());
-        $this->assertEquals('john@doe.com', $publicKey->getUser()->getDisplayName());
+        $this->assertEquals($user->email, $publicKey->getUser()->getDisplayName());
     }
 
     public function test_do_register_data()

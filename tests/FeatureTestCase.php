@@ -2,7 +2,7 @@
 
 namespace LaravelWebauthn\Tests;
 
-use Illuminate\Contracts\Auth\Authenticatable;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 use Orchestra\Testbench\TestCase;
 
 class FeatureTestCase extends TestCase
@@ -83,7 +83,7 @@ class FeatureTestCase extends TestCase
      * object is passed, then sign in as that user.
      *
      * @param  null  $user
-     * @return Authenticatable
+     * @return User
      */
     public function signIn($user = null)
     {
@@ -99,54 +99,75 @@ class FeatureTestCase extends TestCase
     /**
      * Create a user.
      *
-     * @return Authenticatable
+     * @return User
      */
     public function user()
     {
-        $user = new Authenticated();
-        $user->email = 'john@doe.com';
-
-        return $user;
+        return factory(User::class)->create();
+        // return User::create([
+        //     'name' => 'John Doe',
+        //     'email' => 'john@doe.com',
+        //     'password' => 'test',
+        //     'email_verified_at' => null,
+        //     'remember_token' => null,
+        // ]);
     }
 }
 
-class Authenticated implements Authenticatable
+class User extends Authenticatable
 {
-    public $email;
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var string[]
+     */
+    protected $fillable = [
+        'name',
+        'email',
+        'password',
+        'email_verified_at',
+        'remember_token',
+    ];
 
-    protected static $ids;
-    protected $id;
+    // public $email;
 
-    public function __construct()
-    {
-        $this->id = ++self::$ids;
-    }
+    // protected static $ids;
+    // protected $id;
 
-    public function getAuthIdentifierName()
-    {
-        return 'getAuthIdentifier';
-    }
+    // public function __construct()
+    // {
+    //     $this->id = ++self::$ids;
+    // }
 
-    public function getAuthIdentifier()
-    {
-        return (string) $this->id;
-    }
+    // public function getAuthIdentifierName()
+    // {
+    //     return 'getAuthIdentifier';
+    // }
 
-    public function getAuthPassword()
-    {
-        return 'secret';
-    }
+    // public function getAuthIdentifier()
+    // {
+    //     return (string) $this->id;
+    // }
 
-    public function getRememberToken()
-    {
-        return 'token';
-    }
+    // public function getAuthPassword()
+    // {
+    //     return 'secret';
+    // }
 
-    public function setRememberToken($value)
-    {
-    }
+    // public function getRememberToken()
+    // {
+    //     return 'token';
+    // }
 
-    public function getRememberTokenName()
-    {
-    }
+    // public function setRememberToken($value)
+    // {
+    // }
+
+    // public function getRememberTokenName()
+    // {
+    // }
+
+    // public function newQuery() {
+
+    // }
 }

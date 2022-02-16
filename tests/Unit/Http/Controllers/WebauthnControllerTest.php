@@ -207,9 +207,7 @@ class WebauthnControllerTest extends FeatureTestCase
         $webauthnKey = factory(WebauthnKey::class)->create([
             'user_id' => $user->getAuthIdentifier(),
         ]);
-        $otherWebauthnKey = factory(WebauthnKey::class)->create([
-            'user_id' => $this->user()->getAuthIdentifier(),
-        ]);
+        $otherWebauthnKey = factory(WebauthnKey::class)->create();
 
         $this->expectException(\Illuminate\Database\Eloquent\ModelNotFoundException::class);
         $response = $this->delete('/webauthn/keys/'.$otherWebauthnKey->id, ['accept' => 'application/json']);

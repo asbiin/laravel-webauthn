@@ -59,8 +59,7 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "LaravelWebauthn\\Tests\\": "tests",
-            "Database\\Factories\\LaravelWebauthn\\Models\\": "database/factories/"
+            "LaravelWebauthn\\Tests\\": "tests"
         }
     },
     "extra": {
