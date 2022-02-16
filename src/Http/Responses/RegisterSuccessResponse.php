@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Response;
 use LaravelWebauthn\Contracts\RegisterSuccessResponse as RegisterSuccessResponseContract;
 use LaravelWebauthn\Models\WebauthnKey;
-use LaravelWebauthn\Services\Webauthn;
+use LaravelWebauthn\Facades\Webauthn;
 
 class RegisterSuccessResponse implements RegisterSuccessResponseContract
 {
@@ -41,7 +41,7 @@ class RegisterSuccessResponse implements RegisterSuccessResponseContract
      */
     protected function getWebauthnKey(Request $request): WebauthnKey
     {
-        return WebauthnKey::where('user_id', $request->user()->getAuthIdentifier())
+        return (Webauthn::model())::where('user_id', $request->user()->getAuthIdentifier())
             ->findOrFail($this->webauthnId);
     }
 

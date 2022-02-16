@@ -6,6 +6,7 @@ use Base64Url\Base64Url;
 use Illuminate\Contracts\Auth\Authenticatable as User;
 use Illuminate\Contracts\Auth\Factory as AuthFactory;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use LaravelWebauthn\Facades\Webauthn;
 use LaravelWebauthn\Models\WebauthnKey;
 use Webauthn\PublicKeyCredentialDescriptor;
 use Webauthn\PublicKeyCredentialSource;
@@ -80,7 +81,7 @@ class CredentialRepository implements PublicKeyCredentialSourceRepository
      */
     protected function getAllRegisteredKeys($userId): \Illuminate\Support\Collection
     {
-        return WebauthnKey::where('user_id', $userId)
+        return (Webauthn::model())::where('user_id', $userId)
             ->get()
             ->map
             ->publicKeyCredentialSource;
@@ -110,7 +111,7 @@ class CredentialRepository implements PublicKeyCredentialSourceRepository
      */
     private function model(string $credentialId): WebauthnKey
     {
-        return WebauthnKey::where(array_filter(
+        return (Webauthn::model())::where(array_filter(
             [
                 'user_id' => $this->guard()->guest() ? null : $this->guard()->id(),
                 'credentialId' => Base64Url::encode($credentialId),

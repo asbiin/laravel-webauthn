@@ -44,6 +44,7 @@ class WebauthnControllerTest extends FeatureTestCase
         parent::setUp();
 
         Webauthn::spy();
+        Webauthn::shouldReceive('model')->andReturn(WebauthnKey::class);
     }
 
     /**

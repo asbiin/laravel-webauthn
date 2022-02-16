@@ -3,6 +3,7 @@
 namespace LaravelWebauthn\Actions;
 
 use Illuminate\Contracts\Auth\Authenticatable;
+use LaravelWebauthn\Facades\Webauthn;
 use LaravelWebauthn\Models\WebauthnKey;
 
 class UpdateKey
@@ -16,7 +17,7 @@ class UpdateKey
      */
     public function __invoke(Authenticatable $user, int $webauthnKeyId, string $keyName): WebauthnKey
     {
-        $webauthnKey = WebauthnKey::where('user_id', $user->getAuthIdentifier())
+        $webauthnKey = (Webauthn::model())::where('user_id', $user->getAuthIdentifier())
             ->findOrFail($webauthnKeyId);
 
         $webauthnKey->name = $keyName;

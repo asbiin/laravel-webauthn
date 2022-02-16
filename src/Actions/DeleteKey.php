@@ -4,7 +4,6 @@ namespace LaravelWebauthn\Actions;
 
 use Illuminate\Contracts\Auth\Authenticatable;
 use LaravelWebauthn\Facades\Webauthn;
-use LaravelWebauthn\Models\WebauthnKey;
 
 class DeleteKey
 {
@@ -17,7 +16,7 @@ class DeleteKey
      */
     public function __invoke(Authenticatable $user, int $webauthnKeyId): void
     {
-        WebauthnKey::where('user_id', $user->getAuthIdentifier())
+        (Webauthn::model())::where('user_id', $user->getAuthIdentifier())
             ->findOrFail($webauthnKeyId)
             ->delete();
 

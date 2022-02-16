@@ -86,11 +86,13 @@ class CredentialAttestationValidator extends CredentialValidator
      */
     protected function getResponse(PublicKeyCredential $publicKeyCredential): AuthenticatorAttestationResponse
     {
-        return tap($publicKeyCredential->getResponse(), function ($response) {
-            // Check if the response is an Authenticator Attestation Response
-            if (! $response instanceof AuthenticatorAttestationResponse) {
-                throw new ResponseMismatchException('Not an authenticator attestation response');
-            }
-        });
+        $response = $publicKeyCredential->getResponse();
+
+        // Check if the response is an Authenticator Attestation Response
+        if (! $response instanceof AuthenticatorAttestationResponse) {
+            throw new ResponseMismatchException('Not an authenticator attestation response');
+        }
+
+        return $response;
     }
 }

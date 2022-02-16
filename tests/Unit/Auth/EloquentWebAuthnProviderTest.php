@@ -55,6 +55,7 @@ class EloquentWebAuthnProviderTest extends FeatureTestCase
         ]);
 
         Webauthn::shouldReceive('validateAssertion')->andReturn(true);
+        Webauthn::shouldReceive('model')->andReturn(WebauthnKey::class);
 
         $provider = new EloquentWebAuthnProvider(
             app('config'),

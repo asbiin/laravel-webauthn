@@ -53,7 +53,7 @@ class EloquentWebAuthnProvider extends EloquentUserProvider
     {
         if ($this->isSignedChallenge($credentials)) {
             try {
-                $webauthnKey = WebauthnKey::where([
+                $webauthnKey = (Webauthn::model())::where([
                     'credentialId' => $credentials['id'],
                 ])->firstOrFail();
 

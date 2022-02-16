@@ -28,7 +28,7 @@ class WebauthnRegisterFailed
     /**
      * Create a new event instance.
      *
-     * @param  Authenticatable  $user
+     * @param  \Illuminate\Contracts\Auth\Authenticatable  $user
      * @param  Exception|null  $exception
      */
     public function __construct(User $user, ?Exception $exception = null)

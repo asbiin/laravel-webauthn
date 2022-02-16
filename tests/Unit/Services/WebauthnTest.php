@@ -14,12 +14,17 @@ use LaravelWebauthn\Actions\ValidateKeyCreation;
 use LaravelWebauthn\Models\WebauthnKey;
 use LaravelWebauthn\Services\Webauthn;
 use LaravelWebauthn\Tests\FeatureTestCase;
+use Mockery\MockInterface;
 use Ramsey\Uuid\Uuid;
+use Webauthn\PublicKeyCredentialSource;
 
 class WebauthnTest extends FeatureTestCase
 {
     use DatabaseTransactions;
 
+    /**
+     * @test
+     */
     public function test_get_register_data()
     {
         $user = $this->signIn();
@@ -36,6 +41,9 @@ class WebauthnTest extends FeatureTestCase
         $this->assertEquals($user->email, $publicKey->getUser()->getDisplayName());
     }
 
+    /**
+     * @test
+     */
     public function test_do_register_data()
     {
         $user = $this->signIn();
@@ -61,6 +69,9 @@ class WebauthnTest extends FeatureTestCase
         ]);
     }
 
+    /**
+     * @test
+     */
     public function test_get_authenticate_data()
     {
         $user = $this->signIn();
@@ -81,6 +92,9 @@ class WebauthnTest extends FeatureTestCase
         $this->assertCount(0, $publicKey->getExtensions());
     }
 
+    /**
+     * @test
+     */
     public function test_do_authenticate()
     {
         $user = $this->signIn();
@@ -139,6 +153,9 @@ class WebauthnTest extends FeatureTestCase
         $this->assertTrue($result); // Not yet ...
     }
 
+    /**
+     * @test
+     */
     public function test_wrong_do_authenticate()
     {
         $user = $this->signIn();
@@ -195,6 +212,9 @@ class WebauthnTest extends FeatureTestCase
         ];
     }
 
+    /**
+     * @test
+     */
     public function test_force_authenticate()
     {
         $this->assertFalse($this->app[Webauthn::class]->check());
@@ -204,6 +224,9 @@ class WebauthnTest extends FeatureTestCase
         $this->assertTrue($this->app[Webauthn::class]->check());
     }
 
+    /**
+     * @test
+     */
     public function test_enabled()
     {
         $user = $this->signIn();
@@ -217,6 +240,9 @@ class WebauthnTest extends FeatureTestCase
         $this->assertTrue($this->app[Webauthn::class]->enabled($user));
     }
 
+    /**
+     * @test
+     */
     public function test_aaguid_null()
     {
         $webauthnKey = new WebauthnKey();
@@ -226,6 +252,9 @@ class WebauthnTest extends FeatureTestCase
         $this->assertNull($webauthnKey->aaguid);
     }
 
+    /**
+     * @test
+     */
     public function test_aaguid_empty()
     {
         $webauthnKey = new WebauthnKey();
@@ -235,6 +264,9 @@ class WebauthnTest extends FeatureTestCase
         $this->assertEquals('', $webauthnKey->aaguid);
     }
 
+    /**
+     * @test
+     */
     public function test_aaguid_string()
     {
         $webauthnKey = new WebauthnKey();
@@ -245,6 +277,9 @@ class WebauthnTest extends FeatureTestCase
         $this->assertEquals(Uuid::fromString('38195f59-0e5b-4ebf-be46-75664177eeee'), $webauthnKey->aaguid);
     }
 
+    /**
+     * @test
+     */
     public function test_aaguid_Uuid()
     {
         $webauthnKey = new WebauthnKey();
@@ -254,4 +289,61 @@ class WebauthnTest extends FeatureTestCase
         $this->assertInstanceOf(\Ramsey\Uuid\UuidInterface::class, $webauthnKey->aaguid);
         $this->assertEquals(Uuid::fromString('38195f59-0e5b-4ebf-be46-75664177eeee'), $webauthnKey->aaguid);
     }
+
+    /**
+     * @test
+     */
+    public function it_creates_model()
+    {
+        config(['webauthn.model' => WebauthnKeyTest::class]);
+
+        $user = $this->user();
+
+        $source = new PublicKeyCredentialSource(
+            'test',
+            'type',
+            [],
+            'attestationType',
+            new \Webauthn\TrustPath\EmptyTrustPath,
+            Uuid::fromString(Uuid::NIL),
+            'credentialPublicKey',
+            $user->id,
+            0
+        );
+
+        $webauthnkey = Webauthn::create($user, 'name', $source);
+
+        $this->assertInstanceOf(WebauthnKey::class, $webauthnkey);
+    }
+
+    /**
+     * @test
+     */
+    public function it_creates_model_anyway()
+    {
+        config(['webauthn.model' => \stdClass::class]);
+
+        $user = $this->user();
+
+        $source = new PublicKeyCredentialSource(
+            'test',
+            'type',
+            [],
+            'attestationType',
+            new \Webauthn\TrustPath\EmptyTrustPath,
+            Uuid::fromString(Uuid::NIL),
+            'credentialPublicKey',
+            $user->id,
+            0
+        );
+
+        $webauthnkey = Webauthn::create($user, 'name', $source);
+
+        $this->assertInstanceOf(\stdClass::class, $webauthnkey);
+    }
+}
+
+class WebauthnKeyTest extends WebauthnKey
+{
+
 }
