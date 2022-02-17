@@ -54,7 +54,7 @@ class AttemptToAuthenticate
         }
 
         if ($this->attemptValidateAssertion($request)
-            || $this->attemptLogin($request->only(['id', 'rawId', 'response', 'type']), $request->boolean('remember'))) {
+            || $this->attemptLogin($this->filterCredentials($request), $request->boolean('remember'))) {
             return $next($request);
         }
 
@@ -89,7 +89,7 @@ class AttemptToAuthenticate
             return false;
         }
 
-        $result = WebauthnFacade::validateAssertion($user, $request->only(['id', 'rawId', 'response', 'type']));
+        $result = WebauthnFacade::validateAssertion($user, $this->filterCredentials($request));
 
         if (! $result) {
             $this->fireFailedEvent($request, $user);
@@ -159,5 +159,16 @@ class AttemptToAuthenticate
                 ? $user->{Webauthn::username()}
                 : $request->{Webauthn::username()},
         ]));
+    }
+
+    /**
+     * Get array of webauthn credentials.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return array
+     */
+    protected function filterCredentials(Request $request): array
+    {
+        return $request->only(['id', 'rawId', 'response', 'type']);
     }
 }

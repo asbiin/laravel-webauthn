@@ -5,6 +5,7 @@ namespace LaravelWebauthn\Actions;
 use Illuminate\Auth\Events\Failed;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\UserProvider;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
 use LaravelWebauthn\Services\LoginRateLimiter;
@@ -36,19 +37,20 @@ class LoginUserRetrieval
      * @param  \Illuminate\Http\Request  $request
      * @return Authenticatable|null
      */
-    public function __invoke($request)
+    public function __invoke(Request $request): ?Authenticatable
     {
-        $user = $request->user() ?? $this->getUserFromCredentials($request->input());
+        $user = $request->user()
+            ?? $this->getUserFromCredentials($request->only([Webauthn::username(), 'password']));
 
-        if ($user !== null) {
-            return $user;
+        if ($user === null) {
+            $this->fireFailedEvent($request);
+
+            $this->throwFailedAuthenticationException($request);
+
+            return null;
         }
 
-        $this->fireFailedEvent($request);
-
-        $this->throwFailedAuthenticationException($request);
-
-        return null;
+        return $user;
     }
 
     /**
@@ -88,7 +90,7 @@ class LoginUserRetrieval
      *
      * @throws \Illuminate\Validation\ValidationException
      */
-    protected function throwFailedAuthenticationException($request)
+    protected function throwFailedAuthenticationException(Request $request)
     {
         $this->limiter->increment($request);
 
@@ -103,7 +105,7 @@ class LoginUserRetrieval
      * @param  \Illuminate\Http\Request  $request
      * @return void
      */
-    protected function fireFailedEvent($request)
+    protected function fireFailedEvent(Request $request)
     {
         event(new Failed(config('webauthn.guard'), null, [
             Webauthn::username() => $request->{Webauthn::username()},

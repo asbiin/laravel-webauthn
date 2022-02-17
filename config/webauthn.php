@@ -74,7 +74,7 @@ return [
     | Webauthn key model
     |--------------------------------------------------------------------------
     |
-    | .
+    | Here you may specify the model used to create Webauthn keys.
     |
     */
 

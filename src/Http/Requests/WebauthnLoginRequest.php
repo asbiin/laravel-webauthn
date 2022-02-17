@@ -21,7 +21,7 @@ class WebauthnLoginRequest extends FormRequest
             'response.clientDataJSON' => 'required|string',
             'response.signature' => 'required|string',
             'response.userHandle' => 'sometimes|nullable',
-            'remember' => 'nullable|boolean',
+            'remember' => 'nullable|string',
         ];
     }
 }

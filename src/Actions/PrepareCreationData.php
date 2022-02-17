@@ -35,12 +35,12 @@ class PrepareCreationData
      *
      * @throws \Illuminate\Validation\ValidationException
      */
-    protected function throwFailedRegisterException($user, ?Exception $e = null)
+    protected function throwFailedRegisterException(Authenticatable $user, ?Exception $e = null)
     {
         WebauthnRegisterFailed::dispatch($user, $e);
 
         throw ValidationException::withMessages([
-            'register' => [trans('webauthn::errors.cannot_register_new_key')],
+            Webauthn::username() => [trans('webauthn::errors.cannot_register_new_key')],
         ]);
     }
 }

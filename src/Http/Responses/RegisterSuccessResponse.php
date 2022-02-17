@@ -16,7 +16,7 @@ class RegisterSuccessResponse implements RegisterSuccessResponseContract
      *
      * @var int
      */
-    private int $webauthnId;
+    protected int $webauthnId;
 
     /**
      * Create an HTTP response that represents the object.

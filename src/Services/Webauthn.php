@@ -38,10 +38,6 @@ class Webauthn extends WebauthnRepository
      */
     public static bool $registersRoutes = true;
 
-    final public function __construct()
-    {
-    }
-
     /**
      * Get the username used for authentication.
      *
@@ -92,8 +88,8 @@ class Webauthn extends WebauthnRepository
      * Force authentication in session.
      *
      * @return void
-     *
      * @deprecated use login() instead
+     * @codeCoverageIgnore
      */
     public static function forceAuthenticate()
     {
@@ -104,8 +100,8 @@ class Webauthn extends WebauthnRepository
      * Force remove authentication in session.
      *
      * @return void
-     *
      * @deprecated use logout() instead
+     * @codeCoverageIgnore
      */
     public static function forgetAuthenticate()
     {
@@ -224,6 +220,7 @@ class Webauthn extends WebauthnRepository
      *
      * @param  callable  $callback
      * @return void
+     * @codeCoverageIgnore
      */
     public static function authenticateThrough(callable $callback)
     {
@@ -235,6 +232,7 @@ class Webauthn extends WebauthnRepository
      *
      * @param  callable  $callback
      * @return void
+     * @codeCoverageIgnore
      */
     public static function authenticateUsing(callable $callback)
     {
@@ -316,12 +314,10 @@ class Webauthn extends WebauthnRepository
     /**
      * Configure Webauthn to not register its routes.
      *
-     * @return self
+     * @return void
      */
-    public static function ignoreRoutes(): self
+    public static function ignoreRoutes()
     {
         static::$registersRoutes = false;
-
-        return new static;
     }
 }

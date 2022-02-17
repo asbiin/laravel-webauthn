@@ -53,7 +53,7 @@ class ValidateKeyCreation
         WebauthnRegisterFailed::dispatch($user, $e);
 
         throw ValidationException::withMessages([
-            trans('webauthn::errors.cannot_register_new_key'),
+            Webauthn::username() => [trans('webauthn::errors.cannot_register_new_key')]
         ]);
     }
 }

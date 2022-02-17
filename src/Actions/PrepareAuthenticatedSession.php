@@ -2,6 +2,7 @@
 
 namespace LaravelWebauthn\Actions;
 
+use Illuminate\Http\Request;
 use LaravelWebauthn\Services\LoginRateLimiter;
 
 class PrepareAuthenticatedSession
@@ -31,7 +32,7 @@ class PrepareAuthenticatedSession
      * @param  callable  $next
      * @return mixed
      */
-    public function handle($request, $next)
+    public function handle(Request $request, $next)
     {
         $request->session()->regenerate();
 
