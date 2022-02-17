@@ -88,6 +88,7 @@ class Webauthn extends WebauthnRepository
      * Force authentication in session.
      *
      * @return void
+     *
      * @deprecated use login() instead
      * @codeCoverageIgnore
      */
@@ -100,6 +101,7 @@ class Webauthn extends WebauthnRepository
      * Force remove authentication in session.
      *
      * @return void
+     *
      * @deprecated use logout() instead
      * @codeCoverageIgnore
      */
