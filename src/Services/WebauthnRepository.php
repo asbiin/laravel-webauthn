@@ -30,11 +30,14 @@ abstract class WebauthnRepository
             return call_user_func(static::$createWebauthnkeyUsingCallback, [$user, $keyName, $publicKeyCredentialSource]);
         }
 
-        $webauthnKey = new (static::model());
+        $model = static::model();
+        $webauthnKey = new $model;
         if ($webauthnKey instanceof Model) {
-            $webauthnKey->user_id = $user->getAuthIdentifier();
-            $webauthnKey->name = $keyName;
-            $webauthnKey->publicKeyCredentialSource = $publicKeyCredentialSource;
+            $webauthnKey->forceFill([
+                'user_id' => $user->getAuthIdentifier(),
+                'name' => $keyName,
+                'publicKeyCredentialSource' => $publicKeyCredentialSource,
+            ]);
             $webauthnKey->save();
         }
 
