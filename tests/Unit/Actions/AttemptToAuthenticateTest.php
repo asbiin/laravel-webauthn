@@ -31,7 +31,7 @@ class AttemptToAuthenticateTest extends FeatureTestCase
 
         Webauthn::shouldReceive('validateAssertion')->andReturn(true);
 
-        $result = app(AttemptToAuthenticate::class)->handle($request, fn() => 1);
+        $result = app(AttemptToAuthenticate::class)->handle($request, fn () => 1);
 
         $this->assertEquals(1, $result);
     }
@@ -48,7 +48,7 @@ class AttemptToAuthenticateTest extends FeatureTestCase
         Webauthn::shouldReceive('validateAssertion')->andReturn(false);
 
         $this->expectException(ValidationException::class);
-        app(AttemptToAuthenticate::class)->handle($request, fn() => 1);
+        app(AttemptToAuthenticate::class)->handle($request, fn () => 1);
     }
 
     /**
@@ -62,11 +62,12 @@ class AttemptToAuthenticateTest extends FeatureTestCase
 
         WebauthnService::authenticateUsing(function ($r) use ($user, $request) {
             $this->assertEquals($request, $r);
+
             return $user;
         });
         Webauthn::shouldReceive('validateAssertion')->andReturn(true);
 
-        $result = app(AttemptToAuthenticate::class)->handle($request, fn() => 1);
+        $result = app(AttemptToAuthenticate::class)->handle($request, fn () => 1);
 
         $this->assertEquals(1, $result);
     }
@@ -82,10 +83,11 @@ class AttemptToAuthenticateTest extends FeatureTestCase
 
         WebauthnService::authenticateUsing(function ($r) use ($request) {
             $this->assertEquals($request, $r);
+
             return null;
         });
 
         $this->expectException(ValidationException::class);
-        app(AttemptToAuthenticate::class)->handle($request, fn() => 1);
+        app(AttemptToAuthenticate::class)->handle($request, fn () => 1);
     }
 }
