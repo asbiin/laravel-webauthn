@@ -234,7 +234,6 @@ class Webauthn extends WebauthnRepository
      *
      * @param  callable  $callback
      * @return void
-     * @codeCoverageIgnore
      */
     public static function authenticateUsing(callable $callback)
     {

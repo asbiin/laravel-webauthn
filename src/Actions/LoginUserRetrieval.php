@@ -39,8 +39,7 @@ class LoginUserRetrieval
      */
     public function __invoke(Request $request): ?Authenticatable
     {
-        $user = $request->user()
-            ?? $this->getUserFromCredentials($request->only([Webauthn::username(), 'password']));
+        $user = $request->user() ?? $this->getUserFromCredentials($request->only([Webauthn::username(), 'password']));
 
         if ($user === null) {
             $this->fireFailedEvent($request);

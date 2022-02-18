@@ -104,13 +104,6 @@ class FeatureTestCase extends TestCase
     public function user()
     {
         return factory(User::class)->create();
-        // return User::create([
-        //     'name' => 'John Doe',
-        //     'email' => 'john@doe.com',
-        //     'password' => 'test',
-        //     'email_verified_at' => null,
-        //     'remember_token' => null,
-        // ]);
     }
 }
 
@@ -128,46 +121,4 @@ class User extends Authenticatable
         'email_verified_at',
         'remember_token',
     ];
-
-    // public $email;
-
-    // protected static $ids;
-    // protected $id;
-
-    // public function __construct()
-    // {
-    //     $this->id = ++self::$ids;
-    // }
-
-    // public function getAuthIdentifierName()
-    // {
-    //     return 'getAuthIdentifier';
-    // }
-
-    // public function getAuthIdentifier()
-    // {
-    //     return (string) $this->id;
-    // }
-
-    // public function getAuthPassword()
-    // {
-    //     return 'secret';
-    // }
-
-    // public function getRememberToken()
-    // {
-    //     return 'token';
-    // }
-
-    // public function setRememberToken($value)
-    // {
-    // }
-
-    // public function getRememberTokenName()
-    // {
-    // }
-
-    // public function newQuery() {
-
-    // }
 }
