@@ -75,7 +75,7 @@ abstract class WebauthnRepository
         $model = static::model();
         $webauthnKey = new $model;
         if (! $webauthnKey instanceof Model) {
-            throw new ModelNotFoundException('Wrong model type: ' . gettype($webauthnKey));
+            throw new ModelNotFoundException('Wrong model type: '.gettype($webauthnKey));
         }
 
         return $webauthnKey;

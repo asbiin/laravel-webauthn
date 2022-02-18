@@ -8,7 +8,6 @@ use LaravelWebauthn\Events\WebauthnLogin;
 use LaravelWebauthn\Events\WebauthnLoginData;
 use LaravelWebauthn\Events\WebauthnRegister;
 use LaravelWebauthn\Events\WebauthnRegisterData;
-use LaravelWebauthn\Models\WebauthnKey;
 use LaravelWebauthn\Services\Webauthn\CreationOptionsFactory;
 use LaravelWebauthn\Services\Webauthn\CredentialAssertionValidator;
 use LaravelWebauthn\Services\Webauthn\CredentialAttestationValidator;

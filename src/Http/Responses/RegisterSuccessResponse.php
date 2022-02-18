@@ -35,7 +35,7 @@ class RegisterSuccessResponse implements RegisterSuccessResponseContract
      * Set the new Webauthn key.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \Illuminate\Database\Eloquent\Model $webauthnKey
+     * @param  \Illuminate\Database\Eloquent\Model  $webauthnKey
      * @return self
      */
     public function setWebauthnKey(Request $request, Model $webauthnKey): self
