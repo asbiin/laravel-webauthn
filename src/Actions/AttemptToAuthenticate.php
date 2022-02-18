@@ -3,7 +3,7 @@
 namespace LaravelWebauthn\Actions;
 
 use Illuminate\Auth\Events\Failed;
-use Illuminate\Contracts\Auth\Authenticatable;
+use Illuminate\Contracts\Auth\Authenticatable as User;
 use Illuminate\Contracts\Auth\StatefulGuard;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
@@ -152,7 +152,7 @@ class AttemptToAuthenticate
      * @param  \Illuminate\Contracts\Auth\Authenticatable|null  $user
      * @return void
      */
-    protected function fireFailedEvent(Request $request, ?Authenticatable $user = null)
+    protected function fireFailedEvent(Request $request, ?User $user = null)
     {
         event(new Failed(config('webauthn.guard'), $user, [
             Webauthn::username() => $user !== null

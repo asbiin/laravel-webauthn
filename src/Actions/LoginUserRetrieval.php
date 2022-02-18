@@ -3,7 +3,7 @@
 namespace LaravelWebauthn\Actions;
 
 use Illuminate\Auth\Events\Failed;
-use Illuminate\Contracts\Auth\Authenticatable;
+use Illuminate\Contracts\Auth\Authenticatable as User;
 use Illuminate\Contracts\Auth\UserProvider;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -35,9 +35,9 @@ class LoginUserRetrieval
      * Handle the incoming request.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return Authenticatable|null
+     * @return \Illuminate\Contracts\Auth\Authenticatable|null
      */
-    public function __invoke(Request $request): ?Authenticatable
+    public function __invoke(Request $request): ?User
     {
         $user = $request->user() ?? $this->getUserFromCredentials($request->only([Webauthn::username(), 'password']));
 
@@ -58,7 +58,7 @@ class LoginUserRetrieval
      * @param  array|null  $credentials
      * @return \Illuminate\Contracts\Auth\Authenticatable|null
      */
-    protected function getUserFromCredentials(?array $credentials): ?Authenticatable
+    protected function getUserFromCredentials(?array $credentials): ?User
     {
         // We will try to ask the User Provider for any user for the given credentials.
         // If there is one, we will then return an array of credentials ID that the

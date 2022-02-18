@@ -2,7 +2,7 @@
 
 namespace LaravelWebauthn\Services;
 
-use Illuminate\Contracts\Auth\Authenticatable;
+use Illuminate\Contracts\Auth\Authenticatable as User;
 use Illuminate\Database\Eloquent\Model;
 use LaravelWebauthn\Events\WebauthnLogin;
 use LaravelWebauthn\Events\WebauthnLoginData;
@@ -65,7 +65,7 @@ class Webauthn extends WebauthnRepository
      * @param  \Illuminate\Contracts\Auth\Authenticatable|null  $user
      * @return void
      */
-    public static function login(?Authenticatable $user)
+    public static function login(?User $user)
     {
         session([static::sessionName() => true]);
 
@@ -116,7 +116,7 @@ class Webauthn extends WebauthnRepository
      * @param  \Illuminate\Contracts\Auth\Authenticatable  $user
      * @return \Webauthn\PublicKeyCredentialRequestOptions
      */
-    public static function prepareAssertion(Authenticatable $user): PublicKeyCredentialRequestOptions
+    public static function prepareAssertion(User $user): PublicKeyCredentialRequestOptions
     {
         return tap(app(RequestOptionsFactory::class)($user), function ($publicKey) use ($user) {
             WebauthnLoginData::dispatch($user, $publicKey);
@@ -130,7 +130,7 @@ class Webauthn extends WebauthnRepository
      * @param  array  $credentials
      * @return bool
      */
-    public static function validateAssertion(Authenticatable $user, array $credentials): bool
+    public static function validateAssertion(User $user, array $credentials): bool
     {
         return app(CredentialAssertionValidator::class)($user, $credentials);
     }
@@ -141,7 +141,7 @@ class Webauthn extends WebauthnRepository
      * @param  \Illuminate\Contracts\Auth\Authenticatable  $user
      * @return \Webauthn\PublicKeyCredentialCreationOptions
      */
-    public static function prepareAttestation(Authenticatable $user): PublicKeyCredentialCreationOptions
+    public static function prepareAttestation(User $user): PublicKeyCredentialCreationOptions
     {
         return tap(app(CreationOptionsFactory::class)($user), function ($publicKey) use ($user) {
             WebauthnRegisterData::dispatch($user, $publicKey);
@@ -156,7 +156,7 @@ class Webauthn extends WebauthnRepository
      * @param  string  $keyName
      * @return \Illuminate\Database\Eloquent\Model
      */
-    public static function validateAttestation(Authenticatable $user, array $credentials, string $keyName): Model
+    public static function validateAttestation(User $user, array $credentials, string $keyName): Model
     {
         $publicKey = app(CredentialAttestationValidator::class)($user, $credentials);
 
@@ -180,7 +180,7 @@ class Webauthn extends WebauthnRepository
      *
      * @return string
      */
-    private static function sessionName(): string
+    public static function sessionName(): string
     {
         return config('webauthn.session_name', config('webauthn.sessionName', 'webauthn_auth'));
     }
@@ -191,7 +191,7 @@ class Webauthn extends WebauthnRepository
      * @param  \Illuminate\Contracts\Auth\Authenticatable  $user
      * @return bool
      */
-    public static function enabled(Authenticatable $user): bool
+    public static function enabled(User $user): bool
     {
         return static::webauthnEnabled() && static::hasKey($user);
     }
@@ -202,7 +202,7 @@ class Webauthn extends WebauthnRepository
      * @param  \Illuminate\Contracts\Auth\Authenticatable  $user
      * @return bool
      */
-    public static function canRegister(Authenticatable $user): bool
+    public static function canRegister(User $user): bool
     {
         return static::webauthnEnabled() && (! static::enabled($user) || static::check());
     }

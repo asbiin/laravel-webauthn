@@ -18,7 +18,4 @@ parameters:
             - */Actions/AttemptToAuthenticate.php
             - */Services/Webauthn/CreationOptionsFactory.php
 
-        - message: '#Unsafe call to private method LaravelWebauthn\\Services\\Webauthn::sessionName\(\) through static::\.#'
-          path: */Services/Webauthn.php
-
     excludes_analyse:

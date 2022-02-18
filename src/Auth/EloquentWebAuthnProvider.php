@@ -3,7 +3,7 @@
 namespace LaravelWebauthn\Auth;
 
 use Illuminate\Auth\EloquentUserProvider;
-use Illuminate\Contracts\Auth\Authenticatable;
+use Illuminate\Contracts\Auth\Authenticatable as User;
 use Illuminate\Contracts\Config\Repository as Config;
 use Illuminate\Contracts\Hashing\Hasher;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -83,7 +83,7 @@ class EloquentWebAuthnProvider extends EloquentUserProvider
      * @param  array  $credentials
      * @return bool
      */
-    public function validateCredentials(Authenticatable $user, array $credentials): bool
+    public function validateCredentials(User $user, array $credentials): bool
     {
         if ($this->isSignedChallenge($credentials)
             && Webauthn::validateAssertion($user, $credentials)) {

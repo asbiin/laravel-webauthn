@@ -2,7 +2,7 @@
 
 namespace LaravelWebauthn\Services\Webauthn;
 
-use Illuminate\Contracts\Auth\Authenticatable;
+use Illuminate\Contracts\Auth\Authenticatable as User;
 use Illuminate\Contracts\Cache\Repository as Cache;
 use Illuminate\Http\Request;
 
@@ -41,7 +41,7 @@ abstract class CredentialValidator
      * @param  \Illuminate\Contracts\Auth\Authenticatable  $user
      * @return string
      */
-    protected function cacheKey(Authenticatable $user): string
+    protected function cacheKey(User $user): string
     {
         return implode(
             '|',
