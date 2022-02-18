@@ -3,6 +3,7 @@
 namespace LaravelWebauthn\Actions;
 
 use Illuminate\Auth\Events\Lockout;
+use Illuminate\Http\Request;
 use LaravelWebauthn\Contracts\LockoutResponse;
 use LaravelWebauthn\Services\LoginRateLimiter;
 
@@ -33,7 +34,7 @@ class EnsureLoginIsNotThrottled
      * @param  callable  $next
      * @return mixed
      */
-    public function handle($request, $next)
+    public function handle(Request $request, $next)
     {
         if (! $this->limiter->tooManyAttempts($request)) {
             return $next($request);

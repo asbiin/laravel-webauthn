@@ -3,6 +3,7 @@
 namespace LaravelWebauthn\Services;
 
 use Illuminate\Contracts\Auth\Authenticatable;
+use Illuminate\Database\Eloquent\Model;
 use LaravelWebauthn\Events\WebauthnLogin;
 use LaravelWebauthn\Events\WebauthnLoginData;
 use LaravelWebauthn\Events\WebauthnRegister;
@@ -154,9 +155,9 @@ class Webauthn extends WebauthnRepository
      * @param  \Illuminate\Contracts\Auth\Authenticatable  $user
      * @param  array  $credentials
      * @param  string  $keyName
-     * @return \LaravelWebauthn\Models\WebauthnKey
+     * @return \Illuminate\Database\Eloquent\Model
      */
-    public static function validateAttestation(Authenticatable $user, array $credentials, string $keyName): WebauthnKey
+    public static function validateAttestation(Authenticatable $user, array $credentials, string $keyName): Model
     {
         $publicKey = app(CredentialAttestationValidator::class)($user, $credentials);
 

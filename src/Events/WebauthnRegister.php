@@ -2,9 +2,9 @@
 
 namespace LaravelWebauthn\Events;
 
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
-use LaravelWebauthn\Models\WebauthnKey;
 
 class WebauthnRegister
 {
@@ -13,16 +13,16 @@ class WebauthnRegister
     /**
      * The new WebauthnKey.
      *
-     * @var WebauthnKey
+     * @var \Illuminate\Database\Eloquent\Model
      */
-    public WebauthnKey $webauthnKey;
+    public Model $webauthnKey;
 
     /**
      * Create a new event instance.
      *
-     * @param  WebauthnKey  $webauthnKey
+     * @param  \Illuminate\Database\Eloquent\Model  $webauthnKey
      */
-    public function __construct(WebauthnKey $webauthnKey)
+    public function __construct(Model $webauthnKey)
     {
         $this->webauthnKey = $webauthnKey;
     }

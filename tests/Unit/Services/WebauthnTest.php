@@ -7,6 +7,7 @@ use CBOR\ListObject;
 use CBOR\MapItem;
 use CBOR\MapObject;
 use CBOR\TextStringObject;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use LaravelWebauthn\Actions\PrepareAssertionData;
 use LaravelWebauthn\Actions\PrepareCreationData;
@@ -336,9 +337,8 @@ class WebauthnTest extends FeatureTestCase
             0
         );
 
-        $webauthnkey = Webauthn::create($user, 'name', $source);
-
-        $this->assertInstanceOf(\stdClass::class, $webauthnkey);
+        $this->expectException(ModelNotFoundException::class);
+        Webauthn::create($user, 'name', $source);
     }
 }
 

@@ -39,7 +39,6 @@ class WebauthnKeyController extends Controller
      */
     public function store(WebauthnRegisterRequest $request)
     {
-        /** @var \Illuminate\Database\Eloquent\Model|null */
         $webauthnKey = app(ValidateKeyCreation::class)(
             $request->user(),
             $request->only(['id', 'rawId', 'response', 'type']),
@@ -47,7 +46,7 @@ class WebauthnKeyController extends Controller
         );
 
         return app(RegisterSuccessResponse::class)
-            ->setWebauthnId($request, $webauthnKey !== null ? $webauthnKey->id : -1);
+            ->setWebauthnKey($request, $webauthnKey);
     }
 
     /**

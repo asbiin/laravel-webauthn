@@ -95,6 +95,7 @@ class WebauthnControllerTest extends FeatureTestCase
         $user = $this->signIn();
         $this->mock(ValidateKeyCreation::class, function (MockInterface $mock) use ($user) {
             $mock->shouldReceive('__invoke')->andReturn(factory(WebauthnKey::class)->create([
+                'name' => 'keyname',
                 'user_id' => $user->getAuthIdentifier(),
             ]));
         });
@@ -112,7 +113,7 @@ class WebauthnControllerTest extends FeatureTestCase
 
         $response->assertStatus(201);
         $response->assertJson([
-            'result' => true,
+            'name' => 'keyname',
         ]);
 
         $this->assertDatabaseHas('webauthn_keys', [

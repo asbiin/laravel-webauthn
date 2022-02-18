@@ -21,6 +21,7 @@ class DeleteKey
             ->delete();
 
         if (! Webauthn::hasKey($user)) {
+            // Remove session value when last key is deleted
             Webauthn::logout();
         }
     }

@@ -4,6 +4,7 @@ namespace LaravelWebauthn\Services;
 
 use Illuminate\Contracts\Auth\Authenticatable as User;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use LaravelWebauthn\Models\WebauthnKey;
 use Webauthn\PublicKeyCredentialSource;
 
@@ -19,27 +20,24 @@ abstract class WebauthnRepository
     /**
      * Create a new key.
      *
-     * @param  User  $user
+     * @param  \Illuminate\Contracts\Auth\Authenticatable  $user
      * @param  string  $keyName
-     * @param  PublicKeyCredentialSource  $publicKeyCredentialSource
-     * @return mixed
+     * @param  \Webauthn\PublicKeyCredentialSource  $publicKeyCredentialSource
+     * @return \Illuminate\Database\Eloquent\Model
      */
-    public static function create(User $user, string $keyName, PublicKeyCredentialSource $publicKeyCredentialSource)
+    public static function create(User $user, string $keyName, PublicKeyCredentialSource $publicKeyCredentialSource): Model
     {
         if (static::$createWebauthnkeyUsingCallback !== null) {
             return call_user_func(static::$createWebauthnkeyUsingCallback, [$user, $keyName, $publicKeyCredentialSource]);
         }
 
-        $model = static::model();
-        $webauthnKey = new $model;
-        if ($webauthnKey instanceof Model) {
-            $webauthnKey->forceFill([
-                'user_id' => $user->getAuthIdentifier(),
-                'name' => $keyName,
-                'publicKeyCredentialSource' => $publicKeyCredentialSource,
-            ]);
-            $webauthnKey->save();
-        }
+        $webauthnKey = static::createModel();
+        $webauthnKey->forceFill([
+            'user_id' => $user->getAuthIdentifier(),
+            'name' => $keyName,
+            'publicKeyCredentialSource' => $publicKeyCredentialSource,
+        ]);
+        $webauthnKey->save();
 
         return $webauthnKey;
     }
@@ -65,6 +63,22 @@ abstract class WebauthnRepository
         $model = config('webauthn.model', WebauthnKey::class);
 
         return '\\'.ltrim($model, '\\');
+    }
+
+    /**
+     * Create a new model instance.
+     *
+     * @return \Illuminate\Database\Eloquent\Model
+     */
+    public static function createModel(): Model
+    {
+        $model = static::model();
+        $webauthnKey = new $model;
+        if (! $webauthnKey instanceof Model) {
+            throw new ModelNotFoundException('Wrong model type: ' . gettype($webauthnKey));
+        }
+
+        return $webauthnKey;
     }
 
     /**

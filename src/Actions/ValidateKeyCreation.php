@@ -4,6 +4,7 @@ namespace LaravelWebauthn\Actions;
 
 use Exception;
 use Illuminate\Contracts\Auth\Authenticatable;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Validation\ValidationException;
 use LaravelWebauthn\Events\WebauthnRegisterFailed;
 use LaravelWebauthn\Facades\Webauthn;
@@ -14,12 +15,12 @@ class ValidateKeyCreation
     /**
      * Register a new key.
      *
-     * @param  Authenticatable  $user
+     * @param  \Illuminate\Contracts\Auth\Authenticatable  $user
      * @param  array  $data
      * @param  string  $keyName
-     * @return WebauthnKey|null
+     * @return \Illuminate\Database\Eloquent\Model|null
      */
-    public function __invoke(Authenticatable $user, array $data, string $keyName): ?WebauthnKey
+    public function __invoke(Authenticatable $user, array $data, string $keyName): ?Model
     {
         if (! Webauthn::canRegister($user)) {
             $this->throwFailedRegisterException($user);
@@ -53,7 +54,7 @@ class ValidateKeyCreation
         WebauthnRegisterFailed::dispatch($user, $e);
 
         throw ValidationException::withMessages([
-            Webauthn::username() => [trans('webauthn::errors.cannot_register_new_key')],
+            Webauthn::username() => [trans('webauthn::errors.wrong_validation')],
         ]);
     }
 }

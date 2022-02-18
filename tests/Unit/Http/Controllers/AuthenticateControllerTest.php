@@ -87,7 +87,7 @@ class AuthenticateControllerTest extends FeatureTestCase
                 'signature' => 'signature',
                 'userHandle' => 'userHandle',
             ],
-            'remember' => true,
+            'remember' => 'on',
         ], ['accept' => 'application/json']);
 
         $response->assertStatus(200);
@@ -112,7 +112,7 @@ class AuthenticateControllerTest extends FeatureTestCase
                 'signature' => 'signature',
                 'userHandle' => 'userHandle',
             ],
-            'remember' => true,
+            'remember' => 'on',
         ], ['accept' => 'application/json']);
 
         $response->assertStatus(200);
@@ -137,7 +137,7 @@ class AuthenticateControllerTest extends FeatureTestCase
                 'signature' => 'signature',
                 'userHandle' => 'userHandle',
             ],
-            'remember' => true,
+            'remember' => 'on',
         ], ['accept' => 'application/json']);
 
         $response->assertStatus(422);
@@ -171,7 +171,7 @@ class AuthenticateControllerTest extends FeatureTestCase
                 'signature' => 'signature',
                 'userHandle' => 'userHandle',
             ],
-            'remember' => true,
+            'remember' => 'on',
         ]);
 
         $response->assertStatus(302);

@@ -2,21 +2,21 @@
 
 namespace LaravelWebauthn\Http\Responses;
 
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Response;
 use LaravelWebauthn\Contracts\RegisterSuccessResponse as RegisterSuccessResponseContract;
 use LaravelWebauthn\Facades\Webauthn;
-use LaravelWebauthn\Models\WebauthnKey;
 
 class RegisterSuccessResponse implements RegisterSuccessResponseContract
 {
     /**
-     * The new Webauthn key id.
+     * The new Webauthn key.
      *
-     * @var int
+     * @var \Illuminate\Database\Eloquent\Model
      */
-    protected int $webauthnId;
+    protected Model $webauthnKey;
 
     /**
      * Create an HTTP response that represents the object.
@@ -26,53 +26,22 @@ class RegisterSuccessResponse implements RegisterSuccessResponseContract
      */
     public function toResponse($request)
     {
-        $webauthnKey = $this->getWebauthnKey($request);
-
         return $request->wantsJson()
-            ? $this->jsonResponse($request, $webauthnKey)
+            ? Response::json($this->webauthnKey->jsonSerialize(), 201)
             : Redirect::intended(Webauthn::redirects('register'));
     }
 
     /**
-     * Get the created WebauthnKey.
+     * Set the new Webauthn key.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return WebauthnKey
-     */
-    protected function getWebauthnKey(Request $request): WebauthnKey
-    {
-        return (Webauthn::model())::where('user_id', $request->user()->getAuthIdentifier())
-            ->findOrFail($this->webauthnId);
-    }
-
-    /**
-     * Get the id of the registerd key.
-     *
-     * @param  int  $webauthnId
+     * @param  \Illuminate\Database\Eloquent\Model $webauthnKey
      * @return self
      */
-    public function setWebauthnId(Request $request, int $webauthnId): self
+    public function setWebauthnKey(Request $request, Model $webauthnKey): self
     {
-        $this->webauthnId = $webauthnId;
+        $this->webauthnKey = $webauthnKey;
 
         return $this;
-    }
-
-    /**
-     * Create an HTTP response that represents the object.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  WebauthnKey  $webauthnKey
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    protected function jsonResponse(Request $request, WebauthnKey $webauthnKey): \Symfony\Component\HttpFoundation\Response
-    {
-        return Response::json([
-            'result' => true,
-            'id' => $webauthnKey->id,
-            'object' => 'webauthnKey',
-            'name' => $webauthnKey->name,
-            'counter' => $webauthnKey->counter,
-        ], 201);
     }
 }
