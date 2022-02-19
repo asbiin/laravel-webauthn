@@ -1,3 +1,10 @@
+## [2.0.1](https://github.com/asbiin/laravel-webauthn/compare/2.0.0...2.0.1) (2022-02-19)
+
+
+### Bug Fixes
+
+* fix RegisterViewResponse ([#362](https://github.com/asbiin/laravel-webauthn/issues/362)) ([d3a7f9b](https://github.com/asbiin/laravel-webauthn/commit/d3a7f9b9410021b84fd86b86fa77f4d2b41cc15a))
+
 # [2.0.0](https://github.com/asbiin/laravel-webauthn/compare/1.2.0...2.0.0) (2022-02-05)
 
 
