@@ -46,7 +46,7 @@ class LoginUserRetrieval
 
             $this->throwFailedAuthenticationException($request);
 
-            return null;
+            return null; // @codeCoverageIgnore
         }
 
         return $user;

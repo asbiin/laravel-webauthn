@@ -96,7 +96,7 @@ class AttemptToAuthenticate
 
             $this->throwFailedAuthenticationException($request);
 
-            return false;
+            return false; // @codeCoverageIgnore
         }
 
         return true;
@@ -120,7 +120,7 @@ class AttemptToAuthenticate
 
             $this->throwFailedAuthenticationException($request);
 
-            return null;
+            return null; // @codeCoverageIgnore
         }
 
         $this->guard->login($user, $request->boolean('remember'));

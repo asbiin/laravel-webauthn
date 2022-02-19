@@ -25,25 +25,36 @@ class ValidateKeyCreation
             $this->throwFailedRegisterException($user);
         }
 
-        try {
-            $webauthnKey = Webauthn::validateAttestation($user, $data, $keyName);
-
+        return tap($this->validateAttestation($user, $data, $keyName), function () use ($user) {
             // Login the user immediately.
             Webauthn::login($user);
+        });
+    }
 
-            return $webauthnKey;
+    /**
+     * Validate key.
+     *
+     * @param  \Illuminate\Contracts\Auth\Authenticatable  $user
+     * @param  array  $data
+     * @param  string  $keyName
+     * @return \Illuminate\Database\Eloquent\Model|null
+     */
+    protected function validateAttestation(User $user, array $data, string $keyName): ?Model
+    {
+        try {
+            return Webauthn::validateAttestation($user, $data, $keyName);
         } catch (Exception $e) {
             $this->throwFailedRegisterException($user, $e);
         }
 
-        return null;
+        return null; // @codeCoverageIgnore
     }
 
     /**
      * Throw a failed register validation exception.
      *
      * @param  \Illuminate\Contracts\Auth\Authenticatable  $user
-     * @param  Exception|null  $e
+     * @param  \Exception|null  $e
      * @return void
      *
      * @throws \Illuminate\Validation\ValidationException
