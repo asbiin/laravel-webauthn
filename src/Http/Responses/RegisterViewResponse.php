@@ -35,8 +35,8 @@ class RegisterViewResponse implements RegisterViewResponseContract
         $view = $this->config->get('webauthn.views.register', '');
 
         return $request->wantsJson()
-            ? Response::json(['publicKey' => $publicKey])
-            : Response::view($view, ['publicKey' => $publicKey]);
+            ? Response::json(['publicKey' => $publicKey, 'name'=>$request->input('name','key')])
+            : Response::view($view, ['publicKey' => $publicKey, 'name'=>$request->input('name','key')]);
     }
 
     /**
