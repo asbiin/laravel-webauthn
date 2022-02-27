@@ -27,8 +27,24 @@ class RegisterSuccessResponse implements RegisterSuccessResponseContract
     public function toResponse($request)
     {
         return $request->wantsJson()
-            ? Response::json($this->webauthnKey->jsonSerialize(), 201)
+            ? $this->jsonResponse($request)
             : Redirect::intended(Webauthn::redirects('register'));
+    }
+
+    /**
+     * Create an HTTP response that represents the object.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    protected function jsonResponse(Request $request): \Symfony\Component\HttpFoundation\Response
+    {
+        $callback = $request->session()->pull('url.intended', Webauthn::redirects('register'));
+
+        return Response::json([
+            'result' => $this->webauthnKey->jsonSerialize(),
+            'callback' => $callback,
+        ], 201);
     }
 
     /**

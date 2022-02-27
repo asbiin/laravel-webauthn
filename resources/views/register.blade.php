@@ -115,6 +115,11 @@
           ...data,
           name: "{{ $name }}",
         })
+          .then(function (response) {
+            if (response.data.callback) {
+              window.location.href = response.data.callback;
+            }
+          })
           .catch(function (error) {
             console.log(error);
           });
