@@ -42,7 +42,7 @@ class RegisterSuccessResponse implements RegisterSuccessResponseContract
         $callback = $request->session()->pull('url.intended', Webauthn::redirects('register'));
 
         return Response::json([
-            'result' => $this->webauthnKey->jsonSerialize(),
+            'result' => $this->webauthnKey,
             'callback' => $callback,
         ], 201);
     }

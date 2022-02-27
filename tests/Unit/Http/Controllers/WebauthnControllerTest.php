@@ -113,7 +113,9 @@ class WebauthnControllerTest extends FeatureTestCase
 
         $response->assertStatus(201);
         $response->assertJson([
-            'name' => 'keyname',
+            'result' => [
+                'name' => 'keyname',
+            ]
         ]);
 
         $this->assertDatabaseHas('webauthn_keys', [
