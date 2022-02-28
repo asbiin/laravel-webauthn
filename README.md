@@ -8,6 +8,7 @@ Webauthn adapter for Laravel <!-- omit in toc -->
 [![Coverage Status](https://img.shields.io/sonar/coverage/asbiin_laravel-webauthn?server=https%3A%2F%2Fsonarcloud.io&style=flat-square&label=Coverage%20Status)](https://sonarcloud.io/dashboard?id=asbiin_laravel-webauthn)
 
 
+- [Features](#features)
 - [Installation](#installation)
   - [Configuration](#configuration)
 - [Set Up](#set-up)
@@ -31,6 +32,12 @@ Webauthn adapter for Laravel <!-- omit in toc -->
 
 **Try it now on this [demo application](https://laravel-webauthn-example.herokuapp.com/).**
 
+
+# Features
+
+- Manage Webauthn keys registration
+- 2nd factor authentication: add a middleware service **LaravelWebauthn** to use a Webauthn key as 2FA
+- Login provider using a Webauthn key, without password
 
 # Installation
 
