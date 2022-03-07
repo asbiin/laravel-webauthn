@@ -15,7 +15,7 @@ class MiddlewareTest extends FeatureTestCase
         $request = new Request();
 
         $this->expectException(\Symfony\Component\HttpKernel\Exception\HttpException::class);
-        $this->app[WebauthnMiddleware::class]->handle($request, fn() => null);
+        $this->app[WebauthnMiddleware::class]->handle($request, fn () => null);
     }
 
     public function test_middleware_user_not_enabled()
