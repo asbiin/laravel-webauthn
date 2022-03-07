@@ -94,9 +94,9 @@ class WebauthnServiceProvider extends ServiceProvider
             __DIR__.'/../config/webauthn.php', 'webauthn'
         );
 
-        $this->app->bind(StatefulGuard::class, function () {
-            return Auth::guard(config('webauthn.guard', null));
-        });
+        $this->app->bind(StatefulGuard::class, fn () =>
+            Auth::guard(config('webauthn.guard', null))
+        );
     }
 
     /**
@@ -113,9 +113,7 @@ class WebauthnServiceProvider extends ServiceProvider
                 'namespace' => 'LaravelWebauthn\Http\Controllers',
                 'domain' => config('webauthn.domain', null),
                 'prefix' => config('webauthn.prefix', 'webauthn'),
-            ], function () {
-                $this->loadRoutesFrom(__DIR__.'/../routes/routes.php');
-            });
+            ], fn () => $this->loadRoutesFrom(__DIR__.'/../routes/routes.php'));
         }
     }
 

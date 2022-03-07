@@ -15,8 +15,7 @@ class MiddlewareTest extends FeatureTestCase
         $request = new Request();
 
         $this->expectException(\Symfony\Component\HttpKernel\Exception\HttpException::class);
-        $this->app[WebauthnMiddleware::class]->handle($request, function () {
-        });
+        $this->app[WebauthnMiddleware::class]->handle($request, fn() => null);
     }
 
     public function test_middleware_user_not_enabled()
@@ -24,9 +23,7 @@ class MiddlewareTest extends FeatureTestCase
         $user = $this->signIn();
         $request = $this->getRequest($user);
 
-        $result = $this->app[WebauthnMiddleware::class]->handle($request, function () {
-            return 'next';
-        });
+        $result = $this->app[WebauthnMiddleware::class]->handle($request, fn () => 'next');
 
         $this->assertEquals('next', $result);
     }
@@ -38,9 +35,7 @@ class MiddlewareTest extends FeatureTestCase
 
         $this->app[Webauthn::class]->login($user);
 
-        $result = $this->app[WebauthnMiddleware::class]->handle($request, function () {
-            return 'next';
-        });
+        $result = $this->app[WebauthnMiddleware::class]->handle($request, fn () => 'next');
 
         $this->assertEquals('next', $result);
     }
@@ -54,9 +49,7 @@ class MiddlewareTest extends FeatureTestCase
 
         $request = $this->getRequest($user);
 
-        $result = $this->app[WebauthnMiddleware::class]->handle($request, function () {
-            return 'next';
-        });
+        $result = $this->app[WebauthnMiddleware::class]->handle($request, fn () => 'next');
 
         $this->assertInstanceOf(\Illuminate\Http\RedirectResponse::class, $result);
     }
@@ -64,8 +57,6 @@ class MiddlewareTest extends FeatureTestCase
     private function getRequest($user)
     {
         return (new Request())
-            ->setUserResolver(function () use ($user) {
-                return $user;
-            });
+            ->setUserResolver(fn () => $user);
     }
 }

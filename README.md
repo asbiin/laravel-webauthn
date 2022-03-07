@@ -10,11 +10,11 @@ Webauthn adapter for Laravel <!-- omit in toc -->
 
 - [Features](#features)
 - [Installation](#installation)
-  - [Configuration](#configuration)
 - [Set Up](#set-up)
   - [Add LaravelWebauthn middleware](#add-laravelwebauthn-middleware)
   - [Login via remember](#login-via-remember)
-  - [Userless authentication](#userless-authentication)
+  - [Passwordless authentication](#passwordless-authentication)
+  - [Disabling Views](#disabling-views)
 - [Usage](#usage)
   - [Authenticate](#authenticate)
   - [Register a new key](#register-a-new-key)
@@ -28,29 +28,39 @@ Webauthn adapter for Laravel <!-- omit in toc -->
 - [License](#license)
 
 
-**LaravelWebauthn** is an adapter to use Webauthn as [2FA](https://en.wikipedia.org/wiki/Multi-factor_authentication) (two-factor authentication) on Laravel.
+**LaravelWebauthn** is an adapter to use Webauthn as [2FA](https://en.wikipedia.org/wiki/Multi-factor_authentication) (two-factor authentication) or as passwordless authentication on Laravel.
 
-**Try it now on this [demo application](https://laravel-webauthn-example.herokuapp.com/).**
+**Try this now on the [demo application](https://laravel-webauthn-example.herokuapp.com/).**
 
 
 # Features
 
 - Manage Webauthn keys registration
-- 2nd factor authentication: add a middleware service **LaravelWebauthn** to use a Webauthn key as 2FA
+- 2nd factor authentication: add a middleware service to use a Webauthn key as 2FA
 - Login provider using a Webauthn key, without password
+
 
 # Installation
 
-You may use Composer to install this package into your Laravel project:
+First install LaravelWebauthn using the Composer package manager:
 
 ```sh
 composer require asbiin/laravel-webauthn
 ```
 
-## Configuration
+Next, install a [`psr/http-factory-implementation` implementation](https://packagist.org/providers/psr/http-factory-implementation).
 
-You can publish the LaravelWebauthn configuration in a file named `config/webauthn.php`, and resources.
-Just run this artisan command:
+You can either
+- install `guzzlehttp/psr7` package:
+    ```sh
+    composer require guzzlehttp/psr7
+    ```
+- or any other implementation, like `nyholm/psr7`. You'll also need `symfony/psr-http-message-bridge` and `php-http/discovery`:
+    ```sh
+    composer require symfony/psr-http-message-bridge php-http/discovery nyholm/psr7
+    ```
+
+You can publish LaravelWebauthn configuration in a file named `config/webauthn.php`, and resources using the `vendor:publish` command:
 
 ```sh
 php artisan vendor:publish --provider="LaravelWebauthn\WebauthnServiceProvider"
@@ -58,8 +68,15 @@ php artisan vendor:publish --provider="LaravelWebauthn\WebauthnServiceProvider"
 
 If desired, you may disable LaravelWebauthn entirely using the `enabled` configuration option:
 ```php
-'enabled' => false,
+    'enabled' => false,
 ```
+
+Next, you should migrate your database:
+
+```sh
+php artisan migrate
+```
+
 
 # Set Up
 
@@ -103,38 +120,65 @@ class EventServiceProvider extends ServiceProvider
 ```
 
 
-## Userless authentication
+## Passwordless authentication
 
-To enable userless authentication, first add the webauthn user provider.
+You can use Webauthn to authenticate a user without a password, using only a webauthn key authentication.
 
-Update your `config/auth.php` file by changing the `users` provider:
+To enable passwordless authentication, first add the webauthn user provider: update your `config/auth.php` file and change the `users` provider:
 
 ```php
-return [
-    // ...
-
     'providers' => [
         'users' => [
             'driver' => 'webauthn',
             'model' => App\Models\User::class,
         ],
     ],
-
-    // ...
-];
 ```
 
-Then you need to change your login page, to allow initiating a webauthn login with an `email` identifier.
+Then allow your login page to initiating a webauthn login with an `email` identifier.
+
+You can call `webauthn.auth.options` route with a POST request and an `email` input to get the challenge data.
+See [authentation](#Authenticate) section for more details.
+
+
+## Disabling Views
+
+By default LaravelWebauthn defines routes that are intended to return views for authentication and register key.
+
+However, if you are building a JavaScript driven single-page application, you may not need these routes. For that reason, you may disable these routes entirely by setting the `views` configuration value within your application's `config/webauthn.php` configuration file to false:
+
+```php
+'views' => false,
+```
 
 
 # Usage
 
 You will find an example of usage on [asbiin/laravel-webauthn-example](https://github.com/asbiin/laravel-webauthn-example). You can try it right now on the [demo application](https://laravel-webauthn-example.herokuapp.com/).
 
+
 ## Authenticate
 
-The middleware will open the page defined in `webauthn.views.authenticate` configuration.
-The default value will open [webauthn::authenticate](/resources/views/authenticate.blade.php) page. The basics are:
+To authenticate with a webauthn key, the workflow is the following:
+1. Open the `webauthn.login` login page.
+   You can customize the login page view by calling `Webauthn::loginViewResponseUsing`. See [View response](#view-response)
+
+   The default behavior will open [webauthn::authenticate](/resources/views/authenticate.blade.php) page.
+   You can also change the value of `webauthn.views.authenticate` in the configuration file.
+
+2. Or: Get the publicKey challenge by calling `webauthn.auth.options` (if not provided).
+
+3. Start the webauthn browser authentication.
+   You can use the [`webauthn.js`](/resources/js/webauthn.js) library to do this.
+
+   Send the signed data to `webauthn.auth` route.
+
+4. The POST response will be:
+   - a redirect response
+   - or a json response with a `callback` data.
+
+
+Example:
 
 ```html
   <!-- load javascript part -->
@@ -170,10 +214,27 @@ If the authentication is successful, the server will use the `webauthn.redirects
 
 ## Register a new key
 
-To register a new key, open `/webauthn/register` or go to `route('webauthn.register')`, or any of your implementation.
+To register a new webauthn key, the workflow is the following:
+1. Open the `webauthn.register` page.
+   You can customize the register page view by calling `Webauthn::registerViewResponseUsing`. See [View response](#view-response)
 
-The controller will open the page defined in `webauthn.views.register` configuration.
-The default value will open [webauthn::register](/resources/views/register.blade.php) page. The basics are:
+   The default behavior will open [webauthn::register](/resources/views/register.blade.php) page.
+   You can also change the value of `webauthn.views.register` in the configuration file.
+
+2. Or: Get the publicKey challenge by calling `webauthn.store.options` (if not provided).
+
+3. Start the webauthn browser registration.
+   You can use the [`webauthn.js`](/resources/js/webauthn.js) library to do this.
+
+   Send the signed data to `webauthn.store` route.
+   The data should contain a `name` field with the webauthn key name.
+
+4. The POST response will be:
+   - a redirect response
+   - or a json response with a `callback` data.
+
+
+Example:
 
 ```html
   <!-- load javascript part -->
@@ -217,7 +278,7 @@ These reoutes are defined:
 | GET `/webauthn/auth` | `webauthn.login` | The login page. |
 | POST `/webauthn/auth/options` | `webauthn.auth.options` | Get the publicKey and challenge to initiate a WebAuthn login. |
 | POST `/webauthn/auth` | `webauthn.auth` | Post data after a WebAuthn login validate. |
-| GET `/webauthn/keys/create` | `webauthn.create` | Get datas to register a new key. |
+| GET `/webauthn/keys/create` | `webauthn.create` | The register key page. |
 | POST `/webauthn/keys/options` | `webauthn.store.options` | Get the publicKeys and challenge to initiate a WebAuthn registration. |
 | POST `/webauthn/keys` | `webauthn.store` | Post data after a WebAuthn register check. |
 | DELETE `/webauthn/keys/{id}` | `webauthn.destroy` | Delete an existing key. |

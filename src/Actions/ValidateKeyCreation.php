@@ -25,10 +25,10 @@ class ValidateKeyCreation
             $this->throwFailedRegisterException($user);
         }
 
-        return tap($this->validateAttestation($user, $data, $keyName), function () use ($user) {
+        return tap($this->validateAttestation($user, $data, $keyName), fn () =>
             // Login the user immediately.
-            Webauthn::login($user);
-        });
+            Webauthn::login($user)
+        );
     }
 
     /**
