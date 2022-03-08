@@ -8,7 +8,7 @@
   <!--
     This file is part of asbiin/laravel-webauthn project.
 
-    @copyright Alexis SAETTLER © 2019
+    @copyright Alexis SAETTLER © 2019-2022
     @license MIT
   -->
 
