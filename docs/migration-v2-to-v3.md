@@ -3,6 +3,7 @@
 - [Routes](#routes)
   - [Views](#views)
   - [Options](#options)
+- [Contracts](#contracts)
 - [Config file](#config-file)
   - [Facade](#facade)
 
@@ -72,6 +73,14 @@ There are 2 new routes:
 
 These are available to initiate a Webauthn login or registration process. When using GET `webauthn.create` and GET `webauthn.login`, the render page already has a `publicKey` parameter with the challenge key. If you only need to create the challenge, you can use these routes instead.
 
+
+## Contracts
+
+Some of the [contracts](/src/Contracts) have changed:
+
+- `LoginViewResponse` contract has now a `setPublicKey` method.
+- `RegisterSuccessResponse` contract has now a `setWebauthnKey` method.
+- `RegisterViewResponse` contract has now a `setPublicKey` method.
 
 
 ## Config file
