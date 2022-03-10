@@ -19,6 +19,8 @@ Webauthn adapter for Laravel <!-- omit in toc -->
   - [Authenticate](#authenticate)
   - [Register a new key](#register-a-new-key)
   - [Routes](#routes)
+    - [Ignore route creation](#ignore-route-creation)
+  - [Customizing The Authentication Pipeline](#customizing-the-authentication-pipeline)
   - [Events](#events)
   - [View response](#view-response)
 - [Compatibility](#compatibility)
@@ -287,6 +289,26 @@ These reoutes are defined:
 
 You can customize the first part of the url by setting `prefix` value in the config file.
 
+
+### Ignore route creation
+
+You can disable the routes creation by adding this in your `AppServiceProvider`:
+
+```php
+use LaravelWebauthn\Services\Webauthn;
+use Illuminate\Support\ServiceProvider;
+
+class AppServiceProvider extends ServiceProvider
+{
+    public function register()
+    {
+        Webauthn::ignoreRoutes();
+    }
+}
+```
+
+## Customizing The Authentication Pipeline
+
 ## Events
 
 Events are dispatched by LaravelWebauthn:
@@ -301,7 +323,9 @@ Events are dispatched by LaravelWebauthn:
 
 ## View response
 
-You can easily change the view responses with the Webauthn service:
+You can easily change the view responses with the Webauthn service.
+
+For instance, call `Webauthn::loginViewResponseUsing` in your `AppServiceProvider`:
 
 ```php
 use LaravelWebauthn\Services\Webauthn;
@@ -314,6 +338,8 @@ class AppServiceProvider extends ServiceProvider
     }
 }
 ```
+
+With a `LoginViewResponse` class:
 
 ```php
 use LaravelWebauthn\Http\Responses\LoginViewResponse as LoginViewResponseBase;

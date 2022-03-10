@@ -44,18 +44,18 @@
                 </div>
 
                 <h3 class="card-title">
-                    {{ trans('webauthn::messages.insertKey') }}
-                  </h3>
+                  {{ trans('webauthn::messages.insertKey') }}
+                </h3>
 
-                  <p class="card-text text-center">
-                    <img src="https://ssl.gstatic.com/accounts/strongauth/Challenge_2SV-Gnubby_graphic.png" alt=""/>
-                  </p>
+                <p class="card-text text-center">
+                  <img src="https://ssl.gstatic.com/accounts/strongauth/Challenge_2SV-Gnubby_graphic.png" alt=""/>
+                </p>
 
-                  <p class="card-text">
-                    {{ trans('webauthn::messages.buttonAdvise') }}
-                    <br />
-                    {{ trans('webauthn::messages.noButtonAdvise') }}
-                  </p>
+                <p class="card-text">
+                  {{ trans('webauthn::messages.buttonAdvise') }}
+                  <br />
+                  {{ trans('webauthn::messages.noButtonAdvise') }}
+                </p>
 
                 <a href="/" class="card-link" aria-pressed="true">{{ trans('webauthn::messages.cancel') }}</a>
               </div>

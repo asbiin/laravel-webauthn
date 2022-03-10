@@ -6,6 +6,8 @@ return [
     'success' => 'Your key is detected and validated.',
     'insertKey' => 'Insert your security key',
     'cancel' => 'Cancel',
+    'submit' => 'Submit',
+    'key_name' => 'Key name',
 
     'auth' => [
         'title' => 'Authentication with a security key',
