@@ -10,6 +10,7 @@ Webauthn adapter for Laravel <!-- omit in toc -->
 
 - [Features](#features)
 - [Installation](#installation)
+  - [Configuration](#configuration)
 - [Set Up](#set-up)
   - [Add LaravelWebauthn middleware](#add-laravelwebauthn-middleware)
   - [Login via remember](#login-via-remember)
@@ -21,6 +22,7 @@ Webauthn adapter for Laravel <!-- omit in toc -->
   - [Routes](#routes)
     - [Ignore route creation](#ignore-route-creation)
   - [Customizing The Authentication Pipeline](#customizing-the-authentication-pipeline)
+  - [Rate Limiter](#rate-limiter)
   - [Events](#events)
   - [View response](#view-response)
 - [Compatibility](#compatibility)
@@ -44,23 +46,24 @@ Webauthn adapter for Laravel <!-- omit in toc -->
 
 # Installation
 
-First install LaravelWebauthn using the Composer package manager:
+Install LaravelWebauthn and a [`psr/http-factory-implementation` implementation](https://packagist.org/providers/psr/http-factory-implementation):
 
 ```sh
-composer require asbiin/laravel-webauthn
+composer require asbiin/laravel-webauthn guzzlehttp/psr7
 ```
 
-Next, install a [`psr/http-factory-implementation` implementation](https://packagist.org/providers/psr/http-factory-implementation).
+You can use any other [`psr/http-factory-implementation` implementation](https://packagist.org/providers/psr/http-factory-implementation).
 
-You can either
-- install `guzzlehttp/psr7` package:
+- We recommend using `guzzlehttp/psr7` package:
     ```sh
     composer require guzzlehttp/psr7
     ```
-- or any other implementation, like `nyholm/psr7`. You'll also need `symfony/psr-http-message-bridge` and `php-http/discovery`:
+- For instance you can use `nyholm/psr7`. You'll also need `symfony/psr-http-message-bridge` and `php-http/discovery`:
     ```sh
-    composer require symfony/psr-http-message-bridge php-http/discovery nyholm/psr7
+    composer require nyholm/psr7 symfony/psr-http-message-bridge php-http/discovery
     ```
+
+## Configuration
 
 You can publish LaravelWebauthn configuration in a file named `config/webauthn.php`, and resources using the `vendor:publish` command:
 
@@ -70,7 +73,7 @@ php artisan vendor:publish --provider="LaravelWebauthn\WebauthnServiceProvider"
 
 If desired, you may disable LaravelWebauthn entirely using the `enabled` configuration option:
 ```php
-    'enabled' => false,
+'enabled' => false,
 ```
 
 Next, you should migrate your database:
@@ -89,7 +92,7 @@ The Webauthn middleware will force the user to authenticate their webauthn key f
 Add this in the `$routeMiddleware` array of your `app/Http/Kernel.php` file:
 
 ```php
-  'webauthn' => \LaravelWebauthn\Http\Middleware\WebauthnMiddleware::class,
+'webauthn' => \LaravelWebauthn\Http\Middleware\WebauthnMiddleware::class,
 ```
 
 You can use this middleware in your `routes.php` file:
@@ -129,12 +132,12 @@ You can use Webauthn to authenticate a user without a password, using only a web
 To enable passwordless authentication, first add the webauthn user provider: update your `config/auth.php` file and change the `users` provider:
 
 ```php
-    'providers' => [
-        'users' => [
-            'driver' => 'webauthn',
-            'model' => App\Models\User::class,
-        ],
+'providers' => [
+    'users' => [
+        'driver' => 'webauthn',
+        'model' => App\Models\User::class,
     ],
+],
 ```
 
 Then allow your login page to initiating a webauthn login with an `email` identifier.
@@ -273,7 +276,7 @@ If the registration is successful, the server will use the `webauthn.redirects.r
 
 ## Routes
 
-These reoutes are defined:
+These routes are defined:
 
 | Request | Route | Description |
 |---------|-------|-------------|
@@ -309,6 +312,61 @@ class AppServiceProvider extends ServiceProvider
 
 ## Customizing The Authentication Pipeline
 
+The Laravel Webauthn authentication pipeline is highly inspired by the [Fortify pipeline](https://laravel.com/docs/9.x/fortify#customizing-the-authentication-pipeline).
+
+If you would like, you may define a custom pipeline of classes that login requests should be piped through. Each class should have an `__invoke` method which receives the incoming `Illuminate\Http\Request` instance and, like middleware, a `$next` variable that is invoked in order to pass the request to the next class in the pipeline.
+
+To define your custom pipeline, you may use the `Webauthn::authenticateThrough` method. This method accepts a closure which should return the array of classes to pipe the login request through. Typically, this method should be called from the `boot` method of your `App\Providers\FortifyServiceProvider` class.
+
+The example below contains the default pipeline definition that you may use as a starting point when making your own modifications:
+
+```php
+use LaravelWebauthn\Actions\AttemptToAuthenticate;
+use LaravelWebauthn\Actions\EnsureLoginIsNotThrottled;
+use LaravelWebauthn\Actions\PrepareAuthenticatedSession;
+use LaravelWebauthn\Services\Webauthn;
+use Illuminate\Http\Request;
+
+Webauthn::authenticateThrough(function (Request $request) {
+    return array_filter([
+            config('webauthn.limiters.login') !== null ? null : EnsureLoginIsNotThrottled::class,
+            AttemptToAuthenticate::class,
+            PrepareAuthenticatedSession::class,
+    ]);
+});
+```
+
+## Rate Limiter
+
+By default, Laravel Webauthn will throttle logins to five requests per minute for every email and IP address combination. You may specify a custom rate limiter with other specifications.
+
+First define a custom rate limiter. Follow [Laravel rate limiter documentation](https://laravel.com/docs/9.x/routing#defining-rate-limiters) to create a new RateLimiter within the `configureRateLimiting` method of your application's `App\Providers\RouteServiceProvider` class.
+
+```php
+use Illuminate\Cache\RateLimiting\Limit;
+use Illuminate\Support\Facades\RateLimiter;
+
+/**
+ * Configure the rate limiters for the application.
+ *
+ * @return void
+ */
+protected function configureRateLimiting()
+{
+    RateLimiter::for('webauthn-login', function (Request $request) {
+        return Limit::perMinute(1000);
+    });
+}
+```
+
+Then use this new custom rate limiter in your `webauthn.limiters.login` configuration:
+
+```php
+'limiters' => [
+    'login' => 'webauthn-login',
+],
+```
+
 ## Events
 
 Events are dispatched by LaravelWebauthn:
@@ -319,7 +377,6 @@ Events are dispatched by LaravelWebauthn:
 * `\LaravelWebauthn\Events\WebauthnRegister` on registering a new key.
 * `\LaravelWebauthn\Events\WebauthnRegisterData` on preparing register data challenge.
 * `\LaravelWebauthn\Events\WebauthnRegisterFailed` on failing registering a new key.
-
 
 ## View response
 

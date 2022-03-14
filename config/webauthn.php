@@ -85,9 +85,9 @@ return [
     | Rate Limiting
     |--------------------------------------------------------------------------
     |
-    | By default, Webauthn will throttle logins to five requests per minute for
-    | every email and IP address combination. However, if you would like to
-    | specify a custom rate limiter to call then you may specify it here.
+    | By default, Laravel Webauthn will throttle logins to five requests per
+    | minute for every email and IP address combination. However, if you would
+    | like to specify a custom rate limiter to call then you may specify it here.
     |
     */
 
