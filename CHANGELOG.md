@@ -1,3 +1,19 @@
+# [3.0.0-beta.1](https://github.com/asbiin/laravel-webauthn/compare/2.0.1...3.0.0-beta.1) (2022-03-14)
+
+
+### Features
+
+* add login without password, and some rewrite ([#361](https://github.com/asbiin/laravel-webauthn/issues/361)) ([6778707](https://github.com/asbiin/laravel-webauthn/commit/6778707b546a9fbd64e5bc0e31091acd1302c749))
+
+
+### BREAKING CHANGES
+
+* options (`webauthn.auth.options` and `webauthn.store.options`) routes are now POST. GET routes are reserved for the views (`webauthn.login` and `webauthn.create`). `webauthn.auth` and `webauthn.store` routes must send data flatten. See details in https://github.com/asbiin/laravel-webauthn/blob/main/docs/migration-v2-to-v3.md .
+- `LoginViewResponse` contract has now a `setPublicKey` method
+- `RegisterSuccessResponse` contract has now a `setWebauthnKey` method
+- `RegisterViewResponse` contract has now a `setPublicKey` method
+- `Webauthn::login()` now takes 1 argument for `$user`: `login(\Illuminate\Contracts\Auth\Authenticatable $user)`
+
 ## [2.0.1](https://github.com/asbiin/laravel-webauthn/compare/2.0.0...2.0.1) (2022-02-19)
 
 
