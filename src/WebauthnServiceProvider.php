@@ -10,10 +10,13 @@ use Cose\Algorithm\Signature\RSA;
 use Http\Discovery\Exception\NotFoundException;
 use Http\Discovery\Psr17FactoryDiscovery;
 use Http\Discovery\Psr18ClientDiscovery;
+use Illuminate\Contracts\Auth\StatefulGuard;
 use Illuminate\Contracts\Container\BindingResolutionException;
+use Illuminate\Contracts\Hashing\Hasher;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
+use LaravelWebauthn\Auth\EloquentWebAuthnProvider;
 use LaravelWebauthn\Contracts\DestroyResponse as DestroyResponseContract;
 use LaravelWebauthn\Contracts\LoginSuccessResponse as LoginSuccessResponseContract;
 use LaravelWebauthn\Contracts\LoginViewResponse as LoginViewResponseContract;
@@ -21,8 +24,6 @@ use LaravelWebauthn\Contracts\RegisterSuccessResponse as RegisterSuccessResponse
 use LaravelWebauthn\Contracts\RegisterViewResponse as RegisterViewResponseContract;
 use LaravelWebauthn\Contracts\UpdateResponse as UpdateResponseContract;
 use LaravelWebauthn\Facades\Webauthn as WebauthnFacade;
-use LaravelWebauthn\Http\Controllers\AuthenticateController;
-use LaravelWebauthn\Http\Controllers\WebauthnKeyController;
 use LaravelWebauthn\Http\Responses\DestroyResponse;
 use LaravelWebauthn\Http\Responses\LoginSuccessResponse;
 use LaravelWebauthn\Http\Responses\LoginViewResponse;
@@ -30,6 +31,7 @@ use LaravelWebauthn\Http\Responses\RegisterSuccessResponse;
 use LaravelWebauthn\Http\Responses\RegisterViewResponse;
 use LaravelWebauthn\Http\Responses\UpdateResponse;
 use LaravelWebauthn\Services\Webauthn;
+use LaravelWebauthn\Services\Webauthn\CredentialAssertionValidator;
 use LaravelWebauthn\Services\Webauthn\CredentialRepository;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestFactoryInterface;
@@ -48,7 +50,6 @@ use Webauthn\AttestationStatement\FidoU2FAttestationStatementSupport;
 use Webauthn\AttestationStatement\NoneAttestationStatementSupport;
 use Webauthn\AttestationStatement\PackedAttestationStatementSupport;
 use Webauthn\AttestationStatement\TPMAttestationStatementSupport;
-use Webauthn\AuthenticationExtensions\AuthenticationExtensionsClientInputs;
 use Webauthn\AuthenticationExtensions\ExtensionOutputCheckerHandler;
 use Webauthn\AuthenticatorAssertionResponseValidator;
 use Webauthn\AuthenticatorAttestationResponseValidator;
@@ -64,13 +65,6 @@ use Webauthn\TokenBinding\TokenBindingHandler;
 class WebauthnServiceProvider extends ServiceProvider
 {
     /**
-     * Name of the middleware group.
-     *
-     * @var string
-     */
-    private const MIDDLEWARE_GROUP = 'laravel-webauthn';
-
-    /**
      * Bootstrap any application services.
      *
      * @return void
@@ -80,6 +74,7 @@ class WebauthnServiceProvider extends ServiceProvider
         $this->configurePublishing();
         $this->configureRoutes();
         $this->configureResources();
+        $this->passwordLessWebauthn();
     }
 
     /**
@@ -98,6 +93,9 @@ class WebauthnServiceProvider extends ServiceProvider
         $this->mergeConfigFrom(
             __DIR__.'/../config/webauthn.php', 'webauthn'
         );
+
+        $this->app->bind(StatefulGuard::class, fn () => Auth::guard(config('webauthn.guard', null))
+        );
     }
 
     /**
@@ -109,16 +107,13 @@ class WebauthnServiceProvider extends ServiceProvider
      */
     private function configureRoutes()
     {
-        Route::middlewareGroup(self::MIDDLEWARE_GROUP, config('webauthn.middleware', []));
-        Route::group($this->routeAttributes(), function (\Illuminate\Routing\Router $router): void {
-            $router->get('auth', [AuthenticateController::class, 'login'])->name('webauthn.login');
-            $router->post('auth', [AuthenticateController::class, 'auth'])->name('webauthn.auth');
-
-            $router->get('keys/create', [WebauthnKeyController::class, 'create'])->name('webauthn.create');
-            $router->post('keys', [WebauthnKeyController::class, 'store'])->name('webauthn.store');
-            $router->delete('keys/{id}', [WebauthnKeyController::class, 'destroy'])->name('webauthn.destroy');
-            $router->put('keys/{id}', [WebauthnKeyController::class, 'update'])->name('webauthn.update');
-        });
+        if (Webauthn::$registersRoutes) {
+            $this->app['router']->group([
+                'namespace' => 'LaravelWebauthn\Http\Controllers',
+                'domain' => config('webauthn.domain', null),
+                'prefix' => config('webauthn.prefix', 'webauthn'),
+            ], fn () => $this->loadRoutesFrom(__DIR__.'/../routes/routes.php'));
+        }
     }
 
     /**
@@ -137,21 +132,6 @@ class WebauthnServiceProvider extends ServiceProvider
     }
 
     /**
-     * Get the route group configuration array.
-     *
-     * @return array
-     */
-    private function routeAttributes()
-    {
-        return [
-            'middleware' => self::MIDDLEWARE_GROUP,
-            'domain' => config('webauthn.domain', null),
-            'namespace' => 'LaravelWebauthn\Http\Controllers',
-            'prefix' => config('webauthn.prefix', 'webauthn'),
-        ];
-    }
-
-    /**
      * Bind all the WebAuthn package services to the Service Container.
      *
      * @return void
@@ -160,14 +140,7 @@ class WebauthnServiceProvider extends ServiceProvider
     {
         $this->app->bind(PublicKeyCredentialSourceRepository::class, CredentialRepository::class);
         $this->app->bind(TokenBindingHandler::class, IgnoreTokenBindingHandler::class);
-        $this->app->bind(ExtensionOutputCheckerHandler::class, ExtensionOutputCheckerHandler::class);
-        $this->app->bind(AuthenticationExtensionsClientInputs::class, AuthenticationExtensionsClientInputs::class);
 
-        $this->app->bind(NoneAttestationStatementSupport::class, NoneAttestationStatementSupport::class);
-        $this->app->bind(FidoU2FAttestationStatementSupport::class, FidoU2FAttestationStatementSupport::class);
-        $this->app->bind(AndroidKeyAttestationStatementSupport::class, AndroidKeyAttestationStatementSupport::class);
-        $this->app->bind(TPMAttestationStatementSupport::class, TPMAttestationStatementSupport::class);
-        $this->app->bind(AppleAttestationStatementSupport::class, AppleAttestationStatementSupport::class);
         $this->app->bind(
             PackedAttestationStatementSupport::class,
             fn ($app) => new PackedAttestationStatementSupport(
@@ -248,8 +221,8 @@ class WebauthnServiceProvider extends ServiceProvider
             AuthenticatorSelectionCriteria::class,
             fn ($app) => tap(new AuthenticatorSelectionCriteria(), function ($authenticatorSelectionCriteria) use ($app) {
                 $authenticatorSelectionCriteria
-                        ->setAuthenticatorAttachment($app['config']->get('webauthn.attachment_mode', 'null'))
-                        ->setUserVerification($app['config']->get('webauthn.user_verification', 'preferred'));
+                    ->setAuthenticatorAttachment($app['config']->get('webauthn.attachment_mode', 'null'))
+                    ->setUserVerification($app['config']->get('webauthn.user_verification', 'preferred'));
 
                 if (($userless = $app['config']->get('webauthn.userless')) !== null) {
                     $authenticatorSelectionCriteria->setResidentKey($userless);
@@ -385,6 +358,18 @@ class WebauthnServiceProvider extends ServiceProvider
                 // @codeCoverageIgnoreEnd
             });
         }
+    }
+
+    private function passwordLessWebauthn()
+    {
+        $this->app['auth']->provider('webauthn', function ($app, array $config) {
+            return new EloquentWebAuthnProvider(
+                $app['config'],
+                $app[CredentialAssertionValidator::class],
+                $app[Hasher::class],
+                $config['model']
+            );
+        });
     }
 
     /**

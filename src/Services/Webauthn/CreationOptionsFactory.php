@@ -4,7 +4,10 @@ namespace LaravelWebauthn\Services\Webauthn;
 
 use Cose\Algorithm\Manager as CoseAlgorithmManager;
 use Illuminate\Contracts\Auth\Authenticatable as User;
+use Illuminate\Contracts\Cache\Repository as Cache;
 use Illuminate\Contracts\Config\Repository as Config;
+use Illuminate\Http\Request;
+use LaravelWebauthn\Facades\Webauthn;
 use Webauthn\AuthenticatorSelectionCriteria;
 use Webauthn\PublicKeyCredentialCreationOptions;
 use Webauthn\PublicKeyCredentialDescriptor;
@@ -18,28 +21,28 @@ final class CreationOptionsFactory extends OptionsFactory
     /**
      * @var PublicKeyCredentialRpEntity
      */
-    protected $publicKeyCredentialRpEntity;
+    protected PublicKeyCredentialRpEntity $publicKeyCredentialRpEntity;
 
     /**
      * @var AuthenticatorSelectionCriteria
      */
-    protected $authenticatorSelectionCriteria;
+    protected AuthenticatorSelectionCriteria $authenticatorSelectionCriteria;
 
     /**
      * @var CoseAlgorithmManager
      */
-    protected $algorithmManager;
+    protected CoseAlgorithmManager $algorithmManager;
 
     /**
      * Attestation Conveyance preference.
      *
      * @var string
      */
-    protected $attestationConveyance;
+    protected string $attestationConveyance;
 
-    public function __construct(Config $config, PublicKeyCredentialSourceRepository $repository, PublicKeyCredentialRpEntity $publicKeyCredentialRpEntity, AuthenticatorSelectionCriteria $authenticatorSelectionCriteria, CoseAlgorithmManager $algorithmManager)
+    public function __construct(Request $request, Cache $cache, Config $config, PublicKeyCredentialSourceRepository $repository, PublicKeyCredentialRpEntity $publicKeyCredentialRpEntity, AuthenticatorSelectionCriteria $authenticatorSelectionCriteria, CoseAlgorithmManager $algorithmManager)
     {
-        parent::__construct($config, $repository);
+        parent::__construct($request, $cache, $config, $repository);
         $this->publicKeyCredentialRpEntity = $publicKeyCredentialRpEntity;
         $this->authenticatorSelectionCriteria = $authenticatorSelectionCriteria;
         $this->algorithmManager = $algorithmManager;
@@ -54,7 +57,7 @@ final class CreationOptionsFactory extends OptionsFactory
      */
     public function __invoke(User $user): PublicKeyCredentialCreationOptions
     {
-        return (new PublicKeyCredentialCreationOptions(
+        $publicKey = (new PublicKeyCredentialCreationOptions(
             $this->publicKeyCredentialRpEntity,
             $this->getUserEntity($user),
             $this->getChallenge(),
@@ -64,6 +67,10 @@ final class CreationOptionsFactory extends OptionsFactory
             ->excludeCredentials($this->getExcludedCredentials($user))
             ->setAuthenticatorSelection($this->authenticatorSelectionCriteria)
             ->setAttestation($this->attestationConveyance);
+
+        $this->cache->put($this->cacheKey($user), $publicKey, $this->timeout);
+
+        return $publicKey;
     }
 
     /**
@@ -75,9 +82,9 @@ final class CreationOptionsFactory extends OptionsFactory
     private function getUserEntity(User $user): PublicKeyCredentialUserEntity
     {
         return new PublicKeyCredentialUserEntity(
-            $user->email ?? '',
+            $user->{Webauthn::username()} ?? '',
             $user->getAuthIdentifier(),
-            $user->email ?? '',
+            $user->{Webauthn::username()} ?? '',
             null
         );
     }

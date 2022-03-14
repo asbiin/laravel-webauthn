@@ -39,7 +39,7 @@ class CredentialRepositoryTest extends FeatureTestCase
     {
         $user = $this->signIn();
         $webauthnKey = factory(WebauthnKey::class)->create([
-            'user_id' => '1',
+            'user_id' => '-1',
         ]);
 
         $publicKey = $this->app[PublicKeyCredentialSourceRepository::class]

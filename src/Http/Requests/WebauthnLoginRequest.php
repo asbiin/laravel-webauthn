@@ -14,7 +14,14 @@ class WebauthnLoginRequest extends FormRequest
     public function rules()
     {
         return [
-            'data' => 'required|string',
+            'id' => 'required|string',
+            'type' => 'required|string',
+            'rawId' => 'required|string',
+            'response.authenticatorData' => 'required|string',
+            'response.clientDataJSON' => 'required|string',
+            'response.signature' => 'required|string',
+            'response.userHandle' => 'sometimes|nullable',
+            'remember' => 'nullable|string',
         ];
     }
 }

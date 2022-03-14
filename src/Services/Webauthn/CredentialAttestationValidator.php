@@ -2,52 +2,90 @@
 
 namespace LaravelWebauthn\Services\Webauthn;
 
+use Illuminate\Contracts\Auth\Authenticatable as User;
+use Illuminate\Contracts\Cache\Repository as Cache;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use LaravelWebauthn\Exceptions\ResponseMismatchException;
 use Psr\Http\Message\ServerRequestInterface;
 use Webauthn\AuthenticatorAttestationResponse;
 use Webauthn\AuthenticatorAttestationResponseValidator;
+use Webauthn\PublicKeyCredential;
 use Webauthn\PublicKeyCredentialCreationOptions;
 use Webauthn\PublicKeyCredentialLoader;
 use Webauthn\PublicKeyCredentialSource;
 
-class CredentialAttestationValidator
+class CredentialAttestationValidator extends CredentialValidator
 {
     /**
      * @var ServerRequestInterface
      */
-    protected $serverRequest;
+    protected ServerRequestInterface $serverRequest;
 
     /**
      * @var PublicKeyCredentialLoader
      */
-    protected $publicKeyCredentialLoader;
+    protected PublicKeyCredentialLoader $loader;
 
     /**
      * @var AuthenticatorAttestationResponseValidator
      */
-    protected $authenticatorAttestationResponseValidator;
+    protected AuthenticatorAttestationResponseValidator $validator;
 
-    public function __construct(ServerRequestInterface $serverRequest, PublicKeyCredentialLoader $publicKeyCredentialLoader, AuthenticatorAttestationResponseValidator $authenticatorAttestationResponseValidator)
+    public function __construct(Request $request, Cache $cache, ServerRequestInterface $serverRequest, PublicKeyCredentialLoader $loader, AuthenticatorAttestationResponseValidator $validator)
     {
+        parent::__construct($request, $cache);
         $this->serverRequest = $serverRequest;
-        $this->publicKeyCredentialLoader = $publicKeyCredentialLoader;
-        $this->authenticatorAttestationResponseValidator = $authenticatorAttestationResponseValidator;
+        $this->loader = $loader;
+        $this->validator = $validator;
     }
 
     /**
      * Validate a creation request.
      *
-     * @param  PublicKeyCredentialCreationOptions  $publicKeyCredentialCreationOptions
-     * @param  string  $data
+     * @param  \Illuminate\Contracts\Auth\Authenticatable  $user
+     * @param  array  $data
      * @return PublicKeyCredentialSource
      *
      * @throws ResponseMismatchException
      */
-    public function __invoke(PublicKeyCredentialCreationOptions $publicKeyCredentialCreationOptions, string $data): PublicKeyCredentialSource
+    public function __invoke(User $user, array $data): PublicKeyCredentialSource
     {
         // Load the data
-        $publicKeyCredential = $this->publicKeyCredentialLoader->load($data);
+        $publicKeyCredential = $this->loader->loadArray($data);
 
+        // Check the response against the request
+        return $this->validator->check(
+            $this->getResponse($publicKeyCredential),
+            $this->pullPublicKey($user),
+            $this->serverRequest
+        );
+    }
+
+    /**
+     * Get public Key credential.
+     *
+     * @param  \Illuminate\Contracts\Auth\Authenticatable  $user
+     * @return \Webauthn\PublicKeyCredentialCreationOptions
+     */
+    protected function pullPublicKey(User $user): PublicKeyCredentialCreationOptions
+    {
+        return tap($this->cache->pull($this->cacheKey($user)), function ($publicKey) {
+            if (! $publicKey instanceof PublicKeyCredentialCreationOptions) {
+                Log::debug('Webauthn wrong publickKey type');
+                abort(404);
+            }
+        });
+    }
+
+    /**
+     * Get authenticator response.
+     *
+     * @param  \Webauthn\PublicKeyCredential  $publicKeyCredential
+     * @return \Webauthn\AuthenticatorAttestationResponse
+     */
+    protected function getResponse(PublicKeyCredential $publicKeyCredential): AuthenticatorAttestationResponse
+    {
         $response = $publicKeyCredential->getResponse();
 
         // Check if the response is an Authenticator Attestation Response
@@ -55,11 +93,6 @@ class CredentialAttestationValidator
             throw new ResponseMismatchException('Not an authenticator attestation response');
         }
 
-        // Check the response against the request
-        return $this->authenticatorAttestationResponseValidator->check(
-            $response,
-            $publicKeyCredentialCreationOptions,
-            $this->serverRequest
-        );
+        return $response;
     }
 }

@@ -2,25 +2,19 @@
 
 namespace LaravelWebauthn\Http\Responses;
 
-use Illuminate\Contracts\Config\Repository as Config;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Response;
 use LaravelWebauthn\Contracts\RegisterViewResponse as RegisterViewResponseContract;
-use LaravelWebauthn\Services\Webauthn;
 use Webauthn\PublicKeyCredentialCreationOptions;
 
 class RegisterViewResponse implements RegisterViewResponseContract
 {
     /**
-     * The config repository instance.
+     * The public key options.
      *
-     * @var \Illuminate\Contracts\Config\Repository
+     * @var \Webauthn\PublicKeyCredentialCreationOptions
      */
-    protected $config;
-
-    public function __construct(Config $config)
-    {
-        $this->config = $config;
-    }
+    protected PublicKeyCredentialCreationOptions $publicKey;
 
     /**
      * Create an HTTP response that represents the object.
@@ -30,23 +24,24 @@ class RegisterViewResponse implements RegisterViewResponseContract
      */
     public function toResponse($request)
     {
-        $publicKey = $this->publicKeyRequest($request);
-
-        $view = $this->config->get('webauthn.views.register', '');
+        $view = config('webauthn.views.register', '');
 
         return $request->wantsJson()
-            ? Response::json(['publicKey' => $publicKey])
-            : Response::view($view, ['publicKey' => $publicKey]);
+            ? Response::json(['publicKey' => $this->publicKey])
+            : Response::view($view, ['publicKey' => $this->publicKey]);
     }
 
     /**
-     * Get public key creation data.
+     * Set public key request data.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return \Webauthn\PublicKeyCredentialCreationOptions
+     * @param  \Webauthn\PublicKeyCredentialCreationOptions  $publicKey
+     * @return self
      */
-    protected function publicKeyRequest($request): PublicKeyCredentialCreationOptions
+    public function setPublicKey(Request $request, PublicKeyCredentialCreationOptions $publicKey): self
     {
-        return $request->session()->get(Webauthn::SESSION_PUBLICKEY_CREATION);
+        $this->publicKey = $publicKey;
+
+        return $this;
     }
 }

@@ -3,16 +3,12 @@
 namespace LaravelWebauthn\Tests\Unit\Http\Controllers;
 
 use Illuminate\Foundation\Testing\DatabaseTransactions;
-use LaravelWebauthn\Actions\LoginAttempt;
-use LaravelWebauthn\Actions\LoginPrepare;
-use LaravelWebauthn\Actions\RegisterKeyPrepare;
-use LaravelWebauthn\Actions\RegisterKeyStore;
+use LaravelWebauthn\Actions\ValidateKeyCreation;
 use LaravelWebauthn\Facades\Webauthn;
 use LaravelWebauthn\Models\WebauthnKey;
-use LaravelWebauthn\Services\Webauthn\CredentialAssertionValidator;
-use LaravelWebauthn\Tests\Fake\FakeWebauthn;
 use LaravelWebauthn\Tests\FeatureTestCase;
 use Mockery\MockInterface;
+use Webauthn\PublicKeyCredentialCreationOptions;
 
 class WebauthnControllerTest extends FeatureTestCase
 {
@@ -47,76 +43,8 @@ class WebauthnControllerTest extends FeatureTestCase
     {
         parent::setUp();
 
-        Webauthn::swap(new FakeWebauthn($this->app));
-    }
-
-    /**
-     * @test
-     */
-    public function it_auth_get()
-    {
-        $user = $this->signIn();
-
-        $response = $this->get('/webauthn/auth', ['accept' => 'application/json']);
-
-        $response->assertStatus(200);
-        $response->assertJsonStructure([
-            'publicKey',
-        ]);
-    }
-
-    /**
-     * @test
-     */
-    public function it_auth_success()
-    {
-        $user = $this->signIn();
-        $this->session(['webauthn.publicKeyRequest' => app(LoginPrepare::class)($user)]);
-        $this->mock(LoginAttempt::class, function (MockInterface $mock) {
-            $mock->shouldReceive('__invoke')->andReturnUsing(function () {
-                Webauthn::login();
-
-                return true;
-            });
-        });
-
-        $response = $this->post('/webauthn/auth', ['data' => 'x'], ['accept' => 'application/json']);
-
-        $response->assertStatus(200);
-        $response->assertJson([
-            'result' => 'true',
-        ]);
-    }
-
-    /**
-     * @test
-     */
-    public function it_auth_exception()
-    {
-        $user = $this->signIn();
-
-        $response = $this->post('/webauthn/auth', ['data' => 'x'], ['accept' => 'application/json']);
-
-        $response->assertStatus(404);
-    }
-
-    /**
-     * @test
-     */
-    public function it_auth_success_with_redirect()
-    {
-        config(['webauthn.redirects.login' => 'redirect']);
-
-        $user = $this->signIn();
-        $this->session(['webauthn.publicKeyRequest' => app(LoginPrepare::class)($user)]);
-        $this->mock(CredentialAssertionValidator::class, function (MockInterface $mock) {
-            $mock->shouldReceive('__invoke')->andReturn(true);
-        });
-
-        $response = $this->post('/webauthn/auth', ['data' => 'x']);
-
-        $response->assertStatus(302);
-        $response->assertRedirect('redirect');
+        Webauthn::spy();
+        Webauthn::shouldReceive('model')->andReturn(WebauthnKey::class);
     }
 
     /**
@@ -125,13 +53,17 @@ class WebauthnControllerTest extends FeatureTestCase
     public function it_register_get_data()
     {
         $user = $this->signIn();
+        Webauthn::shouldReceive('canRegister')->andReturn(true);
 
-        $response = $this->get('/webauthn/keys/create', ['accept' => 'application/json']);
+        $publicKey = $this->mock(PublicKeyCredentialCreationOptions::class, function (MockInterface $mock) {
+            $mock->shouldReceive('jsonSerialize')->andReturn(['key']);
+        });
+        Webauthn::shouldReceive('prepareAttestation')->andReturn($publicKey);
+
+        $response = $this->post('/webauthn/keys/options', [], ['accept' => 'application/json']);
 
         $response->assertStatus(200);
-        $response->assertJsonStructure([
-            'publicKey' => $this->publicKeyForm,
-        ]);
+        $this->assertEquals(['key'], $response->json('publicKey'));
     }
 
     /**
@@ -140,12 +72,19 @@ class WebauthnControllerTest extends FeatureTestCase
     public function it_register_create_without_check()
     {
         $user = $this->signIn();
+
         $response = $this->post('/webauthn/keys', [
-            'register' => 'x',
+            'id' => 'id',
+            'type' => 'type',
+            'rawId' => 'rawId',
+            'response' => [
+                'attestationObject' => 'attestationObject',
+                'clientDataJSON' => 'clientDataJSON',
+            ],
             'name' => 'keyname',
         ], ['accept' => 'application/json']);
 
-        $response->assertStatus(404);
+        $response->assertStatus(422);
     }
 
     /**
@@ -154,21 +93,29 @@ class WebauthnControllerTest extends FeatureTestCase
     public function it_register_create()
     {
         $user = $this->signIn();
-        $this->session(['webauthn.publicKeyCreation' => app(RegisterKeyPrepare::class)($user)]);
-        $this->mock(RegisterKeyStore::class, function (MockInterface $mock) use ($user) {
+        $this->mock(ValidateKeyCreation::class, function (MockInterface $mock) use ($user) {
             $mock->shouldReceive('__invoke')->andReturn(factory(WebauthnKey::class)->create([
+                'name' => 'keyname',
                 'user_id' => $user->getAuthIdentifier(),
             ]));
         });
 
         $response = $this->post('/webauthn/keys', [
-            'register' => 'x',
+            'id' => 'id',
+            'type' => 'type',
+            'rawId' => 'rawId',
+            'response' => [
+                'attestationObject' => 'attestationObject',
+                'clientDataJSON' => 'clientDataJSON',
+            ],
             'name' => 'keyname',
         ], ['accept' => 'application/json']);
 
         $response->assertStatus(201);
         $response->assertJson([
-            'result' => true,
+            'result' => [
+                'name' => 'keyname',
+            ],
         ]);
 
         $this->assertDatabaseHas('webauthn_keys', [
@@ -184,7 +131,6 @@ class WebauthnControllerTest extends FeatureTestCase
         $user = $this->signIn();
 
         $response = $this->post('/webauthn/keys', [
-            'register' => '',
             'name' => 'keyname',
         ], ['accept' => 'application/json']);
 
@@ -192,8 +138,20 @@ class WebauthnControllerTest extends FeatureTestCase
         $response->assertJson([
             'message' => 'The given data was invalid.',
             'errors' => [
-                'register' => [
-                    'The register field is required.',
+                'id' => [
+                    'The id field is required.',
+                ],
+                'type' => [
+                    'The type field is required.',
+                ],
+                'rawId' => [
+                    'The raw id field is required.',
+                ],
+                'response.attestationObject' => [
+                    'The response.attestation object field is required.',
+                ],
+                'response.clientDataJSON' => [
+                    'The response.client data j s o n field is required.',
                 ],
             ],
         ]);
@@ -253,9 +211,7 @@ class WebauthnControllerTest extends FeatureTestCase
         $webauthnKey = factory(WebauthnKey::class)->create([
             'user_id' => $user->getAuthIdentifier(),
         ]);
-        $otherWebauthnKey = factory(WebauthnKey::class)->create([
-            'user_id' => $this->user()->getAuthIdentifier(),
-        ]);
+        $otherWebauthnKey = factory(WebauthnKey::class)->create();
 
         $this->expectException(\Illuminate\Database\Eloquent\ModelNotFoundException::class);
         $response = $this->delete('/webauthn/keys/'.$otherWebauthnKey->id, ['accept' => 'application/json']);

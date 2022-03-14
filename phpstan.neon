@@ -12,6 +12,10 @@ parameters:
     ignoreErrors:
         # Level 2
         - '#Access to an undefined property LaravelWebauthn\\Models\\WebauthnKey::.*\.#'
-        - '#Access to an undefined property Illuminate\\Contracts\\Auth\\Authenticatable::\$email\.#'
-        - '#Dynamic call to static method Illuminate\\Database\\Eloquent\\Builder<LaravelWebauthn\\Models\\WebauthnKey>::count\(\)\.#'
+
+        - message: '#Variable property access on Illuminate\\Contracts\\Auth\\Authenticatable\.#'
+          paths:
+            - */Actions/AttemptToAuthenticate.php
+            - */Services/Webauthn/CreationOptionsFactory.php
+
     excludes_analyse:

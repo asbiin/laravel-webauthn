@@ -14,7 +14,7 @@ class WebauthnMiddleware
      *
      * @var \Illuminate\Contracts\Auth\Factory
      */
-    protected $auth;
+    protected AuthFactory $auth;
 
     /**
      * Create a Webauthn.
@@ -37,7 +37,7 @@ class WebauthnMiddleware
     public function handle($request, Closure $next, $guard = null)
     {
         if (Webauthn::webauthnEnabled() && ! Webauthn::check()) {
-            abort_if($this->auth->guard($guard)->guest(), 401, trans('webauthn::errors.user_unauthenticated'));
+            abort_if($this->auth->guard($guard)->guest(), 401, /** @var string $m */ $m = trans('webauthn::errors.user_unauthenticated'));
 
             if (Webauthn::enabled($request->user($guard))) {
                 if ($request->hasSession() && $request->session()->has('url.intended')) {
