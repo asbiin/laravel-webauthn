@@ -249,7 +249,7 @@ class WebauthnServiceProvider extends ServiceProvider
         $this->app->bind(
             CoseAlgorithmManager::class,
             fn ($app) => $app[CoseAlgorithmManagerFactory::class]
-                ->create($app['config']->get('webauthn.public_key_credential_parameters'))
+                ->generate(...$app['config']->get('webauthn.public_key_credential_parameters'))
         );
         $this->app->bind(
             CoseAlgorithmManagerFactory::class,
@@ -267,8 +267,8 @@ class WebauthnServiceProvider extends ServiceProvider
                     ECDSA\ES256K::class,
                     ECDSA\ES384::class,
                     ECDSA\ES512::class,
-                    EdDSA\ED256::class,
-                    EdDSA\ED512::class,
+                    EdDSA\Ed256::class,
+                    EdDSA\Ed512::class,
                     EdDSA\Ed25519::class,
                     EdDSA\EdDSA::class,
                 ];

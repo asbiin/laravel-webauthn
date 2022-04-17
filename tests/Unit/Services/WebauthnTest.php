@@ -15,7 +15,7 @@ use LaravelWebauthn\Actions\ValidateKeyCreation;
 use LaravelWebauthn\Models\WebauthnKey;
 use LaravelWebauthn\Services\Webauthn;
 use LaravelWebauthn\Tests\FeatureTestCase;
-use Ramsey\Uuid\Uuid;
+use Symfony\Component\Uid\Uuid;
 use Webauthn\PublicKeyCredentialSource;
 
 class WebauthnTest extends FeatureTestCase
@@ -273,7 +273,7 @@ class WebauthnTest extends FeatureTestCase
         $webauthnKey->aaguid = '38195f59-0e5b-4ebf-be46-75664177eeee';
 
         $this->assertEquals('38195f59-0e5b-4ebf-be46-75664177eeee', $webauthnKey->getAttributeValue('aaguid'));
-        $this->assertInstanceOf(\Ramsey\Uuid\UuidInterface::class, $webauthnKey->aaguid);
+        $this->assertInstanceOf(\Symfony\Component\Uid\AbstractUid::class, $webauthnKey->aaguid);
         $this->assertEquals(Uuid::fromString('38195f59-0e5b-4ebf-be46-75664177eeee'), $webauthnKey->aaguid);
     }
 
@@ -286,7 +286,7 @@ class WebauthnTest extends FeatureTestCase
         $webauthnKey->aaguid = Uuid::fromString('38195f59-0e5b-4ebf-be46-75664177eeee');
 
         $this->assertEquals('38195f59-0e5b-4ebf-be46-75664177eeee', $webauthnKey->getAttributeValue('aaguid'));
-        $this->assertInstanceOf(\Ramsey\Uuid\UuidInterface::class, $webauthnKey->aaguid);
+        $this->assertInstanceOf(\Symfony\Component\Uid\AbstractUid::class, $webauthnKey->aaguid);
         $this->assertEquals(Uuid::fromString('38195f59-0e5b-4ebf-be46-75664177eeee'), $webauthnKey->aaguid);
     }
 
@@ -305,7 +305,7 @@ class WebauthnTest extends FeatureTestCase
             [],
             'attestationType',
             new \Webauthn\TrustPath\EmptyTrustPath,
-            Uuid::fromString(Uuid::NIL),
+            Uuid::fromString('00000000-0000-0000-0000-000000000000'),
             'credentialPublicKey',
             $user->id,
             0
@@ -331,7 +331,7 @@ class WebauthnTest extends FeatureTestCase
             [],
             'attestationType',
             new \Webauthn\TrustPath\EmptyTrustPath,
-            Uuid::fromString(Uuid::NIL),
+            Uuid::fromString('00000000-0000-0000-0000-000000000000'),
             'credentialPublicKey',
             $user->id,
             0

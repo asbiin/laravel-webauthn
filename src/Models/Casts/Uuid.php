@@ -3,8 +3,8 @@
 namespace LaravelWebauthn\Models\Casts;
 
 use Illuminate\Contracts\Database\Eloquent\CastsAttributes;
-use Ramsey\Uuid\Uuid as UuidConvert;
-use Ramsey\Uuid\UuidInterface;
+use Symfony\Component\Uid\Uuid as UuidConvert;
+use Symfony\Component\Uid\AbstractUid;
 
 class Uuid implements CastsAttributes
 {
@@ -15,9 +15,9 @@ class Uuid implements CastsAttributes
      * @param  string  $key
      * @param  mixed  $value
      * @param  array  $attributes
-     * @return \Ramsey\Uuid\UuidInterface|null
+     * @return \Symfony\Component\Uid\AbstractUid|null
      */
-    public function get($model, $key, $value, $attributes): ?UuidInterface
+    public function get($model, $key, $value, $attributes): ?AbstractUid
     {
         if ($value !== null && UuidConvert::isValid($value)) {
             return UuidConvert::fromString($value);
@@ -37,6 +37,6 @@ class Uuid implements CastsAttributes
      */
     public function set($model, $key, $value, $attributes): ?string
     {
-        return $value instanceof UuidInterface ? $value->toString() : (string) $value;
+        return (string) $value;
     }
 }

@@ -54,15 +54,12 @@ class AuthenticateControllerTest extends FeatureTestCase
 
         Webauthn::shouldReceive('canRegister')->andReturn(true);
 
-        $publicKey = $this->mock(PublicKeyCredentialRequestOptions::class, function (MockInterface $mock) {
-            $mock->shouldReceive('jsonSerialize')->andReturn(['key']);
-        });
-        Webauthn::shouldReceive('prepareAssertion')->andReturn($publicKey);
+        Webauthn::shouldReceive('prepareAssertion')->andReturn(new PublicKeyCredentialRequestOptions('challenge'));
 
         $response = $this->get('/webauthn/auth', ['accept' => 'application/json']);
 
         $response->assertStatus(200);
-        $this->assertEquals(['key'], $response->json('publicKey'));
+        $this->assertEquals('Y2hhbGxlbmdl', $response->json('publicKey.challenge'));
     }
 
     /**
@@ -142,7 +139,6 @@ class AuthenticateControllerTest extends FeatureTestCase
 
         $response->assertStatus(422);
         $response->assertJson([
-            'message' => 'The given data was invalid.',
             'errors' => [
                 'email' => [
                     'Authentication failed',

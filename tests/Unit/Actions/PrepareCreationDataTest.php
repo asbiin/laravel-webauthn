@@ -8,6 +8,8 @@ use LaravelWebauthn\Actions\PrepareCreationData;
 use LaravelWebauthn\Facades\Webauthn;
 use LaravelWebauthn\Tests\FeatureTestCase;
 use Webauthn\PublicKeyCredentialCreationOptions;
+use Webauthn\PublicKeyCredentialRpEntity;
+use Webauthn\PublicKeyCredentialUserEntity;
 
 class PrepareCreationDataTest extends FeatureTestCase
 {
@@ -20,7 +22,12 @@ class PrepareCreationDataTest extends FeatureTestCase
     {
         $user = $this->user();
 
-        Webauthn::shouldReceive('prepareAttestation')->andReturn($this->mock(PublicKeyCredentialCreationOptions::class));
+        Webauthn::shouldReceive('prepareAttestation')->andReturn(new PublicKeyCredentialCreationOptions(
+            $this->mock(PublicKeyCredentialRpEntity::class),
+            $this->mock(PublicKeyCredentialUserEntity::class),
+            'challenge',
+            []
+        ));
         Webauthn::shouldReceive('canRegister')->andReturn(true);
 
         $result = app(PrepareCreationData::class)($user);

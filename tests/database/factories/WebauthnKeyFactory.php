@@ -1,7 +1,7 @@
 <?php
 
 use Base64Url\Base64Url;
-use Ramsey\Uuid\Uuid;
+use Symfony\Component\Uid\Uuid;
 
 $factory->define(\LaravelWebauthn\Models\WebauthnKey::class, function (Faker\Generator $faker) {
     return [

@@ -61,10 +61,10 @@ final class CreationOptionsFactory extends OptionsFactory
             $this->publicKeyCredentialRpEntity,
             $this->getUserEntity($user),
             $this->getChallenge(),
-            $this->createCredentialParameters(),
-            $this->timeout
+            $this->createCredentialParameters()
         ))
-            ->excludeCredentials($this->getExcludedCredentials($user))
+            ->setTimeout($this->timeout)
+            ->excludeCredentials(...$this->getExcludedCredentials($user))
             ->setAuthenticatorSelection($this->authenticatorSelectionCriteria)
             ->setAttestation($this->attestationConveyance);
 
