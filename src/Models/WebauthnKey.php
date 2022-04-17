@@ -7,7 +7,7 @@ use LaravelWebauthn\Exceptions\WrongUserHandleException;
 use LaravelWebauthn\Models\Casts\Base64;
 use LaravelWebauthn\Models\Casts\TrustPath;
 use LaravelWebauthn\Models\Casts\Uuid;
-use Symfony\Component\Uid\Uuid as UuidConvert;
+use Symfony\Component\Uid\NilUuid;
 use Webauthn\PublicKeyCredentialSource;
 
 class WebauthnKey extends Model
@@ -81,7 +81,7 @@ class WebauthnKey extends Model
             $this->transports,
             $this->attestationType,
             $this->trustPath,
-            $this->aaguid ?? UuidConvert::fromString('00000000-0000-0000-0000-000000000000'),
+            $this->aaguid ?? new NilUuid(),
             $this->credentialPublicKey,
             (string) $this->user_id,
             $this->counter

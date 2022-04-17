@@ -15,6 +15,7 @@ use LaravelWebauthn\Actions\ValidateKeyCreation;
 use LaravelWebauthn\Models\WebauthnKey;
 use LaravelWebauthn\Services\Webauthn;
 use LaravelWebauthn\Tests\FeatureTestCase;
+use Symfony\Component\Uid\NilUuid;
 use Symfony\Component\Uid\Uuid;
 use Webauthn\PublicKeyCredentialSource;
 
@@ -305,7 +306,7 @@ class WebauthnTest extends FeatureTestCase
             [],
             'attestationType',
             new \Webauthn\TrustPath\EmptyTrustPath,
-            Uuid::fromString('00000000-0000-0000-0000-000000000000'),
+            new NilUuid(),
             'credentialPublicKey',
             $user->id,
             0
@@ -331,7 +332,7 @@ class WebauthnTest extends FeatureTestCase
             [],
             'attestationType',
             new \Webauthn\TrustPath\EmptyTrustPath,
-            Uuid::fromString('00000000-0000-0000-0000-000000000000'),
+            new NilUuid(),
             'credentialPublicKey',
             $user->id,
             0
