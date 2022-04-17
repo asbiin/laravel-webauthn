@@ -17,7 +17,7 @@ on:
 
 env:
   default-php-version: '8.1'
-  default-laravel-version: '8.*'
+  default-laravel-version: '9.*'
   semantic-node-version: 16
 
 jobs:
