@@ -57,10 +57,10 @@ class WebauthnControllerTest extends FeatureTestCase
         $user = $this->signIn();
         Webauthn::shouldReceive('canRegister')->andReturn(true);
 
-        $rpEntity = $this->mock(PublicKeyCredentialRpEntity::class, function(MockInterface $mock) {
+        $rpEntity = $this->mock(PublicKeyCredentialRpEntity::class, function (MockInterface $mock) {
             $mock->shouldReceive('jsonSerialize')->andReturn(['id' => 'id']);
         });
-        $userEntity = $this->mock(PublicKeyCredentialUserEntity::class, function(MockInterface $mock) {
+        $userEntity = $this->mock(PublicKeyCredentialUserEntity::class, function (MockInterface $mock) {
             $mock->shouldReceive('jsonSerialize')->andReturn(['id' => 'id']);
         });
         Webauthn::shouldReceive('prepareAttestation')->andReturn(new PublicKeyCredentialCreationOptions(

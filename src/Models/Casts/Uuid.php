@@ -3,8 +3,8 @@
 namespace LaravelWebauthn\Models\Casts;
 
 use Illuminate\Contracts\Database\Eloquent\CastsAttributes;
-use Symfony\Component\Uid\Uuid as UuidConvert;
 use Symfony\Component\Uid\AbstractUid;
+use Symfony\Component\Uid\Uuid as UuidConvert;
 
 class Uuid implements CastsAttributes
 {
