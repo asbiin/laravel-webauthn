@@ -1,6 +1,6 @@
 <?php
 
-use Base64Url\Base64Url;
+use ParagonIE\ConstantTime\Base64UrlSafe;
 use Symfony\Component\Uid\Uuid;
 
 $factory->define(\LaravelWebauthn\Models\WebauthnKey::class, function (Faker\Generator $faker) {
@@ -11,7 +11,7 @@ $factory->define(\LaravelWebauthn\Models\WebauthnKey::class, function (Faker\Gen
         'name' => $faker->word,
         'counter' => 0,
         'credentialId' => function (array $data) {
-            return Base64Url::encode($data['user_id']);
+            return Base64UrlSafe::encode($data['user_id']);
         },
         'type' => 'public-key',
         'transports' => [],

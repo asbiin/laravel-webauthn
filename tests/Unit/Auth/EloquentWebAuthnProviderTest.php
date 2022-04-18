@@ -2,7 +2,6 @@
 
 namespace LaravelWebauthn\Tests\Unit\Auth;
 
-use Base64Url\Base64Url;
 use Illuminate\Contracts\Hashing\Hasher;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use LaravelWebauthn\Auth\EloquentWebAuthnProvider;
@@ -11,6 +10,7 @@ use LaravelWebauthn\Models\WebauthnKey;
 use LaravelWebauthn\Services\Webauthn\CredentialAssertionValidator;
 use LaravelWebauthn\Tests\FeatureTestCase;
 use LaravelWebauthn\Tests\User;
+use ParagonIE\ConstantTime\Base64UrlSafe;
 
 class EloquentWebAuthnProviderTest extends FeatureTestCase
 {
@@ -65,12 +65,81 @@ class EloquentWebAuthnProviderTest extends FeatureTestCase
         );
 
         $result = $provider->retrieveByCredentials([
-            'id' => Base64Url::encode('id'),
+            'id' => Base64UrlSafe::encode('id'),
             'rawId' => 'rawId',
             'type' => 'public-key',
             'response' => 'response',
         ]);
 
+        $this->assertEquals($user->id, $result->id);
+    }
+
+    /**
+     * @test
+     */
+    public function it_retrieve_user_old_format()
+    {
+        $user = $this->signin();
+        $this->assertEquals($user->id, 1);
+
+        factory(WebauthnKey::class)->create([
+            'user_id' => $user->getAuthIdentifier(),
+            'credentialId' => '1',
+        ]);
+
+        Webauthn::shouldReceive('validateAssertion')->andReturn(true);
+        Webauthn::shouldReceive('model')->andReturn(WebauthnKey::class);
+
+        $provider = new EloquentWebAuthnProvider(
+            app('config'),
+            app(CredentialAssertionValidator::class),
+            app(Hasher::class),
+            User::class,
+        );
+
+        $result = $provider->retrieveByCredentials([
+            'id' => 'MQ==',
+            'rawId' => 'rawId',
+            'type' => 'public-key',
+            'response' => 'response',
+        ]);
+
+        $this->assertNotNull($result);
+        $this->assertEquals($user->id, $result->id);
+    }
+
+    /**
+     * @test
+     */
+    public function it_retrieve_user_new_format()
+    {
+        $user = $this->signin();
+        $this->assertEquals($user->id, 1);
+        $this->assertEquals($user->id, 1);
+
+        factory(WebauthnKey::class)->create([
+            'user_id' => $user->getAuthIdentifier(),
+            'credentialId' => '1',
+        ]);
+
+        Webauthn::shouldReceive('validateAssertion')->andReturn(true);
+        Webauthn::shouldReceive('model')->andReturn(WebauthnKey::class);
+
+        $provider = new EloquentWebAuthnProvider(
+            app('config'),
+            app(CredentialAssertionValidator::class),
+            app(Hasher::class),
+            User::class,
+        );
+
+        $result = $provider->retrieveByCredentials([
+            'id' => 'MQ',
+            'rawId' => 'rawId',
+            'type' => 'public-key',
+            'response' => 'response',
+        ]);
+
+        $this->assertNotNull($result);
         $this->assertEquals($user->id, $result->id);
     }
 }

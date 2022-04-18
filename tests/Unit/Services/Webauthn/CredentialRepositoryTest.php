@@ -37,7 +37,7 @@ class CredentialRepositoryTest extends FeatureTestCase
 
     public function test_find_one_null_wrong_user()
     {
-        $user = $this->signIn();
+        $this->signIn();
         $webauthnKey = factory(WebauthnKey::class)->create([
             'user_id' => '-1',
         ]);
