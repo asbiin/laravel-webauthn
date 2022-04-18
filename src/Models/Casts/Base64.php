@@ -2,9 +2,9 @@
 
 namespace LaravelWebauthn\Models\Casts;
 
-use Webauthn\Util\Base64 as Base64Webauthn;
-use ParagonIE\ConstantTime\Base64UrlSafe;
 use Illuminate\Contracts\Database\Eloquent\CastsAttributes;
+use ParagonIE\ConstantTime\Base64UrlSafe;
+use Webauthn\Util\Base64 as Base64Webauthn;
 
 class Base64 implements CastsAttributes
 {
