@@ -1,3 +1,10 @@
+# [3.0.0-beta.2](https://github.com/asbiin/laravel-webauthn/compare/3.0.0-beta.1...3.0.0-beta.2) (2022-04-18)
+
+
+### Features
+
+* require php 8.1+ ([#378](https://github.com/asbiin/laravel-webauthn/issues/378)) ([af83780](https://github.com/asbiin/laravel-webauthn/commit/af837802ca436d21e15f1b47ca2724ee7b1aaf70))
+
 ## [2.0.1](https://github.com/asbiin/laravel-webauthn/compare/2.0.0...2.0.1) (2022-02-19)
 
 
