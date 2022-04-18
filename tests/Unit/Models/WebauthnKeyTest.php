@@ -4,7 +4,7 @@ namespace LaravelWebauthn\Tests\Unit\Models;
 
 use LaravelWebauthn\Models\WebauthnKey;
 use LaravelWebauthn\Tests\FeatureTestCase;
-use Ramsey\Uuid\Uuid;
+use Symfony\Component\Uid\Uuid;
 use Webauthn\PublicKeyCredentialSource;
 
 class WebauthnKeyTest extends FeatureTestCase
@@ -19,7 +19,7 @@ class WebauthnKeyTest extends FeatureTestCase
         $this->assertEquals('a', $webauthnKey->credentialId);
         $this->assertEquals('b', $webauthnKey->type);
         $this->assertEquals([], $webauthnKey->transports);
-        $this->assertEquals('38195f59-0e5b-4ebf-be46-75664177eeee', $webauthnKey->aaguid->toString());
+        $this->assertEquals('38195f59-0e5b-4ebf-be46-75664177eeee', $webauthnKey->aaguid);
         $this->assertEquals('e', $webauthnKey->credentialPublicKey);
         $this->assertEquals(1, $webauthnKey->counter);
         $this->assertEquals('c', $webauthnKey->attestationType);
@@ -45,7 +45,7 @@ class WebauthnKeyTest extends FeatureTestCase
         $this->assertEquals('a', $publicKeyCredentialSource->getPublicKeyCredentialId());
         $this->assertEquals('b', $publicKeyCredentialSource->getType());
         $this->assertEquals([], $publicKeyCredentialSource->getTransports());
-        $this->assertEquals('38195f59-0e5b-4ebf-be46-75664177eeee', $publicKeyCredentialSource->getAaguid()->toString());
+        $this->assertEquals('38195f59-0e5b-4ebf-be46-75664177eeee', $publicKeyCredentialSource->getAaguid());
         $this->assertEquals('e', $publicKeyCredentialSource->getCredentialPublicKey());
         $this->assertEquals('0', $publicKeyCredentialSource->getUserHandle());
         $this->assertEquals(0, $publicKeyCredentialSource->getCounter());

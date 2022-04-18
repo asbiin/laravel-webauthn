@@ -7,7 +7,7 @@ use LaravelWebauthn\Exceptions\WrongUserHandleException;
 use LaravelWebauthn\Models\Casts\Base64;
 use LaravelWebauthn\Models\Casts\TrustPath;
 use LaravelWebauthn\Models\Casts\Uuid;
-use Ramsey\Uuid\Uuid as UuidConvert;
+use Symfony\Component\Uid\NilUuid;
 use Webauthn\PublicKeyCredentialSource;
 
 class WebauthnKey extends Model
@@ -43,7 +43,7 @@ class WebauthnKey extends Model
     /**
      * The attributes that should be visible in serialization.
      *
-     * @var array
+     * @var array<int, string>
      */
     protected $visible = [
         'id',
@@ -57,7 +57,7 @@ class WebauthnKey extends Model
     /**
      * The attributes that should be cast to native types.
      *
-     * @var array
+     * @var array<string, string>
      */
     protected $casts = [
         'counter' => 'integer',
@@ -81,7 +81,7 @@ class WebauthnKey extends Model
             $this->transports,
             $this->attestationType,
             $this->trustPath,
-            $this->aaguid ?? UuidConvert::fromString(UuidConvert::NIL),
+            $this->aaguid ?? new NilUuid(),
             $this->credentialPublicKey,
             (string) $this->user_id,
             $this->counter

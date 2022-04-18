@@ -39,11 +39,9 @@ final class RequestOptionsFactory extends OptionsFactory
      */
     public function __invoke(User $user): PublicKeyCredentialRequestOptions
     {
-        $publicKey = (new PublicKeyCredentialRequestOptions(
-            $this->getChallenge(),
-            $this->timeout
-        ))
-            ->allowCredentials($this->getAllowedCredentials($user))
+        $publicKey = (new PublicKeyCredentialRequestOptions($this->getChallenge()))
+            ->setTimeout($this->timeout)
+            ->allowCredentials(...$this->getAllowedCredentials($user))
             ->setRpId($this->getRpId())
             ->setUserVerification($this->userVerification);
 

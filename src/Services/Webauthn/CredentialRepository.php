@@ -2,12 +2,12 @@
 
 namespace LaravelWebauthn\Services\Webauthn;
 
-use Base64Url\Base64Url;
 use Illuminate\Contracts\Auth\Authenticatable as User;
 use Illuminate\Contracts\Auth\Factory as AuthFactory;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use LaravelWebauthn\Facades\Webauthn;
 use LaravelWebauthn\Models\WebauthnKey;
+use ParagonIE\ConstantTime\Base64UrlSafe;
 use Webauthn\PublicKeyCredentialDescriptor;
 use Webauthn\PublicKeyCredentialSource;
 use Webauthn\PublicKeyCredentialSourceRepository;
@@ -114,7 +114,7 @@ class CredentialRepository implements PublicKeyCredentialSourceRepository
         return (Webauthn::model())::where(array_filter(
             [
                 'user_id' => $this->guard()->guest() ? null : $this->guard()->id(),
-                'credentialId' => Base64Url::encode($credentialId),
+                'credentialId' => Base64UrlSafe::encode($credentialId),
             ]
         ))->firstOrFail();
     }

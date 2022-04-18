@@ -2,7 +2,6 @@
 
 namespace LaravelWebauthn\Tests\Unit\Services;
 
-use Base64Url\Base64Url;
 use CBOR\ListObject;
 use CBOR\MapItem;
 use CBOR\MapObject;
@@ -15,7 +14,9 @@ use LaravelWebauthn\Actions\ValidateKeyCreation;
 use LaravelWebauthn\Models\WebauthnKey;
 use LaravelWebauthn\Services\Webauthn;
 use LaravelWebauthn\Tests\FeatureTestCase;
-use Ramsey\Uuid\Uuid;
+use ParagonIE\ConstantTime\Base64UrlSafe;
+use Symfony\Component\Uid\NilUuid;
+use Symfony\Component\Uid\Uuid;
 use Webauthn\PublicKeyCredentialSource;
 
 class WebauthnTest extends FeatureTestCase
@@ -58,13 +59,13 @@ class WebauthnTest extends FeatureTestCase
         $this->assertDatabaseHas('webauthn_keys', [
             'user_id' => $user->getAuthIdentifier(),
             'name' => 'name',
-            'credentialId' => 'MA',
+            'credentialId' => 'MA==',
             'type' => 'public-key',
             'transports' => '[]',
             'attestationType' => 'none',
             'trustPath' => '{"type":"Webauthn\\\\TrustPath\\\\EmptyTrustPath"}',
             'aaguid' => '00000000-0000-0000-0000-000000000000',
-            'credentialPublicKey' => 'oWNrZXlldmFsdWU',
+            'credentialPublicKey' => 'oWNrZXlldmFsdWU=',
             'counter' => '1',
         ]);
     }
@@ -116,20 +117,20 @@ class WebauthnTest extends FeatureTestCase
         $this->assertInstanceOf(\Webauthn\PublicKeyCredentialRequestOptions::class, $publicKey);
 
         $data = [
-            'id' => Base64Url::encode($webauthnKey->credentialId),
-            'rawId' => Base64Url::encode($webauthnKey->credentialId),
+            'id' => Base64UrlSafe::encode($webauthnKey->credentialId),
+            'rawId' => Base64UrlSafe::encode($webauthnKey->credentialId),
             'type' => 'public-key',
             'response' => [
-                'clientDataJSON' => Base64Url::encode(json_encode([
+                'clientDataJSON' => Base64UrlSafe::encode(json_encode([
                     'type' => 'webauthn.get',
-                    'challenge' => Base64Url::encode($publicKey->getChallenge()),
+                    'challenge' => Base64UrlSafe::encode($publicKey->getChallenge()),
                     'origin' => 'https://localhost',
                     'tokenBinding' => [
                         'status' => 'supported',
                         'id' => 'id',
                     ],
                 ])),
-                'authenticatorData' => Base64Url::encode(
+                'authenticatorData' => Base64UrlSafe::encode(
                     hash('sha256', 'localhost', true). // rp_id_hash
                     pack('C', 65). // flags
                     pack('N', 1). // signCount
@@ -142,7 +143,7 @@ class WebauthnTest extends FeatureTestCase
                         ),
                     ])) // credentialPublicKey
                 ),
-                'signature' => Base64Url::encode(new TextStringObject('00000100000001000000010000000100000001000000010000000100000001')),
+                'signature' => Base64UrlSafe::encode(new TextStringObject('00000100000001000000010000000100000001000000010000000100000001')),
                 'userHandle' => base64_encode($user->getAuthIdentifier()),
             ],
         ];
@@ -175,20 +176,20 @@ class WebauthnTest extends FeatureTestCase
     private function getAttestationData($publicKey)
     {
         return [
-            'id' => Base64Url::encode('0'),
-            'rawId' => Base64Url::encode('0'),
+            'id' => Base64UrlSafe::encode('0'),
+            'rawId' => Base64UrlSafe::encode('0'),
             'type' => 'public-key',
             'response' => [
-                'clientDataJSON' => Base64Url::encode(json_encode([
+                'clientDataJSON' => Base64UrlSafe::encode(json_encode([
                     'type' => 'webauthn.create',
-                    'challenge' => Base64Url::encode($publicKey->getChallenge()),
+                    'challenge' => Base64UrlSafe::encode($publicKey->getChallenge()),
                     'origin' => 'https://localhost',
                     'tokenBinding' => [
                         'status' => 'supported',
                         'id' => 'id',
                     ],
                 ])),
-                'attestationObject' => Base64Url::encode((string) (new MapObject([
+                'attestationObject' => Base64UrlSafe::encode((string) (new MapObject([
                     new MapItem(
                         new TextStringObject('authData'),
                         new TextStringObject(
@@ -273,7 +274,7 @@ class WebauthnTest extends FeatureTestCase
         $webauthnKey->aaguid = '38195f59-0e5b-4ebf-be46-75664177eeee';
 
         $this->assertEquals('38195f59-0e5b-4ebf-be46-75664177eeee', $webauthnKey->getAttributeValue('aaguid'));
-        $this->assertInstanceOf(\Ramsey\Uuid\UuidInterface::class, $webauthnKey->aaguid);
+        $this->assertInstanceOf(\Symfony\Component\Uid\AbstractUid::class, $webauthnKey->aaguid);
         $this->assertEquals(Uuid::fromString('38195f59-0e5b-4ebf-be46-75664177eeee'), $webauthnKey->aaguid);
     }
 
@@ -286,7 +287,7 @@ class WebauthnTest extends FeatureTestCase
         $webauthnKey->aaguid = Uuid::fromString('38195f59-0e5b-4ebf-be46-75664177eeee');
 
         $this->assertEquals('38195f59-0e5b-4ebf-be46-75664177eeee', $webauthnKey->getAttributeValue('aaguid'));
-        $this->assertInstanceOf(\Ramsey\Uuid\UuidInterface::class, $webauthnKey->aaguid);
+        $this->assertInstanceOf(\Symfony\Component\Uid\AbstractUid::class, $webauthnKey->aaguid);
         $this->assertEquals(Uuid::fromString('38195f59-0e5b-4ebf-be46-75664177eeee'), $webauthnKey->aaguid);
     }
 
@@ -305,7 +306,7 @@ class WebauthnTest extends FeatureTestCase
             [],
             'attestationType',
             new \Webauthn\TrustPath\EmptyTrustPath,
-            Uuid::fromString(Uuid::NIL),
+            new NilUuid(),
             'credentialPublicKey',
             $user->id,
             0
@@ -331,7 +332,7 @@ class WebauthnTest extends FeatureTestCase
             [],
             'attestationType',
             new \Webauthn\TrustPath\EmptyTrustPath,
-            Uuid::fromString(Uuid::NIL),
+            new NilUuid(),
             'credentialPublicKey',
             $user->id,
             0

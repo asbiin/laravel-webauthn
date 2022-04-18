@@ -36,15 +36,14 @@ class LockoutResponse implements LockoutResponseContract
      */
     public function toResponse($request)
     {
-        return with($this->limiter->availableIn($request), function ($seconds) {
-            throw ValidationException::withMessages([
-                Webauthn::username() => [
-                    trans('auth.throttle', [
-                        'seconds' => $seconds,
-                        'minutes' => ceil($seconds / 60),
-                    ]),
-                ],
-            ])->status(Response::HTTP_TOO_MANY_REQUESTS);
-        });
+        $seconds = $this->limiter->availableIn($request);
+        throw ValidationException::withMessages([
+            Webauthn::username() => [
+                trans('auth.throttle', [
+                    'seconds' => $seconds,
+                    'minutes' => ceil($seconds / 60),
+                ]),
+            ],
+        ])->status(Response::HTTP_TOO_MANY_REQUESTS);
     }
 }

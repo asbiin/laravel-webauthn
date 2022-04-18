@@ -9,6 +9,8 @@ use Illuminate\Contracts\Hashing\Hasher;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use LaravelWebauthn\Facades\Webauthn;
 use LaravelWebauthn\Services\Webauthn\CredentialAssertionValidator;
+use ParagonIE\ConstantTime\Base64UrlSafe;
+use Webauthn\Util\Base64;
 
 class EloquentWebAuthnProvider extends EloquentUserProvider
 {
@@ -53,7 +55,7 @@ class EloquentWebAuthnProvider extends EloquentUserProvider
         if ($this->isSignedChallenge($credentials)) {
             try {
                 $webauthnKey = (Webauthn::model())::where([
-                    'credentialId' => $credentials['id'],
+                    'credentialId' => Base64UrlSafe::encode(Base64::decode($credentials['id'])),
                 ])->firstOrFail();
 
                 return $this->retrieveById($webauthnKey->user_id);

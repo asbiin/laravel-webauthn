@@ -2,8 +2,9 @@
 
 namespace LaravelWebauthn\Models\Casts;
 
-use Base64Url\Base64Url;
 use Illuminate\Contracts\Database\Eloquent\CastsAttributes;
+use ParagonIE\ConstantTime\Base64UrlSafe;
+use Webauthn\Util\Base64 as Base64Webauthn;
 
 class Base64 implements CastsAttributes
 {
@@ -18,7 +19,7 @@ class Base64 implements CastsAttributes
      */
     public function get($model, $key, $value, $attributes): ?string
     {
-        return $value !== null ? Base64Url::decode($value) : null;
+        return $value !== null ? Base64Webauthn::decode($value) : null;
     }
 
     /**
@@ -32,6 +33,6 @@ class Base64 implements CastsAttributes
      */
     public function set($model, $key, $value, $attributes): ?string
     {
-        return $value !== null ? Base64Url::encode($value) : null;
+        return $value !== null ? Base64UrlSafe::encode($value) : null;
     }
 }

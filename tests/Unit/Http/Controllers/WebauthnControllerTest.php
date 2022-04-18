@@ -9,6 +9,8 @@ use LaravelWebauthn\Models\WebauthnKey;
 use LaravelWebauthn\Tests\FeatureTestCase;
 use Mockery\MockInterface;
 use Webauthn\PublicKeyCredentialCreationOptions;
+use Webauthn\PublicKeyCredentialRpEntity;
+use Webauthn\PublicKeyCredentialUserEntity;
 
 class WebauthnControllerTest extends FeatureTestCase
 {
@@ -55,15 +57,23 @@ class WebauthnControllerTest extends FeatureTestCase
         $user = $this->signIn();
         Webauthn::shouldReceive('canRegister')->andReturn(true);
 
-        $publicKey = $this->mock(PublicKeyCredentialCreationOptions::class, function (MockInterface $mock) {
-            $mock->shouldReceive('jsonSerialize')->andReturn(['key']);
+        $rpEntity = $this->mock(PublicKeyCredentialRpEntity::class, function (MockInterface $mock) {
+            $mock->shouldReceive('jsonSerialize')->andReturn(['id' => 'id']);
         });
-        Webauthn::shouldReceive('prepareAttestation')->andReturn($publicKey);
+        $userEntity = $this->mock(PublicKeyCredentialUserEntity::class, function (MockInterface $mock) {
+            $mock->shouldReceive('jsonSerialize')->andReturn(['id' => 'id']);
+        });
+        Webauthn::shouldReceive('prepareAttestation')->andReturn(new PublicKeyCredentialCreationOptions(
+            $rpEntity,
+            $userEntity,
+            'challenge',
+            []
+        ));
 
         $response = $this->post('/webauthn/keys/options', [], ['accept' => 'application/json']);
 
         $response->assertStatus(200);
-        $this->assertEquals(['key'], $response->json('publicKey'));
+        $this->assertEquals('Y2hhbGxlbmdl', $response->json('publicKey.challenge'));
     }
 
     /**
@@ -136,7 +146,6 @@ class WebauthnControllerTest extends FeatureTestCase
 
         $response->assertStatus(422);
         $response->assertJson([
-            'message' => 'The given data was invalid.',
             'errors' => [
                 'id' => [
                     'The id field is required.',

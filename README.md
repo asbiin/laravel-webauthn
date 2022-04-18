@@ -435,7 +435,8 @@ This package has the following Laravel compatibility:
 | Laravel  | [asbiin/laravel-webauthn](https://github.com/asbiin/laravel-webauthn) |
 |----------|----------|
 | 5.8-8.x  | <= 1.2.0 |
-| 7.x-8.x  | >= 2.0.0 |
+| 7.x-8.x  | 2.0.1 |
+| 9.x  | >= 3.0.0 |
 
 ## Browser compatibility
 

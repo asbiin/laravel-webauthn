@@ -17,7 +17,7 @@ on:
 
 env:
   default-php-version: '8.1'
-  default-laravel-version: '8.*'
+  default-laravel-version: '9.*'
   semantic-node-version: 16
 
 jobs:
@@ -29,14 +29,14 @@ jobs:
       fail-fast: false
       matrix:
         php-version: ['8.1']
-        laravel-version: [8.*]
+        laravel-version: [9.*]
         psr7: ['guzzle']
         include:
           - php-version: '8.1'
-            laravel-version: '8.*'
+            laravel-version: '9.*'
             psr7: 'nyholm'
           - php-version: '8.1'
-            laravel-version: '8.*'
+            laravel-version: '9.*'
             psr7: 'discovery'
 
     steps:
@@ -63,7 +63,7 @@ jobs:
         id: composer-cache
         run: echo "::set-output name=dir::$(composer config cache-files-dir)"
       - name: Cache composer files
-        uses: actions/cache@v2.1.7
+        uses: actions/cache@v3
         with:
           path: ${{ steps.composer-cache.outputs.dir }}
           key: ${{ runner.os }}-composer-v4-${{ hashFiles('**/composer.json') }}-${{ matrix.php-version }}-${{ matrix.laravel-version }}
@@ -105,7 +105,7 @@ jobs:
 
       - name: Store results
         if: matrix.php-version == env.default-php-version && matrix.laravel-version == env.default-laravel-version
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: results
           path: results
@@ -128,7 +128,7 @@ jobs:
           fetch-depth: 0
 
       - name: Download results
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
           name: results
           path: results
@@ -189,7 +189,7 @@ jobs:
 
       - name: Store changelog file
         if: steps.semantic.outputs.new_release_published == 'true'
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: changelog
           path: CHANGELOG.md
