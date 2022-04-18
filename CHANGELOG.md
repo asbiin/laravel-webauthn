@@ -1,3 +1,10 @@
+# [3.0.0-beta.3](https://github.com/asbiin/laravel-webauthn/compare/3.0.0-beta.2...3.0.0-beta.3) (2022-04-18)
+
+
+### Features
+
+* Add support to Laravel 9.x, and remove Laravel 7.x and 8.x ([#377](https://github.com/asbiin/laravel-webauthn/issues/377)) ([bf6c54a](https://github.com/asbiin/laravel-webauthn/commit/bf6c54a27735def337e296cde9de126d131d861f))
+
 ## [2.0.1](https://github.com/asbiin/laravel-webauthn/compare/2.0.0...2.0.1) (2022-02-19)
 
 
