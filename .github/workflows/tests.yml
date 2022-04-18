@@ -28,12 +28,9 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php-version: ['7.4', '8.0', '8.1']
-        laravel-version: [7.*, 8.*]
+        php-version: ['8.1']
+        laravel-version: [8.*]
         psr7: ['guzzle']
-        exclude:
-          - php-version: '8.1'
-            laravel-version: '7.*'
         include:
           - php-version: '8.1'
             laravel-version: '8.*'
