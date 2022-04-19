@@ -6,7 +6,6 @@ use Illuminate\Auth\EloquentUserProvider;
 use Illuminate\Contracts\Auth\Authenticatable as User;
 use Illuminate\Contracts\Config\Repository as Config;
 use Illuminate\Contracts\Hashing\Hasher;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 use LaravelWebauthn\Facades\Webauthn;
 use LaravelWebauthn\Services\Webauthn\CredentialAssertionValidator;
 use ParagonIE\ConstantTime\Base64UrlSafe;
