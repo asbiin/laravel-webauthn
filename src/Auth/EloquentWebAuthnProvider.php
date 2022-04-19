@@ -58,7 +58,7 @@ class EloquentWebAuthnProvider extends EloquentUserProvider
                     ->firstOrFail();
 
                 return $this->retrieveById($webauthnKey->user_id);
-            } catch (ModelNotFoundExceptio²n $e) {
+            } catch (ModelNotFoundException $e) {
                 // No result
             }
         }
