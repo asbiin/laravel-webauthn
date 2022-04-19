@@ -1,3 +1,10 @@
+# [3.0.0-beta.4](https://github.com/asbiin/laravel-webauthn/compare/3.0.0-beta.3...3.0.0-beta.4) (2022-04-19)
+
+
+### Bug Fixes
+
+* fix base64 padding ([#381](https://github.com/asbiin/laravel-webauthn/issues/381)) ([6ce3783](https://github.com/asbiin/laravel-webauthn/commit/6ce37830ec89881a75b1d9afffedff57237e92e9))
+
 ## [2.0.1](https://github.com/asbiin/laravel-webauthn/compare/2.0.0...2.0.1) (2022-02-19)
 
 
