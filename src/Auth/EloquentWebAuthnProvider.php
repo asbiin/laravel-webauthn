@@ -54,9 +54,9 @@ class EloquentWebAuthnProvider extends EloquentUserProvider
     {
         if ($this->isSignedChallenge($credentials)) {
             try {
-                $webauthnKey = (Webauthn::model())::where([
-                    'credentialId' => Base64UrlSafe::encode(Base64::decode($credentials['id'])),
-                ])->firstOrFail();
+                $webauthnKey = (Webauthn::model())::where('credentialId', Base64UrlSafe::encode(Base64::decode($credentials['id'])))
+                    ->orWhere('credentialId', Base64UrlSafe::encodeUnpadded(Base64::decode($credentials['id'])))
+                    ->firstOrFail();
 
                 return $this->retrieveById($webauthnKey->user_id);
             } catch (ModelNotFoundException $e) {

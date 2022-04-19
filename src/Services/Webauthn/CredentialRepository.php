@@ -111,12 +111,16 @@ class CredentialRepository implements PublicKeyCredentialSourceRepository
      */
     private function model(string $credentialId): WebauthnKey
     {
-        return (Webauthn::model())::where(array_filter(
-            [
-                'user_id' => $this->guard()->guest() ? null : $this->guard()->id(),
-                'credentialId' => Base64UrlSafe::encode($credentialId),
-            ]
-        ))->firstOrFail();
+        return (Webauthn::model())::where(function ($query) {
+            if ($this->guard()->check()) {
+                $query->where('user_id', $this->guard()->id());
+            }
+        })
+        ->where(function ($query) use ($credentialId) {
+            $query->where('credentialId', Base64UrlSafe::encode($credentialId))
+                ->orWhere('credentialId', Base64UrlSafe::encodeUnpadded($credentialId));
+        })
+        ->firstOrFail();
     }
 
     /**
