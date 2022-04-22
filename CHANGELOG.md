@@ -1,3 +1,26 @@
+# [3.0.0](https://github.com/asbiin/laravel-webauthn/compare/2.0.1...3.0.0) (2022-04-22)
+
+
+### Bug Fixes
+
+* fix base64 padding ([#381](https://github.com/asbiin/laravel-webauthn/issues/381)) ([6ce3783](https://github.com/asbiin/laravel-webauthn/commit/6ce37830ec89881a75b1d9afffedff57237e92e9))
+
+
+### Features
+
+* add login without password, and some rewrite ([#361](https://github.com/asbiin/laravel-webauthn/issues/361)) ([6778707](https://github.com/asbiin/laravel-webauthn/commit/6778707b546a9fbd64e5bc0e31091acd1302c749))
+* Add support to Laravel 9.x, and remove Laravel 7.x and 8.x ([#377](https://github.com/asbiin/laravel-webauthn/issues/377)) ([bf6c54a](https://github.com/asbiin/laravel-webauthn/commit/bf6c54a27735def337e296cde9de126d131d861f))
+* require php 8.1+ ([#378](https://github.com/asbiin/laravel-webauthn/issues/378)) ([af83780](https://github.com/asbiin/laravel-webauthn/commit/af837802ca436d21e15f1b47ca2724ee7b1aaf70))
+
+
+### BREAKING CHANGES
+
+* options (`webauthn.auth.options` and `webauthn.store.options`) routes are now POST. GET routes are reserved for the views (`webauthn.login` and `webauthn.create`). `webauthn.auth` and `webauthn.store` routes must send data flatten. See details in https://github.com/asbiin/laravel-webauthn/blob/main/docs/migration-v2-to-v3.md .
+- `LoginViewResponse` contract has now a `setPublicKey` method
+- `RegisterSuccessResponse` contract has now a `setWebauthnKey` method
+- `RegisterViewResponse` contract has now a `setPublicKey` method
+- `Webauthn::login()` now takes 1 argument for `$user`: `login(\Illuminate\Contracts\Auth\Authenticatable $user)`
+
 ## [2.0.1](https://github.com/asbiin/laravel-webauthn/compare/2.0.0...2.0.1) (2022-02-19)
 
 
