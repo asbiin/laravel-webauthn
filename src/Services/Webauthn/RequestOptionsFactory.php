@@ -45,7 +45,7 @@ final class RequestOptionsFactory extends OptionsFactory
             ->setRpId($this->getRpId())
             ->setUserVerification($this->userVerification);
 
-        $this->cache->put($this->cacheKey($user), $publicKey, $this->timeout);
+        $this->cache->put($this->cacheKey($user), $publicKey->jsonSerialize(), $this->timeout);
 
         return $publicKey;
     }

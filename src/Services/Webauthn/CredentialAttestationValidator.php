@@ -70,12 +70,12 @@ class CredentialAttestationValidator extends CredentialValidator
      */
     protected function pullPublicKey(User $user): PublicKeyCredentialCreationOptions
     {
-        return tap($this->cache->pull($this->cacheKey($user)), function ($publicKey) {
-            if (! $publicKey instanceof PublicKeyCredentialCreationOptions) {
-                Log::debug('Webauthn wrong publickKey type');
-                abort(404);
-            }
-        });
+        try {
+            return PublicKeyCredentialCreationOptions::createFromArray($this->cache->pull($this->cacheKey($user)));
+        } catch (\Exception $e) {
+            Log::debug('Webauthn publickKey deserialize error', ['exception' => $e]);
+            abort(404);
+        }
     }
 
     /**

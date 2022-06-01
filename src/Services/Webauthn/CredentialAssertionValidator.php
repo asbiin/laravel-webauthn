@@ -73,12 +73,12 @@ class CredentialAssertionValidator extends CredentialValidator
      */
     protected function pullPublicKey(User $user): PublicKeyCredentialRequestOptions
     {
-        return tap($this->cache->pull($this->cacheKey($user)), function ($publicKey) {
-            if (! $publicKey instanceof PublicKeyCredentialRequestOptions) {
-                Log::debug('Webauthn wrong publickKey type');
-                abort(404);
-            }
-        });
+        try {
+            return PublicKeyCredentialRequestOptions::createFromArray($this->cache->pull($this->cacheKey($user)));
+        } catch (\Exception $e) {
+            Log::debug('Webauthn publickKey deserialize error', ['exception' => $e]);
+            abort(404);
+        }
     }
 
     /**
