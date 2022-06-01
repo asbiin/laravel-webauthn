@@ -1,3 +1,10 @@
+## [3.0.1](https://github.com/asbiin/laravel-webauthn/compare/3.0.0...3.0.1) (2022-06-01)
+
+
+### Bug Fixes
+
+* json serialize publickey for cache store ([#385](https://github.com/asbiin/laravel-webauthn/issues/385)) ([1b6ad1b](https://github.com/asbiin/laravel-webauthn/commit/1b6ad1b719ae70c850dffaa24d676b2f63b346b2))
+
 # [3.0.0](https://github.com/asbiin/laravel-webauthn/compare/2.0.1...3.0.0) (2022-04-22)
 
 
