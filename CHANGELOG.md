@@ -1,3 +1,10 @@
+## [3.1.0](https://github.com/asbiin/laravel-webauthn/compare/3.0.1...3.1.0) (2022-07-30)
+
+
+### Features
+
+* add login event on eloquent provider login ([#392](https://github.com/asbiin/laravel-webauthn/issues/392)) ([16a720e](https://github.com/asbiin/laravel-webauthn/commit/16a720ea15cca233c3c670b1532650d8a1a5d665))
+
 ## [3.0.1](https://github.com/asbiin/laravel-webauthn/compare/3.0.0...3.0.1) (2022-06-01)
 
 
