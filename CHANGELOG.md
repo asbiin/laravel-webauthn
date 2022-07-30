@@ -1,3 +1,10 @@
+## [3.2.0](https://github.com/asbiin/laravel-webauthn/compare/3.1.0...3.2.0) (2022-07-30)
+
+
+### Features
+
+* add WebauthnAuthenticatable trait ([#393](https://github.com/asbiin/laravel-webauthn/issues/393)) ([747df5a](https://github.com/asbiin/laravel-webauthn/commit/747df5ab7bf0f88bbb36f11c0f281464d6c29d0b))
+
 ## [3.1.0](https://github.com/asbiin/laravel-webauthn/compare/3.0.1...3.1.0) (2022-07-30)
 
 
