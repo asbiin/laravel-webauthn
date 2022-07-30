@@ -7,6 +7,7 @@ use Illuminate\Contracts\Auth\Authenticatable as User;
 use Illuminate\Contracts\Config\Repository as Config;
 use Illuminate\Contracts\Hashing\Hasher;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use LaravelWebauthn\Events\WebauthnLogin;
 use LaravelWebauthn\Facades\Webauthn;
 use LaravelWebauthn\Services\Webauthn\CredentialAssertionValidator;
 use ParagonIE\ConstantTime\Base64UrlSafe;
@@ -89,6 +90,8 @@ class EloquentWebAuthnProvider extends EloquentUserProvider
     {
         if ($this->isSignedChallenge($credentials)
             && Webauthn::validateAssertion($user, $credentials)) {
+            WebauthnLogin::dispatch($user, true);
+
             return true;
         }
 

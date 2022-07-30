@@ -18,12 +18,21 @@ class WebauthnLogin
     public User $user;
 
     /**
+     * Login via eloquent webauthn provider.
+     *
+     * @var bool
+     */
+    public bool $eloquent;
+
+    /**
      * Create a new event instance.
      *
      * @param  \Illuminate\Contracts\Auth\Authenticatable  $user
+     * @param  bool  $eloquent
      */
-    public function __construct(User $user)
+    public function __construct(User $user, bool $eloquent = false)
     {
         $this->user = $user;
+        $this->eloquent = $eloquent;
     }
 }
