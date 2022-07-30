@@ -104,19 +104,3 @@ class FeatureTestCase extends TestCase
         return factory(User::class)->create();
     }
 }
-
-class User extends Authenticatable
-{
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var string[]
-     */
-    protected $fillable = [
-        'name',
-        'email',
-        'password',
-        'email_verified_at',
-        'remember_token',
-    ];
-}
