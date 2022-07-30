@@ -94,8 +94,7 @@ class WebauthnServiceProvider extends ServiceProvider
             __DIR__.'/../config/webauthn.php', 'webauthn'
         );
 
-        $this->app->bind(StatefulGuard::class, fn () => Auth::guard(config('webauthn.guard', null))
-        );
+        $this->app->bind(StatefulGuard::class, fn () => Auth::guard(config('webauthn.guard', null)));
     }
 
     /**
