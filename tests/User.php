@@ -3,9 +3,12 @@
 namespace LaravelWebauthn\Tests;
 
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use LaravelWebauthn\WebauthnAuthenticatable;
 
 class User extends Authenticatable
 {
+    use WebauthnAuthenticatable;
+
     /**
      * The attributes that are mass assignable.
      *
