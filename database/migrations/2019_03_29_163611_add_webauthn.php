@@ -18,7 +18,7 @@ class AddWebauthn extends Migration
             $table->bigInteger('user_id')->unsigned();
 
             $table->string('name')->default('key');
-            $table->string('credentialId', 255);
+            $table->mediumText('credentialId');
             $table->string('type', 255);
             $table->text('transports');
             $table->string('attestationType', 255);
