@@ -1,3 +1,10 @@
+## [3.2.2](https://github.com/asbiin/laravel-webauthn/compare/3.2.1...3.2.2) (2022-08-20)
+
+
+### Bug Fixes
+
+* no timestamp update when updating a key ([#397](https://github.com/asbiin/laravel-webauthn/issues/397)) ([0561054](https://github.com/asbiin/laravel-webauthn/commit/05610549427974bf8a3f0cc32a58e4050d9f7792))
+
 ## [3.2.1](https://github.com/asbiin/laravel-webauthn/compare/3.2.0...3.2.1) (2022-08-20)
 
 
