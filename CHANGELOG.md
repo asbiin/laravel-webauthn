@@ -1,3 +1,10 @@
+## [3.2.1](https://github.com/asbiin/laravel-webauthn/compare/3.2.0...3.2.1) (2022-08-20)
+
+
+### Bug Fixes
+
+* fix credentialId migration type ([#396](https://github.com/asbiin/laravel-webauthn/issues/396)) ([ea63d70](https://github.com/asbiin/laravel-webauthn/commit/ea63d70bcc2733526fb8e72af5c5511cd301d899))
+
 ## [3.2.0](https://github.com/asbiin/laravel-webauthn/compare/3.1.0...3.2.0) (2022-07-30)
 
 
