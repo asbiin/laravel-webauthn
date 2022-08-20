@@ -20,8 +20,14 @@ class UpdateKey
         $webauthnKey = (Webauthn::model())::where('user_id', $user->getAuthIdentifier())
             ->findOrFail($webauthnKeyId);
 
+        // prevent timestamp update
+        $timestamps = $webauthnKey->timestamps;
+        $webauthnKey->timestamps = false;
+
         $webauthnKey->name = $keyName;
         $webauthnKey->save();
+
+        $webauthnKey->timestamps = $timestamps;
 
         return $webauthnKey;
     }
