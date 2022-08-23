@@ -87,7 +87,7 @@ php artisan migrate
 
 ## Add LaravelWebauthn middleware
 
-The Webauthn middleware will force the user to authenticate their webauthn key for cetain routes.
+The Webauthn middleware will force the user to authenticate their webauthn key for certain routes.
 
 Add this in the `$routeMiddleware` array of your `app/Http/Kernel.php` file:
 
@@ -140,10 +140,10 @@ To enable passwordless authentication, first add the webauthn user provider: upd
 ],
 ```
 
-Then allow your login page to initiating a webauthn login with an `email` identifier.
+Then allow your login page to initiate a webauthn login with an `email` identifier.
 
 You can call `webauthn.auth.options` route with a POST request and an `email` input to get the challenge data.
-See [authentation](#Authenticate) section for more details.
+See [authentication](#Authenticate) section for more details.
 
 
 ## Disabling Views
@@ -168,7 +168,7 @@ To authenticate with a webauthn key, the workflow is the following:
 1. Open the `webauthn.login` login page.
    You can customize the login page view by calling `Webauthn::loginViewResponseUsing`. See [View response](#view-response)
 
-   The default behavior will open [webauthn::authenticate](/resources/views/authenticate.blade.php) page.
+   The default behavior will open the [webauthn::authenticate](/resources/views/authenticate.blade.php) page.
    You can also change the value of `webauthn.views.authenticate` in the configuration file.
 
 2. Or: Get the publicKey challenge by calling `webauthn.auth.options` (if not provided).
@@ -223,7 +223,7 @@ To register a new webauthn key, the workflow is the following:
 1. Open the `webauthn.register` page.
    You can customize the register page view by calling `Webauthn::registerViewResponseUsing`. See [View response](#view-response)
 
-   The default behavior will open [webauthn::register](/resources/views/register.blade.php) page.
+   The default behavior will open the [webauthn::register](/resources/views/register.blade.php) page.
    You can also change the value of `webauthn.views.register` in the configuration file.
 
 2. Or: Get the publicKey challenge by calling `webauthn.store.options` (if not provided).
