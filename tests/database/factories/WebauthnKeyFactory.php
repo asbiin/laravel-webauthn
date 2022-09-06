@@ -11,7 +11,7 @@ $factory->define(\LaravelWebauthn\Models\WebauthnKey::class, function (Faker\Gen
         'name' => $faker->word,
         'counter' => 0,
         'credentialId' => function (array $data) {
-            return Base64UrlSafe::encode($data['user_id']);
+            return Base64UrlSafe::encodeUnpadded($data['user_id']);
         },
         'type' => 'public-key',
         'transports' => [],

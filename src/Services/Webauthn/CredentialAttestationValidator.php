@@ -73,7 +73,7 @@ class CredentialAttestationValidator extends CredentialValidator
         try {
             return PublicKeyCredentialCreationOptions::createFromArray($this->cache->pull($this->cacheKey($user)));
         } catch (\Exception $e) {
-            Log::debug('Webauthn publickKey deserialize error', ['exception' => $e]);
+            Log::debug('Webauthn publicKey deserialize error', ['exception' => $e]);
             abort(404);
         }
     }

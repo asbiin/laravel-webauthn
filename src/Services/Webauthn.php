@@ -4,6 +4,7 @@ namespace LaravelWebauthn\Services;
 
 use Illuminate\Contracts\Auth\Authenticatable as User;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Arr;
 use LaravelWebauthn\Events\WebauthnLogin;
 use LaravelWebauthn\Events\WebauthnLoginData;
 use LaravelWebauthn\Events\WebauthnRegister;
@@ -12,8 +13,10 @@ use LaravelWebauthn\Services\Webauthn\CreationOptionsFactory;
 use LaravelWebauthn\Services\Webauthn\CredentialAssertionValidator;
 use LaravelWebauthn\Services\Webauthn\CredentialAttestationValidator;
 use LaravelWebauthn\Services\Webauthn\RequestOptionsFactory;
+use ParagonIE\ConstantTime\Base64UrlSafe;
 use Webauthn\PublicKeyCredentialCreationOptions;
 use Webauthn\PublicKeyCredentialRequestOptions;
+use Webauthn\Util\Base64;
 
 class Webauthn extends WebauthnRepository
 {
@@ -132,6 +135,10 @@ class Webauthn extends WebauthnRepository
      */
     public static function validateAssertion(User $user, array $credentials): bool
     {
+        if (($authenticatorData = Arr::get($credentials, 'response.authenticatorData')) !== null) {
+            Arr::set($credentials, 'response.authenticatorData', Base64UrlSafe::encodeUnpadded(Base64::decode($authenticatorData)));
+        }
+
         return app(CredentialAssertionValidator::class)($user, $credentials);
     }
 
