@@ -1,3 +1,10 @@
+## [3.2.3](https://github.com/asbiin/laravel-webauthn/compare/3.2.2...3.2.3) (2022-09-06)
+
+
+### Bug Fixes
+
+* fix authenticatorData format ([#402](https://github.com/asbiin/laravel-webauthn/issues/402)) ([155ae8c](https://github.com/asbiin/laravel-webauthn/commit/155ae8cd2fea1cee5dd0fc0f28ca1d539d80392f))
+
 ## [3.2.2](https://github.com/asbiin/laravel-webauthn/compare/3.2.1...3.2.2) (2022-08-20)
 
 
