@@ -117,20 +117,20 @@ class WebauthnTest extends FeatureTestCase
         $this->assertInstanceOf(\Webauthn\PublicKeyCredentialRequestOptions::class, $publicKey);
 
         $data = [
-            'id' => Base64UrlSafe::encode($webauthnKey->credentialId),
+            'id' => Base64UrlSafe::encodeUnpadded($webauthnKey->credentialId),
             'rawId' => Base64UrlSafe::encode($webauthnKey->credentialId),
             'type' => 'public-key',
             'response' => [
-                'clientDataJSON' => Base64UrlSafe::encode(json_encode([
+                'clientDataJSON' => Base64UrlSafe::encodeUnpadded(json_encode([
                     'type' => 'webauthn.get',
-                    'challenge' => Base64UrlSafe::encode($publicKey->getChallenge()),
+                    'challenge' => Base64UrlSafe::encodeUnpadded($publicKey->getChallenge()),
                     'origin' => 'https://localhost',
                     'tokenBinding' => [
                         'status' => 'supported',
                         'id' => 'id',
                     ],
                 ])),
-                'authenticatorData' => Base64UrlSafe::encode(
+                'authenticatorData' => Base64UrlSafe::encodeUnpadded(
                     hash('sha256', 'localhost', true). // rp_id_hash
                     pack('C', 65). // flags
                     pack('N', 1). // signCount
@@ -176,20 +176,20 @@ class WebauthnTest extends FeatureTestCase
     private function getAttestationData($publicKey)
     {
         return [
-            'id' => Base64UrlSafe::encode('0'),
+            'id' => Base64UrlSafe::encodeUnpadded('0'),
             'rawId' => Base64UrlSafe::encode('0'),
             'type' => 'public-key',
             'response' => [
-                'clientDataJSON' => Base64UrlSafe::encode(json_encode([
+                'clientDataJSON' => Base64UrlSafe::encodeUnpadded(json_encode([
                     'type' => 'webauthn.create',
-                    'challenge' => Base64UrlSafe::encode($publicKey->getChallenge()),
+                    'challenge' => Base64UrlSafe::encodeUnpadded($publicKey->getChallenge()),
                     'origin' => 'https://localhost',
                     'tokenBinding' => [
                         'status' => 'supported',
                         'id' => 'id',
                     ],
                 ])),
-                'attestationObject' => Base64UrlSafe::encode((string) (new MapObject([
+                'attestationObject' => Base64UrlSafe::encodeUnpadded((string) (new MapObject([
                     new MapItem(
                         new TextStringObject('authData'),
                         new TextStringObject(
