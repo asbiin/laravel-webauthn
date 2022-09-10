@@ -1,3 +1,10 @@
+## [3.2.4](https://github.com/asbiin/laravel-webauthn/compare/3.2.3...3.2.4) (2022-09-10)
+
+
+### Bug Fixes
+
+* fix attestation validation by re-encoding response.clientDataJSON ([#405](https://github.com/asbiin/laravel-webauthn/issues/405)) ([7956958](https://github.com/asbiin/laravel-webauthn/commit/79569586790c0df0b1953dfb917d6f6d376be65e))
+
 ## [3.2.3](https://github.com/asbiin/laravel-webauthn/compare/3.2.2...3.2.3) (2022-09-06)
 
 
