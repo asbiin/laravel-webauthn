@@ -165,6 +165,10 @@ class Webauthn extends WebauthnRepository
      */
     public static function validateAttestation(User $user, array $credentials, string $keyName): Model
     {
+        if (($clientDataJSON = Arr::get($credentials, 'response.clientDataJSON')) !== null) {
+            Arr::set($credentials, 'response.clientDataJSON', Base64UrlSafe::encodeUnpadded(Base64::decode($clientDataJSON)));
+        }
+
         $publicKey = app(CredentialAttestationValidator::class)($user, $credentials);
 
         return tap(static::create($user, $keyName, $publicKey), function ($webauthnKey) {
