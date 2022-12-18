@@ -5,6 +5,7 @@ namespace LaravelWebauthn\Services\Webauthn;
 use Illuminate\Contracts\Cache\Repository as Cache;
 use Illuminate\Contracts\Config\Repository as Config;
 use Illuminate\Http\Request;
+use LaravelWebauthn\Contracts\CredentialRepository;
 use Webauthn\PublicKeyCredentialSourceRepository;
 
 abstract class OptionsFactory extends CredentialValidator
