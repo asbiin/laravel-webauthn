@@ -59,8 +59,6 @@ use Webauthn\Counter\ThrowExceptionIfInvalid;
 use Webauthn\PublicKeyCredentialLoader;
 use Webauthn\PublicKeyCredentialRpEntity;
 use Webauthn\PublicKeyCredentialSourceRepository;
-use Webauthn\TokenBinding\IgnoreTokenBindingHandler;
-use Webauthn\TokenBinding\TokenBindingHandler;
 
 class WebauthnServiceProvider extends ServiceProvider
 {
