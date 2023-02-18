@@ -58,7 +58,7 @@ WebAuthn.prototype._registerCallback = function(publicKey, callback) {
     rawId: this._bufferEncode(publicKey.rawId),
     response: {
       /** @see https://www.w3.org/TR/webauthn/#authenticatorattestationresponse */
-      clientDataJSON: this._bufferEncode(publicKey.response.clientDataJSON),
+      clientDataJSON: this._bufferEncode(publicKey.response.clientDataJSON).replace(/=/g, ''),
       attestationObject: this._bufferEncode(publicKey.response.attestationObject)
     }
   };
@@ -103,8 +103,8 @@ WebAuthn.prototype._signCallback = function(publicKey, callback) {
     rawId: this._bufferEncode(publicKey.rawId),
     response: {
       /** @see https://www.w3.org/TR/webauthn/#iface-authenticatorassertionresponse */
-      authenticatorData: this._bufferEncode(publicKey.response.authenticatorData),
-      clientDataJSON: this._bufferEncode(publicKey.response.clientDataJSON),
+      authenticatorData: this._bufferEncode(publicKey.response.authenticatorData).replace(/=/g, ''),
+      clientDataJSON: this._bufferEncode(publicKey.response.clientDataJSON).replace(/=/g, ''),
       signature: this._bufferEncode(publicKey.response.signature),
       userHandle: (publicKey.response.userHandle ? this._bufferEncode(publicKey.response.userHandle) : null),
     }
@@ -130,7 +130,7 @@ WebAuthn.prototype._bufferEncode = function(value) {
  * @return {string}
  */
 WebAuthn.prototype._bufferDecode = function(value) {
-  var t = window.atob(value)
+  var t = window.atob(value);
   return Uint8Array.from(t, c => c.charCodeAt(0));
 }
 
