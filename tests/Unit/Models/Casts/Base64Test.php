@@ -10,6 +10,7 @@ class Base64Test extends FeatureTestCase
 {
     /**
      * @test
+     *
      * @dataProvider dataProvider
      */
     public function it_deserialize_credentialId($credentialId, $expected)

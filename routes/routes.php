@@ -14,7 +14,6 @@ Route::group([
         $limiterMiddleware,
     ]),
 ], function () {
-
     // Authentication
     if (config('webauthn.views.authenticate') !== null) {
         Route::get('auth', [AuthenticateController::class, 'create'])->name('webauthn.login');
@@ -31,7 +30,6 @@ Route::group([
         ]
     )),
 ], function () {
-
     // Webauthn key registration
     if (config('webauthn.views.register') !== null) {
         Route::get('keys/create', [WebauthnKeyController::class, 'create'])->name('webauthn.create');

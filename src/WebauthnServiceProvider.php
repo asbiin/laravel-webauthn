@@ -140,8 +140,8 @@ class WebauthnServiceProvider extends ServiceProvider
         $this->app->bind(
             PackedAttestationStatementSupport::class,
             fn ($app) => new PackedAttestationStatementSupport(
-                    $app[CoseAlgorithmManager::class]
-                )
+                $app[CoseAlgorithmManager::class]
+            )
         );
         $this->app->bind(
             AndroidSafetyNetAttestationStatementSupport::class,
@@ -182,7 +182,7 @@ class WebauthnServiceProvider extends ServiceProvider
         $this->app->bind(
             AttestationObjectLoader::class,
             fn ($app) => tap(new AttestationObjectLoader(
-                    $app[AttestationStatementSupportManager::class]
+                $app[AttestationStatementSupportManager::class]
             ), function ($loader) use ($app) {
                 $loader->setLogger($app['log']);
             })
@@ -196,10 +196,10 @@ class WebauthnServiceProvider extends ServiceProvider
         $this->app->bind(
             AuthenticatorAttestationResponseValidator::class,
             fn ($app) => tap(new AuthenticatorAttestationResponseValidator(
-                    $app[AttestationStatementSupportManager::class],
-                    $app[PublicKeyCredentialSourceRepository::class],
-                    null,
-                    $app[ExtensionOutputCheckerHandler::class]
+                $app[AttestationStatementSupportManager::class],
+                $app[PublicKeyCredentialSourceRepository::class],
+                null,
+                $app[ExtensionOutputCheckerHandler::class]
             ), function ($responseValidator) use ($app) {
                 $responseValidator->setLogger($app['log']);
             })
@@ -207,10 +207,10 @@ class WebauthnServiceProvider extends ServiceProvider
         $this->app->bind(
             AuthenticatorAssertionResponseValidator::class,
             fn ($app) => tap(new AuthenticatorAssertionResponseValidator(
-                    $app[PublicKeyCredentialSourceRepository::class],
-                    null,
-                    $app[ExtensionOutputCheckerHandler::class],
-                    $app[CoseAlgorithmManager::class]
+                $app[PublicKeyCredentialSourceRepository::class],
+                null,
+                $app[ExtensionOutputCheckerHandler::class],
+                $app[CoseAlgorithmManager::class]
             ), function ($responseValidator) use ($app) {
                 $responseValidator->setCounterChecker($app[CounterChecker::class])
                     ->setLogger($app['log']);
@@ -232,15 +232,15 @@ class WebauthnServiceProvider extends ServiceProvider
         $this->app->bind(
             PublicKeyCredentialRpEntity::class,
             fn ($app) => new PublicKeyCredentialRpEntity(
-                    $app['config']->get('app.name', 'Laravel'),
-                    $app->make('request')->getHost(),
-                    $app['config']->get('webauthn.icon')
-                )
+                $app['config']->get('app.name', 'Laravel'),
+                $app->make('request')->getHost(),
+                $app['config']->get('webauthn.icon')
+            )
         );
         $this->app->bind(
             PublicKeyCredentialLoader::class,
             fn ($app) => tap(new PublicKeyCredentialLoader(
-                    $app[AttestationObjectLoader::class]
+                $app[AttestationObjectLoader::class]
             ), function ($loader) use ($app) {
                 $loader->setLogger($app['log']);
             })

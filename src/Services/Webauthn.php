@@ -93,6 +93,7 @@ class Webauthn extends WebauthnRepository
      * @return void
      *
      * @deprecated use login() instead
+     *
      * @codeCoverageIgnore
      */
     public static function forceAuthenticate()
@@ -106,6 +107,7 @@ class Webauthn extends WebauthnRepository
      * @return void
      *
      * @deprecated use logout() instead
+     *
      * @codeCoverageIgnore
      */
     public static function forgetAuthenticate()
@@ -233,6 +235,7 @@ class Webauthn extends WebauthnRepository
      *
      * @param  callable  $callback
      * @return void
+     *
      * @codeCoverageIgnore
      */
     public static function authenticateThrough(callable $callback)
@@ -256,6 +259,7 @@ class Webauthn extends WebauthnRepository
      *
      * @param  \Closure|string  $callback
      * @return void
+     *
      * @codeCoverageIgnore
      */
     public static function destroyViewResponseUsing($callback)
@@ -268,6 +272,7 @@ class Webauthn extends WebauthnRepository
      *
      * @param  \Closure|string  $callback
      * @return void
+     *
      * @codeCoverageIgnore
      */
     public static function updateViewResponseUsing($callback)
@@ -280,6 +285,7 @@ class Webauthn extends WebauthnRepository
      *
      * @param  \Closure|string  $callback
      * @return void
+     *
      * @codeCoverageIgnore
      */
     public static function loginSuccessResponseUsing($callback)
@@ -292,6 +298,7 @@ class Webauthn extends WebauthnRepository
      *
      * @param  \Closure|string  $callback
      * @return void
+     *
      * @codeCoverageIgnore
      */
     public static function loginViewResponseUsing($callback)
@@ -304,6 +311,7 @@ class Webauthn extends WebauthnRepository
      *
      * @param  \Closure|string  $callback
      * @return void
+     *
      * @codeCoverageIgnore
      */
     public static function registerSuccessResponseUsing($callback)
@@ -316,6 +324,7 @@ class Webauthn extends WebauthnRepository
      *
      * @param  \Closure|string  $callback
      * @return void
+     *
      * @codeCoverageIgnore
      */
     public static function registerViewResponseUsing($callback)
