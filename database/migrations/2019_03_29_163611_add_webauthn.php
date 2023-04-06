@@ -3,6 +3,8 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Database\ConnectionResolverInterface as Resolver;
+use Illuminate\Database\MySqlConnection;
 
 class AddWebauthn extends Migration
 {
@@ -29,7 +31,12 @@ class AddWebauthn extends Migration
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->index('credentialId');
+
+            if (app(Resolver::class)->connection($this->getConnection()) instanceof MySqlConnection) {
+                $table->rawIndex(app('db')->raw('credentialId(255)'), 'webauthn_keys_credentialid_index');
+            } else {
+                $table->index('credentialId');
+            }
         });
     }
 
