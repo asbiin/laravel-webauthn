@@ -1,10 +1,10 @@
 <?php
 
+use Illuminate\Database\ConnectionResolverInterface as Resolver;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\MySqlConnection;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\ConnectionResolverInterface as Resolver;
-use Illuminate\Database\MySqlConnection;
 
 class AddWebauthn extends Migration
 {
