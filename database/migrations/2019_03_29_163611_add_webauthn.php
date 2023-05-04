@@ -33,7 +33,7 @@ class AddWebauthn extends Migration
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
 
             if (app(Resolver::class)->connection($this->getConnection()) instanceof MySqlConnection) {
-                $table->rawIndex(app('db')->raw('credentialId(255)'), 'webauthn_keys_credentialid_index');
+                $table->index([app('db')->raw('credentialId(255)')], 'credential_index');
             } else {
                 $table->index('credentialId');
             }
