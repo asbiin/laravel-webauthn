@@ -5,7 +5,6 @@ namespace LaravelWebauthn\Services\Webauthn;
 use Illuminate\Contracts\Auth\Authenticatable as User;
 use Illuminate\Contracts\Cache\Repository as Cache;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 use LaravelWebauthn\Exceptions\ResponseMismatchException;
 use Psr\Http\Message\ServerRequestInterface;
 use Webauthn\AuthenticatorAssertionResponse;
@@ -76,7 +75,7 @@ class CredentialAssertionValidator extends CredentialValidator
         try {
             return PublicKeyCredentialRequestOptions::createFromArray($this->cache->pull($this->cacheKey($user)));
         } catch (\Exception $e) {
-            Log::debug('Webauthn publickKey deserialize error', ['exception' => $e]);
+            app('webauthn.log')->debug('Webauthn publickKey deserialize error', ['exception' => $e]);
             abort(404);
         }
     }
