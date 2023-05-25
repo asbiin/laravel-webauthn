@@ -28,8 +28,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php-version: ['8.1']
-        laravel-version: [9.*]
+        php-version: ['8.1','8.2']
+        laravel-version: [9.*,10.*]
         psr7: ['guzzle']
         include:
           - php-version: '8.1'
@@ -37,6 +37,12 @@ jobs:
             psr7: 'nyholm'
           - php-version: '8.1'
             laravel-version: '9.*'
+            psr7: 'discovery'
+          - php-version: '8.2'
+            laravel-version: '10.*'
+            psr7: 'nyholm'
+          - php-version: '8.2'
+            laravel-version: '10.*'
             psr7: 'discovery'
 
     steps:
@@ -47,7 +53,7 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php-version }}
-          coverage: none
+          coverage: pcov
           extensions: sqlite3, gmp
       - name: Check PHP Version
         run: php -v
@@ -96,8 +102,13 @@ jobs:
         run: |
           composer update --no-interaction --no-progress --prefer-dist
 
+      - name: Setup problem matchers
+        run: |
+          echo "::add-matcher::${{ runner.tool_cache }}/php.json"
+          echo "::add-matcher::${{ runner.tool_cache }}/phpunit.json"
+
       - name: Run test suite
-        run: phpdbg -dmemory_limit=4G -qrr vendor/bin/phpunit -c phpunit.xml --log-junit ./results/results_${{ matrix.psr7 }}.xml --coverage-clover ./results/coverage_${{ matrix.psr7 }}.xml
+        run: vendor/bin/phpunit -c phpunit.xml --log-junit ./results/results_${{ matrix.psr7 }}.xml --coverage-clover ./results/coverage_${{ matrix.psr7 }}.xml
 
       - name: Fix results files
         run: sed -i -e "s%$GITHUB_WORKSPACE/%%g" *.xml
@@ -119,7 +130,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        php-version: ['8.1']
+        php-version: ['8.2']
 
     steps:
       - name: Checkout repository
@@ -141,7 +152,7 @@ jobs:
 
       - name: SonarCloud Scan
         if: env.SONAR_TOKEN != ''
-        uses: SonarSource/sonarcloud-github-action@v1.8
+        uses: SonarSource/sonarcloud-github-action@v1.9
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}

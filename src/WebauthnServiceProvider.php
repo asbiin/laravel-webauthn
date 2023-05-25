@@ -59,8 +59,6 @@ use Webauthn\Counter\ThrowExceptionIfInvalid;
 use Webauthn\PublicKeyCredentialLoader;
 use Webauthn\PublicKeyCredentialRpEntity;
 use Webauthn\PublicKeyCredentialSourceRepository;
-use Webauthn\TokenBinding\IgnoreTokenBindingHandler;
-use Webauthn\TokenBinding\TokenBindingHandler;
 
 class WebauthnServiceProvider extends ServiceProvider
 {
@@ -138,13 +136,12 @@ class WebauthnServiceProvider extends ServiceProvider
     protected function bindWebAuthnPackage(): void
     {
         $this->app->bind(PublicKeyCredentialSourceRepository::class, CredentialRepository::class);
-        $this->app->bind(TokenBindingHandler::class, IgnoreTokenBindingHandler::class);
 
         $this->app->bind(
             PackedAttestationStatementSupport::class,
             fn ($app) => new PackedAttestationStatementSupport(
-                    $app[CoseAlgorithmManager::class]
-                )
+                $app[CoseAlgorithmManager::class]
+            )
         );
         $this->app->bind(
             AndroidSafetyNetAttestationStatementSupport::class,
@@ -184,10 +181,11 @@ class WebauthnServiceProvider extends ServiceProvider
         );
         $this->app->bind(
             AttestationObjectLoader::class,
-            fn ($app) => (new AttestationObjectLoader(
-                    $app[AttestationStatementSupportManager::class]
-                ))
-                    ->setLogger($app['log'])
+            fn ($app) => tap(new AttestationObjectLoader(
+                $app[AttestationStatementSupportManager::class]
+            ), function ($loader) use ($app) {
+                $loader->setLogger($app['log']);
+            })
         );
 
         $this->app->bind(
@@ -197,24 +195,26 @@ class WebauthnServiceProvider extends ServiceProvider
 
         $this->app->bind(
             AuthenticatorAttestationResponseValidator::class,
-            fn ($app) => (new AuthenticatorAttestationResponseValidator(
-                    $app[AttestationStatementSupportManager::class],
-                    $app[PublicKeyCredentialSourceRepository::class],
-                    $app[TokenBindingHandler::class],
-                    $app[ExtensionOutputCheckerHandler::class]
-                ))
-                ->setLogger($app['log'])
+            fn ($app) => tap(new AuthenticatorAttestationResponseValidator(
+                $app[AttestationStatementSupportManager::class],
+                $app[PublicKeyCredentialSourceRepository::class],
+                null,
+                $app[ExtensionOutputCheckerHandler::class]
+            ), function ($responseValidator) use ($app) {
+                $responseValidator->setLogger($app['log']);
+            })
         );
         $this->app->bind(
             AuthenticatorAssertionResponseValidator::class,
-            fn ($app) => (new AuthenticatorAssertionResponseValidator(
-                    $app[PublicKeyCredentialSourceRepository::class],
-                    $app[TokenBindingHandler::class],
-                    $app[ExtensionOutputCheckerHandler::class],
-                    $app[CoseAlgorithmManager::class]
-                ))
-                ->setCounterChecker($app[CounterChecker::class])
-                ->setLogger($app['log'])
+            fn ($app) => tap(new AuthenticatorAssertionResponseValidator(
+                $app[PublicKeyCredentialSourceRepository::class],
+                null,
+                $app[ExtensionOutputCheckerHandler::class],
+                $app[CoseAlgorithmManager::class]
+            ), function ($responseValidator) use ($app) {
+                $responseValidator->setCounterChecker($app[CounterChecker::class])
+                    ->setLogger($app['log']);
+            })
         );
         $this->app->bind(
             AuthenticatorSelectionCriteria::class,
@@ -232,17 +232,18 @@ class WebauthnServiceProvider extends ServiceProvider
         $this->app->bind(
             PublicKeyCredentialRpEntity::class,
             fn ($app) => new PublicKeyCredentialRpEntity(
-                    $app['config']->get('app.name', 'Laravel'),
-                    $app->make('request')->getHost(),
-                    $app['config']->get('webauthn.icon')
-                )
+                $app['config']->get('app.name', 'Laravel'),
+                $app->make('request')->getHost(),
+                $app['config']->get('webauthn.icon')
+            )
         );
         $this->app->bind(
             PublicKeyCredentialLoader::class,
-            fn ($app) => (new PublicKeyCredentialLoader(
-                    $app[AttestationObjectLoader::class]
-                ))
-                    ->setLogger($app['log'])
+            fn ($app) => tap(new PublicKeyCredentialLoader(
+                $app[AttestationObjectLoader::class]
+            ), function ($loader) use ($app) {
+                $loader->setLogger($app['log']);
+            })
         );
 
         $this->app->bind(

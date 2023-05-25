@@ -127,7 +127,7 @@ class WebauthnTest extends FeatureTestCase
                     'origin' => 'https://localhost',
                     'tokenBinding' => [
                         'status' => 'supported',
-                        'id' => 'id',
+                        'id' => Base64UrlSafe::encodeUnpadded(1),
                     ],
                 ])),
                 'authenticatorData' => Base64UrlSafe::encodeUnpadded(
@@ -148,7 +148,7 @@ class WebauthnTest extends FeatureTestCase
             ],
         ];
 
-        $this->expectException(\Assert\InvalidArgumentException::class);
+        $this->expectException(\InvalidArgumentException::class);
         $result = Webauthn::validateAssertion($user, $data);
 
         $this->assertTrue($result); // Not yet ...
@@ -186,7 +186,7 @@ class WebauthnTest extends FeatureTestCase
                     'origin' => 'https://localhost',
                     'tokenBinding' => [
                         'status' => 'supported',
-                        'id' => 'id',
+                        'id' => Base64UrlSafe::encodeUnpadded(1),
                     ],
                 ])),
                 'attestationObject' => Base64UrlSafe::encodeUnpadded((string) (new MapObject([

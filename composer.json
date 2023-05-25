@@ -21,7 +21,7 @@
     ],
     "require": {
         "php": ">=8.1",
-        "illuminate/support": "^9.0",
+        "illuminate/support": "^9.0 || ^10.0",
         "psr/http-factory-implementation": "1.0",
         "thecodingmachine/safe": "^2.0",
         "web-auth/cose-lib": "^4.0",
@@ -34,11 +34,11 @@
         "laravel/legacy-factories": "^1.0",
         "nunomaduro/larastan": "^2.0",
         "ocramius/package-versions": "^2.0",
-        "orchestra/testbench": "^7.0",
+        "orchestra/testbench": "^7.0 || ^8.0",
         "phpstan/phpstan-deprecation-rules": "^1.0",
         "phpstan/phpstan-phpunit": "^1.0",
         "phpstan/phpstan-strict-rules": "^1.0",
-        "phpunit/phpunit": "^9.0",
+        "phpunit/phpunit": "^9.5",
         "thecodingmachine/phpstan-safe-rule": "^1.0"
     },
     "suggest": {

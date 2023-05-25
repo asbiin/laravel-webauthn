@@ -10,6 +10,7 @@ class Base64Test extends FeatureTestCase
 {
     /**
      * @test
+     *
      * @dataProvider dataProvider
      */
     public function it_deserialize_credentialId($credentialId, $expected)
@@ -21,7 +22,7 @@ class Base64Test extends FeatureTestCase
         $this->assertEquals($expected, (new Base64)->set($webauthnKey, 'credentialId', $bin, []));
     }
 
-    public function dataProvider()
+    public static function dataProvider()
     {
         return [
             [
