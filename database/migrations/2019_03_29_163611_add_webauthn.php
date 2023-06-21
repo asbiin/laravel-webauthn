@@ -29,7 +29,7 @@ class AddWebauthn extends Migration
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->index('credentialId');
+            $table->index([DB::raw('credentialId(255)')], "credential_index");
         });
     }
 
