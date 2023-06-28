@@ -1,10 +1,12 @@
 <?php
 
 return [
+    'login_failed' => 'Echec de l\'authentification',
     'user_unauthenticated' => 'Vous devez vous connecter avant de faire une authentification Webauthn',
     'auth_data_not_found' => 'Données d’authentification introuvables',
-    'create_data_not_found' => 'Données d’enregistrement non trouvées',
+    'create_data_not_found' => 'Données d’enregistrement introuvables',
     'cannot_register_new_key' => 'Vous devez vous connecter avant de pouvoir ajouter une nouvelle authentification Webauthn',
+    'wrong_validation' => 'Erreur lors de la validation de la clé',
     'object_not_found' => 'Objet introuvable',
 
     'not_supported' => 'Votre navigateur ne prend actuellement pas en charge WebAuthn.',
