@@ -25,8 +25,12 @@
         "psr/http-factory-implementation": "1.0",
         "thecodingmachine/safe": "^2.0",
         "web-auth/cose-lib": "^4.0",
+        "web-auth/metadata-service": "^4.0",
         "web-auth/webauthn-lib": "^4.0",
         "web-token/jwt-signature": "^3.0"
+    },
+    "conflict": {
+        "web-auth/webauthn-lib": "4.7.0"
     },
     "require-dev": {
         "ext-sqlite3": "*",

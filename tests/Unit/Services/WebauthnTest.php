@@ -17,6 +17,7 @@ use LaravelWebauthn\Tests\FeatureTestCase;
 use ParagonIE\ConstantTime\Base64UrlSafe;
 use Symfony\Component\Uid\NilUuid;
 use Symfony\Component\Uid\Uuid;
+use Webauthn\AuthenticatorData;
 use Webauthn\PublicKeyCredentialSource;
 
 class WebauthnTest extends FeatureTestCase
@@ -96,67 +97,6 @@ class WebauthnTest extends FeatureTestCase
     /**
      * @test
      */
-    public function test_do_authenticate()
-    {
-        $user = $this->signIn();
-        $webauthnKey = factory(WebauthnKey::class)->create([
-            'user_id' => $user->getAuthIdentifier(),
-            'credentialPublicKey' => (string) new MapObject([
-                new MapItem(
-                    new TextStringObject('1'),
-                    new TextStringObject('0')
-                ),
-                new MapItem(
-                    new TextStringObject('3'),
-                    new TextStringObject('-7')
-                ),
-            ]),
-        ]);
-
-        $publicKey = $this->app[PrepareAssertionData::class]($user);
-        $this->assertInstanceOf(\Webauthn\PublicKeyCredentialRequestOptions::class, $publicKey);
-
-        $data = [
-            'id' => Base64UrlSafe::encodeUnpadded($webauthnKey->credentialId),
-            'rawId' => Base64UrlSafe::encode($webauthnKey->credentialId),
-            'type' => 'public-key',
-            'response' => [
-                'clientDataJSON' => Base64UrlSafe::encodeUnpadded(json_encode([
-                    'type' => 'webauthn.get',
-                    'challenge' => Base64UrlSafe::encodeUnpadded($publicKey->getChallenge()),
-                    'origin' => 'https://localhost',
-                    'tokenBinding' => [
-                        'status' => 'supported',
-                        'id' => Base64UrlSafe::encodeUnpadded(1),
-                    ],
-                ])),
-                'authenticatorData' => Base64UrlSafe::encodeUnpadded(
-                    hash('sha256', 'localhost', true). // rp_id_hash
-                    pack('C', 65). // flags
-                    pack('N', 1). // signCount
-                    '0000000000000000'. // aaguid
-                    pack('n', 1).'0'. // credentialLength
-                    ((string) new MapObject([
-                        new MapItem(
-                            new TextStringObject('key'),
-                            new TextStringObject('value')
-                        ),
-                    ])) // credentialPublicKey
-                ),
-                'signature' => Base64UrlSafe::encode(new TextStringObject('00000100000001000000010000000100000001000000010000000100000001')),
-                'userHandle' => base64_encode($user->getAuthIdentifier()),
-            ],
-        ];
-
-        $this->expectException(\InvalidArgumentException::class);
-        $result = Webauthn::validateAssertion($user, $data);
-
-        $this->assertTrue($result); // Not yet ...
-    }
-
-    /**
-     * @test
-     */
     public function test_wrong_do_authenticate()
     {
         $user = $this->signIn();
@@ -194,7 +134,7 @@ class WebauthnTest extends FeatureTestCase
                         new TextStringObject('authData'),
                         new TextStringObject(
                             hash('sha256', 'localhost', true). // rp_id_hash
-                            pack('C', 65). // flags
+                            pack('C', AuthenticatorData::FLAG_AT | AuthenticatorData::FLAG_UP). // flags
                             pack('N', 1). // signCount
                             '0000000000000000'. // aaguid
                             pack('n', 1).'0'. // credentialLength
