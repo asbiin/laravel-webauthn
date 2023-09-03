@@ -27,6 +27,9 @@
         "web-auth/webauthn-lib": "^4.0",
         "web-token/jwt-signature": "^3.0"
     },
+    "conflict": {
+        "web-auth/webauthn-lib": "4.7.0"
+    },
     "require-dev": {
         "ext-sqlite3": "*",
         "guzzlehttp/psr7": "^2.1",
