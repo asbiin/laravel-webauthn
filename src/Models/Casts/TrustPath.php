@@ -5,9 +5,6 @@ namespace LaravelWebauthn\Models\Casts;
 use Illuminate\Contracts\Database\Eloquent\CastsAttributes;
 use Webauthn\TrustPath\TrustPathLoader;
 
-use function Safe\json_decode;
-use function Safe\json_encode;
-
 class TrustPath implements CastsAttributes
 {
     /**
@@ -21,7 +18,7 @@ class TrustPath implements CastsAttributes
      */
     public function get($model, $key, $value, $attributes): ?\Webauthn\TrustPath\TrustPath
     {
-        return $value !== null ? TrustPathLoader::loadTrustPath(json_decode($value, true)) : null;
+        return $value !== null ? TrustPathLoader::loadTrustPath(json_decode($value, true, flags: JSON_THROW_ON_ERROR)) : null;
     }
 
     /**
@@ -35,6 +32,6 @@ class TrustPath implements CastsAttributes
      */
     public function set($model, $key, $value, $attributes): string
     {
-        return json_encode($value);
+        return json_encode($value, flags: JSON_THROW_ON_ERROR);
     }
 }

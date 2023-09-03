@@ -23,10 +23,12 @@
         "php": ">=8.1",
         "illuminate/support": "^9.0 || ^10.0",
         "psr/http-factory-implementation": "1.0",
-        "thecodingmachine/safe": "^2.0",
         "web-auth/cose-lib": "^4.0",
         "web-auth/webauthn-lib": "^4.0",
         "web-token/jwt-signature": "^3.0"
+    },
+    "conflict": {
+        "web-auth/webauthn-lib": "4.7.0"
     },
     "require-dev": {
         "ext-sqlite3": "*",
@@ -38,8 +40,7 @@
         "phpstan/phpstan-deprecation-rules": "^1.0",
         "phpstan/phpstan-phpunit": "^1.0",
         "phpstan/phpstan-strict-rules": "^1.0",
-        "phpunit/phpunit": "^9.5",
-        "thecodingmachine/phpstan-safe-rule": "^1.0"
+        "phpunit/phpunit": "^9.5"
     },
     "suggest": {
         "guzzlehttp/psr7": "To provide a psr/http-factory-implementation implementation",
