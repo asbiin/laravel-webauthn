@@ -2,37 +2,24 @@
 
 namespace LaravelWebauthn\Actions;
 
+use Closure;
 use Illuminate\Http\Request;
 use LaravelWebauthn\Services\LoginRateLimiter;
 
 class PrepareAuthenticatedSession
 {
     /**
-     * The login rate limiter instance.
-     *
-     * @var \LaravelWebauthn\Services\LoginRateLimiter
-     */
-    protected LoginRateLimiter $limiter;
-
-    /**
      * Create a new class instance.
-     *
-     * @param  \LaravelWebauthn\Services\LoginRateLimiter  $limiter
-     * @return void
      */
-    public function __construct(LoginRateLimiter $limiter)
-    {
-        $this->limiter = $limiter;
+    public function __construct(
+        protected LoginRateLimiter $limiter
+    ) {
     }
 
     /**
      * Handle the incoming request.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  callable  $next
-     * @return mixed
      */
-    public function handle(Request $request, $next)
+    public function handle(Request $request, Closure $next): mixed
     {
         $request->session()->regenerate();
 

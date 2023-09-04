@@ -11,11 +11,8 @@ class LoginViaRemember
 {
     /**
      * Handle the event.
-     *
-     * @param  \Illuminate\Auth\Events\Login  $event
-     * @return void
      */
-    public function handle(Login $event)
+    public function handle(Login $event): void
     {
         if (Auth::viaRemember()) {
             $this->registerWebauthn($event->user);
@@ -24,8 +21,6 @@ class LoginViaRemember
 
     /**
      * Force register Webauthn login.
-     *
-     * @param  \Illuminate\Contracts\Auth\Authenticatable  $user
      */
     private function registerWebauthn(User $user)
     {

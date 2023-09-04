@@ -31,7 +31,6 @@ use LaravelWebauthn\Http\Responses\RegisterViewResponse;
 use LaravelWebauthn\Http\Responses\UpdateResponse;
 use LaravelWebauthn\Services\Webauthn;
 use LaravelWebauthn\Services\Webauthn\CredentialAssertionValidator;
-use LaravelWebauthn\Services\Webauthn\CredentialRepository;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestFactoryInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
@@ -57,16 +56,13 @@ use Webauthn\Counter\CounterChecker;
 use Webauthn\Counter\ThrowExceptionIfInvalid;
 use Webauthn\PublicKeyCredentialLoader;
 use Webauthn\PublicKeyCredentialRpEntity;
-use Webauthn\PublicKeyCredentialSourceRepository;
 
 class WebauthnServiceProvider extends ServiceProvider
 {
     /**
      * Bootstrap any application services.
-     *
-     * @return void
      */
-    public function boot()
+    public function boot(): void
     {
         $this->configurePublishing();
         $this->configureRoutes();
@@ -76,10 +72,8 @@ class WebauthnServiceProvider extends ServiceProvider
 
     /**
      * Register any application services.
-     *
-     * @return void
      */
-    public function register()
+    public function register(): void
     {
         $this->app->singleton(WebauthnFacade::class, Webauthn::class);
 
@@ -99,10 +93,8 @@ class WebauthnServiceProvider extends ServiceProvider
      * Register the package routes.
      *
      * @psalm-suppress InvalidArgument
-     *
-     * @return void
      */
-    private function configureRoutes()
+    private function configureRoutes(): void
     {
         if (Webauthn::$registersRoutes) {
             $this->app['router']->group([
@@ -115,10 +107,8 @@ class WebauthnServiceProvider extends ServiceProvider
 
     /**
      * Register the response bindings.
-     *
-     * @return void
      */
-    public function registerResponseBindings()
+    public function registerResponseBindings(): void
     {
         $this->app->singleton(DestroyResponseContract::class, DestroyResponse::class);
         $this->app->singleton(LoginSuccessResponseContract::class, LoginSuccessResponse::class);
@@ -130,13 +120,9 @@ class WebauthnServiceProvider extends ServiceProvider
 
     /**
      * Bind all the WebAuthn package services to the Service Container.
-     *
-     * @return void
      */
     protected function bindWebAuthnPackage(): void
     {
-        $this->app->bind(PublicKeyCredentialSourceRepository::class, CredentialRepository::class);
-
         $this->app->bind(
             PackedAttestationStatementSupport::class,
             fn ($app) => new PackedAttestationStatementSupport(
@@ -197,7 +183,7 @@ class WebauthnServiceProvider extends ServiceProvider
             AuthenticatorAttestationResponseValidator::class,
             fn ($app) => tap(new AuthenticatorAttestationResponseValidator(
                 $app[AttestationStatementSupportManager::class],
-                $app[PublicKeyCredentialSourceRepository::class],
+                null,
                 null,
                 $app[ExtensionOutputCheckerHandler::class]
             ), function ($responseValidator) use ($app) {
@@ -207,7 +193,7 @@ class WebauthnServiceProvider extends ServiceProvider
         $this->app->bind(
             AuthenticatorAssertionResponseValidator::class,
             fn ($app) => tap(new AuthenticatorAssertionResponseValidator(
-                $app[PublicKeyCredentialSourceRepository::class],
+                null,
                 null,
                 $app[ExtensionOutputCheckerHandler::class],
                 $app[CoseAlgorithmManager::class]
@@ -360,7 +346,7 @@ class WebauthnServiceProvider extends ServiceProvider
         }
     }
 
-    private function passwordLessWebauthn()
+    private function passwordLessWebauthn(): void
     {
         $this->app['auth']->provider('webauthn', function ($app, array $config) {
             return new EloquentWebAuthnProvider(
@@ -374,10 +360,8 @@ class WebauthnServiceProvider extends ServiceProvider
 
     /**
      * Register the package's publishable resources.
-     *
-     * @return void
      */
-    private function configurePublishing()
+    private function configurePublishing(): void
     {
         if ($this->app->runningInConsole()) {
             $this->publishes([
@@ -400,10 +384,8 @@ class WebauthnServiceProvider extends ServiceProvider
 
     /**
      * Register other package's resources.
-     *
-     * @return void
      */
-    private function configureResources()
+    private function configureResources(): void
     {
         $this->loadViewsFrom(__DIR__.'/../resources/views/', 'webauthn');
         $this->loadTranslationsFrom(__DIR__.'/../resources/lang', 'webauthn');

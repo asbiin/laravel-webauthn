@@ -3,6 +3,7 @@
 namespace LaravelWebauthn\Tests\Unit\Http\Controllers;
 
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Illuminate\Http\Request;
 use LaravelWebauthn\Actions\AttemptToAuthenticate;
 use LaravelWebauthn\Facades\Webauthn;
 use LaravelWebauthn\Tests\FeatureTestCase;
@@ -50,7 +51,7 @@ class AuthenticateControllerTest extends FeatureTestCase
      */
     public function it_auth_get()
     {
-        $user = $this->signIn();
+        $this->signIn();
 
         Webauthn::shouldReceive('canRegister')->andReturn(true);
 
@@ -67,11 +68,9 @@ class AuthenticateControllerTest extends FeatureTestCase
      */
     public function it_auth_success()
     {
-        $user = $this->signIn();
+        $this->signIn();
         $this->mock(AttemptToAuthenticate::class, function (MockInterface $mock) {
-            $mock->shouldReceive('handle')->andReturnUsing(function ($request, $next) {
-                $next($request);
-            });
+            $mock->shouldReceive('handle')->andReturnUsing(fn (Request $request, \Closure $next): mixed => $next($request));
         });
 
         $response = $this->post('/webauthn/auth', [
@@ -95,7 +94,7 @@ class AuthenticateControllerTest extends FeatureTestCase
      */
     public function it_auth_success2()
     {
-        $user = $this->signIn();
+        $this->signIn();
 
         Webauthn::shouldReceive('validateAssertion')->andReturn(true);
 
@@ -120,7 +119,7 @@ class AuthenticateControllerTest extends FeatureTestCase
      */
     public function it_auth_exception()
     {
-        $user = $this->signIn();
+        $this->signIn();
 
         Webauthn::shouldReceive('validateAssertion')->andReturn(false);
 
@@ -152,7 +151,7 @@ class AuthenticateControllerTest extends FeatureTestCase
      */
     public function it_auth_success_with_redirect()
     {
-        $user = $this->signIn();
+        $this->signIn();
 
         Webauthn::shouldReceive('redirects')->andReturn('redirect');
         Webauthn::shouldReceive('validateAssertion')->andReturn(true);

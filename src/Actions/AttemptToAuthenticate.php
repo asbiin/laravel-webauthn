@@ -2,6 +2,7 @@
 
 namespace LaravelWebauthn\Actions;
 
+use Closure;
 use Illuminate\Auth\Events\Failed;
 use Illuminate\Contracts\Auth\Authenticatable as User;
 use Illuminate\Contracts\Auth\StatefulGuard;
@@ -14,40 +15,18 @@ use LaravelWebauthn\Services\Webauthn;
 class AttemptToAuthenticate
 {
     /**
-     * The guard implementation.
-     *
-     * @var \Illuminate\Contracts\Auth\StatefulGuard
-     */
-    protected StatefulGuard $guard;
-
-    /**
-     * The login rate limiter instance.
-     *
-     * @var \LaravelWebauthn\Services\LoginRateLimiter
-     */
-    protected LoginRateLimiter $limiter;
-
-    /**
      * Create a new controller instance.
-     *
-     * @param  \Illuminate\Contracts\Auth\StatefulGuard  $guard
-     * @param  \LaravelWebauthn\Services\LoginRateLimiter  $limiter
-     * @return void
      */
-    public function __construct(StatefulGuard $guard, LoginRateLimiter $limiter)
-    {
-        $this->guard = $guard;
-        $this->limiter = $limiter;
+    public function __construct(
+        protected StatefulGuard $guard,
+        protected LoginRateLimiter $limiter
+    ) {
     }
 
     /**
      * Handle the incoming request.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  callable  $next
-     * @return mixed
      */
-    public function handle(Request $request, $next)
+    public function handle(Request $request, Closure $next): mixed
     {
         if (Webauthn::$authenticateUsingCallback !== null) {
             return $this->handleUsingCustomCallback($request, $next);
@@ -65,10 +44,6 @@ class AttemptToAuthenticate
 
     /**
      * Attempt to log the user into the application.
-     *
-     * @param  array  $challenge
-     * @param  bool  $remember
-     * @return bool
      */
     protected function attemptLogin(array $challenge, bool $remember = false): bool
     {
@@ -77,9 +52,6 @@ class AttemptToAuthenticate
 
     /**
      * Attempt to validate assertion for authenticated user.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return bool
      */
     protected function attemptValidateAssertion(Request $request): bool
     {
@@ -104,12 +76,8 @@ class AttemptToAuthenticate
 
     /**
      * Attempt to authenticate using a custom callback.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  callable  $next
-     * @return mixed
      */
-    protected function handleUsingCustomCallback(Request $request, $next)
+    protected function handleUsingCustomCallback(Request $request, Closure $next): mixed
     {
         $user = Webauthn::$authenticateUsingCallback !== null
             ? call_user_func(Webauthn::$authenticateUsingCallback, $request)
@@ -131,12 +99,9 @@ class AttemptToAuthenticate
     /**
      * Throw a failed authentication validation exception.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return void
-     *
      * @throws \Illuminate\Validation\ValidationException
      */
-    protected function throwFailedAuthenticationException(Request $request)
+    protected function throwFailedAuthenticationException(Request $request): void
     {
         $this->limiter->increment($request);
 
@@ -147,12 +112,8 @@ class AttemptToAuthenticate
 
     /**
      * Fire the failed authentication attempt event with the given arguments.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Illuminate\Contracts\Auth\Authenticatable|null  $user
-     * @return void
      */
-    protected function fireFailedEvent(Request $request, ?User $user = null)
+    protected function fireFailedEvent(Request $request, ?User $user = null): void
     {
         event(new Failed(config('webauthn.guard'), $user, [
             Webauthn::username() => $user !== null
@@ -163,9 +124,6 @@ class AttemptToAuthenticate
 
     /**
      * Get array of webauthn credentials.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return array
      */
     protected function filterCredentials(Request $request): array
     {

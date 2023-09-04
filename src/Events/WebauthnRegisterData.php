@@ -12,28 +12,14 @@ class WebauthnRegisterData
     use SerializesModels, Dispatchable;
 
     /**
-     * The authenticated user.
-     *
-     * @var \Illuminate\Contracts\Auth\Authenticatable
-     */
-    public User $user;
-
-    /**
-     * The register data.
-     *
-     * @var PublicKeyCredentialCreationOptions
-     */
-    public PublicKeyCredentialCreationOptions $publicKey;
-
-    /**
      * Create a new event instance.
      *
-     * @param  \Illuminate\Contracts\Auth\Authenticatable  $user
-     * @param  PublicKeyCredentialCreationOptions  $publicKey
+     * @param  \Illuminate\Contracts\Auth\Authenticatable  $user  The authenticated user.
+     * @param  PublicKeyCredentialCreationOptions  $publicKey  The register data.
      */
-    public function __construct(User $user, PublicKeyCredentialCreationOptions $publicKey)
-    {
-        $this->user = $user;
-        $this->publicKey = $publicKey;
+    public function __construct(
+        public User $user,
+        public PublicKeyCredentialCreationOptions $publicKey
+    ) {
     }
 }

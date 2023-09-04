@@ -13,9 +13,6 @@ class PrepareCreationData
 {
     /**
      * Get data to register a new key.
-     *
-     * @param  \Illuminate\Contracts\Auth\Authenticatable  $user
-     * @return PublicKeyCredentialCreationOptions
      */
     public function __invoke(User $user): PublicKeyCredentialCreationOptions
     {
@@ -29,13 +26,9 @@ class PrepareCreationData
     /**
      * Throw a failed register validation exception.
      *
-     * @param  \Illuminate\Contracts\Auth\Authenticatable  $user
-     * @param  Exception|null  $e
-     * @return void
-     *
      * @throws \Illuminate\Validation\ValidationException
      */
-    protected function throwFailedRegisterException(User $user, ?Exception $e = null)
+    protected function throwFailedRegisterException(User $user, ?Exception $e = null): void
     {
         WebauthnRegisterFailed::dispatch($user, $e);
 

@@ -11,28 +11,14 @@ class WebauthnLogin
     use SerializesModels, Dispatchable;
 
     /**
-     * The authenticated user.
-     *
-     * @var \Illuminate\Contracts\Auth\Authenticatable
-     */
-    public User $user;
-
-    /**
-     * Login via eloquent webauthn provider.
-     *
-     * @var bool
-     */
-    public bool $eloquent;
-
-    /**
      * Create a new event instance.
      *
-     * @param  \Illuminate\Contracts\Auth\Authenticatable  $user
-     * @param  bool  $eloquent
+     * @param  \Illuminate\Contracts\Auth\Authenticatable  $user  The authenticated user.
+     * @param  bool  $eloquent  Login via eloquent webauthn provider.
      */
-    public function __construct(User $user, bool $eloquent = false)
-    {
-        $this->user = $user;
-        $this->eloquent = $eloquent;
+    public function __construct(
+        public User $user,
+        public bool $eloquent = false
+    ) {
     }
 }

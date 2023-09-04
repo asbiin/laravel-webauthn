@@ -11,16 +11,6 @@
     ["@semantic-release/commit-analyzer", {"preset": "conventionalcommits"}],
     ["@semantic-release/release-notes-generator", {"preset": "conventionalcommits"}],
     ["@semantic-release/changelog", {"changelogFile": "CHANGELOG.md"}],
-    "@semantic-release/github",
-    [
-      "semantic-release-github-pullrequest",
-      {
-        "assets": ["CHANGELOG.md"],
-        "labels": [
-          "semantic-release",
-          "auto-squash"
-        ]
-      }
-    ]
+    "@semantic-release/github"
   ]
 }

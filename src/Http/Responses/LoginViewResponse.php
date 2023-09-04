@@ -11,8 +11,6 @@ class LoginViewResponse implements LoginViewResponseContract
 {
     /**
      * The public key options.
-     *
-     * @var \Webauthn\PublicKeyCredentialRequestOptions
      */
     protected PublicKeyCredentialRequestOptions $publicKey;
 
@@ -33,10 +31,6 @@ class LoginViewResponse implements LoginViewResponseContract
 
     /**
      * Set public key request data.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Webauthn\PublicKeyCredentialRequestOptions  $publicKey
-     * @return self
      */
     public function setPublicKey(Request $request, PublicKeyCredentialRequestOptions $publicKey): self
     {

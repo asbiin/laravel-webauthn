@@ -15,35 +15,18 @@ use Webauthn\PublicKeyCredentialRequestOptions;
 
 class CredentialAssertionValidator extends CredentialValidator
 {
-    /**
-     * @var ServerRequestInterface
-     */
-    protected ServerRequestInterface $serverRequest;
-
-    /**
-     * @var PublicKeyCredentialLoader
-     */
-    protected PublicKeyCredentialLoader $loader;
-
-    /**
-     * @var AuthenticatorAssertionResponseValidator
-     */
-    protected AuthenticatorAssertionResponseValidator $validator;
-
-    public function __construct(Request $request, Cache $cache, ServerRequestInterface $serverRequest, PublicKeyCredentialLoader $loader, AuthenticatorAssertionResponseValidator $validator)
-    {
+    public function __construct(
+        Request $request,
+        Cache $cache,
+        protected ServerRequestInterface $serverRequest,
+        protected PublicKeyCredentialLoader $loader,
+        protected AuthenticatorAssertionResponseValidator $validator
+    ) {
         parent::__construct($request, $cache);
-        $this->serverRequest = $serverRequest;
-        $this->loader = $loader;
-        $this->validator = $validator;
     }
 
     /**
      * Validate an authentication request.
-     *
-     * @param  User  $user
-     * @param  array  $data
-     * @return bool
      *
      * @throws ResponseMismatchException
      */
@@ -66,9 +49,6 @@ class CredentialAssertionValidator extends CredentialValidator
 
     /**
      * Get public Key credential.
-     *
-     * @param  \Illuminate\Contracts\Auth\Authenticatable  $user
-     * @return \Webauthn\PublicKeyCredentialRequestOptions
      */
     protected function pullPublicKey(User $user): PublicKeyCredentialRequestOptions
     {
@@ -82,9 +62,6 @@ class CredentialAssertionValidator extends CredentialValidator
 
     /**
      * Get authenticator response.
-     *
-     * @param  \Webauthn\PublicKeyCredential  $publicKeyCredential
-     * @return \Webauthn\AuthenticatorAssertionResponse
      */
     protected function getResponse(PublicKeyCredential $publicKeyCredential): AuthenticatorAssertionResponse
     {

@@ -11,19 +11,12 @@ class WebauthnRegister
     use SerializesModels, Dispatchable;
 
     /**
-     * The new WebauthnKey.
-     *
-     * @var \Illuminate\Database\Eloquent\Model
-     */
-    public Model $webauthnKey;
-
-    /**
      * Create a new event instance.
      *
-     * @param  \Illuminate\Database\Eloquent\Model  $webauthnKey
+     * @param  \Illuminate\Database\Eloquent\Model  $webauthnKey  The new WebauthnKey.
      */
-    public function __construct(Model $webauthnKey)
-    {
-        $this->webauthnKey = $webauthnKey;
+    public function __construct(
+        public Model $webauthnKey
+    ) {
     }
 }

@@ -13,8 +13,6 @@ class RegisterSuccessResponse implements RegisterSuccessResponseContract
 {
     /**
      * The new Webauthn key.
-     *
-     * @var \Illuminate\Database\Eloquent\Model
      */
     protected Model $webauthnKey;
 
@@ -33,9 +31,6 @@ class RegisterSuccessResponse implements RegisterSuccessResponseContract
 
     /**
      * Create an HTTP response that represents the object.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Symfony\Component\HttpFoundation\Response
      */
     protected function jsonResponse(Request $request): \Symfony\Component\HttpFoundation\Response
     {
@@ -49,10 +44,6 @@ class RegisterSuccessResponse implements RegisterSuccessResponseContract
 
     /**
      * Set the new Webauthn key.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Illuminate\Database\Eloquent\Model  $webauthnKey
-     * @return self
      */
     public function setWebauthnKey(Request $request, Model $webauthnKey): self
     {

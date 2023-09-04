@@ -26,10 +26,8 @@ class Webauthn extends Facade
 {
     /**
      * Get the registered name of the component.
-     *
-     * @return string
      */
-    protected static function getFacadeAccessor()
+    protected static function getFacadeAccessor(): string
     {
         return \LaravelWebauthn\Services\Webauthn::class;
     }

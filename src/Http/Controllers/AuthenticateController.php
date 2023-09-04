@@ -19,11 +19,8 @@ class AuthenticateController extends Controller
 {
     /**
      * Show the login Webauthn request after a login authentication.
-     *
-     * @param  \LaravelWebauthn\Http\Requests\WebauthnLoginAttemptRequest  $request
-     * @return LoginViewResponse
      */
-    public function create(WebauthnLoginAttemptRequest $request)
+    public function create(WebauthnLoginAttemptRequest $request): LoginViewResponse
     {
         $user = $this->createPipeline($request)->then(function ($request) {
             return app(LoginUserRetrieval::class)($request);
@@ -37,9 +34,6 @@ class AuthenticateController extends Controller
 
     /**
      * Get the authentication pipeline instance.
-     *
-     * @param  \LaravelWebauthn\Http\Requests\WebauthnLoginAttemptRequest  $request
-     * @return \Illuminate\Pipeline\Pipeline
      */
     protected function createPipeline(WebauthnLoginAttemptRequest $request): Pipeline
     {
@@ -52,11 +46,8 @@ class AuthenticateController extends Controller
 
     /**
      * Authenticate a webauthn request.
-     *
-     * @param  WebauthnLoginRequest  $request
-     * @return LoginSuccessResponse
      */
-    public function store(WebauthnLoginRequest $request)
+    public function store(WebauthnLoginRequest $request): LoginSuccessResponse
     {
         return $this->loginPipeline($request)->then(function ($request) {
             Webauthn::login($request->user());
@@ -67,9 +58,6 @@ class AuthenticateController extends Controller
 
     /**
      * Get the authentication pipeline instance.
-     *
-     * @param  \LaravelWebauthn\Http\Requests\WebauthnLoginRequest  $request
-     * @return \Illuminate\Pipeline\Pipeline
      */
     protected function loginPipeline(WebauthnLoginRequest $request): Pipeline
     {

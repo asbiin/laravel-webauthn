@@ -12,28 +12,14 @@ class WebauthnRegisterFailed
     use SerializesModels, Dispatchable;
 
     /**
-     * The authenticated user.
-     *
-     * @var \Illuminate\Contracts\Auth\Authenticatable
-     */
-    public User $user;
-
-    /**
-     * Exception throwned.
-     *
-     * @var ?Exception
-     */
-    public ?Exception $exception;
-
-    /**
      * Create a new event instance.
      *
-     * @param  \Illuminate\Contracts\Auth\Authenticatable  $user
-     * @param  Exception|null  $exception
+     * @param  \Illuminate\Contracts\Auth\Authenticatable  $user  The authenticated user.
+     * @param  Exception|null  $exception  Exception throwned.
      */
-    public function __construct(User $user, ?Exception $exception = null)
-    {
-        $this->user = $user;
-        $this->exception = $exception;
+    public function __construct(
+        public User $user,
+        public ?Exception $exception = null
+    ) {
     }
 }

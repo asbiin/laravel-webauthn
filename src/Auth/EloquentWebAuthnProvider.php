@@ -17,25 +17,16 @@ class EloquentWebAuthnProvider extends EloquentUserProvider
 {
     /**
      * If it should fallback to password credentials whenever possible.
-     *
-     * @var bool
      */
     protected bool $fallback;
 
     /**
      * WebAuthn assertion validator.
-     *
-     * @var CredentialAssertionValidator
      */
     protected CredentialAssertionValidator $validator;
 
     /**
      * Create a new database user provider.
-     *
-     * @param  \Illuminate\Contracts\Config\Repository  $config
-     * @param  CredentialAssertionValidator  $validator
-     * @param  \Illuminate\Contracts\Hashing\Hasher  $hasher
-     * @param  string  $model
      */
     public function __construct(Config $config, CredentialAssertionValidator $validator, Hasher $hasher, string $model)
     {
@@ -47,11 +38,8 @@ class EloquentWebAuthnProvider extends EloquentUserProvider
 
     /**
      * Retrieve a user by the given credentials.
-     *
-     * @param  array  $credentials
-     * @return \Illuminate\Contracts\Auth\Authenticatable|null
      */
-    public function retrieveByCredentials(array $credentials)
+    public function retrieveByCredentials(array $credentials): ?User
     {
         if ($this->isSignedChallenge($credentials)) {
             try {
@@ -70,9 +58,6 @@ class EloquentWebAuthnProvider extends EloquentUserProvider
 
     /**
      * Check if the credentials are for a public key signed challenge.
-     *
-     * @param  array  $credentials
-     * @return bool
      */
     protected function isSignedChallenge(array $credentials): bool
     {
@@ -81,10 +66,6 @@ class EloquentWebAuthnProvider extends EloquentUserProvider
 
     /**
      * Validate a user against the given credentials.
-     *
-     * @param  \Illuminate\Contracts\Auth\Authenticatable  $user
-     * @param  array  $credentials
-     * @return bool
      */
     public function validateCredentials(User $user, array $credentials): bool
     {
