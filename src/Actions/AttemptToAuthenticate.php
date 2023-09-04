@@ -77,7 +77,7 @@ class AttemptToAuthenticate
     /**
      * Attempt to authenticate using a custom callback.
      */
-    protected function handleUsingCustomCallback(Request $request, callable $next): mixed
+    protected function handleUsingCustomCallback(Request $request, Closure $next): mixed
     {
         $user = Webauthn::$authenticateUsingCallback !== null
             ? call_user_func(Webauthn::$authenticateUsingCallback, $request)
