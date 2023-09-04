@@ -36,39 +36,29 @@ class Webauthn extends WebauthnRepository
 
     /**
      * Indicates if Webauthn routes will be registered.
-     *
-     * @var bool
      */
     public static bool $registersRoutes = true;
 
     /**
      * Get the username used for authentication.
-     *
-     * @return string
      */
-    public static function username()
+    public static function username(): string
     {
         return config('webauthn.username', 'email');
     }
 
     /**
      * Get a completion redirect path for a specific feature.
-     *
-     * @param  string  $redirect
-     * @return string
      */
-    public static function redirects(string $redirect, $default = null)
+    public static function redirects(string $redirect, $default = null): string
     {
         return config('webauthn.redirects.'.$redirect) ?? $default ?? config('webauthn.home');
     }
 
     /**
      * Save authentication in session.
-     *
-     * @param  \Illuminate\Contracts\Auth\Authenticatable|null  $user
-     * @return void
      */
-    public static function login(?User $user)
+    public static function login(?User $user): void
     {
         session([static::sessionName() => true]);
 
@@ -79,10 +69,8 @@ class Webauthn extends WebauthnRepository
 
     /**
      * Remove authentication from session.
-     *
-     * @return void
      */
-    public static function logout()
+    public static function logout(): void
     {
         session()->forget(static::sessionName());
     }
@@ -90,13 +78,11 @@ class Webauthn extends WebauthnRepository
     /**
      * Force authentication in session.
      *
-     * @return void
-     *
      * @deprecated use login() instead
      *
      * @codeCoverageIgnore
      */
-    public static function forceAuthenticate()
+    public static function forceAuthenticate(): void
     {
         static::login(null);
     }
@@ -104,22 +90,17 @@ class Webauthn extends WebauthnRepository
     /**
      * Force remove authentication in session.
      *
-     * @return void
-     *
      * @deprecated use logout() instead
      *
      * @codeCoverageIgnore
      */
-    public static function forgetAuthenticate()
+    public static function forgetAuthenticate(): void
     {
         static::logout();
     }
 
     /**
      * Get publicKey data to prepare Webauthn login.
-     *
-     * @param  \Illuminate\Contracts\Auth\Authenticatable  $user
-     * @return \Webauthn\PublicKeyCredentialRequestOptions
      */
     public static function prepareAssertion(User $user): PublicKeyCredentialRequestOptions
     {
@@ -130,10 +111,6 @@ class Webauthn extends WebauthnRepository
 
     /**
      * Validate a Webauthn login request.
-     *
-     * @param  \Illuminate\Contracts\Auth\Authenticatable  $user
-     * @param  array  $credentials
-     * @return bool
      */
     public static function validateAssertion(User $user, array $credentials): bool
     {
@@ -146,9 +123,6 @@ class Webauthn extends WebauthnRepository
 
     /**
      * Get publicKey data to prepare Webauthn key creation.
-     *
-     * @param  \Illuminate\Contracts\Auth\Authenticatable  $user
-     * @return \Webauthn\PublicKeyCredentialCreationOptions
      */
     public static function prepareAttestation(User $user): PublicKeyCredentialCreationOptions
     {
@@ -159,11 +133,6 @@ class Webauthn extends WebauthnRepository
 
     /**
      * Validate a Webauthn key creation request.
-     *
-     * @param  \Illuminate\Contracts\Auth\Authenticatable  $user
-     * @param  array  $credentials
-     * @param  string  $keyName
-     * @return \Illuminate\Database\Eloquent\Model
      */
     public static function validateAttestation(User $user, array $credentials, string $keyName): Model
     {
@@ -180,8 +149,6 @@ class Webauthn extends WebauthnRepository
 
     /**
      * Check authentication of the user in session.
-     *
-     * @return bool
      */
     public static function check(): bool
     {
@@ -190,8 +157,6 @@ class Webauthn extends WebauthnRepository
 
     /**
      * Get webauthn session store name.
-     *
-     * @return string
      */
     public static function sessionName(): string
     {
@@ -200,9 +165,6 @@ class Webauthn extends WebauthnRepository
 
     /**
      * Test if the user has one or more webauthn key.
-     *
-     * @param  \Illuminate\Contracts\Auth\Authenticatable  $user
-     * @return bool
      */
     public static function enabled(User $user): bool
     {
@@ -211,9 +173,6 @@ class Webauthn extends WebauthnRepository
 
     /**
      * Test if the user can register a new key.
-     *
-     * @param  \Illuminate\Contracts\Auth\Authenticatable  $user
-     * @return bool
      */
     public static function canRegister(User $user): bool
     {
@@ -222,8 +181,6 @@ class Webauthn extends WebauthnRepository
 
     /**
      * Test if webauthn is enabled.
-     *
-     * @return bool
      */
     public static function webauthnEnabled(): bool
     {
@@ -233,23 +190,17 @@ class Webauthn extends WebauthnRepository
     /**
      * Register a callback that is responsible for building the authentication pipeline array.
      *
-     * @param  callable  $callback
-     * @return void
-     *
      * @codeCoverageIgnore
      */
-    public static function authenticateThrough(callable $callback)
+    public static function authenticateThrough(callable $callback): void
     {
         static::$authenticateThroughCallback = $callback;
     }
 
     /**
      * Register a callback that is responsible for validating incoming authentication credentials.
-     *
-     * @param  callable  $callback
-     * @return void
      */
-    public static function authenticateUsing(callable $callback)
+    public static function authenticateUsing(callable $callback): void
     {
         static::$authenticateUsingCallback = $callback;
     }
@@ -257,12 +208,9 @@ class Webauthn extends WebauthnRepository
     /**
      * Register a class / callback that should be used to the destroy view response.
      *
-     * @param  \Closure|string  $callback
-     * @return void
-     *
      * @codeCoverageIgnore
      */
-    public static function destroyViewResponseUsing($callback)
+    public static function destroyViewResponseUsing(\Closure|string $callback): void
     {
         app()->singleton(\LaravelWebauthn\Contracts\DestroyResponse::class, $callback);
     }
@@ -270,12 +218,9 @@ class Webauthn extends WebauthnRepository
     /**
      * Register a class / callback that should be used to the update view response.
      *
-     * @param  \Closure|string  $callback
-     * @return void
-     *
      * @codeCoverageIgnore
      */
-    public static function updateViewResponseUsing($callback)
+    public static function updateViewResponseUsing(\Closure|string $callback): void
     {
         app()->singleton(\LaravelWebauthn\Contracts\UpdateResponse::class, $callback);
     }
@@ -283,12 +228,9 @@ class Webauthn extends WebauthnRepository
     /**
      * Register a class / callback that should be used to the login success view response.
      *
-     * @param  \Closure|string  $callback
-     * @return void
-     *
      * @codeCoverageIgnore
      */
-    public static function loginSuccessResponseUsing($callback)
+    public static function loginSuccessResponseUsing(\Closure|string $callback): void
     {
         app()->singleton(\LaravelWebauthn\Contracts\LoginSuccessResponse::class, $callback);
     }
@@ -296,12 +238,9 @@ class Webauthn extends WebauthnRepository
     /**
      * Register a class / callback that should be used to the login view response.
      *
-     * @param  \Closure|string  $callback
-     * @return void
-     *
      * @codeCoverageIgnore
      */
-    public static function loginViewResponseUsing($callback)
+    public static function loginViewResponseUsing(\Closure|string $callback): void
     {
         app()->singleton(\LaravelWebauthn\Contracts\LoginViewResponse::class, $callback);
     }
@@ -309,12 +248,9 @@ class Webauthn extends WebauthnRepository
     /**
      * Register a class / callback that should be used to the register key success view response.
      *
-     * @param  \Closure|string  $callback
-     * @return void
-     *
      * @codeCoverageIgnore
      */
-    public static function registerSuccessResponseUsing($callback)
+    public static function registerSuccessResponseUsing(\Closure|string $callback): void
     {
         app()->singleton(\LaravelWebauthn\Contracts\RegisterSuccessResponse::class, $callback);
     }
@@ -322,22 +258,17 @@ class Webauthn extends WebauthnRepository
     /**
      * Register a class / callback that should be used to the register creation view response.
      *
-     * @param  \Closure|string  $callback
-     * @return void
-     *
      * @codeCoverageIgnore
      */
-    public static function registerViewResponseUsing($callback)
+    public static function registerViewResponseUsing(\Closure|string $callback): void
     {
         app()->singleton(\LaravelWebauthn\Contracts\RegisterViewResponse::class, $callback);
     }
 
     /**
      * Configure Webauthn to not register its routes.
-     *
-     * @return void
      */
-    public static function ignoreRoutes()
+    public static function ignoreRoutes(): void
     {
         static::$registersRoutes = false;
     }

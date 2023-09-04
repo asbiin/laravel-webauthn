@@ -11,8 +11,6 @@ class RegisterViewResponse implements RegisterViewResponseContract
 {
     /**
      * The public key options.
-     *
-     * @var \Webauthn\PublicKeyCredentialCreationOptions
      */
     protected PublicKeyCredentialCreationOptions $publicKey;
 
@@ -33,10 +31,6 @@ class RegisterViewResponse implements RegisterViewResponseContract
 
     /**
      * Set public key request data.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Webauthn\PublicKeyCredentialCreationOptions  $publicKey
-     * @return self
      */
     public function setPublicKey(Request $request, PublicKeyCredentialCreationOptions $publicKey): self
     {

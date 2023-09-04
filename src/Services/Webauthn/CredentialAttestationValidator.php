@@ -17,35 +17,18 @@ use Webauthn\PublicKeyCredentialSource;
 
 class CredentialAttestationValidator extends CredentialValidator
 {
-    /**
-     * @var ServerRequestInterface
-     */
-    protected ServerRequestInterface $serverRequest;
-
-    /**
-     * @var PublicKeyCredentialLoader
-     */
-    protected PublicKeyCredentialLoader $loader;
-
-    /**
-     * @var AuthenticatorAttestationResponseValidator
-     */
-    protected AuthenticatorAttestationResponseValidator $validator;
-
-    public function __construct(Request $request, Cache $cache, ServerRequestInterface $serverRequest, PublicKeyCredentialLoader $loader, AuthenticatorAttestationResponseValidator $validator)
-    {
+    public function __construct(
+        Request $request,
+        Cache $cache,
+        protected ServerRequestInterface $serverRequest,
+        protected PublicKeyCredentialLoader $loader,
+        protected AuthenticatorAttestationResponseValidator $validator
+    ) {
         parent::__construct($request, $cache);
-        $this->serverRequest = $serverRequest;
-        $this->loader = $loader;
-        $this->validator = $validator;
     }
 
     /**
      * Validate a creation request.
-     *
-     * @param  \Illuminate\Contracts\Auth\Authenticatable  $user
-     * @param  array  $data
-     * @return PublicKeyCredentialSource
      *
      * @throws ResponseMismatchException
      */
@@ -64,9 +47,6 @@ class CredentialAttestationValidator extends CredentialValidator
 
     /**
      * Get public Key credential.
-     *
-     * @param  \Illuminate\Contracts\Auth\Authenticatable  $user
-     * @return \Webauthn\PublicKeyCredentialCreationOptions
      */
     protected function pullPublicKey(User $user): PublicKeyCredentialCreationOptions
     {
@@ -80,9 +60,6 @@ class CredentialAttestationValidator extends CredentialValidator
 
     /**
      * Get authenticator response.
-     *
-     * @param  \Webauthn\PublicKeyCredential  $publicKeyCredential
-     * @return \Webauthn\AuthenticatorAttestationResponse
      */
     protected function getResponse(PublicKeyCredential $publicKeyCredential): AuthenticatorAttestationResponse
     {

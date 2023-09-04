@@ -11,22 +11,11 @@ use LaravelWebauthn\Services\Webauthn;
 class LockoutResponse implements LockoutResponseContract
 {
     /**
-     * The login rate limiter instance.
-     *
-     * @var \LaravelWebauthn\Services\LoginRateLimiter
-     */
-    protected LoginRateLimiter $limiter;
-
-    /**
      * Create a new response instance.
-     *
-     * @param  \LaravelWebauthn\Services\LoginRateLimiter  $limiter
-     * @return void
      */
-    public function __construct(LoginRateLimiter $limiter)
-    {
-        $this->limiter = $limiter;
-    }
+    public function __construct(
+        protected LoginRateLimiter $limiter
+    ) { }
 
     /**
      * Create an HTTP response that represents the object.

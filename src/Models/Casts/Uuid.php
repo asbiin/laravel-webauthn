@@ -3,21 +3,19 @@
 namespace LaravelWebauthn\Models\Casts;
 
 use Illuminate\Contracts\Database\Eloquent\CastsAttributes;
+use Illuminate\Database\Eloquent\Model;
 use Symfony\Component\Uid\AbstractUid;
 use Symfony\Component\Uid\Uuid as UuidConvert;
 
+/**
+ * @implements CastsAttributes<AbstractUid,string>
+ */
 class Uuid implements CastsAttributes
 {
     /**
      * Cast the given value.
-     *
-     * @param  \Illuminate\Database\Eloquent\Model  $model
-     * @param  string  $key
-     * @param  mixed  $value
-     * @param  array  $attributes
-     * @return \Symfony\Component\Uid\AbstractUid|null
      */
-    public function get($model, $key, $value, $attributes): ?AbstractUid
+    public function get(Model $model, string $key, mixed $value, array $attributes): ?AbstractUid
     {
         if ($value !== null && UuidConvert::isValid($value)) {
             return UuidConvert::fromString($value);
@@ -28,14 +26,8 @@ class Uuid implements CastsAttributes
 
     /**
      * Prepare the given value for storage.
-     *
-     * @param  \Illuminate\Database\Eloquent\Model  $model
-     * @param  string  $key
-     * @param  mixed  $value
-     * @param  array  $attributes
-     * @return string|null
      */
-    public function set($model, $key, $value, $attributes): ?string
+    public function set(Model $model, string $key, mixed $value, array $attributes): ?string
     {
         return (string) $value;
     }

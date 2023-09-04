@@ -9,10 +9,6 @@ class DeleteKey
 {
     /**
      * Delete a key.
-     *
-     * @param  \Illuminate\Contracts\Auth\Authenticatable  $user
-     * @param  int  $webauthnKeyId
-     * @return void
      */
     public function __invoke(User $user, int $webauthnKeyId): void
     {

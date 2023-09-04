@@ -19,11 +19,6 @@ abstract class WebauthnRepository
 
     /**
      * Create a new key.
-     *
-     * @param  \Illuminate\Contracts\Auth\Authenticatable  $user
-     * @param  string  $keyName
-     * @param  \Webauthn\PublicKeyCredentialSource  $publicKeyCredentialSource
-     * @return \Illuminate\Database\Eloquent\Model
      */
     public static function create(User $user, string $keyName, PublicKeyCredentialSource $publicKeyCredentialSource): Model
     {
@@ -44,19 +39,14 @@ abstract class WebauthnRepository
 
     /**
      * Register a callback that is responsible for creating a new webauthnkey.
-     *
-     * @param  callable  $callback
-     * @return void
      */
-    public static function createWebauthnkeyUsing(callable $callback)
+    public static function createWebauthnkeyUsing(callable $callback): void
     {
         static::$createWebauthnkeyUsingCallback = $callback;
     }
 
     /**
      * Get the model for Webauthnkey.
-     *
-     * @return string
      */
     public static function model(): string
     {
@@ -67,8 +57,6 @@ abstract class WebauthnRepository
 
     /**
      * Create a new model instance.
-     *
-     * @return \Illuminate\Database\Eloquent\Model
      */
     public static function createModel(): Model
     {
@@ -83,9 +71,6 @@ abstract class WebauthnRepository
 
     /**
      * Detect if user has a key.
-     *
-     * @param  User  $user
-     * @return bool
      */
     public static function hasKey(User $user): bool
     {

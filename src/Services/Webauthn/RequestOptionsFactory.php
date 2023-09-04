@@ -6,9 +6,9 @@ use Illuminate\Contracts\Auth\Authenticatable as User;
 use Illuminate\Contracts\Cache\Repository as Cache;
 use Illuminate\Contracts\Config\Repository as Config;
 use Illuminate\Http\Request;
+use Webauthn\PublicKeyCredentialDescriptor;
 use Webauthn\PublicKeyCredentialRequestOptions;
 use Webauthn\PublicKeyCredentialRpEntity;
-use Webauthn\PublicKeyCredentialSourceRepository;
 
 final class RequestOptionsFactory extends OptionsFactory
 {
@@ -19,23 +19,19 @@ final class RequestOptionsFactory extends OptionsFactory
      */
     protected ?string $userVerification;
 
-    /**
-     * @var PublicKeyCredentialRpEntity
-     */
-    protected PublicKeyCredentialRpEntity $publicKeyCredentialRpEntity;
-
-    public function __construct(Request $request, Cache $cache, Config $config, PublicKeyCredentialSourceRepository $repository, PublicKeyCredentialRpEntity $publicKeyCredentialRpEntity)
-    {
+    public function __construct(
+        Request $request,
+        Cache $cache,
+        Config $config,
+        CredentialRepository $repository,
+        protected PublicKeyCredentialRpEntity $publicKeyCredentialRpEntity
+    ) {
         parent::__construct($request, $cache, $config, $repository);
-        $this->publicKeyCredentialRpEntity = $publicKeyCredentialRpEntity;
         $this->userVerification = self::getUserVerification($config);
     }
 
     /**
      * Create a new PublicKeyCredentialCreationOptions object.
-     *
-     * @param  User  $user
-     * @return PublicKeyCredentialRequestOptions
      */
     public function __invoke(User $user): PublicKeyCredentialRequestOptions
     {
@@ -52,9 +48,6 @@ final class RequestOptionsFactory extends OptionsFactory
 
     /**
      * Get user verification preference.
-     *
-     * @param  \Illuminate\Contracts\Config\Repository  $config
-     * @return string|null
      */
     private static function getUserVerification(Config $config): ?string
     {
@@ -66,12 +59,11 @@ final class RequestOptionsFactory extends OptionsFactory
     /**
      * Get the list of allowed keys.
      *
-     * @param  \Illuminate\Contracts\Auth\Authenticatable  $user
-     * @return array
+     * @return array<array-key,PublicKeyCredentialDescriptor>
      */
     private function getAllowedCredentials(User $user): array
     {
-        return $this->repository->getRegisteredKeys($user);
+        return CredentialRepository::getRegisteredKeys($user);
     }
 
     /**

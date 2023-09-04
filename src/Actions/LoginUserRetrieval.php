@@ -14,28 +14,14 @@ use LaravelWebauthn\Services\Webauthn;
 class LoginUserRetrieval
 {
     /**
-     * The login rate limiter instance.
-     *
-     * @var \LaravelWebauthn\Services\LoginRateLimiter
-     */
-    protected LoginRateLimiter $limiter;
-
-    /**
      * Create a new controller instance.
-     *
-     * @param  \LaravelWebauthn\Services\LoginRateLimiter  $limiter
-     * @return void
      */
-    public function __construct(LoginRateLimiter $limiter)
-    {
-        $this->limiter = $limiter;
-    }
+    public function __construct(
+        protected LoginRateLimiter $limiter
+    ) { }
 
     /**
      * Handle the incoming request.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Contracts\Auth\Authenticatable|null
      */
     public function __invoke(Request $request): ?User
     {
@@ -54,9 +40,6 @@ class LoginUserRetrieval
 
     /**
      * Return the user that should authenticate via WebAuthn.
-     *
-     * @param  array|null  $credentials
-     * @return \Illuminate\Contracts\Auth\Authenticatable|null
      */
     protected function getUserFromCredentials(?array $credentials): ?User
     {
@@ -73,8 +56,6 @@ class LoginUserRetrieval
 
     /**
      * Get the User Provider for WebAuthn Authenticatable users.
-     *
-     * @return \Illuminate\Contracts\Auth\UserProvider|null
      */
     protected function userProvider(): ?UserProvider
     {
@@ -84,12 +65,9 @@ class LoginUserRetrieval
     /**
      * Throw a failed authentication validation exception.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return void
-     *
      * @throws \Illuminate\Validation\ValidationException
      */
-    protected function throwFailedAuthenticationException(Request $request)
+    protected function throwFailedAuthenticationException(Request $request): void
     {
         $this->limiter->increment($request);
 
@@ -100,11 +78,8 @@ class LoginUserRetrieval
 
     /**
      * Fire the failed authentication attempt event with the given arguments.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return void
      */
-    protected function fireFailedEvent(Request $request)
+    protected function fireFailedEvent(Request $request): void
     {
         event(new Failed(config('webauthn.guard'), null, [
             Webauthn::username() => $request->{Webauthn::username()},

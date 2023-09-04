@@ -12,28 +12,13 @@ class WebauthnLoginData
     use SerializesModels, Dispatchable;
 
     /**
-     * The authenticated user.
-     *
-     * @var \Illuminate\Contracts\Auth\Authenticatable
-     */
-    public User $user;
-
-    /**
-     * The authentication data.
-     *
-     * @var PublicKeyCredentialRequestOptions
-     */
-    public PublicKeyCredentialRequestOptions $publicKey;
-
-    /**
      * Create a new event instance.
      *
-     * @param  \Illuminate\Contracts\Auth\Authenticatable  $user
-     * @param  PublicKeyCredentialRequestOptions  $publicKey
+     * @param  \Illuminate\Contracts\Auth\Authenticatable  $user  The authenticated user.
+     * @param  PublicKeyCredentialRequestOptions  $publicKey  The authentication data.
      */
-    public function __construct(User $user, PublicKeyCredentialRequestOptions $publicKey)
-    {
-        $this->user = $user;
-        $this->publicKey = $publicKey;
-    }
+    public function __construct(
+        public User $user,
+        public PublicKeyCredentialRequestOptions $publicKey
+    ) { }
 }

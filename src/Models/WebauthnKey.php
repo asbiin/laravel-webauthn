@@ -2,7 +2,9 @@
 
 namespace LaravelWebauthn\Models;
 
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Arr;
 use LaravelWebauthn\Exceptions\WrongUserHandleException;
 use LaravelWebauthn\Models\Casts\Base64;
 use LaravelWebauthn\Models\Casts\TrustPath;
@@ -24,7 +26,7 @@ class WebauthnKey extends Model
     /**
      * The attributes that are mass assignable.
      *
-     * @var string[]
+     * @var array<string>
      */
     protected $fillable = [
         'user_id',
@@ -43,7 +45,7 @@ class WebauthnKey extends Model
     /**
      * The attributes that should be visible in serialization.
      *
-     * @var array<int, string>
+     * @var array<int,string>
      */
     protected $visible = [
         'id',
@@ -57,7 +59,7 @@ class WebauthnKey extends Model
     /**
      * The attributes that should be cast to native types.
      *
-     * @var array<string, string>
+     * @var array<string,string>
      */
     protected $casts = [
         'counter' => 'integer',
@@ -71,41 +73,46 @@ class WebauthnKey extends Model
     /**
      * Get PublicKeyCredentialSource object from WebauthnKey attributes.
      *
-     * @return PublicKeyCredentialSource
+     * @return Attribute<PublicKeyCredentialSource,PublicKeyCredentialSource>
      */
-    public function getPublicKeyCredentialSourceAttribute(): PublicKeyCredentialSource
+    public function publicKeyCredentialSource(): Attribute
     {
-        return new PublicKeyCredentialSource(
-            $this->credentialId,
-            $this->type,
-            $this->transports,
-            $this->attestationType,
-            $this->trustPath,
-            $this->aaguid ?? new NilUuid(),
-            $this->credentialPublicKey,
-            (string) $this->user_id,
-            $this->counter
-        );
-    }
+        return Attribute::make(
+            get: fn (): PublicKeyCredentialSource => new PublicKeyCredentialSource(
+                $this->credentialId,
+                $this->type,
+                $this->transports,
+                $this->attestationType,
+                $this->trustPath,
+                $this->aaguid ?? new NilUuid(),
+                $this->credentialPublicKey,
+                (string) $this->user_id,
+                $this->counter
+            ),
+            set: function (PublicKeyCredentialSource $value, array $attributes): array {
+                if (((string) Arr::get($attributes, 'user_id')) !== $value->getUserHandle()) {
+                    throw new WrongUserHandleException();
+                }
 
-    /**
-     * Set WebauthnKey attributes from a PublicKeyCredentialSource object.
-     *
-     * @param  PublicKeyCredentialSource  $value
-     * @return void
-     */
-    public function setPublicKeyCredentialSourceAttribute(PublicKeyCredentialSource $value)
-    {
-        if ((string) $this->user_id !== $value->getUserHandle()) {
-            throw new WrongUserHandleException();
-        }
-        $this->credentialId = $value->getPublicKeyCredentialId();
-        $this->type = $value->getType();
-        $this->transports = $value->getTransports();
-        $this->attestationType = $value->getAttestationType();
-        $this->trustPath = $value->getTrustPath();
-        $this->aaguid = $value->getAaguid();
-        $this->credentialPublicKey = $value->getCredentialPublicKey();
-        $this->counter = $value->getCounter();
+                // Set value to attributes using casts
+                $this->credentialId = $value->getPublicKeyCredentialId();
+                $this->transports = $value->getTransports();
+                $this->trustPath = $value->getTrustPath();
+                $this->aaguid = $value->getAaguid();
+                $this->credentialPublicKey = $value->getCredentialPublicKey();
+                $this->counter = $value->getCounter();
+
+                return [
+                    'credentialId' => $this->attributes['credentialId'],
+                    'type' => $value->getType(),
+                    'transports' => $this->attributes['transports'],
+                    'attestationType' => $value->getAttestationType(),
+                    'trustPath' => $this->attributes['trustPath'],
+                    'aaguid' => $this->attributes['aaguid'],
+                    'credentialPublicKey' => $this->attributes['credentialPublicKey'],
+                    'counter' => $this->attributes['counter'],
+                ];
+            }
+        )->shouldCache();
     }
 }

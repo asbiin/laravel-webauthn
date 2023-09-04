@@ -13,47 +13,30 @@ use Webauthn\PublicKeyCredentialCreationOptions;
 use Webauthn\PublicKeyCredentialDescriptor;
 use Webauthn\PublicKeyCredentialParameters;
 use Webauthn\PublicKeyCredentialRpEntity;
-use Webauthn\PublicKeyCredentialSourceRepository;
 use Webauthn\PublicKeyCredentialUserEntity;
 
 final class CreationOptionsFactory extends OptionsFactory
 {
     /**
-     * @var PublicKeyCredentialRpEntity
-     */
-    protected PublicKeyCredentialRpEntity $publicKeyCredentialRpEntity;
-
-    /**
-     * @var AuthenticatorSelectionCriteria
-     */
-    protected AuthenticatorSelectionCriteria $authenticatorSelectionCriteria;
-
-    /**
-     * @var CoseAlgorithmManager
-     */
-    protected CoseAlgorithmManager $algorithmManager;
-
-    /**
      * Attestation Conveyance preference.
-     *
-     * @var string
      */
     protected string $attestationConveyance;
 
-    public function __construct(Request $request, Cache $cache, Config $config, PublicKeyCredentialSourceRepository $repository, PublicKeyCredentialRpEntity $publicKeyCredentialRpEntity, AuthenticatorSelectionCriteria $authenticatorSelectionCriteria, CoseAlgorithmManager $algorithmManager)
-    {
+    public function __construct(
+        Request $request,
+        Cache $cache,
+        Config $config,
+        CredentialRepository $repository,
+        protected PublicKeyCredentialRpEntity $publicKeyCredentialRpEntity,
+        protected AuthenticatorSelectionCriteria $authenticatorSelectionCriteria,
+        protected CoseAlgorithmManager $algorithmManager
+    ) {
         parent::__construct($request, $cache, $config, $repository);
-        $this->publicKeyCredentialRpEntity = $publicKeyCredentialRpEntity;
-        $this->authenticatorSelectionCriteria = $authenticatorSelectionCriteria;
-        $this->algorithmManager = $algorithmManager;
         $this->attestationConveyance = $config->get('webauthn.attestation_conveyance', 'none');
     }
 
     /**
      * Create a new PublicKeyCredentialCreationOptions object.
-     *
-     * @param  User  $user
-     * @return PublicKeyCredentialCreationOptions
      */
     public function __invoke(User $user): PublicKeyCredentialCreationOptions
     {
@@ -75,9 +58,6 @@ final class CreationOptionsFactory extends OptionsFactory
 
     /**
      * Return the credential user entity.
-     *
-     * @param  \Illuminate\Contracts\Auth\Authenticatable  $user
-     * @return PublicKeyCredentialUserEntity
      */
     private function getUserEntity(User $user): PublicKeyCredentialUserEntity
     {
@@ -90,7 +70,7 @@ final class CreationOptionsFactory extends OptionsFactory
     }
 
     /**
-     * @return PublicKeyCredentialParameters[]
+     * @return array<array-key,PublicKeyCredentialParameters>
      */
     private function createCredentialParameters(): array
     {
@@ -106,12 +86,9 @@ final class CreationOptionsFactory extends OptionsFactory
 
     /**
      * Get the excluded credentials.
-     *
-     * @param  \Illuminate\Contracts\Auth\Authenticatable  $user
-     * @return array
      */
     protected function getExcludedCredentials(User $user): array
     {
-        return $this->repository->getRegisteredKeys($user);
+        return CredentialRepository::getRegisteredKeys($user);
     }
 }

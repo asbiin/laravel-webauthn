@@ -19,11 +19,8 @@ class WebauthnKeyController extends Controller
 {
     /**
      * Return the register data to attempt a Webauthn registration.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return RegisterViewResponse
      */
-    public function create(Request $request)
+    public function create(Request $request): RegisterViewResponse
     {
         $publicKey = app(PrepareCreationData::class)($request->user());
 
@@ -33,11 +30,8 @@ class WebauthnKeyController extends Controller
 
     /**
      * Validate and create the Webauthn request.
-     *
-     * @param  WebauthnRegisterRequest  $request
-     * @return RegisterSuccessResponse
      */
-    public function store(WebauthnRegisterRequest $request)
+    public function store(WebauthnRegisterRequest $request): RegisterSuccessResponse
     {
         $webauthnKey = app(ValidateKeyCreation::class)(
             $request->user(),
@@ -51,12 +45,8 @@ class WebauthnKeyController extends Controller
 
     /**
      * Update an existing Webauthn key.
-     *
-     * @param  WebauthnUpdateRequest  $request
-     * @param  int  $webauthnKeyId
-     * @return UpdateResponse
      */
-    public function update(WebauthnUpdateRequest $request, int $webauthnKeyId)
+    public function update(WebauthnUpdateRequest $request, int $webauthnKeyId): UpdateResponse
     {
         app(UpdateKey::class)(
             $request->user(),
@@ -69,12 +59,8 @@ class WebauthnKeyController extends Controller
 
     /**
      * Delete an existing Webauthn key.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $webauthnKeyId
-     * @return DestroyResponse
      */
-    public function destroy(Request $request, int $webauthnKeyId)
+    public function destroy(Request $request, int $webauthnKeyId): DestroyResponse
     {
         app(DeleteKey::class)(
             $request->user(),

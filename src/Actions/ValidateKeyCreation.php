@@ -13,11 +13,6 @@ class ValidateKeyCreation
 {
     /**
      * Register a new key.
-     *
-     * @param  \Illuminate\Contracts\Auth\Authenticatable  $user
-     * @param  array  $data
-     * @param  string  $keyName
-     * @return \Illuminate\Database\Eloquent\Model|null
      */
     public function __invoke(User $user, array $data, string $keyName): ?Model
     {
@@ -33,11 +28,6 @@ class ValidateKeyCreation
 
     /**
      * Validate key.
-     *
-     * @param  \Illuminate\Contracts\Auth\Authenticatable  $user
-     * @param  array  $data
-     * @param  string  $keyName
-     * @return \Illuminate\Database\Eloquent\Model|null
      */
     protected function validateAttestation(User $user, array $data, string $keyName): ?Model
     {
@@ -53,13 +43,9 @@ class ValidateKeyCreation
     /**
      * Throw a failed register validation exception.
      *
-     * @param  \Illuminate\Contracts\Auth\Authenticatable  $user
-     * @param  \Exception|null  $e
-     * @return void
-     *
      * @throws \Illuminate\Validation\ValidationException
      */
-    protected function throwFailedRegisterException(User $user, ?Exception $e = null)
+    protected function throwFailedRegisterException(User $user, ?Exception $e = null): void
     {
         WebauthnRegisterFailed::dispatch($user, $e);
 

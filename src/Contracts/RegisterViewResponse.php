@@ -10,10 +10,6 @@ interface RegisterViewResponse extends Responsable
 {
     /**
      * Set public key request data.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Webauthn\PublicKeyCredentialCreationOptions  $publicKey
-     * @return self
      */
     public function setPublicKey(Request $request, PublicKeyCredentialCreationOptions $publicKey): self;
 }

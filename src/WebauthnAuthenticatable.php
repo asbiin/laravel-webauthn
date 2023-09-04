@@ -9,10 +9,8 @@ trait WebauthnAuthenticatable
 {
     /**
      * Get the webauthn keys associated to this user.
-     *
-     * @return HasMany
      */
-    public function webauthnKeys()
+    public function webauthnKeys(): HasMany
     {
         return $this->hasMany(WebauthnKey::class);
     }
