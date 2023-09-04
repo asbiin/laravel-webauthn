@@ -40,7 +40,7 @@
         "phpstan/phpstan-deprecation-rules": "^1.0",
         "phpstan/phpstan-phpunit": "^1.0",
         "phpstan/phpstan-strict-rules": "^1.0",
-        "phpunit/phpunit": "^9.5"
+        "phpunit/phpunit": "^9.5 || ^10.0"
     },
     "suggest": {
         "guzzlehttp/psr7": "To provide a psr/http-factory-implementation implementation",
