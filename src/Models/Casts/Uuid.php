@@ -14,8 +14,11 @@ class Uuid implements CastsAttributes
 {
     /**
      * Cast the given value.
+     *
+     * @param \Illuminate\Database\Eloquent\Model $model
+     * @param mixed $value
      */
-    public function get(Model $model, string $key, mixed $value, array $attributes): ?AbstractUid
+    public function get($model, string $key, $value, array $attributes): ?AbstractUid
     {
         if ($value !== null && UuidConvert::isValid($value)) {
             return UuidConvert::fromString($value);
@@ -26,8 +29,11 @@ class Uuid implements CastsAttributes
 
     /**
      * Prepare the given value for storage.
+     *
+     * @param \Illuminate\Database\Eloquent\Model $model
+     * @param string|null $value
      */
-    public function set(Model $model, string $key, mixed $value, array $attributes): ?string
+    public function set($model, string $key, mixed $value, array $attributes): ?string
     {
         return (string) $value;
     }
