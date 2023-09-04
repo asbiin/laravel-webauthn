@@ -133,6 +133,20 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Webauthn logging
+    |--------------------------------------------------------------------------
+    |
+    | Here you may specify the channel to which Webauthn will log messages.
+    | This value should correspond with one of your loggers that is already
+    | present in your "logging" configuration file. If left as null, it will
+    | use the default logger for the application.
+    |
+    */
+
+    'log' => null,
+
+    /*
+    |--------------------------------------------------------------------------
     | Session name
     |--------------------------------------------------------------------------
     |

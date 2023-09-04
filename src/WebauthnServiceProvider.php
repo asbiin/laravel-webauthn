@@ -14,7 +14,6 @@ use Illuminate\Contracts\Auth\StatefulGuard;
 use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Contracts\Hashing\Hasher;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\ServiceProvider;
 use LaravelWebauthn\Auth\EloquentWebAuthnProvider;
 use LaravelWebauthn\Contracts\DestroyResponse as DestroyResponseContract;
@@ -87,6 +86,7 @@ class WebauthnServiceProvider extends ServiceProvider
         );
 
         $this->app->bind(StatefulGuard::class, fn () => Auth::guard(config('webauthn.guard', null)));
+        $this->app->bind('webauthn.log', fn ($app) => $app['log']->channel(config('webauthn.log', config('logging.default'))));
     }
 
     /**
@@ -170,13 +170,13 @@ class WebauthnServiceProvider extends ServiceProvider
             fn ($app) => tap(new AttestationObjectLoader(
                 $app[AttestationStatementSupportManager::class]
             ), function ($loader) use ($app) {
-                $loader->setLogger($app['log']);
+                $loader->setLogger($app['webauthn.log']);
             })
         );
 
         $this->app->bind(
             CounterChecker::class,
-            fn ($app) => new ThrowExceptionIfInvalid($app['log'])
+            fn ($app) => new ThrowExceptionIfInvalid($app['webauthn.log'])
         );
 
         $this->app->bind(
@@ -187,7 +187,7 @@ class WebauthnServiceProvider extends ServiceProvider
                 null,
                 $app[ExtensionOutputCheckerHandler::class]
             ), function ($responseValidator) use ($app) {
-                $responseValidator->setLogger($app['log']);
+                $responseValidator->setLogger($app['webauthn.log']);
             })
         );
         $this->app->bind(
@@ -199,7 +199,7 @@ class WebauthnServiceProvider extends ServiceProvider
                 $app[CoseAlgorithmManager::class]
             ), function ($responseValidator) use ($app) {
                 $responseValidator->setCounterChecker($app[CounterChecker::class])
-                    ->setLogger($app['log']);
+                    ->setLogger($app['webauthn.log']);
             })
         );
         $this->app->bind(
@@ -228,7 +228,7 @@ class WebauthnServiceProvider extends ServiceProvider
             fn ($app) => tap(new PublicKeyCredentialLoader(
                 $app[AttestationObjectLoader::class]
             ), function ($loader) use ($app) {
-                $loader->setLogger($app['log']);
+                $loader->setLogger($app['webauthn.log']);
             })
         );
 
@@ -278,7 +278,7 @@ class WebauthnServiceProvider extends ServiceProvider
                     return Psr18ClientDiscovery::find();
                     // @codeCoverageIgnoreStart
                 } catch (NotFoundException $e) {
-                    Log::error('Could not find PSR-18 Client Factory.', ['exception' => $e]);
+                    app('webauthn.log')->error('Could not find PSR-18 Client Factory.', ['exception' => $e]);
                     throw new BindingResolutionException('Unable to resolve PSR-18 Client Factory. Please install a psr/http-client-implementation implementation like \'guzzlehttp/guzzle\'.');
                 }
             }
@@ -293,7 +293,7 @@ class WebauthnServiceProvider extends ServiceProvider
                     return Psr17FactoryDiscovery::findRequestFactory();
                     // @codeCoverageIgnoreStart
                 } catch (NotFoundException $e) {
-                    Log::error('Could not find PSR-17 Request Factory.', ['exception' => $e]);
+                    app('webauthn.log')->error('Could not find PSR-17 Request Factory.', ['exception' => $e]);
                     throw new BindingResolutionException('Unable to resolve PSR-17 Request Factory. Please install psr/http-factory-implementation implementation like \'guzzlehttp/psr7\'.');
                 }
             }
@@ -336,7 +336,7 @@ class WebauthnServiceProvider extends ServiceProvider
                         return new PsrHttpFactory($serverRequestFactory, $streamFactory, $uploadFileFactory, $responseFactory);
                         // @codeCoverageIgnoreStart
                     } catch (NotFoundException $e) {
-                        Log::error('Could not find PSR-17 Factory.', ['exception' => $e]);
+                        app('webauthn.log')->error('Could not find PSR-17 Factory.', ['exception' => $e]);
                     }
                 }
 
