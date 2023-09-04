@@ -4,8 +4,8 @@ namespace LaravelWebauthn\Models\Casts;
 
 use Illuminate\Contracts\Database\Eloquent\CastsAttributes;
 use Illuminate\Database\Eloquent\Model;
-use Webauthn\TrustPath\TrustPathLoader;
 use Webauthn\TrustPath\TrustPath as TrustPathLib;
+use Webauthn\TrustPath\TrustPathLoader;
 
 /**
  * @implements CastsAttributes<TrustPathLib,string>

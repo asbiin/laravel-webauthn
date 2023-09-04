@@ -17,5 +17,6 @@ class WebauthnRegister
      */
     public function __construct(
         public Model $webauthnKey
-    ) { }
+    ) {
+    }
 }

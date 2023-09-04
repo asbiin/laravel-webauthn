@@ -20,5 +20,6 @@ class WebauthnRegisterData
     public function __construct(
         public User $user,
         public PublicKeyCredentialCreationOptions $publicKey
-    ) { }
+    ) {
+    }
 }

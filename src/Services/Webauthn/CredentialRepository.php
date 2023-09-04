@@ -3,9 +3,9 @@
 namespace LaravelWebauthn\Services\Webauthn;
 
 use Illuminate\Contracts\Auth\Authenticatable as User;
+use Illuminate\Support\Collection;
 use LaravelWebauthn\Facades\Webauthn;
 use Webauthn\PublicKeyCredentialDescriptor;
-use Illuminate\Support\Collection;
 use Webauthn\PublicKeyCredentialSource;
 
 class CredentialRepository

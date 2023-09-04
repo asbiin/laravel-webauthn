@@ -16,7 +16,8 @@ abstract class CredentialValidator
     public function __construct(
         protected Request $request,
         protected Cache $cache
-    ) { }
+    ) {
+    }
 
     /**
      * Returns the cache key to remember the challenge for the user.

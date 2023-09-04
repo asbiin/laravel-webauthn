@@ -15,7 +15,8 @@ class WebauthnMiddleware
      */
     public function __construct(
         protected AuthFactory $auth
-    ) { }
+    ) {
+    }
 
     /**
      * Handle an incoming request.

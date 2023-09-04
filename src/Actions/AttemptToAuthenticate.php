@@ -20,7 +20,8 @@ class AttemptToAuthenticate
     public function __construct(
         protected StatefulGuard $guard,
         protected LoginRateLimiter $limiter
-    ) { }
+    ) {
+    }
 
     /**
      * Handle the incoming request.
