@@ -6,7 +6,6 @@ use Illuminate\Contracts\Auth\Authenticatable as User;
 use Illuminate\Contracts\Cache\Repository as Cache;
 use Illuminate\Http\Request;
 use LaravelWebauthn\Exceptions\ResponseMismatchException;
-use Psr\Http\Message\ServerRequestInterface;
 use Webauthn\AuthenticatorAttestationResponse;
 use Webauthn\AuthenticatorAttestationResponseValidator;
 use Webauthn\PublicKeyCredential;
@@ -19,7 +18,6 @@ class CredentialAttestationValidator extends CredentialValidator
     public function __construct(
         Request $request,
         Cache $cache,
-        protected ServerRequestInterface $serverRequest,
         protected PublicKeyCredentialLoader $loader,
         protected AuthenticatorAttestationResponseValidator $validator
     ) {
@@ -40,7 +38,7 @@ class CredentialAttestationValidator extends CredentialValidator
         return $this->validator->check(
             $this->getResponse($publicKeyCredential),
             $this->pullPublicKey($user),
-            $this->serverRequest
+            $this->request->host()
         );
     }
 
