@@ -102,6 +102,7 @@ class WebauthnTest extends FeatureTestCase
         $user = $this->signIn();
         factory(WebauthnKey::class)->create([
             'user_id' => $user->getAuthIdentifier(),
+            'credentialId' => '0',
         ]);
 
         $publicKey = $this->app[PrepareAssertionData::class]($user);
