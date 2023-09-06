@@ -6,7 +6,8 @@ use Illuminate\Contracts\Auth\Authenticatable as User;
 use Illuminate\Contracts\Cache\Repository as Cache;
 use Illuminate\Http\Request;
 use LaravelWebauthn\Exceptions\ResponseMismatchException;
-use Psr\Http\Message\ServerRequestInterface;
+use LaravelWebauthn\Services\Webauthn;
+use ParagonIE\ConstantTime\Base64UrlSafe;
 use Webauthn\AuthenticatorAssertionResponse;
 use Webauthn\AuthenticatorAssertionResponseValidator;
 use Webauthn\PublicKeyCredential;
@@ -18,7 +19,6 @@ class CredentialAssertionValidator extends CredentialValidator
     public function __construct(
         Request $request,
         Cache $cache,
-        protected ServerRequestInterface $serverRequest,
         protected PublicKeyCredentialLoader $loader,
         protected AuthenticatorAssertionResponseValidator $validator
     ) {
@@ -37,10 +37,10 @@ class CredentialAssertionValidator extends CredentialValidator
 
         // Check the response against the request
         $this->validator->check(
-            $publicKeyCredential->getRawId(),
+            $this->getCredentialSource($user, $publicKeyCredential),
             $this->getResponse($publicKeyCredential),
             $this->pullPublicKey($user),
-            $this->serverRequest,
+            $this->request->host(),
             $user->getAuthIdentifier()
         );
 
@@ -73,5 +73,21 @@ class CredentialAssertionValidator extends CredentialValidator
         }
 
         return $response;
+    }
+
+    /**
+     * Get credential source from user and public key.
+     */
+    protected function getCredentialSource(User $user, PublicKeyCredential $publicKeyCredential)
+    {
+        $credentialId = $publicKeyCredential->getRawId();
+
+        return (Webauthn::model())::where('user_id', $user->getAuthIdentifier())
+            ->where(fn ($query) =>
+                $query->where('credentialId', Base64UrlSafe::encode($credentialId))
+                    ->orWhere('credentialId', Base64UrlSafe::encodeUnpadded($credentialId))
+            )
+            ->firstOrFail()
+            ->publicKeyCredentialSource;
     }
 }
