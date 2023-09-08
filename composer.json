@@ -34,13 +34,15 @@
         "ext-sqlite3": "*",
         "guzzlehttp/psr7": "^2.1",
         "laravel/legacy-factories": "^1.0",
+        "laravel/pint": "^1.13",
         "nunomaduro/larastan": "^2.0",
         "ocramius/package-versions": "^2.0",
         "orchestra/testbench": "^7.0 || ^8.0",
         "phpstan/phpstan-deprecation-rules": "^1.0",
         "phpstan/phpstan-phpunit": "^1.0",
         "phpstan/phpstan-strict-rules": "^1.0",
-        "phpunit/phpunit": "^9.5 || ^10.0"
+        "phpunit/phpunit": "^9.5 || ^10.0",
+        "xheaven/composer-git-hooks": "^3.1"
     },
     "suggest": {
         "guzzlehttp/psr7": "To provide a psr/http-factory-implementation implementation",
@@ -67,7 +69,22 @@
             "providers": [
                 "LaravelWebauthn\\WebauthnServiceProvider"
             ]
+        },
+        "hooks": {
+            "config": {
+                "stop-on-failure": [
+                    "pre-commit"
+                ]
+            },
+            "pre-commit": [
+                "files=$(git diff --staged --name-only);\"$(dirname \"$0\")/../../vendor/bin/pint\" $files; git add $files"
+            ]
         }
+    },
+    "scripts": {
+        "cghooks": "vendor/bin/cghooks",
+        "post-install-cmd": "cghooks add --ignore-lock",
+        "post-update-cmd": "cghooks update"
     },
     "config": {
         "sort-packages": true,

@@ -14,8 +14,6 @@ final class RequestOptionsFactory extends OptionsFactory
 {
     /**
      * User verification preference.
-     *
-     * @var string|null
      */
     protected ?string $userVerification;
 
@@ -68,8 +66,6 @@ final class RequestOptionsFactory extends OptionsFactory
 
     /**
      * Get the rpEntity Id.
-     *
-     * @return string|null
      */
     private function getRpId(): ?string
     {

@@ -25,9 +25,6 @@ class LoginSuccessResponse implements LoginSuccessResponseContract
 
     /**
      * Create an HTTP response that represents the object.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Symfony\Component\HttpFoundation\Response
      */
     protected function jsonResponse(Request $request): \Symfony\Component\HttpFoundation\Response
     {

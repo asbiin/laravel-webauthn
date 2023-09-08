@@ -8,7 +8,7 @@ use Illuminate\Queue\SerializesModels;
 
 class WebauthnLogin
 {
-    use SerializesModels, Dispatchable;
+    use Dispatchable, SerializesModels;
 
     /**
      * Create a new event instance.

@@ -305,7 +305,7 @@ class WebauthnServiceProvider extends ServiceProvider
         $this->app->bind(ServerRequestInterface::class, function ($app) {
             if (class_exists(PsrHttpFactory::class)) {
                 return $app[PsrHttpFactory::class]
-                        ->createRequest($app->make('request'));
+                    ->createRequest($app->make('request'));
             }
 
             if (class_exists(\GuzzleHttp\Psr7\ServerRequest::class)) {

@@ -84,7 +84,7 @@ class CredentialAssertionValidator extends CredentialValidator
 
         return (Webauthn::model())::where('user_id', $user->getAuthIdentifier())
             ->where(fn ($query) => $query->where('credentialId', Base64UrlSafe::encode($credentialId))
-                    ->orWhere('credentialId', Base64UrlSafe::encodeUnpadded($credentialId))
+                ->orWhere('credentialId', Base64UrlSafe::encodeUnpadded($credentialId))
             )
             ->firstOrFail()
             ->publicKeyCredentialSource;
