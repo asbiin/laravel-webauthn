@@ -9,7 +9,7 @@ use Illuminate\Queue\SerializesModels;
 
 class WebauthnRegisterFailed
 {
-    use SerializesModels, Dispatchable;
+    use Dispatchable, SerializesModels;
 
     /**
      * Create a new event instance.

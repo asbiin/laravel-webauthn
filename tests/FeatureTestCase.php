@@ -42,9 +42,9 @@ class FeatureTestCase extends TestCase
         // Setup default database to use sqlite :memory:
         $app['config']->set('database.default', 'testbench');
         $app['config']->set('database.connections.testbench', [
-            'driver'   => 'sqlite',
+            'driver' => 'sqlite',
             'database' => ':memory:',
-            'prefix'   => '',
+            'prefix' => '',
         ]);
     }
 
@@ -79,7 +79,6 @@ class FeatureTestCase extends TestCase
      * Create a user and sign in as that user. If a user
      * object is passed, then sign in as that user.
      *
-     * @param  null  $user
      * @return User
      */
     public function signIn($user = null)

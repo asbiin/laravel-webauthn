@@ -9,7 +9,7 @@ use Webauthn\PublicKeyCredentialRequestOptions;
 
 class WebauthnLoginData
 {
-    use SerializesModels, Dispatchable;
+    use Dispatchable, SerializesModels;
 
     /**
      * Create a new event instance.

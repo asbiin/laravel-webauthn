@@ -9,7 +9,7 @@ use Webauthn\PublicKeyCredentialCreationOptions;
 
 class WebauthnRegisterData
 {
-    use SerializesModels, Dispatchable;
+    use Dispatchable, SerializesModels;
 
     /**
      * Create a new event instance.

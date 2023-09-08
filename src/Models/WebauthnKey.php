@@ -89,7 +89,7 @@ class WebauthnKey extends Model
                 (string) $this->user_id,
                 $this->counter
             ),
-            set: function (PublicKeyCredentialSource $value, ?array $attributes = null): array {
+            set: function (PublicKeyCredentialSource $value, array $attributes = null): array {
                 if (((string) Arr::get($attributes, 'user_id')) !== $value->getUserHandle()) {
                     throw new WrongUserHandleException();
                 }
