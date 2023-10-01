@@ -40,16 +40,16 @@ final class CreationOptionsFactory extends OptionsFactory
      */
     public function __invoke(User $user): PublicKeyCredentialCreationOptions
     {
-        $publicKey = (new PublicKeyCredentialCreationOptions(
+        $publicKey = new PublicKeyCredentialCreationOptions(
             $this->publicKeyCredentialRpEntity,
             $this->getUserEntity($user),
             $this->getChallenge(),
-            $this->createCredentialParameters()
-        ))
-            ->setTimeout($this->timeout)
-            ->excludeCredentials(...$this->getExcludedCredentials($user))
-            ->setAuthenticatorSelection($this->authenticatorSelectionCriteria)
-            ->setAttestation($this->attestationConveyance);
+            $this->createCredentialParameters(),
+            $this->authenticatorSelectionCriteria,
+            $this->attestationConveyance,
+            $this->getExcludedCredentials($user),
+            $this->timeout
+        );
 
         $this->cache->put($this->cacheKey($user), $publicKey->jsonSerialize(), $this->timeout);
 

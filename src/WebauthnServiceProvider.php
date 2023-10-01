@@ -169,9 +169,8 @@ class WebauthnServiceProvider extends ServiceProvider
             AttestationObjectLoader::class,
             fn ($app) => tap(new AttestationObjectLoader(
                 $app[AttestationStatementSupportManager::class]
-            ), function ($loader) use ($app) {
-                $loader->setLogger($app['webauthn.log']);
-            })
+            ), fn (AttestationObjectLoader $loader) => $loader->setLogger($app['webauthn.log'])
+            )
         );
 
         $this->app->bind(
@@ -186,40 +185,34 @@ class WebauthnServiceProvider extends ServiceProvider
                 null,
                 null,
                 $app[ExtensionOutputCheckerHandler::class]
-            ), function ($responseValidator) use ($app) {
-                $responseValidator->setLogger($app['webauthn.log']);
-            })
+            ), fn (AuthenticatorAttestationResponseValidator $responseValidator) => $responseValidator->setLogger($app['webauthn.log'])
+            )
         );
         $this->app->bind(
             AuthenticatorAssertionResponseValidator::class,
-            fn ($app) => tap(new AuthenticatorAssertionResponseValidator(
+            fn ($app) => tap((new AuthenticatorAssertionResponseValidator(
                 null,
                 null,
                 $app[ExtensionOutputCheckerHandler::class],
                 $app[CoseAlgorithmManager::class]
-            ), function ($responseValidator) use ($app) {
-                $responseValidator->setCounterChecker($app[CounterChecker::class])
-                    ->setLogger($app['webauthn.log']);
-            })
+            ))
+                ->setCounterChecker($app[CounterChecker::class]), fn (AuthenticatorAssertionResponseValidator $responseValidator) => $responseValidator->setLogger($app['webauthn.log'])
+            )
         );
         $this->app->bind(
             AuthenticatorSelectionCriteria::class,
-            fn ($app) => tap(new AuthenticatorSelectionCriteria(), function ($authenticatorSelectionCriteria) use ($app) {
-                $authenticatorSelectionCriteria
-                    ->setAuthenticatorAttachment($app['config']->get('webauthn.attachment_mode', 'null'))
-                    ->setUserVerification($app['config']->get('webauthn.user_verification', 'preferred'));
-
-                if (($userless = $app['config']->get('webauthn.userless')) !== null) {
-                    $authenticatorSelectionCriteria->setResidentKey($userless);
-                }
-            })
+            fn ($app) => new AuthenticatorSelectionCriteria(
+                $app['config']->get('webauthn.attachment_mode', 'null'),
+                $app['config']->get('webauthn.user_verification', 'preferred'),
+                $app['config']->get('webauthn.userless')
+            )
         );
 
         $this->app->bind(
             PublicKeyCredentialRpEntity::class,
             fn ($app) => new PublicKeyCredentialRpEntity(
                 $app['config']->get('app.name', 'Laravel'),
-                $app->make('request')->getHost(),
+                $app->make('request')->host(),
                 $app['config']->get('webauthn.icon')
             )
         );
@@ -227,9 +220,8 @@ class WebauthnServiceProvider extends ServiceProvider
             PublicKeyCredentialLoader::class,
             fn ($app) => tap(new PublicKeyCredentialLoader(
                 $app[AttestationObjectLoader::class]
-            ), function ($loader) use ($app) {
-                $loader->setLogger($app['webauthn.log']);
-            })
+            ), fn (PublicKeyCredentialLoader $loader) => $loader->setLogger($app['webauthn.log'])
+            )
         );
 
         $this->app->bind(
@@ -348,14 +340,13 @@ class WebauthnServiceProvider extends ServiceProvider
 
     private function passwordLessWebauthn(): void
     {
-        $this->app['auth']->provider('webauthn', function ($app, array $config) {
-            return new EloquentWebAuthnProvider(
-                $app['config'],
-                $app[CredentialAssertionValidator::class],
-                $app[Hasher::class],
-                $config['model']
-            );
-        });
+        $this->app['auth']->provider('webauthn', fn ($app, array $config) => new EloquentWebAuthnProvider(
+            $app['config'],
+            $app[CredentialAssertionValidator::class],
+            $app[Hasher::class],
+            $config['model']
+        )
+        );
     }
 
     /**
