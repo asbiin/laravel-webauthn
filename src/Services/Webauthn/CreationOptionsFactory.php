@@ -51,7 +51,9 @@ final class CreationOptionsFactory extends OptionsFactory
             ->setAuthenticatorSelection($this->authenticatorSelectionCriteria)
             ->setAttestation($this->attestationConveyance);
 
-        $this->cache->put($this->cacheKey($user), $publicKey->jsonSerialize(), $this->timeout);
+        $value = json_encode($publicKey, flags: JSON_THROW_ON_ERROR);
+
+        $this->cache->put($this->cacheKey($user), $value, $this->timeout);
 
         return $publicKey;
     }

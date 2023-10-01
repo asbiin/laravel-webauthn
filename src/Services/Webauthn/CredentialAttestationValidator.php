@@ -48,7 +48,9 @@ class CredentialAttestationValidator extends CredentialValidator
     protected function pullPublicKey(User $user): PublicKeyCredentialCreationOptions
     {
         try {
-            return PublicKeyCredentialCreationOptions::createFromArray($this->cache->pull($this->cacheKey($user)));
+            $value = json_decode($this->cache->pull($this->cacheKey($user)), true, flags: JSON_THROW_ON_ERROR);
+
+            return PublicKeyCredentialCreationOptions::createFromArray($value);
         } catch (\Exception $e) {
             app('webauthn.log')->debug('Webauthn publicKey deserialize error', ['exception' => $e]);
             abort(404);
