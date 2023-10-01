@@ -67,14 +67,12 @@ class CredentialAssertionValidator extends CredentialValidator
      */
     protected function getResponse(PublicKeyCredential $publicKeyCredential): AuthenticatorAssertionResponse
     {
-        $response = $publicKeyCredential->getResponse();
-
         // Check if the response is an Authenticator Assertion Response
-        if (! $response instanceof AuthenticatorAssertionResponse) {
+        if (! $publicKeyCredential->response instanceof AuthenticatorAssertionResponse) {
             throw new ResponseMismatchException('Not an authenticator attestation response');
         }
 
-        return $response;
+        return $publicKeyCredential->response;
     }
 
     /**
@@ -82,7 +80,7 @@ class CredentialAssertionValidator extends CredentialValidator
      */
     protected function getCredentialSource(User $user, PublicKeyCredential $publicKeyCredential)
     {
-        $credentialId = $publicKeyCredential->getRawId();
+        $credentialId = $publicKeyCredential->rawId;
 
         return (Webauthn::model())::where('user_id', $user->getAuthIdentifier())
             ->where(fn ($query) => $query->where('credentialId', Base64UrlSafe::encode($credentialId))

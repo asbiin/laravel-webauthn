@@ -29,7 +29,7 @@ abstract class CredentialValidator
             [
                 self::CACHE_PUBLICKEY_REQUEST,
                 get_class($user).':'.$user->getAuthIdentifier(),
-                hash('sha512', $this->request->getHost().'|'.$this->request->ip()),
+                hash('sha512', $this->request->host().'|'.$this->request->ip()),
             ]
         );
     }

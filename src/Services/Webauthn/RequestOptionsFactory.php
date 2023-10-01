@@ -33,11 +33,13 @@ final class RequestOptionsFactory extends OptionsFactory
      */
     public function __invoke(User $user): PublicKeyCredentialRequestOptions
     {
-        $publicKey = (new PublicKeyCredentialRequestOptions($this->getChallenge()))
-            ->setTimeout($this->timeout)
-            ->allowCredentials(...$this->getAllowedCredentials($user))
-            ->setRpId($this->getRpId())
-            ->setUserVerification($this->userVerification);
+        $publicKey = new PublicKeyCredentialRequestOptions(
+            $this->getChallenge(),
+            $this->getRpId(),
+            $this->getAllowedCredentials($user),
+            $this->userVerification,
+            $this->timeout
+        );
 
         $value = json_encode($publicKey, flags: JSON_THROW_ON_ERROR);
 
@@ -71,6 +73,6 @@ final class RequestOptionsFactory extends OptionsFactory
      */
     private function getRpId(): ?string
     {
-        return $this->publicKeyCredentialRpEntity->getId();
+        return $this->publicKeyCredentialRpEntity->id;
     }
 }
