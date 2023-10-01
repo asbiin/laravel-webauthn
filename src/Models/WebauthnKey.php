@@ -90,23 +90,23 @@ class WebauthnKey extends Model
                 $this->counter
             ),
             set: function (PublicKeyCredentialSource $value, array $attributes = null): array {
-                if (((string) Arr::get($attributes, 'user_id')) !== $value->getUserHandle()) {
+                if (((string) Arr::get($attributes, 'user_id')) !== $value->userHandle) {
                     throw new WrongUserHandleException();
                 }
 
                 // Set value to attributes using casts
-                $this->credentialId = $value->getPublicKeyCredentialId();
-                $this->transports = $value->getTransports();
-                $this->trustPath = $value->getTrustPath();
-                $this->aaguid = $value->getAaguid();
-                $this->credentialPublicKey = $value->getCredentialPublicKey();
-                $this->counter = $value->getCounter();
+                $this->credentialId = $value->publicKeyCredentialId;
+                $this->transports = $value->transports;
+                $this->trustPath = $value->trustPath;
+                $this->aaguid = $value->aaguid;
+                $this->credentialPublicKey = $value->credentialPublicKey;
+                $this->counter = $value->counter;
 
                 return [
                     'credentialId' => $this->attributes['credentialId'],
-                    'type' => $value->getType(),
+                    'type' => $value->type,
                     'transports' => $this->attributes['transports'],
-                    'attestationType' => $value->getAttestationType(),
+                    'attestationType' => $value->attestationType,
                     'trustPath' => $this->attributes['trustPath'],
                     'aaguid' => $this->attributes['aaguid'],
                     'credentialPublicKey' => $this->attributes['credentialPublicKey'],
