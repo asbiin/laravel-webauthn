@@ -17,9 +17,9 @@ on:
   workflow_dispatch:
 
 env:
-  default-php-version: '8.1'
-  default-laravel-version: '9.*'
-  semantic-node-version: 16
+  default-php-version: '8.2'
+  default-laravel-version: '10.*'
+  semantic-node-version: 18
 
 jobs:
   tests:
@@ -56,6 +56,7 @@ jobs:
           php-version: ${{ matrix.php-version }}
           coverage: pcov
           extensions: sqlite3, gmp
+          ini-values: pcov.directory=., pcov.exclude="~vendor~"
       - name: Check PHP Version
         run: php -v
       - name: Check Composer Version
@@ -114,9 +115,10 @@ jobs:
       - name: Fix results files
         run: sed -i -e "s%$GITHUB_WORKSPACE/%%g" *.xml
         working-directory: results
+        if: success() || failure()
 
       - name: Store results
-        if: matrix.php-version == env.default-php-version && matrix.laravel-version == env.default-laravel-version
+        if: matrix.php-version == env.default-php-version && matrix.laravel-version == env.default-laravel-version && (success() || failure())
         uses: actions/upload-artifact@v3
         with:
           name: results
@@ -129,9 +131,7 @@ jobs:
   reporting:
     needs: tests
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        php-version: ['8.2']
+    if: success() || failure()
 
     steps:
       - name: Checkout repository
@@ -144,6 +144,12 @@ jobs:
         with:
           name: results
           path: results
+
+      - name: Merge junit files
+        run: |
+          npm init -y
+          yarn set version berry
+          yarn dlx junit-report-merger ./results/results.xml "./results/results*.xml"
 
       - name: Set coverage list
         id: coverage
@@ -159,7 +165,7 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         with:
           args: |
-            -Dsonar.php.tests.reportPath=./results/results_guzzle.xml
+            -Dsonar.php.tests.reportPath=./results/results.xml
             -Dsonar.php.coverage.reportPaths=${{ steps.coverage.outputs.list }}
 
 
