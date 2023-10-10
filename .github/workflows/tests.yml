@@ -147,6 +147,8 @@ jobs:
 
       - name: Merge junit files
         run: |
+          npm init -y
+          yarn set version berry
           yarn dlx junit-merge --recursive --dir results --out results/results.xml
 
       - name: Set coverage list
