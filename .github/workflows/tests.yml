@@ -149,7 +149,7 @@ jobs:
         run: |
           npm init -y
           yarn set version berry
-          yarn dlx junit-merge --recursive --dir results --out results/results.xml
+          yarn dlx junit-report-merger ./results/results.xml "./results/results*.xml"
 
       - name: Set coverage list
         id: coverage
