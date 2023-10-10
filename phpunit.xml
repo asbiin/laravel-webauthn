@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" backupGlobals="false" beStrictAboutTestsThatDoNotTestAnything="true" bootstrap="vendor/autoload.php" colors="true" processIsolation="false" stopOnError="false" stopOnFailure="false" xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/10.3/phpunit.xsd" cacheDirectory=".phpunit.cache" backupStaticProperties="false">
-  <coverage/>
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/10.3/phpunit.xsd"
+         bootstrap="vendor/autoload.php"
+         colors="true"
+>
   <testsuites>
-    <testsuite name="LaravelSabre Tests Suite">
+    <testsuite name="Tests Suite">
       <directory suffix="Test.php">./tests</directory>
     </testsuite>
   </testsuites>
+  <coverage/>
   <php>
     <env name="APP_ENV" value="testing"/>
     <env name="APP_KEY" value="base64:uA/XEme0vpegJz/rKSk3ys2uzEfXZA0Ca2P0e1M8vRU="/>
