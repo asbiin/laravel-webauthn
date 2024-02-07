@@ -142,4 +142,29 @@ class EloquentWebAuthnProviderTest extends FeatureTestCase
         $this->assertNotNull($result);
         $this->assertEquals($user->id, $result->id);
     }
+
+    /**
+     * @test
+     */
+    public function it_does_not_fail_when_retrieving_user()
+    {
+        Webauthn::shouldReceive('validateAssertion')->andReturn(true);
+        Webauthn::shouldReceive('model')->andReturn(WebauthnKey::class);
+
+        $provider = new EloquentWebAuthnProvider(
+            app('config'),
+            app(CredentialAssertionValidator::class),
+            app(Hasher::class),
+            User::class,
+        );
+
+        $result = $provider->retrieveByCredentials([
+            'id' => Base64UrlSafe::encode('id'),
+            'rawId' => 'rawId',
+            'type' => 'public-key',
+            'response' => 'response',
+        ]);
+
+        $this->assertNull($result);
+    }
 }
