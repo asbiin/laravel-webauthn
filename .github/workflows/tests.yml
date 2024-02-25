@@ -8,7 +8,6 @@ on:
       - next-major
       - beta
       - alpha
-      - '[0-9]+.x'
   pull_request:
     types: [opened, synchronize, reopened]
   release:
@@ -19,7 +18,11 @@ on:
 env:
   default-php-version: '8.2'
   default-laravel-version: '10.*'
-  semantic-node-version: 18
+  semantic-node-version: 20
+
+concurrency:
+  group: Tests ${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   tests:
@@ -29,8 +32,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php-version: ['8.1','8.2']
-        laravel-version: [9.*,10.*]
+        php-version: ['8.1', '8.2', '8.3']
+        laravel-version: ['9.*', '10.*', '11.*']
         psr7: ['guzzle']
         include:
           - php-version: '8.1'
@@ -44,6 +47,12 @@ jobs:
             psr7: 'nyholm'
           - php-version: '8.2'
             laravel-version: '10.*'
+            psr7: 'discovery'
+          - php-version: '8.2'
+            laravel-version: '11.*'
+            psr7: 'nyholm'
+          - php-version: '8.2'
+            laravel-version: '11.*'
             psr7: 'discovery'
 
     steps:
@@ -159,7 +168,7 @@ jobs:
 
       - name: SonarCloud Scan
         if: env.SONAR_TOKEN != ''
-        uses: SonarSource/sonarcloud-github-action@v2.0.2
+        uses: SonarSource/sonarcloud-github-action@v2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
