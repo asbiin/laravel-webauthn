@@ -32,7 +32,7 @@ class CredentialAttestationValidator extends CredentialValidator
     public function __invoke(User $user, array $data): PublicKeyCredentialSource
     {
         // Load the data
-        $publicKeyCredential = $this->loader->deserialize($data, PublicKeyCredential::class, 'json');
+        $publicKeyCredential = $this->loader->deserialize(json_encode($data), PublicKeyCredential::class, 'json');
 
         // Check the response against the request
         return $this->validator->check(
@@ -48,7 +48,7 @@ class CredentialAttestationValidator extends CredentialValidator
     protected function pullPublicKey(User $user): PublicKeyCredentialCreationOptions
     {
         try {
-            $value = json_decode($this->cache->pull($this->cacheKey($user)), true, flags: JSON_THROW_ON_ERROR);
+            $value = $this->cache->pull($this->cacheKey($user));
 
             return $this->loader->deserialize($value, PublicKeyCredentialCreationOptions::class, 'json');
         } catch (\Exception $e) {
