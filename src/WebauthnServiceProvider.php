@@ -204,6 +204,7 @@ class WebauthnServiceProvider extends ServiceProvider
                 null,
                 $app[ExtensionOutputCheckerHandler::class],
                 $app[CoseAlgorithmManager::class],
+                null,
                 ($app[CeremonyStepManagerFactory::class])->requestCeremony()
             )), fn (AuthenticatorAssertionResponseValidator $responseValidator) => $responseValidator->setLogger($app['webauthn.log'])
             )
