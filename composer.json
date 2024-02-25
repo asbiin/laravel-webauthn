@@ -23,6 +23,7 @@
         "php": ">=8.1",
         "illuminate/support": "^9.0 || ^10.0",
         "psr/http-factory-implementation": "1.0",
+        "symfony/property-access": "^6.4 || ^7.0",
         "symfony/property-info": "^6.4 || ^7.0",
         "symfony/serializer": "^6.4 || ^7.0",
         "web-auth/cose-lib": "^4.0",
