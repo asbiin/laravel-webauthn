@@ -33,7 +33,8 @@ class CredentialAssertionValidator extends CredentialValidator
     public function __invoke(User $user, array $data): bool
     {
         // Load the data
-        $publicKeyCredential = $this->loader->deserialize(json_encode($data), PublicKeyCredential::class, 'json');
+        $content = json_encode($data, flags: JSON_THROW_ON_ERROR);
+        $publicKeyCredential = $this->loader->deserialize($content, PublicKeyCredential::class, 'json');
 
         // Check the response against the request
         $this->validator->check(
@@ -53,7 +54,7 @@ class CredentialAssertionValidator extends CredentialValidator
     protected function pullPublicKey(User $user): PublicKeyCredentialRequestOptions
     {
         try {
-            $value = json_decode($this->cache->pull($this->cacheKey($user)), true, flags: JSON_THROW_ON_ERROR);
+            $value = $this->cache->pull($this->cacheKey($user));
 
             return $this->loader->deserialize($value, PublicKeyCredentialRequestOptions::class, 'json');
         } catch (\Exception $e) {

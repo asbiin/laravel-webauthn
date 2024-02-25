@@ -32,7 +32,8 @@ class CredentialAttestationValidator extends CredentialValidator
     public function __invoke(User $user, array $data): PublicKeyCredentialSource
     {
         // Load the data
-        $publicKeyCredential = $this->loader->deserialize(json_encode($data), PublicKeyCredential::class, 'json');
+        $content = json_encode($data, flags: JSON_THROW_ON_ERROR);
+        $publicKeyCredential = $this->loader->deserialize($content, PublicKeyCredential::class, 'json');
 
         // Check the response against the request
         return $this->validator->check(
