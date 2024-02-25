@@ -39,6 +39,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\StreamFactoryInterface;
 use Psr\Http\Message\UploadedFileFactoryInterface;
 use Symfony\Bridge\PsrHttpMessage\Factory\PsrHttpFactory;
+use Symfony\Component\Serializer\SerializerInterface;
 use Webauthn\AttestationStatement\AndroidKeyAttestationStatementSupport;
 use Webauthn\AttestationStatement\AndroidSafetyNetAttestationStatementSupport;
 use Webauthn\AttestationStatement\AppleAttestationStatementSupport;
@@ -52,9 +53,9 @@ use Webauthn\AuthenticationExtensions\ExtensionOutputCheckerHandler;
 use Webauthn\AuthenticatorAssertionResponseValidator;
 use Webauthn\AuthenticatorAttestationResponseValidator;
 use Webauthn\AuthenticatorSelectionCriteria;
+use Webauthn\CeremonyStep\CeremonyStepManagerFactory;
 use Webauthn\Counter\CounterChecker;
 use Webauthn\Counter\ThrowExceptionIfInvalid;
-use Webauthn\PublicKeyCredentialLoader;
 use Webauthn\PublicKeyCredentialRpEntity;
 
 class WebauthnServiceProvider extends ServiceProvider
@@ -189,14 +190,22 @@ class WebauthnServiceProvider extends ServiceProvider
             )
         );
         $this->app->bind(
+            CeremonyStepManagerFactory::class,
+            fn ($app) => tap(new CeremonyStepManagerFactory, function (CeremonyStepManagerFactory $factory) use ($app) {
+                $factory->setExtensionOutputCheckerHandler($app[ExtensionOutputCheckerHandler::class]);
+                $factory->setAlgorithmManager($app[CoseAlgorithmManager::class]);
+                $factory->setCounterChecker($app[CounterChecker::class]);
+            })
+        );
+        $this->app->bind(
             AuthenticatorAssertionResponseValidator::class,
             fn ($app) => tap((new AuthenticatorAssertionResponseValidator(
                 null,
                 null,
                 $app[ExtensionOutputCheckerHandler::class],
-                $app[CoseAlgorithmManager::class]
-            ))
-                ->setCounterChecker($app[CounterChecker::class]), fn (AuthenticatorAssertionResponseValidator $responseValidator) => $responseValidator->setLogger($app['webauthn.log'])
+                $app[CoseAlgorithmManager::class],
+                ($app[CeremonyStepManagerFactory::class])->requestCeremony()
+            )), fn (AuthenticatorAssertionResponseValidator $responseValidator) => $responseValidator->setLogger($app['webauthn.log'])
             )
         );
         $this->app->bind(
@@ -207,7 +216,6 @@ class WebauthnServiceProvider extends ServiceProvider
                 $app['config']->get('webauthn.userless')
             )
         );
-
         $this->app->bind(
             PublicKeyCredentialRpEntity::class,
             fn ($app) => new PublicKeyCredentialRpEntity(
@@ -216,14 +224,6 @@ class WebauthnServiceProvider extends ServiceProvider
                 $app['config']->get('webauthn.icon')
             )
         );
-        $this->app->bind(
-            PublicKeyCredentialLoader::class,
-            fn ($app) => tap(new PublicKeyCredentialLoader(
-                $app[AttestationObjectLoader::class]
-            ), fn (PublicKeyCredentialLoader $loader) => $loader->setLogger($app['webauthn.log'])
-            )
-        );
-
         $this->app->bind(
             CoseAlgorithmManager::class,
             fn ($app) => $app[CoseAlgorithmManagerFactory::class]
@@ -255,6 +255,10 @@ class WebauthnServiceProvider extends ServiceProvider
                     $factory->add((string) $algorithm::identifier(), new $algorithm);
                 }
             })
+        );
+        $this->app->bind(
+            SerializerInterface::class,
+            fn ($app) => (new \Webauthn\Denormalizer\WebauthnSerializerFactory($app[AttestationStatementSupportManager::class]))->create()
         );
     }
 

@@ -8,10 +8,10 @@ use Illuminate\Http\Request;
 use LaravelWebauthn\Exceptions\ResponseMismatchException;
 use LaravelWebauthn\Services\Webauthn;
 use ParagonIE\ConstantTime\Base64UrlSafe;
+use Symfony\Component\Serializer\SerializerInterface;
 use Webauthn\AuthenticatorAssertionResponse;
 use Webauthn\AuthenticatorAssertionResponseValidator;
 use Webauthn\PublicKeyCredential;
-use Webauthn\PublicKeyCredentialLoader;
 use Webauthn\PublicKeyCredentialRequestOptions;
 
 class CredentialAssertionValidator extends CredentialValidator
@@ -19,7 +19,7 @@ class CredentialAssertionValidator extends CredentialValidator
     public function __construct(
         Request $request,
         Cache $cache,
-        protected PublicKeyCredentialLoader $loader,
+        protected SerializerInterface $loader,
         protected AuthenticatorAssertionResponseValidator $validator
     ) {
         parent::__construct($request, $cache);
@@ -33,7 +33,7 @@ class CredentialAssertionValidator extends CredentialValidator
     public function __invoke(User $user, array $data): bool
     {
         // Load the data
-        $publicKeyCredential = $this->loader->loadArray($data);
+        $publicKeyCredential = $this->loader->deserialize($data, PublicKeyCredential::class, 'json');
 
         // Check the response against the request
         $this->validator->check(
@@ -55,7 +55,7 @@ class CredentialAssertionValidator extends CredentialValidator
         try {
             $value = json_decode($this->cache->pull($this->cacheKey($user)), true, flags: JSON_THROW_ON_ERROR);
 
-            return PublicKeyCredentialRequestOptions::createFromArray($value);
+            return $this->loader->deserialize($value, PublicKeyCredentialRequestOptions::class, 'json');
         } catch (\Exception $e) {
             app('webauthn.log')->debug('Webauthn publickKey deserialize error', ['exception' => $e]);
             abort(404);

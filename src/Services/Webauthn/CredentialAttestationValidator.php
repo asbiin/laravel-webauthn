@@ -6,11 +6,11 @@ use Illuminate\Contracts\Auth\Authenticatable as User;
 use Illuminate\Contracts\Cache\Repository as Cache;
 use Illuminate\Http\Request;
 use LaravelWebauthn\Exceptions\ResponseMismatchException;
+use Symfony\Component\Serializer\SerializerInterface;
 use Webauthn\AuthenticatorAttestationResponse;
 use Webauthn\AuthenticatorAttestationResponseValidator;
 use Webauthn\PublicKeyCredential;
 use Webauthn\PublicKeyCredentialCreationOptions;
-use Webauthn\PublicKeyCredentialLoader;
 use Webauthn\PublicKeyCredentialSource;
 
 class CredentialAttestationValidator extends CredentialValidator
@@ -18,7 +18,7 @@ class CredentialAttestationValidator extends CredentialValidator
     public function __construct(
         Request $request,
         Cache $cache,
-        protected PublicKeyCredentialLoader $loader,
+        protected SerializerInterface $loader,
         protected AuthenticatorAttestationResponseValidator $validator
     ) {
         parent::__construct($request, $cache);
@@ -32,7 +32,7 @@ class CredentialAttestationValidator extends CredentialValidator
     public function __invoke(User $user, array $data): PublicKeyCredentialSource
     {
         // Load the data
-        $publicKeyCredential = $this->loader->loadArray($data);
+        $publicKeyCredential = $this->loader->deserialize($data, PublicKeyCredential::class, 'json');
 
         // Check the response against the request
         return $this->validator->check(
@@ -50,7 +50,7 @@ class CredentialAttestationValidator extends CredentialValidator
         try {
             $value = json_decode($this->cache->pull($this->cacheKey($user)), true, flags: JSON_THROW_ON_ERROR);
 
-            return PublicKeyCredentialCreationOptions::createFromArray($value);
+            return $this->loader->deserialize($value, PublicKeyCredentialCreationOptions::class, 'json');
         } catch (\Exception $e) {
             app('webauthn.log')->debug('Webauthn publicKey deserialize error', ['exception' => $e]);
             abort(404);
