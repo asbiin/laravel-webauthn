@@ -46,30 +46,30 @@ class WebauthnTest extends FeatureTestCase
     /**
      * @test
      */
-    // public function test_do_register_data()
-    // {
-    //     $user = $this->signIn();
+    public function test_do_register_data()
+    {
+        $user = $this->signIn();
 
-    //     $publicKey = $this->app[PrepareCreationData::class]($user);
-    //     $this->assertInstanceOf(\Webauthn\PublicKeyCredentialCreationOptions::class, $publicKey);
+        $publicKey = $this->app[PrepareCreationData::class]($user);
+        $this->assertInstanceOf(\Webauthn\PublicKeyCredentialCreationOptions::class, $publicKey);
 
-    //     $data = $this->getAttestationData($publicKey);
+        $data = $this->getAttestationData($publicKey);
 
-    //     $this->app[ValidateKeyCreation::class]($user, $data, 'name');
+        $this->app[ValidateKeyCreation::class]($user, $data, 'name');
 
-    //     $this->assertDatabaseHas('webauthn_keys', [
-    //         'user_id' => $user->getAuthIdentifier(),
-    //         'name' => 'name',
-    //         'credentialId' => 'MA==',
-    //         'type' => 'public-key',
-    //         'transports' => '[]',
-    //         'attestationType' => 'none',
-    //         'trustPath' => '{"type":"Webauthn\\\\TrustPath\\\\EmptyTrustPath"}',
-    //         'aaguid' => '00000000-0000-0000-0000-000000000000',
-    //         'credentialPublicKey' => 'oWNrZXlldmFsdWU=',
-    //         'counter' => '1',
-    //     ]);
-    // }
+        $this->assertDatabaseHas('webauthn_keys', [
+            'user_id' => $user->getAuthIdentifier(),
+            'name' => 'name',
+            'credentialId' => 'MA==',
+            'type' => 'public-key',
+            'transports' => '[]',
+            'attestationType' => 'none',
+            'trustPath' => '{"type":"Webauthn\\\\TrustPath\\\\EmptyTrustPath"}',
+            'aaguid' => '00000000-0000-0000-0000-000000000000',
+            'credentialPublicKey' => 'oWNrZXlldmFsdWU=',
+            'counter' => '1',
+        ]);
+    }
 
     /**
      * @test
