@@ -117,7 +117,7 @@ jobs:
 
       - name: Set results artifact name
         id: artifact
-        run: echo "name=${{ matrix.php-version }}_${{ matrix.laravel-version }}" | sed -e "s/*//g" >> $GITHUB_OUTPUT
+        run: echo "name=${{ matrix.php-version }}_${{ matrix.laravel-version }}${{ matrix.psr7 }}" | sed -e "s/*//g" >> $GITHUB_OUTPUT
 
       - name: Setup problem matchers
         run: echo "::add-matcher::${{ runner.tool_cache }}/phpunit.json"
@@ -154,7 +154,7 @@ jobs:
       - name: Download results
         uses: actions/download-artifact@v4
         with:
-          name: ${{ format('results_{0}_{1}*', env.default-php-version, env.default-laravel-version) }}
+          pattern: ${{ format('results_{0}_{1}', env.default-php-version, env.default-laravel-version) }}
           path: results
           merge-multiple: true
 

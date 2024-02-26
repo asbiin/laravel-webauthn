@@ -5,6 +5,7 @@ namespace LaravelWebauthn\Tests\Unit\Services;
 use CBOR\ListObject;
 use CBOR\MapItem;
 use CBOR\MapObject;
+use CBOR\NegativeIntegerObject;
 use CBOR\TextStringObject;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
@@ -65,8 +66,8 @@ class WebauthnTest extends FeatureTestCase
             'transports' => '[]',
             'attestationType' => 'none',
             'trustPath' => '{"type":"Webauthn\\\\TrustPath\\\\EmptyTrustPath"}',
-            'aaguid' => '00000000-0000-0000-0000-000000000000',
-            'credentialPublicKey' => 'oWNrZXlldmFsdWU=',
+            'aaguid' => '30303030-3030-3030-3030-303030303030',
+            'credentialPublicKey' => 'omExZXZhbHVlYTMm',
             'counter' => '1',
         ]);
     }
@@ -141,8 +142,12 @@ class WebauthnTest extends FeatureTestCase
                             pack('n', 1).'0'. // credentialLength
                             ((string) new MapObject([
                                 new MapItem(
-                                    new TextStringObject('key'),
+                                    new TextStringObject('1'),
                                     new TextStringObject('value')
+                                ),
+                                new MapItem(
+                                    new TextStringObject('3'),
+                                    new NegativeIntegerObject(6, null)
                                 ),
                             ])) // credentialPublicKey
                         )
