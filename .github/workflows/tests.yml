@@ -149,7 +149,7 @@ jobs:
       - name: Download results
         uses: actions/download-artifact@v4
         with:
-          name: ${{ format('results_{0}_{1}*', env.default-php-version, env.default-laravel-version) }}
+          name: ${{ format('results_{0}_{1}', env.default-php-version, env.default-laravel-version) }}
           path: results
           merge-multiple: true
 
