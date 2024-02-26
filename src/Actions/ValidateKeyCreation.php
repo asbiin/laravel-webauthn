@@ -45,7 +45,7 @@ class ValidateKeyCreation
      *
      * @throws \Illuminate\Validation\ValidationException
      */
-    protected function throwFailedRegisterException(User $user, Exception $e = null): void
+    protected function throwFailedRegisterException(User $user, ?Exception $e = null): void
     {
         WebauthnRegisterFailed::dispatch($user, $e);
 

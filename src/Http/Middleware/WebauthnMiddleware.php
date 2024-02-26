@@ -21,7 +21,7 @@ class WebauthnMiddleware
     /**
      * Handle an incoming request.
      */
-    public function handle(Request $request, Closure $next, string $guard = null): mixed
+    public function handle(Request $request, Closure $next, ?string $guard = null): mixed
     {
         if (Webauthn::webauthnEnabled() && ! Webauthn::check()) {
             abort_if($this->auth->guard($guard)->guest(), 401, /** @var string $m */ $m = trans('webauthn::errors.user_unauthenticated'));

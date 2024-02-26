@@ -50,7 +50,7 @@ class Webauthn extends WebauthnRepository
     /**
      * Get a completion redirect path for a specific feature.
      */
-    public static function redirects(string $redirect, string $default = null): string
+    public static function redirects(string $redirect, ?string $default = null): string
     {
         return config('webauthn.redirects.'.$redirect) ?? $default ?? config('webauthn.home');
     }
