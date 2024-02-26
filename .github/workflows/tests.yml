@@ -19,7 +19,11 @@ on:
 env:
   default-php-version: '8.2'
   default-laravel-version: '10.*'
-  semantic-node-version: 18
+  semantic-node-version: 20
+
+concurrency:
+  group: Tests ${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   tests:
@@ -29,8 +33,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php-version: ['8.1','8.2']
-        laravel-version: [9.*,10.*]
+        php-version: ['8.1', '8.2', '8.3']
+        laravel-version: ['9.*', '10.*']
         psr7: ['guzzle']
         include:
           - php-version: '8.1'
@@ -63,6 +67,8 @@ jobs:
         run: composer -V
       - name: Check PHP Extensions
         run: php -m
+      - name: Setup problem matchers for PHP
+        run: echo "::add-matcher::${{ runner.tool_cache }}/php.json"
 
       - name: Validate composer.json
         run: composer validate
@@ -71,7 +77,7 @@ jobs:
         id: composer-cache
         run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
       - name: Cache composer files
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: ${{ steps.composer-cache.outputs.dir }}
           key: ${{ runner.os }}-composer-v4-${{ hashFiles('**/composer.json') }}-${{ matrix.php-version }}-${{ matrix.laravel-version }}
@@ -104,24 +110,25 @@ jobs:
         run: |
           composer update --no-interaction --no-progress --prefer-dist
 
-      - name: Setup problem matchers
-        run: |
-          echo "::add-matcher::${{ runner.tool_cache }}/php.json"
-          echo "::add-matcher::${{ runner.tool_cache }}/phpunit.json"
+      - name: Set results artifact name
+        id: artifact
+        run: echo "name=${{ matrix.php-version }}_${{ matrix.laravel-version }}" | sed -e "s/*//g" >> $GITHUB_OUTPUT
 
+      - name: Setup problem matchers
+        run: echo "::add-matcher::${{ runner.tool_cache }}/phpunit.json"
       - name: Run test suite
         run: vendor/bin/phpunit -c phpunit.xml --log-junit ./results/results_${{ matrix.psr7 }}.xml --coverage-clover ./results/coverage_${{ matrix.psr7 }}.xml
 
       - name: Fix results files
+        if: success() || failure()
         run: sed -i -e "s%$GITHUB_WORKSPACE/%%g" *.xml
         working-directory: results
-        if: success() || failure()
 
       - name: Store results
-        if: matrix.php-version == env.default-php-version && matrix.laravel-version == env.default-laravel-version && (success() || failure())
-        uses: actions/upload-artifact@v3
+        if: success() || failure()
+        uses: actions/upload-artifact@v4
         with:
-          name: results
+          name: results_${{ steps.artifact.outputs.name }}
           path: results
 
 
@@ -140,16 +147,19 @@ jobs:
           fetch-depth: 0
 
       - name: Download results
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
-          name: results
+          name: ${{ format('results_{0}_{1}*', env.default-php-version, env.default-laravel-version) }}
           path: results
+          merge-multiple: true
 
       - name: Merge junit files
         run: |
+          mkdir -p $RUNNER_TEMP/junit-merge
+          cd $RUNNER_TEMP/junit-merge
           npm init -y
           yarn set version berry
-          yarn dlx junit-report-merger ./results/results.xml "./results/results*.xml"
+          yarn dlx junit-merge --recursive --dir $GITHUB_WORKSPACE/results --out $GITHUB_WORKSPACE/results/results.xml
 
       - name: Set coverage list
         id: coverage
@@ -159,7 +169,7 @@ jobs:
 
       - name: SonarCloud Scan
         if: env.SONAR_TOKEN != ''
-        uses: SonarSource/sonarcloud-github-action@v2.1.1
+        uses: SonarSource/sonarcloud-github-action@v2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
@@ -207,7 +217,7 @@ jobs:
 
       - name: Store changelog file
         if: steps.semantic.outputs.new_release_published == 'true'
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: changelog
           path: CHANGELOG.md
