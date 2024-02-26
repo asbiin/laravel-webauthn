@@ -28,8 +28,8 @@
         "symfony/property-info": "^6.4 || ^7.0",
         "symfony/serializer": "^6.4 || ^7.0",
         "web-auth/cose-lib": "^4.0",
-        "web-auth/webauthn-lib": "^4.8.0",
-        "web-token/jwt-signature": "^3.0"
+        "web-auth/webauthn-lib": "^4.8",
+        "web-token/jwt-library": "^3.0"
     },
     "conflict": {
         "web-auth/webauthn-lib": "4.7.0"
@@ -53,11 +53,7 @@
         "guzzlehttp/psr7": "To provide a psr/http-factory-implementation implementation",
         "symfony/psr-http-message-bridge": "To find a psr/http-factory-implementation implementation",
         "php-http/discovery": "To find a psr/http-factory-implementation implementation",
-        "psr/http-client-implementation": "Required for the AndroidSafetyNet Attestation Statement support",
-        "web-token/jwt-signature-algorithm-rsa": "Required for the AndroidSafetyNet Attestation Statement support",
-        "web-token/jwt-signature-algorithm-ecdsa": "Required for the AndroidSafetyNet Attestation Statement support",
-        "web-token/jwt-signature-algorithm-eddsa": "Required for the AndroidSafetyNet Attestation Statement support",
-        "web-token/jwt-key-mgmt": "Required for the AndroidSafetyNet Attestation Statement support"
+        "psr/http-client-implementation": "Required for the AndroidSafetyNet Attestation Statement support"
     },
     "autoload": {
         "psr-4": {
