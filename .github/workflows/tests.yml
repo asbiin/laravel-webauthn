@@ -112,7 +112,7 @@ jobs:
 
       - name: Set results artifact name
         id: artifact
-        run: echo "name=${{ matrix.php-version }}_${{ matrix.laravel-version }}" | sed -e "s/*//g" >> $GITHUB_OUTPUT
+        run: echo "name=${{ matrix.php-version }}_${{ matrix.laravel-version }}_${{ matrix.psr7 }}" | sed -e "s/*//g" >> $GITHUB_OUTPUT
 
       - name: Setup problem matchers
         run: echo "::add-matcher::${{ runner.tool_cache }}/phpunit.json"
