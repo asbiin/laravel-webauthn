@@ -54,6 +54,9 @@ jobs:
           - php-version: '8.2'
             laravel-version: '11.*'
             psr7: 'discovery'
+        exclude:
+          - php-version: '8.1'
+            laravel-version: '11.*'
 
     steps:
       - name: Checkout sources
