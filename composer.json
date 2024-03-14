@@ -41,7 +41,7 @@
         "laravel/pint": "^1.13",
         "larastan/larastan": "^2.0",
         "ocramius/package-versions": "^2.0",
-        "orchestra/testbench": "^8.0 || ^9.0 || ^10.0",
+        "orchestra/testbench": "^7.0 || ^8.0 || ^9.0",
         "phpstan/phpstan-deprecation-rules": "^1.0",
         "phpstan/phpstan-phpunit": "^1.0",
         "phpstan/phpstan-strict-rules": "^1.0",
