@@ -45,7 +45,7 @@
         "phpstan/phpstan-deprecation-rules": "^1.0",
         "phpstan/phpstan-phpunit": "^1.0",
         "phpstan/phpstan-strict-rules": "^1.0",
-        "phpunit/phpunit": "^9.5 || ^10.0 || ^11.0",
+        "phpunit/phpunit": "^9.5 || ^10.0 || ^11.0",
         "psalm/plugin-laravel": "^2.8",
         "xheaven/composer-git-hooks": "^3.1"
     },
