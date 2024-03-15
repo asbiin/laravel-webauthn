@@ -104,7 +104,7 @@ jobs:
       - name: Update dependencies with Laravel ${{ matrix.laravel-version }}
         run: |
           export COMPOSER_ROOT_VERSION=dev-main
-          composer require "illuminate/support:${{ matrix.laravel-version }}" --no-update
+          composer require "illuminate/support:^${{ matrix.laravel-version }}" --no-update
 
       - name: Use psr7 variant (nyholm)
         if: matrix.psr7 == 'nyholm'
