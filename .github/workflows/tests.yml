@@ -8,7 +8,6 @@ on:
       - next-major
       - beta
       - alpha
-      - '[0-9]+.x'
   pull_request:
     types: [opened, synchronize, reopened]
   release:
@@ -17,8 +16,8 @@ on:
   workflow_dispatch:
 
 env:
-  default-php-version: '8.2'
-  default-laravel-version: '10.*'
+  default-php-version: '8.3'
+  default-laravel-version: '11.0'
   semantic-node-version: 20
 
 concurrency:
@@ -34,21 +33,36 @@ jobs:
       fail-fast: false
       matrix:
         php-version: ['8.1', '8.2', '8.3']
-        laravel-version: ['9.*', '10.*']
+        laravel-version: ['9.0', '10.0', '11.0']
         psr7: ['guzzle']
         include:
           - php-version: '8.1'
-            laravel-version: '9.*'
+            laravel-version: '9.0'
             psr7: 'nyholm'
           - php-version: '8.1'
-            laravel-version: '9.*'
+            laravel-version: '9.0'
             psr7: 'discovery'
           - php-version: '8.2'
-            laravel-version: '10.*'
+            laravel-version: '10.0'
             psr7: 'nyholm'
           - php-version: '8.2'
-            laravel-version: '10.*'
+            laravel-version: '10.0'
             psr7: 'discovery'
+          - php-version: '8.2'
+            laravel-version: '11.0'
+            psr7: 'nyholm'
+          - php-version: '8.2'
+            laravel-version: '11.0'
+            psr7: 'discovery'
+          - php-version: '8.3'
+            laravel-version: '11.0'
+            psr7: 'nyholm'
+          - php-version: '8.3'
+            laravel-version: '11.0'
+            psr7: 'discovery'
+        exclude:
+          - php-version: '8.1'
+            laravel-version: '11.0'
 
     steps:
       - name: Checkout sources
@@ -90,7 +104,7 @@ jobs:
       - name: Update dependencies with Laravel ${{ matrix.laravel-version }}
         run: |
           export COMPOSER_ROOT_VERSION=dev-main
-          composer require "illuminate/support:${{ matrix.laravel-version }}" --no-update
+          composer require "illuminate/support:^${{ matrix.laravel-version }}" --no-update
 
       - name: Use psr7 variant (nyholm)
         if: matrix.psr7 == 'nyholm'
@@ -149,7 +163,7 @@ jobs:
       - name: Download results
         uses: actions/download-artifact@v4
         with:
-          pattern: ${{ format('results_{0}_{1}', env.default-php-version, env.default-laravel-version) }}
+          pattern: ${{ format('results_{0}_{1}*', env.default-php-version, env.default-laravel-version) }}
           path: results
           merge-multiple: true
 
