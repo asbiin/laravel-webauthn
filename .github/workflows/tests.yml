@@ -16,7 +16,7 @@ on:
   workflow_dispatch:
 
 env:
-  default-php-version: '8.2'
+  default-php-version: '8.3'
   default-laravel-version: '11.0'
   semantic-node-version: 20
 
