@@ -34,7 +34,7 @@ Webauthn adapter for Laravel <!-- omit in toc -->
 - [License](#license)
 
 
-**LaravelWebauthn** is an adapter to use Webauthn as [2FA](https://en.wikipedia.org/wiki/Multi-factor_authentication) (two-factor authentication) or as passwordless authentication on Laravel.
+**LaravelWebauthn** is the adapter to use Webauthn as [2FA](https://en.wikipedia.org/wiki/Multi-factor_authentication) (two-factor authentication) or as passwordless authentication on Laravel.
 
 **Try this now on the [demo application](https://webauthn.asbin.net/).**
 
@@ -48,7 +48,7 @@ Webauthn adapter for Laravel <!-- omit in toc -->
 
 # Installation
 
-Install LaravelWebauthn with:
+Install this package with:
 
 ```sh
 composer require asbiin/laravel-webauthn
@@ -466,6 +466,6 @@ If you haven't done so already, describe your site domain and network in your ho
 
 Author: [Alexis Saettler](https://github.com/asbiin)
 
-Copyright © 2019–2023.
+Copyright © 2019–2024.
 
 Licensed under the MIT License. [View license](/LICENSE.md).
