@@ -10,12 +10,14 @@ Webauthn adapter for Laravel <!-- omit in toc -->
 
 - [Features](#features)
 - [Installation](#installation)
+  - [psr/http-factory-implementation](#psrhttp-factory-implementation)
   - [Configuration](#configuration)
 - [Set Up](#set-up)
   - [Add LaravelWebauthn middleware](#add-laravelwebauthn-middleware)
   - [Login via remember](#login-via-remember)
   - [Passwordless authentication](#passwordless-authentication)
   - [Disabling Views](#disabling-views)
+  - [Cache](#cache)
 - [Usage](#usage)
   - [Authenticate](#authenticate)
   - [Register a new key](#register-a-new-key)
@@ -32,7 +34,7 @@ Webauthn adapter for Laravel <!-- omit in toc -->
 - [License](#license)
 
 
-**LaravelWebauthn** is an adapter to use Webauthn as [2FA](https://en.wikipedia.org/wiki/Multi-factor_authentication) (two-factor authentication) or as passwordless authentication on Laravel.
+**LaravelWebauthn** is the adapter to use Webauthn as [2FA](https://en.wikipedia.org/wiki/Multi-factor_authentication) (two-factor authentication) or as passwordless authentication on Laravel.
 
 **Try this now on the [demo application](https://webauthn.asbin.net/).**
 
@@ -46,22 +48,19 @@ Webauthn adapter for Laravel <!-- omit in toc -->
 
 # Installation
 
-Install LaravelWebauthn and a [`psr/http-factory-implementation` implementation](https://packagist.org/providers/psr/http-factory-implementation):
+Install this package with:
 
 ```sh
-composer require asbiin/laravel-webauthn guzzlehttp/psr7
+composer require asbiin/laravel-webauthn
 ```
 
-You can use any other [`psr/http-factory-implementation` implementation](https://packagist.org/providers/psr/http-factory-implementation).
+## psr/http-factory-implementation
 
-- We recommend using `guzzlehttp/psr7` package:
-    ```sh
-    composer require guzzlehttp/psr7
-    ```
-- For instance you can use `nyholm/psr7`. You'll also need `symfony/psr-http-message-bridge` and `php-http/discovery`:
-    ```sh
-    composer require nyholm/psr7 symfony/psr-http-message-bridge php-http/discovery
-    ```
+You'll need a [`psr/http-factory-implementation` implementation](https://packagist.org/providers/psr/http-factory-implementation):
+
+We recommend using `guzzlehttp/psr7`, which is installed by `guzzlehttp/guzzle`, so you probably already have it.
+
+You can use any other [`psr/http-factory-implementation` implementation](https://packagist.org/providers/psr/http-factory-implementation), like `nyholm/psr7` (this one also requires `symfony/psr-http-message-bridge` and `php-http/discovery`)
 
 ## Configuration
 
@@ -69,11 +68,6 @@ You can publish LaravelWebauthn configuration in a file named `config/webauthn.p
 
 ```sh
 php artisan vendor:publish --provider="LaravelWebauthn\WebauthnServiceProvider"
-```
-
-If desired, you may disable LaravelWebauthn entirely using the `enabled` configuration option:
-```php
-'enabled' => false,
 ```
 
 Next, you should migrate your database:
@@ -99,7 +93,7 @@ You can use this middleware in your `routes.php` file:
 ```php
 Route::middleware(['auth', 'webauthn'])->group(function () {
     Route::get('/home', 'HomeController@index')->name('home');
-    ...
+    // ...
 }
 ```
 
@@ -108,10 +102,11 @@ The Webauthn middleware will redirect the user to the webauthn login page when r
 
 ## Login via remember
 
-When session expires, but the user have set the `remember` token, you can revalidate webauthn session by adding this in your `App\Providers\EventServiceProvider` file:
+When session expires, but the user have set the `remember` cookie, you can revalidate webauthn session by adding this in your `App\Providers\EventServiceProvider` file:
 
 ```php
 use Illuminate\Auth\Events\Login;
+use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 use LaravelWebauthn\Listeners\LoginViaRemember;
 
 class EventServiceProvider extends ServiceProvider
@@ -121,7 +116,7 @@ class EventServiceProvider extends ServiceProvider
             LoginViaRemember::class,
         ],
     ];
-// ...
+}
 ```
 
 
@@ -155,6 +150,10 @@ However, if you are building a JavaScript driven single-page application, you ma
 ```php
 'views' => false,
 ```
+
+## Cache
+
+Note this package uses the cache to store the challenge data between the server request and the browser response. You'll need to setup a real cache driver from your `config/cache.php` file, and thus you can't use the `array` or `null` driver.
 
 
 # Usage
@@ -278,16 +277,16 @@ If the registration is successful, the server will use the `webauthn.redirects.r
 
 These routes are defined:
 
-| Request | Route | Description |
-|---------|-------|-------------|
-| GET `/webauthn/auth` | `webauthn.login` | The login page. |
-| POST `/webauthn/auth/options` | `webauthn.auth.options` | Get the publicKey and challenge to initiate a WebAuthn login. |
-| POST `/webauthn/auth` | `webauthn.auth` | Post data after a WebAuthn login validate. |
-| GET `/webauthn/keys/create` | `webauthn.create` | The register key page. |
+| Request                       | Route                    | Description                                                           |
+|-------------------------------|--------------------------|-----------------------------------------------------------------------|
+| GET `/webauthn/auth`          | `webauthn.login`         | The login page.                                                       |
+| POST `/webauthn/auth/options` | `webauthn.auth.options`  | Get the publicKey and challenge to initiate a WebAuthn login.         |
+| POST `/webauthn/auth`         | `webauthn.auth`          | Post data after a WebAuthn login validate.                            |
+| GET `/webauthn/keys/create`   | `webauthn.create`        | The register key page.                                                |
 | POST `/webauthn/keys/options` | `webauthn.store.options` | Get the publicKeys and challenge to initiate a WebAuthn registration. |
-| POST `/webauthn/keys` | `webauthn.store` | Post data after a WebAuthn register check. |
-| DELETE `/webauthn/keys/{id}` | `webauthn.destroy` | Delete an existing key. |
-| PUT `/webauthn/keys/{id}` | `webauthn.update` | Update key properties (name, ...). |
+| POST `/webauthn/keys`         | `webauthn.store`         | Post data after a WebAuthn register check.                            |
+| DELETE `/webauthn/keys/{id}`  | `webauthn.destroy`       | Delete an existing key.                                               |
+| PUT `/webauthn/keys/{id}`     | `webauthn.update`        | Update key properties (name, ...).                                    |
 
 
 You can customize the first part of the url by setting `prefix` value in the config file.
@@ -327,13 +326,11 @@ use LaravelWebauthn\Actions\PrepareAuthenticatedSession;
 use LaravelWebauthn\Services\Webauthn;
 use Illuminate\Http\Request;
 
-Webauthn::authenticateThrough(function (Request $request) {
-    return array_filter([
-            config('webauthn.limiters.login') !== null ? null : EnsureLoginIsNotThrottled::class,
-            AttemptToAuthenticate::class,
-            PrepareAuthenticatedSession::class,
-    ]);
-});
+Webauthn::authenticateThrough(fn (Request $request) => array_filter([
+    config('webauthn.limiters.login') !== null ? null : EnsureLoginIsNotThrottled::class,
+    AttemptToAuthenticate::class,
+    PrepareAuthenticatedSession::class,
+]));
 ```
 
 ## Rate Limiter
@@ -405,25 +402,23 @@ class LoginViewResponse extends LoginViewResponseBase
 {
     public function toResponse($request)
     {
-        $publicKey = $this->publicKeyRequest($request);
-
         return Inertia::render('Webauthn/WebauthnLogin', [
-            'publicKey' => $publicKey
-        ]);
+            'publicKey' => $this->publicKey
+        ])->toResponse($request);
     }
 }
 ```
 
 List of methods and their expected response contracts:
 
-| Webauthn static methods | `\LaravelWebauthn\Contracts` |
-|-------------------------|------------------------------|
-| `loginViewResponseUsing` | `LoginViewResponseContract` |
-| `loginSuccessResponseUsing` | `LoginSuccessResponseContract` |
-| `registerViewResponseUsing` | `RegisterViewResponseContract` |
+| Webauthn static methods        | `\LaravelWebauthn\Contracts`      |
+|--------------------------------|-----------------------------------|
+| `loginViewResponseUsing`       | `LoginViewResponseContract`       |
+| `loginSuccessResponseUsing`    | `LoginSuccessResponseContract`    |
+| `registerViewResponseUsing`    | `RegisterViewResponseContract`    |
 | `registerSuccessResponseUsing` | `RegisterSuccessResponseContract` |
-| `destroyViewResponseUsing` | `DestroyResponseContract` |
-| `updateViewResponseUsing` | `UpdateResponseContract` |
+| `destroyViewResponseUsing`     | `DestroyResponseContract`         |
+| `updateViewResponseUsing`      | `UpdateResponseContract`          |
 
 
 # Compatibility
@@ -435,8 +430,8 @@ This package has the following Laravel compatibility:
 | Laravel  | [asbiin/laravel-webauthn](https://github.com/asbiin/laravel-webauthn) |
 |----------|----------|
 | 5.8-8.x  | <= 1.2.0 |
-| 7.x-8.x  | 2.0.1 |
-| 9.x-10.x  | >= 3.0.0 |
+| 7.x-8.x  | 2.0.1    |
+| >= 9.x   | >= 3.0.0 |
 
 ## Browser compatibility
 
@@ -471,6 +466,6 @@ If you haven't done so already, describe your site domain and network in your ho
 
 Author: [Alexis Saettler](https://github.com/asbiin)
 
-Copyright © 2019–2023.
+Copyright © 2019–2024.
 
 Licensed under the MIT License. [View license](/LICENSE.md).
