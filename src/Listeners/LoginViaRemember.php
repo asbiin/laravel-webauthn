@@ -4,6 +4,7 @@ namespace LaravelWebauthn\Listeners;
 
 use Illuminate\Auth\Events\Login;
 use Illuminate\Contracts\Auth\Authenticatable as User;
+use Illuminate\Events\Dispatcher;
 use Illuminate\Support\Facades\Auth;
 use LaravelWebauthn\Facades\Webauthn;
 
@@ -27,5 +28,17 @@ class LoginViaRemember
         if (Webauthn::enabled($user)) {
             Webauthn::login($user);
         }
+    }
+
+    /**
+     * Register the listeners for the subscriber.
+     *
+     * @return array<string, string>
+     */
+    public function subscribe(Dispatcher $events): array
+    {
+        return [
+            Login::class => 'handle',
+        ];
     }
 }
