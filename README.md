@@ -10,12 +10,11 @@ Webauthn adapter for Laravel <!-- omit in toc -->
 
 - [Features](#features)
 - [Installation](#installation)
-  - [psr/http-factory-implementation](#psrhttp-factory-implementation)
   - [Configuration](#configuration)
 - [Set Up](#set-up)
-  - [Add LaravelWebauthn middleware](#add-laravelwebauthn-middleware)
-  - [Login via remember](#login-via-remember)
-  - [Passwordless authentication](#passwordless-authentication)
+  - [Option 1: add LaravelWebauthn middleware](#option-1-add-laravelwebauthn-middleware)
+    - [Login via remember](#login-via-remember)
+  - [Option 2: Passwordless authentication](#option-2-passwordless-authentication)
   - [Disabling Views](#disabling-views)
   - [Cache](#cache)
 - [Usage](#usage)
@@ -54,14 +53,6 @@ Install this package with:
 composer require asbiin/laravel-webauthn
 ```
 
-## psr/http-factory-implementation
-
-You'll need a [`psr/http-factory-implementation` implementation](https://packagist.org/providers/psr/http-factory-implementation):
-
-We recommend using `guzzlehttp/psr7`, which is installed by `guzzlehttp/guzzle`, so you probably already have it.
-
-You can use any other [`psr/http-factory-implementation` implementation](https://packagist.org/providers/psr/http-factory-implementation), like `nyholm/psr7` (this one also requires `symfony/psr-http-message-bridge` and `php-http/discovery`)
-
 ## Configuration
 
 You can publish LaravelWebauthn configuration in a file named `config/webauthn.php`, and resources using the `vendor:publish` command:
@@ -79,48 +70,48 @@ php artisan migrate
 
 # Set Up
 
-## Add LaravelWebauthn middleware
+## Option 1: add LaravelWebauthn middleware
 
 The Webauthn middleware will force the user to authenticate their webauthn key for certain routes.
 
-Add this in the `$routeMiddleware` array of your `app/Http/Kernel.php` file:
+Assign the middleware to a route or a group of routes:
 
 ```php
-'webauthn' => \LaravelWebauthn\Http\Middleware\WebauthnMiddleware::class,
-```
+use LaravelWebauthn\Http\Middleware\WebauthnMiddleware;
 
-You can use this middleware in your `routes.php` file:
-```php
-Route::middleware(['auth', 'webauthn'])->group(function () {
-    Route::get('/home', 'HomeController@index')->name('home');
+Route::get('/home', function () {
     // ...
-}
+})->middleware(WebauthnMiddleware::class);
 ```
 
 The Webauthn middleware will redirect the user to the webauthn login page when required.
 
 
-## Login via remember
+### Login via remember
 
-When session expires, but the user have set the `remember` cookie, you can revalidate webauthn session by adding this in your `App\Providers\EventServiceProvider` file:
+When session expires, but the user have set the `remember` cookie, you can revalidate webauthn session by subscribing to the `LaravelWebauthn\Listeners\LoginViaRemember` listener:
 
 ```php
-use Illuminate\Auth\Events\Login;
-use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
-use LaravelWebauthn\Listeners\LoginViaRemember;
+use Illuminate\Support\Facades\Event;
+use Illuminate\Support\ServiceProvider;
 
-class EventServiceProvider extends ServiceProvider
+class AppServiceProvider extends ServiceProvider
 {
-    protected $listen = [
-        Login::class => [
-            LoginViaRemember::class,
-        ],
-    ];
+    /**
+     * Bootstrap any application services.
+     */
+    public function boot(): void
+    {
+        Event::listen(
+            \Illuminate\Auth\Events\Login::class,
+            \LaravelWebauthn\Listeners\LoginViaRemember::class
+        );
+    }
 }
 ```
 
 
-## Passwordless authentication
+## Option 2: Passwordless authentication
 
 You can use Webauthn to authenticate a user without a password, using only a webauthn key authentication.
 
@@ -302,7 +293,10 @@ use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
 {
-    public function register()
+    /**
+     * Register any application services.
+     */
+    public function register(): void
     {
         Webauthn::ignoreRoutes();
     }
@@ -337,22 +331,25 @@ Webauthn::authenticateThrough(fn (Request $request) => array_filter([
 
 By default, Laravel Webauthn will throttle logins to five requests per minute for every email and IP address combination. You may specify a custom rate limiter with other specifications.
 
-First define a custom rate limiter. Follow [Laravel rate limiter documentation](https://laravel.com/docs/9.x/routing#defining-rate-limiters) to create a new RateLimiter within the `configureRateLimiting` method of your application's `App\Providers\RouteServiceProvider` class.
+First define a custom rate limiter. Follow [Laravel rate limiter documentation](https://laravel.com/docs/11.x/routing#defining-rate-limiters) to create a new RateLimiter within the `boot` method of your application's `App\Providers\AppServiceProvider` class.
 
 ```php
 use Illuminate\Cache\RateLimiting\Limit;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\RateLimiter;
+use Illuminate\Support\ServiceProvider;
 
-/**
- * Configure the rate limiters for the application.
- *
- * @return void
- */
-protected function configureRateLimiting()
+class AppServiceProvider extends ServiceProvider
 {
-    RateLimiter::for('webauthn-login', function (Request $request) {
-        return Limit::perMinute(1000);
-    });
+    /**
+     * Bootstrap any application services.
+     */
+    protected function boot(): void
+    {
+        RateLimiter::for('webauthn-login', function (Request $request) {
+            return Limit::perMinute(1000);
+        });
+    }
 }
 ```
 
@@ -379,14 +376,17 @@ Events are dispatched by LaravelWebauthn:
 
 You can easily change the view responses with the Webauthn service.
 
-For instance, call `Webauthn::loginViewResponseUsing` in your `AppServiceProvider`:
+For instance, call `Webauthn::loginViewResponseUsing` in your `App\Providers\AppServiceProvider` class:
 
 ```php
 use LaravelWebauthn\Services\Webauthn;
 
 class AppServiceProvider extends ServiceProvider
 {
-    public function register()
+    /**
+     * Register any application services.
+     */
+    public function register(): void
     {
         Webauthn::loginViewResponseUsing(LoginViewResponse::class);
     }
