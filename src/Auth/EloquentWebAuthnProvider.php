@@ -84,4 +84,17 @@ class EloquentWebAuthnProvider extends EloquentUserProvider
 
         return false;
     }
+
+    /**
+     * Rehash the user's password if required and supported.
+     */
+    public function rehashPasswordIfRequired(User $user, array $credentials, bool $force = false): void
+    {
+        if ($this->isSignedChallenge($credentials)) {
+            // We don't need to rehash the password for WebAuthn credentials.
+            return;
+        }
+
+        parent::rehashPasswordIfRequired($user, $credentials, $force);
+    }
 }
