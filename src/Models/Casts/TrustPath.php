@@ -3,8 +3,8 @@
 namespace LaravelWebauthn\Models\Casts;
 
 use Illuminate\Contracts\Database\Eloquent\CastsAttributes;
+use Symfony\Component\Serializer\SerializerInterface;
 use Webauthn\TrustPath\TrustPath as TrustPathLib;
-use Webauthn\TrustPath\TrustPathLoader;
 
 /**
  * @implements CastsAttributes<TrustPathLib,string>
@@ -19,7 +19,7 @@ class TrustPath implements CastsAttributes
      */
     public function get($model, string $key, $value, array $attributes): ?TrustPathLib
     {
-        return $value !== null ? TrustPathLoader::loadTrustPath(json_decode($value, true, flags: JSON_THROW_ON_ERROR)) : null;
+        return $value !== null ? app(SerializerInterface::class)->deserialize($value, TrustPath::class, 'json') : null;
     }
 
     /**
