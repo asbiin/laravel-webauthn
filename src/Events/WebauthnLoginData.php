@@ -18,7 +18,7 @@ class WebauthnLoginData
      * @param  PublicKeyCredentialRequestOptions  $publicKey  The authentication data.
      */
     public function __construct(
-        public User $user,
+        public ?User $user,
         public PublicKeyCredentialRequestOptions $publicKey
     ) {}
 }
