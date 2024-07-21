@@ -20,6 +20,5 @@ class WebauthnRegisterFailed
     public function __construct(
         public User $user,
         public ?Exception $exception = null
-    ) {
-    }
+    ) {}
 }
