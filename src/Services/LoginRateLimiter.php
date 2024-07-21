@@ -13,8 +13,7 @@ class LoginRateLimiter
      */
     public function __construct(
         protected RateLimiter $limiter
-    ) {
-    }
+    ) {}
 
     /**
      * Get the number of attempts for the given key.

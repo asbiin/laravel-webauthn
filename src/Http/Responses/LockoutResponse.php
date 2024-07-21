@@ -15,8 +15,7 @@ class LockoutResponse implements LockoutResponseContract
      */
     public function __construct(
         protected LoginRateLimiter $limiter
-    ) {
-    }
+    ) {}
 
     /**
      * Create an HTTP response that represents the object.

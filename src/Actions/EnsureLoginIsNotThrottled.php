@@ -15,8 +15,7 @@ class EnsureLoginIsNotThrottled
      */
     public function __construct(
         protected LoginRateLimiter $limiter
-    ) {
-    }
+    ) {}
 
     /**
      * Handle the incoming request.

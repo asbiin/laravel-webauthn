@@ -7,6 +7,4 @@ use RuntimeException;
 /**
  * Exception thrown if the user handle is wrong.
  */
-class WrongUserHandleException extends RuntimeException
-{
-}
+class WrongUserHandleException extends RuntimeException {}

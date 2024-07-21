@@ -19,6 +19,5 @@ class WebauthnLogin
     public function __construct(
         public User $user,
         public bool $eloquent = false
-    ) {
-    }
+    ) {}
 }
