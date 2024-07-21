@@ -19,7 +19,7 @@ class TrustPath implements CastsAttributes
      */
     public function get($model, string $key, $value, array $attributes): ?TrustPathLib
     {
-        return $value !== null ? app(SerializerInterface::class)->deserialize($value, TrustPath::class, 'json') : null;
+        return $value !== null ? app(SerializerInterface::class)->deserialize($value, TrustPathLib::class, 'json') : null;
     }
 
     /**
