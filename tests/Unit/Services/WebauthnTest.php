@@ -289,6 +289,4 @@ class WebauthnTest extends FeatureTestCase
     }
 }
 
-class WebauthnKeyTest extends WebauthnKey
-{
-}
+class WebauthnKeyTest extends WebauthnKey {}

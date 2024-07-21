@@ -41,7 +41,6 @@ use Psr\Http\Message\UploadedFileFactoryInterface;
 use Symfony\Bridge\PsrHttpMessage\Factory\PsrHttpFactory;
 use Symfony\Component\Serializer\SerializerInterface;
 use Webauthn\AttestationStatement\AndroidKeyAttestationStatementSupport;
-use Webauthn\AttestationStatement\AndroidSafetyNetAttestationStatementSupport;
 use Webauthn\AttestationStatement\AppleAttestationStatementSupport;
 use Webauthn\AttestationStatement\AttestationObjectLoader;
 use Webauthn\AttestationStatement\AttestationStatementSupportManager;
@@ -131,15 +130,6 @@ class WebauthnServiceProvider extends ServiceProvider
             )
         );
         $this->app->bind(
-            AndroidSafetyNetAttestationStatementSupport::class,
-            fn ($app) => (new AndroidSafetyNetAttestationStatementSupport())
-                ->enableApiVerification(
-                    $app[ClientInterface::class],
-                    $app['config']->get('webauthn.google_safetynet_api_key'),
-                    $app[RequestFactoryInterface::class]
-                )
-        );
-        $this->app->bind(
             AttestationStatementSupportManager::class,
             fn ($app) => tap(new AttestationStatementSupportManager(), function ($manager) use ($app) {
                 // https://www.w3.org/TR/webauthn/#sctn-none-attestation
@@ -156,11 +146,6 @@ class WebauthnServiceProvider extends ServiceProvider
 
                 // https://www.w3.org/TR/webauthn/#sctn-packed-attestation
                 $manager->add($app[PackedAttestationStatementSupport::class]);
-
-                // https://www.w3.org/TR/webauthn/#sctn-android-safetynet-attestation
-                if ($app['config']->get('webauthn.google_safetynet_api_key') !== null) {
-                    $manager->add($app[AndroidSafetyNetAttestationStatementSupport::class]);
-                }
 
                 // https://www.w3.org/TR/webauthn/#sctn-apple-anonymous-attestation
                 $manager->add($app[AppleAttestationStatementSupport::class]);
@@ -182,10 +167,8 @@ class WebauthnServiceProvider extends ServiceProvider
         $this->app->bind(
             AuthenticatorAttestationResponseValidator::class,
             fn ($app) => tap(new AuthenticatorAttestationResponseValidator(
-                $app[AttestationStatementSupportManager::class],
-                null,
-                null,
-                $app[ExtensionOutputCheckerHandler::class]
+                attestationStatementSupportManager: $app[AttestationStatementSupportManager::class],
+                extensionOutputCheckerHandler: $app[ExtensionOutputCheckerHandler::class]
             ), fn (AuthenticatorAttestationResponseValidator $responseValidator) => $responseValidator->setLogger($app['webauthn.log'])
             )
         );
