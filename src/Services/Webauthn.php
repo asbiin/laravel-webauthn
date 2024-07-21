@@ -102,7 +102,7 @@ class Webauthn extends WebauthnRepository
     /**
      * Get publicKey data to prepare Webauthn login.
      */
-    public static function prepareAssertion(User $user): PublicKeyCredentialRequestOptions
+    public static function prepareAssertion(?User $user): PublicKeyCredentialRequestOptions
     {
         return tap(app(RequestOptionsFactory::class)($user), function ($publicKey) use ($user) {
             WebauthnLoginData::dispatch($user, $publicKey);

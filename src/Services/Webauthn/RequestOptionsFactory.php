@@ -31,7 +31,7 @@ final class RequestOptionsFactory extends OptionsFactory
     /**
      * Create a new PublicKeyCredentialCreationOptions object.
      */
-    public function __invoke(User $user): PublicKeyCredentialRequestOptions
+    public function __invoke(?User $user): PublicKeyCredentialRequestOptions
     {
         $publicKey = new PublicKeyCredentialRequestOptions(
             $this->getChallenge(),
@@ -63,9 +63,9 @@ final class RequestOptionsFactory extends OptionsFactory
      *
      * @return array<array-key,PublicKeyCredentialDescriptor>
      */
-    private function getAllowedCredentials(User $user): array
+    private function getAllowedCredentials(?User $user): array
     {
-        return CredentialRepository::getRegisteredKeys($user);
+        return $user !== null ? CredentialRepository::getRegisteredKeys($user) : [];
     }
 
     /**

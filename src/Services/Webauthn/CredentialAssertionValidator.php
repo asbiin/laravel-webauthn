@@ -30,7 +30,7 @@ class CredentialAssertionValidator extends CredentialValidator
      *
      * @throws ResponseMismatchException
      */
-    public function __invoke(User $user, array $data): bool
+    public function __invoke(?User $user, array $data): bool
     {
         // Load the data
         $content = json_encode($data, flags: JSON_THROW_ON_ERROR);
@@ -51,10 +51,14 @@ class CredentialAssertionValidator extends CredentialValidator
     /**
      * Get public Key credential.
      */
-    protected function pullPublicKey(User $user): PublicKeyCredentialRequestOptions
+    protected function pullPublicKey(?User $user): PublicKeyCredentialRequestOptions
     {
         try {
             $value = $this->cache->pull($this->cacheKey($user));
+
+            if ($value === null && in_array(config('webauthn.userless'), ['required', 'preferred'])) {
+                $value = $this->cache->pull($this->cacheKey(null));
+            }
 
             return $this->loader->deserialize($value, PublicKeyCredentialRequestOptions::class, 'json');
         } catch (\Exception $e) {
@@ -79,14 +83,16 @@ class CredentialAssertionValidator extends CredentialValidator
     /**
      * Get credential source from user and public key.
      */
-    protected function getCredentialSource(User $user, PublicKeyCredential $publicKeyCredential)
+    protected function getCredentialSource(?User $user, PublicKeyCredential $publicKeyCredential)
     {
         $credentialId = $publicKeyCredential->rawId;
 
-        return (Webauthn::model())::where('user_id', $user->getAuthIdentifier())
-            ->where(fn ($query) => $query->where('credentialId', Base64UrlSafe::encode($credentialId))
+        return (Webauthn::model())::where(
+            fn ($query) => $query->where('credentialId', Base64UrlSafe::encode($credentialId))
                 ->orWhere('credentialId', Base64UrlSafe::encodeUnpadded($credentialId))
-            )
+        )->where(
+            fn ($query) => $user !== null ? $query->where('user_id', $user->getAuthIdentifier()) : $query
+        )
             ->firstOrFail()
             ->publicKeyCredentialSource;
     }

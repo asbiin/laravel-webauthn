@@ -16,19 +16,18 @@ abstract class CredentialValidator
     public function __construct(
         protected Request $request,
         protected Cache $cache
-    ) {
-    }
+    ) {}
 
     /**
      * Returns the cache key to remember the challenge for the user.
      */
-    protected function cacheKey(User $user): string
+    protected function cacheKey(?User $user): string
     {
         return implode(
             '|',
             [
                 self::CACHE_PUBLICKEY_REQUEST,
-                get_class($user).':'.$user->getAuthIdentifier(),
+                $user !== null ? get_class($user).':'.$user->getAuthIdentifier() : '',
                 hash('sha512', $this->request->host().'|'.$this->request->ip()),
             ]
         );
