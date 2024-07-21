@@ -56,7 +56,7 @@ class CredentialAssertionValidator extends CredentialValidator
         try {
             $value = $this->cache->pull($this->cacheKey($user));
 
-            if ($value === null && in_array(config('webauthn.userless'), ['required', 'preferred'])) {
+            if ($value === null && in_array(config('webauthn.userless'), ['required', 'preferred'], true)) {
                 $value = $this->cache->pull($this->cacheKey(null));
             }
 
