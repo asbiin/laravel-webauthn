@@ -73,7 +73,7 @@ class WebauthnControllerTest extends FeatureTestCase
         $response = $this->post('/webauthn/keys/options', [], ['accept' => 'application/json']);
 
         $response->assertStatus(200);
-        $this->assertEquals('Y2hhbGxlbmdl', $response->json('publicKey.challenge'));
+        $this->assertEquals('challenge', $response->json('publicKey.challenge'));
     }
 
     /**

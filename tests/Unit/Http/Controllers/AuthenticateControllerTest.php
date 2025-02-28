@@ -60,7 +60,7 @@ class AuthenticateControllerTest extends FeatureTestCase
         $response = $this->get('/webauthn/auth', ['accept' => 'application/json']);
 
         $response->assertStatus(200);
-        $this->assertEquals('Y2hhbGxlbmdl', $response->json('publicKey.challenge'));
+        $this->assertEquals('challenge', $response->json('publicKey.challenge'));
     }
 
     /**

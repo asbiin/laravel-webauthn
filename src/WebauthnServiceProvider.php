@@ -126,12 +126,12 @@ class WebauthnServiceProvider extends ServiceProvider
         $this->app->bind(
             PackedAttestationStatementSupport::class,
             fn ($app) => new PackedAttestationStatementSupport(
-                $app[CoseAlgorithmManager::class]
+                algorithmManager: $app[CoseAlgorithmManager::class]
             )
         );
         $this->app->bind(
             AttestationStatementSupportManager::class,
-            fn ($app) => tap(new AttestationStatementSupportManager(), function ($manager) use ($app) {
+            fn ($app) => tap(new AttestationStatementSupportManager, function ($manager) use ($app) {
                 // https://www.w3.org/TR/webauthn/#sctn-none-attestation
                 $manager->add($app[NoneAttestationStatementSupport::class]);
 
@@ -167,8 +167,7 @@ class WebauthnServiceProvider extends ServiceProvider
         $this->app->bind(
             AuthenticatorAttestationResponseValidator::class,
             fn ($app) => tap(new AuthenticatorAttestationResponseValidator(
-                attestationStatementSupportManager: $app[AttestationStatementSupportManager::class],
-                extensionOutputCheckerHandler: $app[ExtensionOutputCheckerHandler::class]
+                ceremonyStepManager: ($app[CeremonyStepManagerFactory::class])->creationCeremony(),
             ), fn (AuthenticatorAttestationResponseValidator $responseValidator) => $responseValidator->setLogger($app['webauthn.log'])
             )
         );
@@ -183,29 +182,24 @@ class WebauthnServiceProvider extends ServiceProvider
         $this->app->bind(
             AuthenticatorAssertionResponseValidator::class,
             fn ($app) => tap((new AuthenticatorAssertionResponseValidator(
-                null,
-                null,
-                $app[ExtensionOutputCheckerHandler::class],
-                $app[CoseAlgorithmManager::class],
-                null,
-                ($app[CeremonyStepManagerFactory::class])->requestCeremony()
+                ceremonyStepManager: ($app[CeremonyStepManagerFactory::class])->requestCeremony()
             )), fn (AuthenticatorAssertionResponseValidator $responseValidator) => $responseValidator->setLogger($app['webauthn.log'])
             )
         );
         $this->app->bind(
             AuthenticatorSelectionCriteria::class,
             fn ($app) => new AuthenticatorSelectionCriteria(
-                $app['config']->get('webauthn.attachment_mode', 'null'),
-                $app['config']->get('webauthn.user_verification', 'preferred'),
-                $app['config']->get('webauthn.userless')
+                authenticatorAttachment: $app['config']->get('webauthn.attachment_mode', 'null'),
+                userVerification: $app['config']->get('webauthn.user_verification', 'preferred'),
+                residentKey: $app['config']->get('webauthn.userless')
             )
         );
         $this->app->bind(
             PublicKeyCredentialRpEntity::class,
             fn ($app) => new PublicKeyCredentialRpEntity(
-                $app['config']->get('app.name', 'Laravel'),
-                $app->make('request')->host(),
-                $app['config']->get('webauthn.icon')
+                name: $app['config']->get('app.name', 'Laravel'),
+                id: $app->make('request')->host(),
+                icon: $app['config']->get('webauthn.icon')
             )
         );
         $this->app->bind(

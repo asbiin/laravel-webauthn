@@ -36,12 +36,12 @@ class WebauthnTest extends FeatureTestCase
 
         $this->assertInstanceOf(\Webauthn\PublicKeyCredentialCreationOptions::class, $publicKey);
 
-        $this->assertNotNull($publicKey->getChallenge());
-        $this->assertEquals(32, strlen($publicKey->getChallenge()));
+        $this->assertNotNull($publicKey->challenge);
+        $this->assertEquals(32, strlen($publicKey->challenge));
 
-        $this->assertInstanceOf(\Webauthn\PublicKeyCredentialUserEntity::class, $publicKey->getUser());
-        $this->assertEquals($user->getAuthIdentifier(), $publicKey->getUser()->getId());
-        $this->assertEquals($user->email, $publicKey->getUser()->getDisplayName());
+        $this->assertInstanceOf(\Webauthn\PublicKeyCredentialUserEntity::class, $publicKey->user);
+        $this->assertEquals($user->getAuthIdentifier(), $publicKey->user->id);
+        $this->assertEquals($user->email, $publicKey->user->displayName);
     }
 
     /**
@@ -65,7 +65,7 @@ class WebauthnTest extends FeatureTestCase
             'type' => 'public-key',
             'transports' => '[]',
             'attestationType' => 'none',
-            'trustPath' => '{"type":"Webauthn\\\\TrustPath\\\\EmptyTrustPath"}',
+            'trustPath' => '{}',
             'aaguid' => '30303030-3030-3030-3030-303030303030',
             'credentialPublicKey' => 'omExZXZhbHVlYTMm',
             'counter' => '1',
@@ -86,13 +86,13 @@ class WebauthnTest extends FeatureTestCase
 
         $this->assertInstanceOf(\Webauthn\PublicKeyCredentialRequestOptions::class, $publicKey);
 
-        $this->assertNotNull($publicKey->getChallenge());
-        $this->assertEquals(32, strlen($publicKey->getChallenge()));
+        $this->assertNotNull($publicKey->challenge);
+        $this->assertEquals(32, strlen($publicKey->challenge));
 
-        $this->assertEquals('preferred', $publicKey->getUserVerification());
-        $this->assertEquals('localhost', $publicKey->getRpId());
-        $this->assertEquals(60000, $publicKey->getTimeout());
-        $this->assertCount(0, $publicKey->getExtensions());
+        $this->assertEquals('preferred', $publicKey->userVerification);
+        $this->assertEquals('localhost', $publicKey->rpId);
+        $this->assertEquals(60000, $publicKey->timeout);
+        $this->assertCount(0, $publicKey->extensions);
     }
 
     /**
@@ -124,7 +124,7 @@ class WebauthnTest extends FeatureTestCase
             'response' => [
                 'clientDataJSON' => Base64UrlSafe::encodeUnpadded(json_encode([
                     'type' => 'webauthn.create',
-                    'challenge' => Base64UrlSafe::encodeUnpadded($publicKey->getChallenge()),
+                    'challenge' => Base64UrlSafe::encodeUnpadded($publicKey->challenge),
                     'origin' => 'https://localhost',
                     'tokenBinding' => [
                         'status' => 'supported',
@@ -192,7 +192,7 @@ class WebauthnTest extends FeatureTestCase
      */
     public function test_aaguid_null()
     {
-        $webauthnKey = new WebauthnKey();
+        $webauthnKey = new WebauthnKey;
         $webauthnKey->aaguid = null;
 
         $this->assertNull($webauthnKey->getAttributeValue('aaguid'));
@@ -204,7 +204,7 @@ class WebauthnTest extends FeatureTestCase
      */
     public function test_aaguid_empty()
     {
-        $webauthnKey = new WebauthnKey();
+        $webauthnKey = new WebauthnKey;
         $webauthnKey->aaguid = '';
 
         $this->assertEquals('', $webauthnKey->getAttributeValue('aaguid'));
@@ -216,7 +216,7 @@ class WebauthnTest extends FeatureTestCase
      */
     public function test_aaguid_string()
     {
-        $webauthnKey = new WebauthnKey();
+        $webauthnKey = new WebauthnKey;
         $webauthnKey->aaguid = '38195f59-0e5b-4ebf-be46-75664177eeee';
 
         $this->assertEquals('38195f59-0e5b-4ebf-be46-75664177eeee', $webauthnKey->getAttributeValue('aaguid'));
@@ -227,9 +227,9 @@ class WebauthnTest extends FeatureTestCase
     /**
      * @test
      */
-    public function test_aaguid_Uuid()
+    public function test_aaguid_uuid()
     {
-        $webauthnKey = new WebauthnKey();
+        $webauthnKey = new WebauthnKey;
         $webauthnKey->aaguid = Uuid::fromString('38195f59-0e5b-4ebf-be46-75664177eeee');
 
         $this->assertEquals('38195f59-0e5b-4ebf-be46-75664177eeee', $webauthnKey->getAttributeValue('aaguid'));
@@ -252,7 +252,7 @@ class WebauthnTest extends FeatureTestCase
             [],
             'attestationType',
             new \Webauthn\TrustPath\EmptyTrustPath,
-            new NilUuid(),
+            new NilUuid,
             'credentialPublicKey',
             $user->id,
             0
@@ -278,7 +278,7 @@ class WebauthnTest extends FeatureTestCase
             [],
             'attestationType',
             new \Webauthn\TrustPath\EmptyTrustPath,
-            new NilUuid(),
+            new NilUuid,
             'credentialPublicKey',
             $user->id,
             0

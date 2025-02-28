@@ -6,6 +6,7 @@ use Illuminate\Contracts\Auth\Authenticatable as User;
 use Illuminate\Contracts\Cache\Repository as Cache;
 use Illuminate\Contracts\Config\Repository as Config;
 use Illuminate\Http\Request;
+use Symfony\Component\Serializer\SerializerInterface;
 use Webauthn\PublicKeyCredentialDescriptor;
 use Webauthn\PublicKeyCredentialRequestOptions;
 use Webauthn\PublicKeyCredentialRpEntity;
@@ -22,6 +23,7 @@ final class RequestOptionsFactory extends OptionsFactory
         Cache $cache,
         Config $config,
         CredentialRepository $repository,
+        protected SerializerInterface $loader,
         protected PublicKeyCredentialRpEntity $publicKeyCredentialRpEntity
     ) {
         parent::__construct($request, $cache, $config, $repository);
@@ -41,7 +43,7 @@ final class RequestOptionsFactory extends OptionsFactory
             $this->timeout
         );
 
-        $value = json_encode($publicKey, flags: JSON_THROW_ON_ERROR);
+        $value = $this->loader->serialize($publicKey, 'json');
 
         $this->cache->put($this->cacheKey($user), $value, $this->timeout);
 

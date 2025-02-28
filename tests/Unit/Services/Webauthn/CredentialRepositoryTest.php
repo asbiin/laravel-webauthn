@@ -35,6 +35,6 @@ class CredentialRepositoryTest extends FeatureTestCase
 
         $keys = CredentialRepository::getRegisteredKeys($user);
         $this->assertCount(1, $keys);
-        $this->assertEquals('{"type":"public-key","id":"MQ"}', json_encode($keys[0], JSON_THROW_ON_ERROR));
+        $this->assertEquals('{"type":"public-key","id":"1","transports":[]}', json_encode($keys[0], JSON_THROW_ON_ERROR));
     }
 }
