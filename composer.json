@@ -28,8 +28,11 @@
         "symfony/property-info": "^6.4 || ^7.0",
         "symfony/serializer": "^6.4 || ^7.0",
         "web-auth/cose-lib": "^4.0",
-        "web-auth/webauthn-lib": "^5.0",
+        "web-auth/webauthn-lib": "^4.8 || ^5.0",
         "web-token/jwt-library": "^3.0 || ^4.0"
+    },
+    "conflict": {
+        "web-auth/webauthn-lib": "4.7.0"
     },
     "require-dev": {
         "ext-sqlite3": "*",
