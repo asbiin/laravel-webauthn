@@ -13,9 +13,9 @@ class Base64Test extends FeatureTestCase
      *
      * @dataProvider dataProvider
      */
-    public function it_deserialize_credentialId($credentialId, $expected)
+    public function it_deserialize_credential_id($credentialId, $expected)
     {
-        $webauthnKey = new WebauthnKey();
+        $webauthnKey = new WebauthnKey;
 
         $bin = (new Base64)->get($webauthnKey, 'credentialId', $credentialId, []);
 

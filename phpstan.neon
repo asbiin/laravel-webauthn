@@ -16,5 +16,3 @@ parameters:
           paths:
             - */Actions/AttemptToAuthenticate.php
             - */Services/Webauthn/CreationOptionsFactory.php
-
-    excludes_analyse:

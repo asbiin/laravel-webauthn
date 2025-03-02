@@ -27,13 +27,12 @@ final class CreationOptionsFactory extends OptionsFactory
         Request $request,
         Cache $cache,
         Config $config,
-        CredentialRepository $repository,
         protected SerializerInterface $loader,
         protected PublicKeyCredentialRpEntity $publicKeyCredentialRpEntity,
         protected AuthenticatorSelectionCriteria $authenticatorSelectionCriteria,
         protected CoseAlgorithmManager $algorithmManager
     ) {
-        parent::__construct($request, $cache, $config, $repository);
+        parent::__construct($request, $cache, $config);
         $this->attestationConveyance = $config->get('webauthn.attestation_conveyance', 'none');
     }
 
@@ -79,12 +78,10 @@ final class CreationOptionsFactory extends OptionsFactory
     private function createCredentialParameters(): array
     {
         return collect($this->algorithmManager->list())
-            ->map(function ($algorithm): PublicKeyCredentialParameters {
-                return new PublicKeyCredentialParameters(
-                    PublicKeyCredentialDescriptor::CREDENTIAL_TYPE_PUBLIC_KEY,
-                    $algorithm
-                );
-            })
+            ->map(fn ($algorithm): PublicKeyCredentialParameters => new PublicKeyCredentialParameters(
+                PublicKeyCredentialDescriptor::CREDENTIAL_TYPE_PUBLIC_KEY,
+                $algorithm
+            ))
             ->toArray();
     }
 

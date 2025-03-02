@@ -17,6 +17,7 @@ class Base64 implements CastsAttributes
      * @param  \Illuminate\Database\Eloquent\Model  $model
      * @param  mixed  $value
      */
+    #[\Override]
     public function get($model, string $key, $value, array $attributes): ?string
     {
         return $value !== null ? Base64Webauthn::decode($value) : null;
@@ -28,6 +29,7 @@ class Base64 implements CastsAttributes
      * @param  \Illuminate\Database\Eloquent\Model  $model
      * @param  string|null  $value
      */
+    #[\Override]
     public function set($model, string $key, mixed $value, array $attributes): ?string
     {
         return $value !== null ? Base64UrlSafe::encode($value) : null;

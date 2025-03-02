@@ -20,6 +20,7 @@ class LoginViewResponse implements LoginViewResponseContract
      * @param  \Illuminate\Http\Request  $request
      * @return \Symfony\Component\HttpFoundation\Response
      */
+    #[\Override]
     public function toResponse($request)
     {
         $view = config('webauthn.views.authenticate', '');
@@ -32,6 +33,7 @@ class LoginViewResponse implements LoginViewResponseContract
     /**
      * Set public key request data.
      */
+    #[\Override]
     public function setPublicKey(Request $request, PublicKeyCredentialRequestOptions $publicKey): self
     {
         $this->publicKey = $publicKey;

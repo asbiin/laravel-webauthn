@@ -22,11 +22,10 @@ final class RequestOptionsFactory extends OptionsFactory
         Request $request,
         Cache $cache,
         Config $config,
-        CredentialRepository $repository,
         protected SerializerInterface $loader,
         protected PublicKeyCredentialRpEntity $publicKeyCredentialRpEntity
     ) {
-        parent::__construct($request, $cache, $config, $repository);
+        parent::__construct($request, $cache, $config);
         $this->userVerification = self::getUserVerification($config);
     }
 

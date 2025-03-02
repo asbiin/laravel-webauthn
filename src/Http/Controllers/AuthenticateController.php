@@ -62,13 +62,13 @@ class AuthenticateController extends Controller
     protected function loginPipeline(WebauthnLoginRequest $request): Pipeline
     {
         if (Webauthn::$authenticateThroughCallback !== null) {
-            return (new Pipeline(app()))->send($request)->through(array_filter(
+            return (new Pipeline(app()))->send($request)->through(array_filter( // @phpstan-ignore arrayFilter.strict
                 call_user_func(Webauthn::$authenticateThroughCallback, $request)
             ));
         }
 
         if (is_array($pipelines = config('webauthn.pipelines.login'))) {
-            return (new Pipeline(app()))->send($request)->through(array_filter(
+            return (new Pipeline(app()))->send($request)->through(array_filter( // @phpstan-ignore arrayFilter.strict
                 $pipelines
             ));
         }

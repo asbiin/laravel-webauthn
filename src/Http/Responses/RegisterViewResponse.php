@@ -20,6 +20,7 @@ class RegisterViewResponse implements RegisterViewResponseContract
      * @param  \Illuminate\Http\Request  $request
      * @return \Symfony\Component\HttpFoundation\Response
      */
+    #[\Override]
     public function toResponse($request)
     {
         $view = config('webauthn.views.register', '');
@@ -32,6 +33,7 @@ class RegisterViewResponse implements RegisterViewResponseContract
     /**
      * Set public key request data.
      */
+    #[\Override]
     public function setPublicKey(Request $request, PublicKeyCredentialCreationOptions $publicKey): self
     {
         $this->publicKey = $publicKey;

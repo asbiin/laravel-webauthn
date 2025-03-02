@@ -16,6 +16,7 @@ class LoginSuccessResponse implements LoginSuccessResponseContract
      * @param  \Illuminate\Http\Request  $request
      * @return \Symfony\Component\HttpFoundation\Response
      */
+    #[\Override]
     public function toResponse($request)
     {
         return $request->wantsJson()

@@ -30,7 +30,6 @@ use LaravelWebauthn\Http\Responses\RegisterSuccessResponse;
 use LaravelWebauthn\Http\Responses\RegisterViewResponse;
 use LaravelWebauthn\Http\Responses\UpdateResponse;
 use LaravelWebauthn\Services\Webauthn;
-use LaravelWebauthn\Services\Webauthn\CredentialAssertionValidator;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestFactoryInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
@@ -57,6 +56,9 @@ use Webauthn\Counter\CounterChecker;
 use Webauthn\Counter\ThrowExceptionIfInvalid;
 use Webauthn\PublicKeyCredentialRpEntity;
 
+/**
+ * @psalm-suppress UnusedClass
+ */
 class WebauthnServiceProvider extends ServiceProvider
 {
     /**
@@ -73,6 +75,7 @@ class WebauthnServiceProvider extends ServiceProvider
     /**
      * Register any application services.
      */
+    #[\Override]
     public function register(): void
     {
         $this->app->singleton(WebauthnFacade::class, Webauthn::class);
@@ -294,6 +297,8 @@ class WebauthnServiceProvider extends ServiceProvider
                 if (class_exists(\Nyholm\Psr7\Factory\Psr17Factory::class) && class_exists(PsrHttpFactory::class)) {
                     /**
                      * @var ServerRequestFactoryInterface|StreamFactoryInterface|UploadedFileFactoryInterface|ResponseFactoryInterface
+                     *
+                     * @phpstan-ignore varTag.nativeType
                      */
                     $psr17Factory = new \Nyholm\Psr7\Factory\Psr17Factory;
 
@@ -324,7 +329,6 @@ class WebauthnServiceProvider extends ServiceProvider
     {
         $this->app['auth']->provider('webauthn', fn ($app, array $config) => new EloquentWebAuthnProvider(
             $app['config'],
-            $app[CredentialAssertionValidator::class],
             $app[Hasher::class],
             $config['model']
         )

@@ -17,6 +17,7 @@ class TrustPath implements CastsAttributes
      * @param  \Illuminate\Database\Eloquent\Model  $model
      * @param  mixed  $value
      */
+    #[\Override]
     public function get($model, string $key, $value, array $attributes): ?TrustPathLib
     {
         return $value !== null ? app(SerializerInterface::class)->deserialize($value, TrustPathLib::class, 'json') : null;
@@ -28,6 +29,7 @@ class TrustPath implements CastsAttributes
      * @param  \Illuminate\Database\Eloquent\Model  $model
      * @param  string|null  $value
      */
+    #[\Override]
     public function set($model, string $key, mixed $value, array $attributes): ?string
     {
         return json_encode($value, flags: JSON_THROW_ON_ERROR);

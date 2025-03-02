@@ -21,8 +21,7 @@ abstract class OptionsFactory extends CredentialValidator
     public function __construct(
         Request $request,
         Cache $cache,
-        Config $config,
-        protected CredentialRepository $repository
+        Config $config
     ) {
         parent::__construct($request, $cache);
 

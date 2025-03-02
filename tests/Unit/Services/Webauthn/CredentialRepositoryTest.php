@@ -28,7 +28,7 @@ class CredentialRepositoryTest extends FeatureTestCase
 
         $this->assertEmpty(WebauthnKey::all());
 
-        $webauthnKey = factory(WebauthnKey::class)->create([
+        factory(WebauthnKey::class)->create([
             'user_id' => $user->getAuthIdentifier(),
             'credentialId' => '1',
         ]);

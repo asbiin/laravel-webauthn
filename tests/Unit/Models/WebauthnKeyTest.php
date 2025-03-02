@@ -11,9 +11,9 @@ class WebauthnKeyTest extends FeatureTestCase
 {
     public function test_serialize_data()
     {
-        $webauthnKey = new WebauthnKey();
+        $webauthnKey = new WebauthnKey;
         $webauthnKey->user_id = 0;
-        $webauthnKey->publicKeyCredentialSource = new PublicKeyCredentialSource('a', 'b', [], 'c', new \Webauthn\TrustPath\EmptyTrustPath(), Uuid::fromString('38195f59-0e5b-4ebf-be46-75664177eeee'), 'e', '0', 1);
+        $webauthnKey->publicKeyCredentialSource = new PublicKeyCredentialSource('a', 'b', [], 'c', new \Webauthn\TrustPath\EmptyTrustPath, Uuid::fromString('38195f59-0e5b-4ebf-be46-75664177eeee'), 'e', '0', 1);
 
         $this->assertEquals(0, $webauthnKey->user_id);
         $this->assertEquals('a', $webauthnKey->credentialId);
@@ -28,7 +28,7 @@ class WebauthnKeyTest extends FeatureTestCase
 
     public function test_deserialize_data()
     {
-        $webauthnKey = new WebauthnKey();
+        $webauthnKey = new WebauthnKey;
 
         $webauthnKey->user_id = 0;
         $webauthnKey->credentialId = 'a';
@@ -38,7 +38,7 @@ class WebauthnKeyTest extends FeatureTestCase
         $webauthnKey->credentialPublicKey = 'e';
         $webauthnKey->counter = 0;
         $webauthnKey->attestationType = 'c';
-        $webauthnKey->trustPath = new \Webauthn\TrustPath\EmptyTrustPath();
+        $webauthnKey->trustPath = new \Webauthn\TrustPath\EmptyTrustPath;
 
         $publicKeyCredentialSource = $webauthnKey->publicKeyCredentialSource;
 

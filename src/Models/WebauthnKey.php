@@ -26,7 +26,7 @@ class WebauthnKey extends Model
     /**
      * The attributes that are mass assignable.
      *
-     * @var array<int,string>
+     * @var list<string>
      */
     protected $fillable = [
         'user_id',
@@ -45,7 +45,7 @@ class WebauthnKey extends Model
     /**
      * The attributes that should be visible in serialization.
      *
-     * @var array<int,string>
+     * @var list<string>
      */
     protected $visible = [
         'id',
@@ -84,14 +84,14 @@ class WebauthnKey extends Model
                 $this->transports,
                 $this->attestationType,
                 $this->trustPath,
-                $this->aaguid ?? new NilUuid(),
+                $this->aaguid ?? new NilUuid,
                 $this->credentialPublicKey,
                 (string) $this->user_id,
                 $this->counter
             ),
             set: function (PublicKeyCredentialSource $value, ?array $attributes = null): array {
                 if (((string) Arr::get($attributes, 'user_id')) !== $value->userHandle) {
-                    throw new WrongUserHandleException();
+                    throw new WrongUserHandleException;
                 }
 
                 // Set value to attributes using casts

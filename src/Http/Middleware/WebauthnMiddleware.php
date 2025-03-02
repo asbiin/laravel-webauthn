@@ -8,6 +8,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 use LaravelWebauthn\Facades\Webauthn;
 
+/**
+ * @psalm-suppress UnusedClass
+ */
 class WebauthnMiddleware
 {
     /**

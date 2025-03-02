@@ -72,7 +72,7 @@ class Webauthn extends WebauthnRepository
      */
     public static function logout(): void
     {
-        session()->forget(static::sessionName());
+        session()->forget(static::sessionName()); // @phpstan-ignore staticMethod.dynamicCall
     }
 
     /**

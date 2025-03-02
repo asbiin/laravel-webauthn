@@ -13,6 +13,7 @@ class DestroyResponse implements DestroyResponseContract
      * @param  \Illuminate\Http\Request  $request
      * @return \Symfony\Component\HttpFoundation\Response
      */
+    #[\Override]
     public function toResponse($request)
     {
         return $request->wantsJson()

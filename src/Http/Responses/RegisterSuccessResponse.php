@@ -22,6 +22,7 @@ class RegisterSuccessResponse implements RegisterSuccessResponseContract
      * @param  \Illuminate\Http\Request  $request
      * @return \Symfony\Component\HttpFoundation\Response
      */
+    #[\Override]
     public function toResponse($request)
     {
         return $request->wantsJson()
@@ -45,6 +46,7 @@ class RegisterSuccessResponse implements RegisterSuccessResponseContract
     /**
      * Set the new Webauthn key.
      */
+    #[\Override]
     public function setWebauthnKey(Request $request, Model $webauthnKey): self
     {
         $this->webauthnKey = $webauthnKey;

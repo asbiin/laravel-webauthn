@@ -10,6 +10,8 @@ class UpdateKey
 {
     /**
      * Update a key.
+     *
+     * @psalm-suppress PossiblyUnusedReturnValue
      */
     public function __invoke(User $user, int $webauthnKeyId, string $keyName): Model
     {
