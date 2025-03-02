@@ -432,7 +432,7 @@ This package has the following Laravel compatibility:
 | <= 1.2.0 | 5.8-8.x  |
 | 2.0.1    | 7.x-8.x  |
 | >= 3.0.0, <= 4.6.0 | 9.x-11.x |
-| >= 5.0.0 | >= 10.x   |
+| >= 5.0.0 | >= 11.x   |
 
 ## Browser compatibility
 
