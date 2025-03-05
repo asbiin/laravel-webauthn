@@ -277,8 +277,6 @@ return [
     | ID to use for authentication, but they can also login without specifying
     | one if the device can remember them, allowing for true one-touch login.
     |
-    | If required or preferred, login verification will be always required.
-    |
     | See https://www.w3.org/TR/webauthn/#enum-residentKeyRequirement
     |
     | Supported: "null", "required", "preferred", "discouraged".

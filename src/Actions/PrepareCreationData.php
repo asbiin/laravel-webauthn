@@ -7,7 +7,7 @@ use Illuminate\Contracts\Auth\Authenticatable as User;
 use Illuminate\Validation\ValidationException;
 use LaravelWebauthn\Events\WebauthnRegisterFailed;
 use LaravelWebauthn\Facades\Webauthn;
-use Webauthn\PublicKeyCredentialCreationOptions;
+use LaravelWebauthn\Services\Webauthn\PublicKeyCredentialCreationOptions;
 
 class PrepareCreationData
 {

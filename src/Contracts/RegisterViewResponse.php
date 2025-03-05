@@ -4,7 +4,7 @@ namespace LaravelWebauthn\Contracts;
 
 use Illuminate\Contracts\Support\Responsable;
 use Illuminate\Http\Request;
-use Webauthn\PublicKeyCredentialCreationOptions;
+use LaravelWebauthn\Services\Webauthn\PublicKeyCredentialCreationOptions;
 
 interface RegisterViewResponse extends Responsable
 {

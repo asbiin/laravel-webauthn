@@ -467,6 +467,6 @@ If you haven't done so already, describe your site domain and network in your ho
 
 Author: [Alexis Saettler](https://github.com/asbiin)
 
-Copyright © 2019–2024.
+Copyright © 2019–2025.
 
 Licensed under the MIT License. [View license](/LICENSE.md).

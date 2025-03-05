@@ -6,9 +6,8 @@ use Illuminate\Contracts\Auth\Authenticatable as User;
 use Illuminate\Contracts\Cache\Repository as Cache;
 use Illuminate\Contracts\Config\Repository as Config;
 use Illuminate\Http\Request;
-use Symfony\Component\Serializer\SerializerInterface;
 use Webauthn\PublicKeyCredentialDescriptor;
-use Webauthn\PublicKeyCredentialRequestOptions;
+use Webauthn\PublicKeyCredentialRequestOptions as PublicKeyCredentialRequestOptionsBase;
 use Webauthn\PublicKeyCredentialRpEntity;
 
 final class RequestOptionsFactory extends OptionsFactory
@@ -22,7 +21,6 @@ final class RequestOptionsFactory extends OptionsFactory
         Request $request,
         Cache $cache,
         Config $config,
-        protected SerializerInterface $loader,
         protected PublicKeyCredentialRpEntity $publicKeyCredentialRpEntity
     ) {
         parent::__construct($request, $cache, $config);
@@ -34,7 +32,7 @@ final class RequestOptionsFactory extends OptionsFactory
      */
     public function __invoke(?User $user): PublicKeyCredentialRequestOptions
     {
-        $publicKey = new PublicKeyCredentialRequestOptions(
+        $publicKey = new PublicKeyCredentialRequestOptionsBase(
             $this->getChallenge(),
             $this->getRpId(),
             $this->getAllowedCredentials($user),
@@ -42,11 +40,9 @@ final class RequestOptionsFactory extends OptionsFactory
             $this->timeout
         );
 
-        $value = $this->loader->serialize($publicKey, 'json');
-
-        $this->cache->put($this->cacheKey($user), $value, $this->timeout);
-
-        return $publicKey;
+        return tap(PublicKeyCredentialRequestOptions::create($publicKey), function (PublicKeyCredentialRequestOptions $result) use ($user): void {
+            $this->cache->put($this->cacheKey($user), (string) $result, $this->timeout);
+        });
     }
 
     /**
@@ -54,9 +50,7 @@ final class RequestOptionsFactory extends OptionsFactory
      */
     private static function getUserVerification(Config $config): ?string
     {
-        return in_array($config->get('webauthn.userless'), ['required', 'preferred'], true)
-            ? 'required'
-            : $config->get('webauthn.user_verification', 'preferred');
+        return $config->get('webauthn.user_verification', 'preferred');
     }
 
     /**

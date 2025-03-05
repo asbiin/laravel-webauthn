@@ -6,9 +6,10 @@ use Illuminate\Foundation\Testing\DatabaseTransactions;
 use LaravelWebauthn\Actions\ValidateKeyCreation;
 use LaravelWebauthn\Facades\Webauthn;
 use LaravelWebauthn\Models\WebauthnKey;
+use LaravelWebauthn\Services\Webauthn\PublicKeyCredentialCreationOptions;
 use LaravelWebauthn\Tests\FeatureTestCase;
 use Mockery\MockInterface;
-use Webauthn\PublicKeyCredentialCreationOptions;
+use Webauthn\PublicKeyCredentialCreationOptions as PublicKeyCredentialCreationOptionsBase;
 use Webauthn\PublicKeyCredentialRpEntity;
 use Webauthn\PublicKeyCredentialUserEntity;
 
@@ -54,26 +55,22 @@ class WebauthnControllerTest extends FeatureTestCase
      */
     public function it_register_get_data()
     {
-        $user = $this->signIn();
+        $this->signIn();
         Webauthn::shouldReceive('canRegister')->andReturn(true);
 
-        $rpEntity = $this->mock(PublicKeyCredentialRpEntity::class, function (MockInterface $mock) {
-            $mock->shouldReceive('jsonSerialize')->andReturn(['id' => 'id']);
-        });
-        $userEntity = $this->mock(PublicKeyCredentialUserEntity::class, function (MockInterface $mock) {
-            $mock->shouldReceive('jsonSerialize')->andReturn(['id' => 'id']);
-        });
-        Webauthn::shouldReceive('prepareAttestation')->andReturn(new PublicKeyCredentialCreationOptions(
+        $rpEntity = new PublicKeyCredentialRpEntity('name', 'id');
+        $userEntity = new PublicKeyCredentialUserEntity('name', 'id', 'displayName');
+        Webauthn::shouldReceive('prepareAttestation')->andReturn(PublicKeyCredentialCreationOptions::create(new PublicKeyCredentialCreationOptionsBase(
             $rpEntity,
             $userEntity,
             'challenge',
             []
-        ));
+        )));
 
         $response = $this->post('/webauthn/keys/options', [], ['accept' => 'application/json']);
 
         $response->assertStatus(200);
-        $this->assertEquals('challenge', $response->json('publicKey.challenge'));
+        $this->assertEquals('Y2hhbGxlbmdl', $response->json('publicKey.challenge'));
     }
 
     /**
@@ -81,7 +78,7 @@ class WebauthnControllerTest extends FeatureTestCase
      */
     public function it_register_create_without_check()
     {
-        $user = $this->signIn();
+        $this->signIn();
 
         $response = $this->post('/webauthn/keys', [
             'id' => 'id',
@@ -138,7 +135,7 @@ class WebauthnControllerTest extends FeatureTestCase
      */
     public function it_register_create_exception()
     {
-        $user = $this->signIn();
+        $this->signIn();
 
         $response = $this->post('/webauthn/keys', [
             'name' => 'keyname',

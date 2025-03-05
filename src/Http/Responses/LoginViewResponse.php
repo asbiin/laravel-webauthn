@@ -5,7 +5,7 @@ namespace LaravelWebauthn\Http\Responses;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Response;
 use LaravelWebauthn\Contracts\LoginViewResponse as LoginViewResponseContract;
-use Webauthn\PublicKeyCredentialRequestOptions;
+use LaravelWebauthn\Services\Webauthn\PublicKeyCredentialRequestOptions;
 
 class LoginViewResponse implements LoginViewResponseContract
 {
@@ -25,9 +25,11 @@ class LoginViewResponse implements LoginViewResponseContract
     {
         $view = config('webauthn.views.authenticate', '');
 
+        $data = ['publicKey' => $this->publicKey];
+
         return $request->wantsJson()
-            ? Response::json(['publicKey' => $this->publicKey])
-            : Response::view($view, ['publicKey' => $this->publicKey]);
+            ? Response::json($data)
+            : Response::view($view, $data);
     }
 
     /**

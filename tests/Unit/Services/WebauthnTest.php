@@ -34,14 +34,14 @@ class WebauthnTest extends FeatureTestCase
 
         $publicKey = $this->app[PrepareCreationData::class]($user);
 
-        $this->assertInstanceOf(\Webauthn\PublicKeyCredentialCreationOptions::class, $publicKey);
+        $this->assertInstanceOf(\LaravelWebauthn\Services\Webauthn\PublicKeyCredentialCreationOptions::class, $publicKey);
 
-        $this->assertNotNull($publicKey->challenge);
-        $this->assertEquals(32, strlen($publicKey->challenge));
+        $this->assertNotNull($publicKey->data->challenge);
+        $this->assertEquals(32, strlen($publicKey->data->challenge));
 
-        $this->assertInstanceOf(\Webauthn\PublicKeyCredentialUserEntity::class, $publicKey->user);
-        $this->assertEquals($user->getAuthIdentifier(), $publicKey->user->id);
-        $this->assertEquals($user->email, $publicKey->user->displayName);
+        $this->assertInstanceOf(\Webauthn\PublicKeyCredentialUserEntity::class, $publicKey->data->user);
+        $this->assertEquals($user->getAuthIdentifier(), $publicKey->data->user->id);
+        $this->assertEquals($user->email, $publicKey->data->user->displayName);
     }
 
     /**
@@ -52,7 +52,7 @@ class WebauthnTest extends FeatureTestCase
         $user = $this->signIn();
 
         $publicKey = $this->app[PrepareCreationData::class]($user);
-        $this->assertInstanceOf(\Webauthn\PublicKeyCredentialCreationOptions::class, $publicKey);
+        $this->assertInstanceOf(\LaravelWebauthn\Services\Webauthn\PublicKeyCredentialCreationOptions::class, $publicKey);
 
         $data = $this->getAttestationData($publicKey);
 
@@ -84,15 +84,15 @@ class WebauthnTest extends FeatureTestCase
 
         $publicKey = $this->app[PrepareAssertionData::class]($user);
 
-        $this->assertInstanceOf(\Webauthn\PublicKeyCredentialRequestOptions::class, $publicKey);
+        $this->assertInstanceOf(\LaravelWebauthn\Services\Webauthn\PublicKeyCredentialRequestOptions::class, $publicKey);
 
-        $this->assertNotNull($publicKey->challenge);
-        $this->assertEquals(32, strlen($publicKey->challenge));
+        $this->assertNotNull($publicKey->data->challenge);
+        $this->assertEquals(32, strlen($publicKey->data->challenge));
 
-        $this->assertEquals('preferred', $publicKey->userVerification);
-        $this->assertEquals('localhost', $publicKey->rpId);
-        $this->assertEquals(60000, $publicKey->timeout);
-        $this->assertCount(0, $publicKey->extensions);
+        $this->assertEquals('preferred', $publicKey->data->userVerification);
+        $this->assertEquals('localhost', $publicKey->data->rpId);
+        $this->assertEquals(60000, $publicKey->data->timeout);
+        $this->assertCount(0, $publicKey->data->extensions);
     }
 
     /**
@@ -107,7 +107,7 @@ class WebauthnTest extends FeatureTestCase
         ]);
 
         $publicKey = $this->app[PrepareAssertionData::class]($user);
-        $this->assertInstanceOf(\Webauthn\PublicKeyCredentialRequestOptions::class, $publicKey);
+        $this->assertInstanceOf(\LaravelWebauthn\Services\Webauthn\PublicKeyCredentialRequestOptions::class, $publicKey);
 
         $data = $this->getAttestationData($publicKey);
 
@@ -124,7 +124,7 @@ class WebauthnTest extends FeatureTestCase
             'response' => [
                 'clientDataJSON' => Base64UrlSafe::encodeUnpadded(json_encode([
                     'type' => 'webauthn.create',
-                    'challenge' => Base64UrlSafe::encodeUnpadded($publicKey->challenge),
+                    'challenge' => Base64UrlSafe::encodeUnpadded($publicKey->data->challenge),
                     'origin' => 'https://localhost',
                     'tokenBinding' => [
                         'status' => 'supported',

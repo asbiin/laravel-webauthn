@@ -4,7 +4,7 @@ namespace LaravelWebauthn\Actions;
 
 use Illuminate\Contracts\Auth\Authenticatable as User;
 use LaravelWebauthn\Facades\Webauthn;
-use Webauthn\PublicKeyCredentialRequestOptions;
+use LaravelWebauthn\Services\Webauthn\PublicKeyCredentialRequestOptions;
 
 class PrepareAssertionData
 {

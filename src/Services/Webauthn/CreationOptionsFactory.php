@@ -8,9 +8,8 @@ use Illuminate\Contracts\Cache\Repository as Cache;
 use Illuminate\Contracts\Config\Repository as Config;
 use Illuminate\Http\Request;
 use LaravelWebauthn\Facades\Webauthn;
-use Symfony\Component\Serializer\SerializerInterface;
 use Webauthn\AuthenticatorSelectionCriteria;
-use Webauthn\PublicKeyCredentialCreationOptions;
+use Webauthn\PublicKeyCredentialCreationOptions as PublicKeyCredentialCreationOptionsBase;
 use Webauthn\PublicKeyCredentialDescriptor;
 use Webauthn\PublicKeyCredentialParameters;
 use Webauthn\PublicKeyCredentialRpEntity;
@@ -27,7 +26,6 @@ final class CreationOptionsFactory extends OptionsFactory
         Request $request,
         Cache $cache,
         Config $config,
-        protected SerializerInterface $loader,
         protected PublicKeyCredentialRpEntity $publicKeyCredentialRpEntity,
         protected AuthenticatorSelectionCriteria $authenticatorSelectionCriteria,
         protected CoseAlgorithmManager $algorithmManager
@@ -41,7 +39,7 @@ final class CreationOptionsFactory extends OptionsFactory
      */
     public function __invoke(User $user): PublicKeyCredentialCreationOptions
     {
-        $publicKey = new PublicKeyCredentialCreationOptions(
+        $publicKey = new PublicKeyCredentialCreationOptionsBase(
             $this->publicKeyCredentialRpEntity,
             $this->getUserEntity($user),
             $this->getChallenge(),
@@ -52,11 +50,9 @@ final class CreationOptionsFactory extends OptionsFactory
             $this->timeout
         );
 
-        $value = $this->loader->serialize($publicKey, 'json');
-
-        $this->cache->put($this->cacheKey($user), $value, $this->timeout);
-
-        return $publicKey;
+        return tap(PublicKeyCredentialCreationOptions::create($publicKey), function (PublicKeyCredentialCreationOptions $result) use ($user): void {
+            $this->cache->put($this->cacheKey($user), (string) $result, $this->timeout);
+        });
     }
 
     /**
