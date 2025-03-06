@@ -14,7 +14,7 @@ abstract class OptionsFactory extends CredentialValidator
     protected int $challengeLength;
 
     /**
-     * Timeout in seconds.
+     * Timeout in milliseconds.
      */
     protected int $timeout;
 
