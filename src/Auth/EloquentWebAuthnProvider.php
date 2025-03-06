@@ -9,7 +9,6 @@ use Illuminate\Contracts\Hashing\Hasher;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use LaravelWebauthn\Events\WebauthnLogin;
 use LaravelWebauthn\Facades\Webauthn;
-use LaravelWebauthn\Services\Webauthn\CredentialAssertionValidator;
 use ParagonIE\ConstantTime\Base64UrlSafe;
 use Webauthn\Util\Base64;
 
@@ -21,17 +20,11 @@ class EloquentWebAuthnProvider extends EloquentUserProvider
     protected bool $fallback;
 
     /**
-     * WebAuthn assertion validator.
-     */
-    protected CredentialAssertionValidator $validator;
-
-    /**
      * Create a new database user provider.
      */
-    public function __construct(Config $config, CredentialAssertionValidator $validator, Hasher $hasher, string $model)
+    public function __construct(Config $config, Hasher $hasher, string $model)
     {
         $this->fallback = (bool) $config->get('webauthn.fallback', true);
-        $this->validator = $validator;
 
         parent::__construct($hasher, $model);
     }
@@ -39,6 +32,7 @@ class EloquentWebAuthnProvider extends EloquentUserProvider
     /**
      * Retrieve a user by the given credentials.
      */
+    #[\Override]
     public function retrieveByCredentials(array $credentials): ?User
     {
         if ($this->isSignedChallenge($credentials)) {
@@ -68,6 +62,7 @@ class EloquentWebAuthnProvider extends EloquentUserProvider
     /**
      * Validate a user against the given credentials.
      */
+    #[\Override]
     public function validateCredentials(User $user, array $credentials): bool
     {
         if ($this->isSignedChallenge($credentials)
@@ -88,6 +83,7 @@ class EloquentWebAuthnProvider extends EloquentUserProvider
     /**
      * Rehash the user's password if required and supported.
      */
+    #[\Override]
     public function rehashPasswordIfRequired(User $user, array $credentials, bool $force = false): void
     {
         if ($this->isSignedChallenge($credentials)) {

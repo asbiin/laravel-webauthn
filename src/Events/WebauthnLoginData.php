@@ -7,6 +7,9 @@ use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 use Webauthn\PublicKeyCredentialRequestOptions;
 
+/**
+ * @psalm-suppress PossiblyUnusedProperty
+ */
 class WebauthnLoginData
 {
     use Dispatchable, SerializesModels;

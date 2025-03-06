@@ -8,6 +8,9 @@ use Illuminate\Events\Dispatcher;
 use Illuminate\Support\Facades\Auth;
 use LaravelWebauthn\Facades\Webauthn;
 
+/**
+ * @psalm-suppress UnusedClass
+ */
 class LoginViaRemember
 {
     /**
@@ -34,6 +37,8 @@ class LoginViaRemember
      * Register the listeners for the subscriber.
      *
      * @return array<string, string>
+     *
+     * @psalm-suppress PossiblyUnusedParam
      */
     public function subscribe(Dispatcher $events): array
     {

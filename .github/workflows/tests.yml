@@ -16,9 +16,9 @@ on:
   workflow_dispatch:
 
 env:
-  default-php-version: '8.3'
-  default-laravel-version: '11.0'
-  semantic-node-version: 20
+  default-php-version: '8.4'
+  default-laravel-version: '12.0'
+  semantic-node-version: 22
 
 concurrency:
   group: Tests ${{ github.ref }}
@@ -32,22 +32,10 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php-version: ['8.1', '8.2', '8.3']
-        laravel-version: ['9.0', '10.0', '11.0']
+        php-version: ['8.2', '8.3', '8.4']
+        laravel-version: ['11.0', '12.0']
         psr7: ['guzzle']
         include:
-          - php-version: '8.1'
-            laravel-version: '9.0'
-            psr7: 'nyholm'
-          - php-version: '8.1'
-            laravel-version: '9.0'
-            psr7: 'discovery'
-          - php-version: '8.2'
-            laravel-version: '10.0'
-            psr7: 'nyholm'
-          - php-version: '8.2'
-            laravel-version: '10.0'
-            psr7: 'discovery'
           - php-version: '8.2'
             laravel-version: '11.0'
             psr7: 'nyholm'
@@ -60,9 +48,12 @@ jobs:
           - php-version: '8.3'
             laravel-version: '11.0'
             psr7: 'discovery'
-        exclude:
-          - php-version: '8.1'
-            laravel-version: '11.0'
+          - php-version: '8.4'
+            laravel-version: '12.0'
+            psr7: 'nyholm'
+          - php-version: '8.4'
+            laravel-version: '12.0'
+            psr7: 'discovery'
 
     steps:
       - name: Checkout sources
@@ -183,7 +174,7 @@ jobs:
 
       - name: SonarCloud Scan
         if: env.SONAR_TOKEN != ''
-        uses: SonarSource/sonarqube-scan-action@v4
+        uses: SonarSource/sonarqube-scan-action@v5
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}

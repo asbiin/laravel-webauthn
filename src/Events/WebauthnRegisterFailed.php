@@ -7,6 +7,9 @@ use Illuminate\Contracts\Auth\Authenticatable as User;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
+/**
+ * @psalm-suppress PossiblyUnusedProperty
+ */
 class WebauthnRegisterFailed
 {
     use Dispatchable, SerializesModels;
@@ -16,6 +19,8 @@ class WebauthnRegisterFailed
      *
      * @param  \Illuminate\Contracts\Auth\Authenticatable  $user  The authenticated user.
      * @param  Exception|null  $exception  Exception throwned.
+     *
+     * @psalm-suppress PossiblyUnusedProperty
      */
     public function __construct(
         public User $user,

@@ -6,6 +6,9 @@ use Illuminate\Contracts\Auth\Authenticatable as User;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
+/**
+ * @psalm-suppress PossiblyUnusedProperty
+ */
 class WebauthnLogin
 {
     use Dispatchable, SerializesModels;

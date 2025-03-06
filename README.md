@@ -129,7 +129,7 @@ To enable passwordless authentication, first add the webauthn user provider: upd
 Then allow your login page to initiate a webauthn login with an `email` identifier.
 
 You can call `webauthn.auth.options` route with a POST request and an `email` input to get the challenge data.
-See [authentication](#Authenticate) section for more details.
+See [Authenticate](#Authenticate) section for more details.
 
 
 ## Disabling Views
@@ -427,11 +427,12 @@ List of methods and their expected response contracts:
 
 This package has the following Laravel compatibility:
 
-| Laravel  | [asbiin/laravel-webauthn](https://github.com/asbiin/laravel-webauthn) |
+| [asbiin/laravel-webauthn](https://github.com/asbiin/laravel-webauthn) | Laravel |
 |----------|----------|
-| 5.8-8.x  | <= 1.2.0 |
-| 7.x-8.x  | 2.0.1    |
-| >= 9.x   | >= 3.0.0 |
+| <= 1.2.0 | 5.8-8.x  |
+| 2.0.1    | 7.x-8.x  |
+| >= 3.0.0, <= 4.6.0 | 9.x-11.x |
+| >= 5.0.0 | >= 11.x   |
 
 ## Browser compatibility
 
@@ -466,6 +467,6 @@ If you haven't done so already, describe your site domain and network in your ho
 
 Author: [Alexis Saettler](https://github.com/asbiin)
 
-Copyright © 2019–2024.
+Copyright © 2019–2025.
 
 Licensed under the MIT License. [View license](/LICENSE.md).

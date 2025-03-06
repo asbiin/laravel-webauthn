@@ -6,9 +6,10 @@ use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Http\Request;
 use LaravelWebauthn\Actions\AttemptToAuthenticate;
 use LaravelWebauthn\Facades\Webauthn;
+use LaravelWebauthn\Services\Webauthn\PublicKeyCredentialRequestOptions;
 use LaravelWebauthn\Tests\FeatureTestCase;
 use Mockery\MockInterface;
-use Webauthn\PublicKeyCredentialRequestOptions;
+use Webauthn\PublicKeyCredentialRequestOptions as PublicKeyCredentialRequestOptionsBase;
 
 class AuthenticateControllerTest extends FeatureTestCase
 {
@@ -55,7 +56,7 @@ class AuthenticateControllerTest extends FeatureTestCase
 
         Webauthn::shouldReceive('canRegister')->andReturn(true);
 
-        Webauthn::shouldReceive('prepareAssertion')->andReturn(new PublicKeyCredentialRequestOptions('challenge'));
+        Webauthn::shouldReceive('prepareAssertion')->andReturn(PublicKeyCredentialRequestOptions::create(new PublicKeyCredentialRequestOptionsBase('challenge')));
 
         $response = $this->get('/webauthn/auth', ['accept' => 'application/json']);
 

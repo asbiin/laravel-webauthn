@@ -4,7 +4,7 @@ namespace LaravelWebauthn\Contracts;
 
 use Illuminate\Contracts\Support\Responsable;
 use Illuminate\Http\Request;
-use Webauthn\PublicKeyCredentialRequestOptions;
+use LaravelWebauthn\Services\Webauthn\PublicKeyCredentialRequestOptions;
 
 interface LoginViewResponse extends Responsable
 {

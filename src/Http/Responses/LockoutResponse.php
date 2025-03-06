@@ -8,6 +8,9 @@ use LaravelWebauthn\Contracts\LockoutResponse as LockoutResponseContract;
 use LaravelWebauthn\Services\LoginRateLimiter;
 use LaravelWebauthn\Services\Webauthn;
 
+/**
+ * @psalm-suppress UnusedClass
+ */
 class LockoutResponse implements LockoutResponseContract
 {
     /**
@@ -23,6 +26,7 @@ class LockoutResponse implements LockoutResponseContract
      * @param  \Illuminate\Http\Request  $request
      * @return \Symfony\Component\HttpFoundation\Response
      */
+    #[\Override]
     public function toResponse($request)
     {
         $seconds = $this->limiter->availableIn($request);

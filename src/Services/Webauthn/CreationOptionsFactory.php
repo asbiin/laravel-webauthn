@@ -9,7 +9,7 @@ use Illuminate\Contracts\Config\Repository as Config;
 use Illuminate\Http\Request;
 use LaravelWebauthn\Facades\Webauthn;
 use Webauthn\AuthenticatorSelectionCriteria;
-use Webauthn\PublicKeyCredentialCreationOptions;
+use Webauthn\PublicKeyCredentialCreationOptions as PublicKeyCredentialCreationOptionsBase;
 use Webauthn\PublicKeyCredentialDescriptor;
 use Webauthn\PublicKeyCredentialParameters;
 use Webauthn\PublicKeyCredentialRpEntity;
@@ -26,12 +26,11 @@ final class CreationOptionsFactory extends OptionsFactory
         Request $request,
         Cache $cache,
         Config $config,
-        CredentialRepository $repository,
         protected PublicKeyCredentialRpEntity $publicKeyCredentialRpEntity,
         protected AuthenticatorSelectionCriteria $authenticatorSelectionCriteria,
         protected CoseAlgorithmManager $algorithmManager
     ) {
-        parent::__construct($request, $cache, $config, $repository);
+        parent::__construct($request, $cache, $config);
         $this->attestationConveyance = $config->get('webauthn.attestation_conveyance', 'none');
     }
 
@@ -40,7 +39,7 @@ final class CreationOptionsFactory extends OptionsFactory
      */
     public function __invoke(User $user): PublicKeyCredentialCreationOptions
     {
-        $publicKey = new PublicKeyCredentialCreationOptions(
+        $publicKey = new PublicKeyCredentialCreationOptionsBase(
             $this->publicKeyCredentialRpEntity,
             $this->getUserEntity($user),
             $this->getChallenge(),
@@ -51,11 +50,9 @@ final class CreationOptionsFactory extends OptionsFactory
             $this->timeout
         );
 
-        $value = json_encode($publicKey, flags: JSON_THROW_ON_ERROR);
-
-        $this->cache->put($this->cacheKey($user), $value, $this->timeout);
-
-        return $publicKey;
+        return tap(PublicKeyCredentialCreationOptions::create($publicKey), function (PublicKeyCredentialCreationOptions $result) use ($user): void {
+            $this->cache->put($this->cacheKey($user), (string) $result, $this->timeout);
+        });
     }
 
     /**
@@ -77,12 +74,10 @@ final class CreationOptionsFactory extends OptionsFactory
     private function createCredentialParameters(): array
     {
         return collect($this->algorithmManager->list())
-            ->map(function ($algorithm): PublicKeyCredentialParameters {
-                return new PublicKeyCredentialParameters(
-                    PublicKeyCredentialDescriptor::CREDENTIAL_TYPE_PUBLIC_KEY,
-                    $algorithm
-                );
-            })
+            ->map(fn ($algorithm): PublicKeyCredentialParameters => new PublicKeyCredentialParameters(
+                PublicKeyCredentialDescriptor::CREDENTIAL_TYPE_PUBLIC_KEY,
+                $algorithm
+            ))
             ->toArray();
     }
 

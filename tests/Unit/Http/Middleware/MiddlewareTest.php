@@ -12,7 +12,7 @@ class MiddlewareTest extends FeatureTestCase
 {
     public function test_middleware_guest()
     {
-        $request = new Request();
+        $request = new Request;
 
         $this->expectException(\Symfony\Component\HttpKernel\Exception\HttpException::class);
         $this->app[WebauthnMiddleware::class]->handle($request, fn () => null);
@@ -56,7 +56,7 @@ class MiddlewareTest extends FeatureTestCase
 
     private function getRequest($user)
     {
-        return (new Request())
+        return (new Request)
             ->setUserResolver(fn () => $user);
     }
 }

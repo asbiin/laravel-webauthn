@@ -12,10 +12,10 @@ use LaravelWebauthn\Events\WebauthnRegisterData;
 use LaravelWebauthn\Services\Webauthn\CreationOptionsFactory;
 use LaravelWebauthn\Services\Webauthn\CredentialAssertionValidator;
 use LaravelWebauthn\Services\Webauthn\CredentialAttestationValidator;
+use LaravelWebauthn\Services\Webauthn\PublicKeyCredentialCreationOptions;
+use LaravelWebauthn\Services\Webauthn\PublicKeyCredentialRequestOptions;
 use LaravelWebauthn\Services\Webauthn\RequestOptionsFactory;
 use ParagonIE\ConstantTime\Base64UrlSafe;
-use Webauthn\PublicKeyCredentialCreationOptions;
-use Webauthn\PublicKeyCredentialRequestOptions;
 use Webauthn\Util\Base64;
 
 class Webauthn extends WebauthnRepository
@@ -72,7 +72,7 @@ class Webauthn extends WebauthnRepository
      */
     public static function logout(): void
     {
-        session()->forget(static::sessionName());
+        session()->forget(static::sessionName()); // @phpstan-ignore staticMethod.dynamicCall
     }
 
     /**
@@ -104,8 +104,8 @@ class Webauthn extends WebauthnRepository
      */
     public static function prepareAssertion(?User $user): PublicKeyCredentialRequestOptions
     {
-        return tap(app(RequestOptionsFactory::class)($user), function ($publicKey) use ($user) {
-            WebauthnLoginData::dispatch($user, $publicKey);
+        return tap(app(RequestOptionsFactory::class)($user), function (PublicKeyCredentialRequestOptions $publicKey) use ($user) {
+            WebauthnLoginData::dispatch($user, $publicKey->data);
         });
     }
 
@@ -126,8 +126,8 @@ class Webauthn extends WebauthnRepository
      */
     public static function prepareAttestation(User $user): PublicKeyCredentialCreationOptions
     {
-        return tap(app(CreationOptionsFactory::class)($user), function ($publicKey) use ($user) {
-            WebauthnRegisterData::dispatch($user, $publicKey);
+        return tap(app(CreationOptionsFactory::class)($user), function (PublicKeyCredentialCreationOptions $publicKey) use ($user) {
+            WebauthnRegisterData::dispatch($user, $publicKey->data);
         });
     }
 

@@ -17,4 +17,8 @@
     <plugins>
         <pluginClass class="Psalm\LaravelPlugin\Plugin"/>
     </plugins>
+
+    <issueHandlers>
+        <PossiblyUnusedMethod errorLevel="suppress"/>
+    </issueHandlers>
 </psalm>

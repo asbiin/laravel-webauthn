@@ -7,6 +7,9 @@ use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 use Webauthn\PublicKeyCredentialCreationOptions;
 
+/**
+ * @psalm-suppress PossiblyUnusedProperty
+ */
 class WebauthnRegisterData
 {
     use Dispatchable, SerializesModels;
@@ -16,6 +19,8 @@ class WebauthnRegisterData
      *
      * @param  \Illuminate\Contracts\Auth\Authenticatable  $user  The authenticated user.
      * @param  PublicKeyCredentialCreationOptions  $publicKey  The register data.
+     *
+     * @psalm-suppress PossiblyUnusedProperty
      */
     public function __construct(
         public User $user,

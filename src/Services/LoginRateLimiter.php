@@ -33,6 +33,8 @@ class LoginRateLimiter
 
     /**
      * Increment the login attempts for the user.
+     *
+     * @psalm-suppress PossiblyUnusedReturnValue
      */
     public function increment(Request $request): int
     {

@@ -7,7 +7,6 @@ use Illuminate\Foundation\Testing\DatabaseTransactions;
 use LaravelWebauthn\Auth\EloquentWebAuthnProvider;
 use LaravelWebauthn\Facades\Webauthn;
 use LaravelWebauthn\Models\WebauthnKey;
-use LaravelWebauthn\Services\Webauthn\CredentialAssertionValidator;
 use LaravelWebauthn\Tests\FeatureTestCase;
 use LaravelWebauthn\Tests\User;
 use ParagonIE\ConstantTime\Base64UrlSafe;
@@ -27,7 +26,6 @@ class EloquentWebAuthnProviderTest extends FeatureTestCase
 
         $provider = new EloquentWebAuthnProvider(
             app('config'),
-            app(CredentialAssertionValidator::class),
             app(Hasher::class),
             ''
         );
@@ -59,7 +57,6 @@ class EloquentWebAuthnProviderTest extends FeatureTestCase
 
         $provider = new EloquentWebAuthnProvider(
             app('config'),
-            app(CredentialAssertionValidator::class),
             app(Hasher::class),
             User::class,
         );
@@ -92,7 +89,6 @@ class EloquentWebAuthnProviderTest extends FeatureTestCase
 
         $provider = new EloquentWebAuthnProvider(
             app('config'),
-            app(CredentialAssertionValidator::class),
             app(Hasher::class),
             User::class,
         );
@@ -127,7 +123,6 @@ class EloquentWebAuthnProviderTest extends FeatureTestCase
 
         $provider = new EloquentWebAuthnProvider(
             app('config'),
-            app(CredentialAssertionValidator::class),
             app(Hasher::class),
             User::class,
         );
@@ -153,7 +148,6 @@ class EloquentWebAuthnProviderTest extends FeatureTestCase
 
         $provider = new EloquentWebAuthnProvider(
             app('config'),
-            app(CredentialAssertionValidator::class),
             app(Hasher::class),
             User::class,
         );

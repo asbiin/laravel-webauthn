@@ -28,13 +28,13 @@ class CredentialRepositoryTest extends FeatureTestCase
 
         $this->assertEmpty(WebauthnKey::all());
 
-        $webauthnKey = factory(WebauthnKey::class)->create([
+        factory(WebauthnKey::class)->create([
             'user_id' => $user->getAuthIdentifier(),
             'credentialId' => '1',
         ]);
 
         $keys = CredentialRepository::getRegisteredKeys($user);
         $this->assertCount(1, $keys);
-        $this->assertEquals('{"type":"public-key","id":"MQ"}', json_encode($keys[0], JSON_THROW_ON_ERROR));
+        $this->assertEquals('{"type":"public-key","id":"1","transports":[]}', json_encode($keys[0], JSON_THROW_ON_ERROR));
     }
 }
