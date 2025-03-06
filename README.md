@@ -129,7 +129,7 @@ To enable passwordless authentication, first add the webauthn user provider: upd
 Then allow your login page to initiate a webauthn login with an `email` identifier.
 
 You can call `webauthn.auth.options` route with a POST request and an `email` input to get the challenge data.
-See [authentication](#Authenticate) section for more details.
+See [Authenticate](#Authenticate) section for more details.
 
 
 ## Disabling Views
