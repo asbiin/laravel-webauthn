@@ -139,8 +139,6 @@
       e.preventDefault();
       start();
     });
-
-    start();
   </script>
 </body>
 </html>
