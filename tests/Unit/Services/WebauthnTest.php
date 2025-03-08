@@ -77,6 +77,8 @@ class WebauthnTest extends FeatureTestCase
      */
     public function test_get_authenticate_data()
     {
+        config(['webauthn.timeout' => 60000]);
+
         $user = $this->signIn();
         factory(WebauthnKey::class)->create([
             'user_id' => $user->getAuthIdentifier(),
