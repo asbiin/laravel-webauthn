@@ -58,7 +58,7 @@ class CredentialAttestationValidator extends CredentialValidator
             return $this->loader->deserialize($value, PublicKeyCredentialCreationOptions::class, 'json');
         } catch (\Exception $e) {
             app('webauthn.log')->debug('Webauthn publicKey deserialize error', ['exception' => $e]);
-            abort(404);
+            abort(404, $e->getMessage());
         }
     }
 

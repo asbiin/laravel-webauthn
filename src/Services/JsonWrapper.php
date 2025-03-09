@@ -18,7 +18,6 @@ class JsonWrapper implements JsonSerializable
      * @param  T  $data
      */
     public function __construct(
-        private SerializerInterface $loader,
         public mixed $data
     ) {}
 
@@ -37,7 +36,7 @@ class JsonWrapper implements JsonSerializable
     #[\Override]
     public function __toString()
     {
-        return $this->loader->serialize($this->data, 'json', [
+        return app(SerializerInterface::class)->serialize($this->data, 'json', [
             AbstractObjectNormalizer::SKIP_NULL_VALUES => true,
             JsonEncode::OPTIONS => JSON_THROW_ON_ERROR,
         ]);

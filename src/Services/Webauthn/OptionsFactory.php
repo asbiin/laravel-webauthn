@@ -36,7 +36,7 @@ abstract class OptionsFactory extends CredentialValidator
             $this->timeout = (int) $timeout;
             $this->timeoutCache = $this->timeout / 1000;
         } else {
-            $this->timeoutCache = static::getDefaultTimeoutCache($config);
+            $this->timeoutCache = self::getDefaultTimeoutCache($config);
         }
     }
 
@@ -61,8 +61,8 @@ abstract class OptionsFactory extends CredentialValidator
             case 'preferred':
             case 'required':
                 return 600;
+            default:
+                return null;
         }
-
-        return null;
     }
 }
