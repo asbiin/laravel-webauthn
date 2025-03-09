@@ -173,10 +173,11 @@ return [
     |--------------------------------------------------------------------------
     |
     | Time that the caller is willing to wait for the call to complete.
+    | See https://webauthn-doc.spomky-labs.com/symfony-bundle/configuration-references#timeout
     |
     */
 
-    'timeout' => 60000,
+    'timeout' => null,
 
     /*
     |--------------------------------------------------------------------------

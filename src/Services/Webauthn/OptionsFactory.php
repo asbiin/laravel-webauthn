@@ -16,7 +16,12 @@ abstract class OptionsFactory extends CredentialValidator
     /**
      * Timeout in milliseconds.
      */
-    protected int $timeout;
+    protected ?int $timeout = null;
+
+    /**
+     * Timeout in milliseconds.
+     */
+    protected ?int $timeoutCache;
 
     public function __construct(
         Request $request,
@@ -26,7 +31,13 @@ abstract class OptionsFactory extends CredentialValidator
         parent::__construct($request, $cache);
 
         $this->challengeLength = (int) $config->get('webauthn.challenge_length', 32);
-        $this->timeout = (int) $config->get('webauthn.timeout', 60000);
+        $timeout = $config->get('webauthn.timeout');
+        if ($timeout !== null) {
+            $this->timeout = (int) $timeout;
+            $this->timeoutCache = $this->timeout / 1000;
+        } else {
+            $this->timeoutCache = self::getDefaultTimeoutCache($config);
+        }
     }
 
     /**
@@ -37,5 +48,21 @@ abstract class OptionsFactory extends CredentialValidator
     protected function getChallenge(): string
     {
         return \random_bytes($this->challengeLength);
+    }
+
+    /**
+     * See https://webauthn-doc.spomky-labs.com/symfony-bundle/configuration-references#timeout
+     */
+    private static function getDefaultTimeoutCache(Config $config): ?int
+    {
+        switch ($config->get('webauthn.user_verification', 'preferred')) {
+            case 'discouraged':
+                return 180;
+            case 'preferred':
+            case 'required':
+                return 600;
+            default:
+                return null;
+        }
     }
 }
