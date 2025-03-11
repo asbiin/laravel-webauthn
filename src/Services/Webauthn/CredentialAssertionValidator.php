@@ -42,7 +42,7 @@ class CredentialAssertionValidator extends CredentialValidator
             $this->getResponse($publicKeyCredential),
             $this->pullPublicKey($user),
             $this->request->host(),
-            $user->getAuthIdentifier()
+            optional($user)->getAuthIdentifier()
         );
 
         return true;

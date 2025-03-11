@@ -40,19 +40,20 @@ class CredentialAssertionValidatorTest extends FeatureTestCase
         });
 
         $option = app(RequestOptionsFactory::class)($user);
+        $creds = new PublicKeyCredential('public-key', $webauthnKey->credentialId, new AuthenticatorAssertionResponse(
+            $this->mock(CollectedClientData::class),
+            $this->mock(AuthenticatorData::class),
+            'signature',
+            'userHandle'
+        ));
 
-        $this->mock(SerializerInterface::class, function ($mock) use ($webauthnKey, $option) {
+        $this->mock(SerializerInterface::class, function ($mock) use ($option, $creds) {
             $mock->shouldReceive('deserialize')
                 ->withSomeOfArgs(TrustPath::class)
                 ->andReturn(new EmptyTrustPath);
             $mock->shouldReceive('deserialize')
                 ->withSomeOfArgs(PublicKeyCredential::class)
-                ->andReturn(new PublicKeyCredential('public-key', $webauthnKey->credentialId, new AuthenticatorAssertionResponse(
-                    $this->mock(CollectedClientData::class),
-                    $this->mock(AuthenticatorData::class),
-                    'signature',
-                    'userHandle'
-                )));
+                ->andReturn($creds);
             $mock->shouldReceive('deserialize')
                 ->withSomeOfArgs(PublicKeyCredentialRequestOptions::class)
                 ->andReturn($option->data);
@@ -63,12 +64,6 @@ class CredentialAssertionValidatorTest extends FeatureTestCase
             $mock->shouldReceive('check');
         });
 
-        $creds = new PublicKeyCredential('public-key', $webauthnKey->credentialId, new AuthenticatorAssertionResponse(
-            $this->mock(CollectedClientData::class),
-            $this->mock(AuthenticatorData::class),
-            'signature',
-            'userHandle'
-        ));
         $data = json_decode(json_encode($creds), true);
         $data['id'] = Base64UrlSafe::encodeUnpadded($webauthnKey->credentialId);
         $data['rawId'] = base64_encode($webauthnKey->credentialId);
@@ -77,5 +72,89 @@ class CredentialAssertionValidatorTest extends FeatureTestCase
         $result = $test($user, $data);
 
         $this->assertTrue($result);
+    }
+
+    #[Test]
+    public function create_credential_assertion_validator_without_user()
+    {
+        $webauthnKey = factory(WebauthnKey::class)->create();
+
+        $this->mock(Request::class, function ($mock) {
+            $mock->shouldReceive('host')
+                ->andReturn('localhost');
+            $mock->shouldReceive('ip')
+                ->andReturn('127.0.0.1');
+        });
+
+        $option = app(RequestOptionsFactory::class)(null);
+        $creds = new PublicKeyCredential('public-key', $webauthnKey->credentialId, new AuthenticatorAssertionResponse(
+            $this->mock(CollectedClientData::class),
+            $this->mock(AuthenticatorData::class),
+            'signature',
+            'userHandle'
+        ));
+
+        $this->mock(SerializerInterface::class, function ($mock) use ($option, $creds) {
+            $mock->shouldReceive('deserialize')
+                ->withSomeOfArgs(TrustPath::class)
+                ->andReturn(new EmptyTrustPath);
+            $mock->shouldReceive('deserialize')
+                ->withSomeOfArgs(PublicKeyCredential::class)
+                ->andReturn($creds);
+            $mock->shouldReceive('deserialize')
+                ->withSomeOfArgs(PublicKeyCredentialRequestOptions::class)
+                ->andReturn($option->data);
+            $mock->shouldReceive('serialize')
+                ->andReturn('{"challenge":"KTWMgB3ND1SbaoM8xEBZvbR1Y5Ehm5gC5p2t73Nd15g","rpId":"localhost","allowCredentials":[{"type":"public-key","id":"TVE"}],"userVerification":"preferred"}');
+        });
+        $this->mock(AuthenticatorAssertionResponseValidator::class, function ($mock) {
+            $mock->shouldReceive('check');
+        });
+
+        $data = json_decode(json_encode($creds), true);
+        $data['id'] = Base64UrlSafe::encodeUnpadded($webauthnKey->credentialId);
+        $data['rawId'] = base64_encode($webauthnKey->credentialId);
+
+        $test = app(CredentialAssertionValidator::class);
+        $result = $test(null, $data);
+
+        $this->assertTrue($result);
+    }
+
+    #[Test]
+    public function create_credential_assertion_validator_and_fail()
+    {
+        $this->expectException(\Exception::class);
+        $this->expectExceptionMessage('No public key credential found');
+
+        $webauthnKey = factory(WebauthnKey::class)->create();
+
+        $this->mock(Request::class, function ($mock) {
+            $mock->shouldReceive('host')
+                ->andReturn('localhost');
+            $mock->shouldReceive('ip')
+                ->andReturn('127.0.0.1');
+        });
+        $creds = new PublicKeyCredential('public-key', $webauthnKey->credentialId, new AuthenticatorAssertionResponse(
+            $this->mock(CollectedClientData::class),
+            $this->mock(AuthenticatorData::class),
+            'signature',
+            'userHandle'
+        ));
+
+        $this->mock(SerializerInterface::class, function ($mock) use ($creds) {
+            $mock->shouldReceive('deserialize')
+                ->withSomeOfArgs(TrustPath::class)
+                ->andReturn(new EmptyTrustPath);
+            $mock->shouldReceive('deserialize')
+                ->withSomeOfArgs(PublicKeyCredential::class)
+                ->andReturn($creds);
+        });
+
+        $data = json_decode(json_encode($creds), true);
+        $test = app(CredentialAssertionValidator::class);
+        $test(null, $data);
+
+        $this->fail('No exception thrown');
     }
 }

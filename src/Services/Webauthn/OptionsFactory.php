@@ -55,7 +55,7 @@ abstract class OptionsFactory extends CredentialValidator
      */
     private static function getDefaultTimeoutCache(Config $config): ?int
     {
-        switch ($config->get('webauthn.user_verification', 'preferred')) {
+        switch ($config->get('webauthn.user_verification')) {
             case 'discouraged':
                 return 180;
             case 'preferred':
