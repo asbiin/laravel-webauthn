@@ -10,7 +10,6 @@ use Illuminate\Http\Request;
 use LaravelWebauthn\Facades\Webauthn;
 use Webauthn\AuthenticatorSelectionCriteria;
 use Webauthn\PublicKeyCredentialCreationOptions as PublicKeyCredentialCreationOptionsBase;
-use Webauthn\PublicKeyCredentialDescriptor;
 use Webauthn\PublicKeyCredentialParameters;
 use Webauthn\PublicKeyCredentialRpEntity;
 use Webauthn\PublicKeyCredentialUserEntity;
@@ -51,7 +50,7 @@ final class CreationOptionsFactory extends OptionsFactory
         );
 
         return tap(PublicKeyCredentialCreationOptions::create($publicKey), function (PublicKeyCredentialCreationOptions $result) use ($user): void {
-            $this->cache->put($this->cacheKey($user), (string) $result, $this->timeout);
+            $this->cache->put($this->cacheKey($user), (string) $result, $this->timeoutCache);
         });
     }
 
@@ -74,10 +73,7 @@ final class CreationOptionsFactory extends OptionsFactory
     private function createCredentialParameters(): array
     {
         return collect($this->algorithmManager->list())
-            ->map(fn ($algorithm): PublicKeyCredentialParameters => new PublicKeyCredentialParameters(
-                PublicKeyCredentialDescriptor::CREDENTIAL_TYPE_PUBLIC_KEY,
-                $algorithm
-            ))
+            ->map(fn (int $algorithm): PublicKeyCredentialParameters => PublicKeyCredentialParameters::createPk($algorithm))
             ->toArray();
     }
 

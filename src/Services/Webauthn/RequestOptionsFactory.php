@@ -41,7 +41,7 @@ final class RequestOptionsFactory extends OptionsFactory
         );
 
         return tap(PublicKeyCredentialRequestOptions::create($publicKey), function (PublicKeyCredentialRequestOptions $result) use ($user): void {
-            $this->cache->put($this->cacheKey($user), (string) $result, $this->timeout);
+            $this->cache->put($this->cacheKey($user), (string) $result, $this->timeoutCache);
         });
     }
 

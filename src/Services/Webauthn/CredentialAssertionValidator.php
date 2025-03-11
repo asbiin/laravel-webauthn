@@ -42,7 +42,7 @@ class CredentialAssertionValidator extends CredentialValidator
             $this->getResponse($publicKeyCredential),
             $this->pullPublicKey($user),
             $this->request->host(),
-            $user->getAuthIdentifier()
+            optional($user)->getAuthIdentifier()
         );
 
         return true;
@@ -60,10 +60,14 @@ class CredentialAssertionValidator extends CredentialValidator
                 $value = $this->cache->pull($this->cacheKey(null));
             }
 
+            if ($value === null) {
+                abort(404, 'No public key credential found');
+            }
+
             return $this->loader->deserialize($value, PublicKeyCredentialRequestOptions::class, 'json');
         } catch (\Exception $e) {
             app('webauthn.log')->debug('Webauthn publickKey deserialize error', ['exception' => $e]);
-            abort(404);
+            abort(404, $e->getMessage());
         }
     }
 
