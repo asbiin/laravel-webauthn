@@ -124,15 +124,13 @@ class WebauthnServiceProvider extends ServiceProvider
 
     /**
      * Override the configuration for userless WebAuthn.
-     *
-     * @return void
      */
     protected function overrideConfiguration(): void
     {
         if (Webauthn::userless()) {
             $this->app['config']->set('webauthn.user_verification', 'required');
             $this->app['config']->set('webauthn.resident_key', 'required');
-        };
+        }
     }
 
     /**
