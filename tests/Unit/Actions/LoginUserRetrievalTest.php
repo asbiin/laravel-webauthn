@@ -7,14 +7,13 @@ use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
 use LaravelWebauthn\Actions\LoginUserRetrieval;
 use LaravelWebauthn\Tests\FeatureTestCase;
+use PHPUnit\Framework\Attributes\Test;
 
 class LoginUserRetrievalTest extends FeatureTestCase
 {
     use DatabaseTransactions;
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_get_user_request()
     {
         $user = $this->user();
@@ -26,9 +25,7 @@ class LoginUserRetrievalTest extends FeatureTestCase
         $this->assertEquals($user, $result);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_get_user_fail()
     {
         $request = $this->app->make(Request::class);

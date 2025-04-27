@@ -16,6 +16,7 @@ use LaravelWebauthn\Models\WebauthnKey;
 use LaravelWebauthn\Services\Webauthn;
 use LaravelWebauthn\Tests\FeatureTestCase;
 use ParagonIE\ConstantTime\Base64UrlSafe;
+use PHPUnit\Framework\Attributes\Test;
 use Symfony\Component\Uid\NilUuid;
 use Symfony\Component\Uid\Uuid;
 use Webauthn\AuthenticatorData;
@@ -25,9 +26,7 @@ class WebauthnTest extends FeatureTestCase
 {
     use DatabaseTransactions;
 
-    /**
-     * @test
-     */
+    #[Test]
     public function test_get_register_data()
     {
         $user = $this->signIn();
@@ -44,9 +43,7 @@ class WebauthnTest extends FeatureTestCase
         $this->assertEquals($user->email, $publicKey->data->user->displayName);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function test_do_register_data()
     {
         $user = $this->signIn();
@@ -72,9 +69,7 @@ class WebauthnTest extends FeatureTestCase
         ]);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function test_get_authenticate_data()
     {
         config(['webauthn.timeout' => 60000]);
@@ -97,9 +92,7 @@ class WebauthnTest extends FeatureTestCase
         $this->assertCount(0, $publicKey->data->extensions);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function test_wrong_do_authenticate()
     {
         $user = $this->signIn();
@@ -161,9 +154,7 @@ class WebauthnTest extends FeatureTestCase
         ];
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function test_force_authenticate()
     {
         $this->assertFalse($this->app[Webauthn::class]->check());
@@ -173,9 +164,7 @@ class WebauthnTest extends FeatureTestCase
         $this->assertTrue($this->app[Webauthn::class]->check());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function test_enabled()
     {
         $user = $this->signIn();
@@ -189,9 +178,7 @@ class WebauthnTest extends FeatureTestCase
         $this->assertTrue($this->app[Webauthn::class]->enabled($user));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function test_aaguid_null()
     {
         $webauthnKey = new WebauthnKey;
@@ -201,9 +188,7 @@ class WebauthnTest extends FeatureTestCase
         $this->assertNull($webauthnKey->aaguid);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function test_aaguid_empty()
     {
         $webauthnKey = new WebauthnKey;
@@ -213,9 +198,7 @@ class WebauthnTest extends FeatureTestCase
         $this->assertEquals('', $webauthnKey->aaguid);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function test_aaguid_string()
     {
         $webauthnKey = new WebauthnKey;
@@ -226,9 +209,7 @@ class WebauthnTest extends FeatureTestCase
         $this->assertEquals(Uuid::fromString('38195f59-0e5b-4ebf-be46-75664177eeee'), $webauthnKey->aaguid);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function test_aaguid_uuid()
     {
         $webauthnKey = new WebauthnKey;
@@ -239,9 +220,7 @@ class WebauthnTest extends FeatureTestCase
         $this->assertEquals(Uuid::fromString('38195f59-0e5b-4ebf-be46-75664177eeee'), $webauthnKey->aaguid);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_creates_model()
     {
         config(['webauthn.model' => WebauthnKeyTest::class]);
@@ -265,9 +244,7 @@ class WebauthnTest extends FeatureTestCase
         $this->assertInstanceOf(WebauthnKey::class, $webauthnkey);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_creates_model_anyway()
     {
         config(['webauthn.model' => \stdClass::class]);

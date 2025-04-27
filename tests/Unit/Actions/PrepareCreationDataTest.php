@@ -8,6 +8,7 @@ use LaravelWebauthn\Actions\PrepareCreationData;
 use LaravelWebauthn\Facades\Webauthn;
 use LaravelWebauthn\Services\Webauthn\PublicKeyCredentialCreationOptions;
 use LaravelWebauthn\Tests\FeatureTestCase;
+use PHPUnit\Framework\Attributes\Test;
 use Webauthn\PublicKeyCredentialCreationOptions as PublicKeyCredentialCreationOptionsBase;
 use Webauthn\PublicKeyCredentialRpEntity;
 use Webauthn\PublicKeyCredentialUserEntity;
@@ -16,9 +17,7 @@ class PrepareCreationDataTest extends FeatureTestCase
 {
     use DatabaseTransactions;
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_get_attestation()
     {
         $user = $this->user();
@@ -36,9 +35,7 @@ class PrepareCreationDataTest extends FeatureTestCase
         $this->assertNotNull($result);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_fails()
     {
         $user = $this->user();

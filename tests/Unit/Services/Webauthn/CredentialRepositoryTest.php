@@ -6,12 +6,13 @@ use Illuminate\Foundation\Testing\DatabaseTransactions;
 use LaravelWebauthn\Models\WebauthnKey;
 use LaravelWebauthn\Services\Webauthn\CredentialRepository;
 use LaravelWebauthn\Tests\FeatureTestCase;
+use PHPUnit\Framework\Attributes\Test;
 
 class CredentialRepositoryTest extends FeatureTestCase
 {
     use DatabaseTransactions;
 
-    /** @test */
+    #[Test]
     public function it_returns_an_empty_array_when_no_keys_are_registered()
     {
         $user = $this->user();
@@ -21,7 +22,7 @@ class CredentialRepositoryTest extends FeatureTestCase
         $this->assertEquals([], CredentialRepository::getRegisteredKeys($user));
     }
 
-    /** @test */
+    #[Test]
     public function it_returns_an_array_with_the_keys()
     {
         $user = $this->user();

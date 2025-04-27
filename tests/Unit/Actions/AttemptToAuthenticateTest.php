@@ -9,6 +9,7 @@ use LaravelWebauthn\Actions\AttemptToAuthenticate;
 use LaravelWebauthn\Facades\Webauthn;
 use LaravelWebauthn\Services\Webauthn as WebauthnService;
 use LaravelWebauthn\Tests\FeatureTestCase;
+use PHPUnit\Framework\Attributes\Test;
 
 class AttemptToAuthenticateTest extends FeatureTestCase
 {
@@ -20,9 +21,7 @@ class AttemptToAuthenticateTest extends FeatureTestCase
         WebauthnService::$authenticateUsingCallback = null;
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_get_user_request()
     {
         $user = $this->user();
@@ -36,9 +35,7 @@ class AttemptToAuthenticateTest extends FeatureTestCase
         $this->assertEquals(1, $result);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_fails_with_request()
     {
         $user = $this->user();
@@ -51,9 +48,7 @@ class AttemptToAuthenticateTest extends FeatureTestCase
         app(AttemptToAuthenticate::class)->handle($request, fn () => 1);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_get_user_with_callback()
     {
         $user = $this->user();
@@ -72,9 +67,7 @@ class AttemptToAuthenticateTest extends FeatureTestCase
         $this->assertEquals(1, $result);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_fails_with_callback()
     {
         $user = $this->user();

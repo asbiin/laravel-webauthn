@@ -3,15 +3,14 @@
 namespace LaravelWebauthn\Tests\Unit\Services;
 
 use LaravelWebauthn\Tests\FeatureTestCase;
+use PHPUnit\Framework\Attributes\Test;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestFactoryInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
 class PsrHelpersTest extends FeatureTestCase
 {
-    /**
-     * @test
-     */
+    #[Test]
     public function it_get_client()
     {
         if (! class_exists(\Http\Discovery\Psr17FactoryDiscovery::class)) {
@@ -25,9 +24,7 @@ class PsrHelpersTest extends FeatureTestCase
         $this->assertInstanceOf(ClientInterface::class, $client);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_get_request_factory()
     {
         if (! class_exists(\Http\Discovery\Psr17FactoryDiscovery::class)) {
@@ -41,9 +38,7 @@ class PsrHelpersTest extends FeatureTestCase
         $this->assertInstanceOf(RequestFactoryInterface::class, $requestFactory);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_get_server_request_interface()
     {
         $serverRequest = app(ServerRequestInterface::class);

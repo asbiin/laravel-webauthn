@@ -4,11 +4,13 @@ namespace LaravelWebauthn\Tests\Unit\Models;
 
 use LaravelWebauthn\Models\WebauthnKey;
 use LaravelWebauthn\Tests\FeatureTestCase;
+use PHPUnit\Framework\Attributes\Test;
 use Symfony\Component\Uid\Uuid;
 use Webauthn\PublicKeyCredentialSource;
 
 class WebauthnKeyTest extends FeatureTestCase
 {
+    #[Test]
     public function test_serialize_data()
     {
         $webauthnKey = new WebauthnKey;
@@ -26,6 +28,7 @@ class WebauthnKeyTest extends FeatureTestCase
         $this->assertInstanceOf(\Webauthn\TrustPath\EmptyTrustPath::class, $webauthnKey->trustPath);
     }
 
+    #[Test]
     public function test_deserialize_data()
     {
         $webauthnKey = new WebauthnKey;

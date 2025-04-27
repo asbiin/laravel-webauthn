@@ -9,6 +9,7 @@ use LaravelWebauthn\Models\WebauthnKey;
 use LaravelWebauthn\Services\Webauthn\PublicKeyCredentialCreationOptions;
 use LaravelWebauthn\Tests\FeatureTestCase;
 use Mockery\MockInterface;
+use PHPUnit\Framework\Attributes\Test;
 use Webauthn\PublicKeyCredentialCreationOptions as PublicKeyCredentialCreationOptionsBase;
 use Webauthn\PublicKeyCredentialRpEntity;
 use Webauthn\PublicKeyCredentialUserEntity;
@@ -50,9 +51,7 @@ class WebauthnControllerTest extends FeatureTestCase
         Webauthn::shouldReceive('model')->andReturn(WebauthnKey::class);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_register_get_data()
     {
         $this->signIn();
@@ -73,9 +72,7 @@ class WebauthnControllerTest extends FeatureTestCase
         $this->assertEquals('Y2hhbGxlbmdl', $response->json('publicKey.challenge'));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_register_create_without_check()
     {
         $this->signIn();
@@ -94,9 +91,7 @@ class WebauthnControllerTest extends FeatureTestCase
         $response->assertStatus(422);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_register_create()
     {
         $user = $this->signIn();
@@ -130,9 +125,7 @@ class WebauthnControllerTest extends FeatureTestCase
         ]);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_register_create_exception()
     {
         $this->signIn();
@@ -163,9 +156,7 @@ class WebauthnControllerTest extends FeatureTestCase
         ]);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_destroy_key()
     {
         $user = $this->signIn();
@@ -182,9 +173,7 @@ class WebauthnControllerTest extends FeatureTestCase
         ]);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_destroy_wrong_id()
     {
         $user = $this->signIn();
@@ -208,9 +197,7 @@ class WebauthnControllerTest extends FeatureTestCase
         ]);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_destroy_wrong_user()
     {
         $user = $this->signIn();
@@ -235,9 +222,7 @@ class WebauthnControllerTest extends FeatureTestCase
         ]);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_update_webauthnkey()
     {
         $user = $this->signIn();
@@ -257,9 +242,7 @@ class WebauthnControllerTest extends FeatureTestCase
         ]);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_not_update_wrong_id()
     {
         $user = $this->signIn();
@@ -287,9 +270,7 @@ class WebauthnControllerTest extends FeatureTestCase
         ]);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_not_update_wrong_user()
     {
         $user = $this->signIn();

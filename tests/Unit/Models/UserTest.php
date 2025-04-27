@@ -5,14 +5,13 @@ namespace LaravelWebauthn\Tests\Unit\Models;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use LaravelWebauthn\Models\WebauthnKey;
 use LaravelWebauthn\Tests\FeatureTestCase;
+use PHPUnit\Framework\Attributes\Test;
 
 class UserTest extends FeatureTestCase
 {
     use DatabaseTransactions;
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_get_keys()
     {
         $user = $this->user();
