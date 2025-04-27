@@ -23,6 +23,10 @@ class AuthenticateController extends Controller
     public function create(WebauthnLoginAttemptRequest $request): LoginViewResponse
     {
         $user = $this->createPipeline($request)->then(function ($request) {
+            if (Webauthn::userless() || config('webauthn.user_verification') === 'discouraged') {
+                return null;
+            }
+
             return app(LoginUserRetrieval::class)($request);
         });
 
