@@ -11,7 +11,7 @@ class PrepareAssertionData
     /**
      * Get data to authenticate a user.
      */
-    public function __invoke(User $user): PublicKeyCredentialRequestOptions
+    public function __invoke(?User $user): PublicKeyCredentialRequestOptions
     {
         return Webauthn::prepareAssertion($user);
     }

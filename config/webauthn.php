@@ -101,8 +101,8 @@ return [
     |--------------------------------------------------------------------------
     |
     | When using navigation, redirects to these url on success:
-    | - login: after a successfull login.
-    | - register: after a successfull Webauthn key creation.
+    | - login: after a successful login.
+    | - register: after a successful Webauthn key creation.
     |
     | Redirects are not used in case of application/json requests.
     |
@@ -264,6 +264,7 @@ return [
     | See https://www.w3.org/TR/webauthn/#enum-userVerificationRequirement
     |
     | Supported: "required", "preferred", "discouraged".
+    | Forced to "required" when userless is true.
     |
     */
 
@@ -271,19 +272,31 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Userless (One touch, Typeless) login
+    | The resident key
     |--------------------------------------------------------------------------
     |
-    | By default, users must input their email to receive a list of credentials
-    | ID to use for authentication, but they can also login without specifying
-    | one if the device can remember them, allowing for true one-touch login.
+    | When userless is set to 'preferred' or 'required', the resident key will be
+    | forced to be 'required' automatically.
     |
     | See https://www.w3.org/TR/webauthn/#enum-residentKeyRequirement
     |
     | Supported: "null", "required", "preferred", "discouraged".
+    | Forced to "required" when userless is true.
     |
     */
 
-    'userless' => null,
+    'resident_key' => 'preferred',
+
+    /*
+    |--------------------------------------------------------------------------
+    | Userless (One touch, Typeless) login
+    |--------------------------------------------------------------------------
+    |
+    | This activates userless login, also known as one-touch login or typeless
+    | login for devices when they're being registered.
+    |
+    */
+
+    'userless' => (bool) env('WEBAUTHN_USERLESS', false),
 
 ];

@@ -272,4 +272,11 @@ class Webauthn extends WebauthnRepository
     {
         static::$registersRoutes = false;
     }
+
+    public static function userless(): bool
+    {
+        $userless = config('webauthn.userless');
+
+        return $userless === true || $userless === 'true' || $userless === 'preferred' || $userless === 'required';
+    }
 }

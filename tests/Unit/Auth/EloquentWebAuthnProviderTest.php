@@ -10,14 +10,13 @@ use LaravelWebauthn\Models\WebauthnKey;
 use LaravelWebauthn\Tests\FeatureTestCase;
 use LaravelWebauthn\Tests\User;
 use ParagonIE\ConstantTime\Base64UrlSafe;
+use PHPUnit\Framework\Attributes\Test;
 
 class EloquentWebAuthnProviderTest extends FeatureTestCase
 {
     use DatabaseTransactions;
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_validate_credentials()
     {
         $user = $this->user();
@@ -40,9 +39,7 @@ class EloquentWebAuthnProviderTest extends FeatureTestCase
         $this->assertTrue($result);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_retrieve_user()
     {
         $user = $this->signin();
@@ -71,9 +68,7 @@ class EloquentWebAuthnProviderTest extends FeatureTestCase
         $this->assertEquals($user->id, $result->id);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_retrieve_user_old_format()
     {
         $user = $this->signin();
@@ -104,9 +99,7 @@ class EloquentWebAuthnProviderTest extends FeatureTestCase
         $this->assertEquals($user->id, $result->id);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_retrieve_user_new_format()
     {
         $user = $this->signin();
@@ -138,9 +131,7 @@ class EloquentWebAuthnProviderTest extends FeatureTestCase
         $this->assertEquals($user->id, $result->id);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_does_not_fail_when_retrieving_user()
     {
         Webauthn::shouldReceive('validateAssertion')->andReturn(true);

@@ -7,9 +7,11 @@ use LaravelWebauthn\Http\Middleware\WebauthnMiddleware;
 use LaravelWebauthn\Models\WebauthnKey;
 use LaravelWebauthn\Services\Webauthn;
 use LaravelWebauthn\Tests\FeatureTestCase;
+use PHPUnit\Framework\Attributes\Test;
 
 class MiddlewareTest extends FeatureTestCase
 {
+    #[Test]
     public function test_middleware_guest()
     {
         $request = new Request;
@@ -18,6 +20,7 @@ class MiddlewareTest extends FeatureTestCase
         $this->app[WebauthnMiddleware::class]->handle($request, fn () => null);
     }
 
+    #[Test]
     public function test_middleware_user_not_enabled()
     {
         $user = $this->signIn();
@@ -28,6 +31,7 @@ class MiddlewareTest extends FeatureTestCase
         $this->assertEquals('next', $result);
     }
 
+    #[Test]
     public function test_middleware_user_authenticated()
     {
         $user = $this->signIn();
@@ -40,6 +44,7 @@ class MiddlewareTest extends FeatureTestCase
         $this->assertEquals('next', $result);
     }
 
+    #[Test]
     public function test_middleware_user_enabled()
     {
         $user = $this->signIn();

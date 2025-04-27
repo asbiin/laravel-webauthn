@@ -9,6 +9,7 @@ use LaravelWebauthn\Facades\Webauthn;
 use LaravelWebauthn\Services\Webauthn\PublicKeyCredentialRequestOptions;
 use LaravelWebauthn\Tests\FeatureTestCase;
 use Mockery\MockInterface;
+use PHPUnit\Framework\Attributes\Test;
 use Webauthn\PublicKeyCredentialRequestOptions as PublicKeyCredentialRequestOptionsBase;
 
 class AuthenticateControllerTest extends FeatureTestCase
@@ -47,9 +48,7 @@ class AuthenticateControllerTest extends FeatureTestCase
         Webauthn::spy();
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_auth_get()
     {
         $this->signIn();
@@ -64,9 +63,7 @@ class AuthenticateControllerTest extends FeatureTestCase
         $this->assertEquals('Y2hhbGxlbmdl', $response->json('publicKey.challenge'));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_auth_success()
     {
         $this->signIn();
@@ -90,9 +87,7 @@ class AuthenticateControllerTest extends FeatureTestCase
         $response->assertStatus(200);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_auth_success2()
     {
         $this->signIn();
@@ -115,9 +110,7 @@ class AuthenticateControllerTest extends FeatureTestCase
         $response->assertStatus(200);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_auth_exception()
     {
         $this->signIn();
@@ -147,9 +140,7 @@ class AuthenticateControllerTest extends FeatureTestCase
         ]);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_auth_success_with_redirect()
     {
         $this->signIn();

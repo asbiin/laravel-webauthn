@@ -81,6 +81,7 @@ class WebauthnServiceProvider extends ServiceProvider
         $this->app->singleton(WebauthnFacade::class, Webauthn::class);
 
         $this->registerResponseBindings();
+        $this->overrideConfiguration();
         $this->bindWebAuthnPackage();
         $this->bindPsrInterfaces();
 
@@ -119,6 +120,17 @@ class WebauthnServiceProvider extends ServiceProvider
         $this->app->singleton(RegisterSuccessResponseContract::class, RegisterSuccessResponse::class);
         $this->app->singleton(RegisterViewResponseContract::class, RegisterViewResponse::class);
         $this->app->singleton(UpdateResponseContract::class, UpdateResponse::class);
+    }
+
+    /**
+     * Override the configuration for userless WebAuthn.
+     */
+    protected function overrideConfiguration(): void
+    {
+        if (Webauthn::userless()) {
+            $this->app['config']->set('webauthn.user_verification', 'required');
+            $this->app['config']->set('webauthn.resident_key', 'required');
+        }
     }
 
     /**
@@ -192,9 +204,9 @@ class WebauthnServiceProvider extends ServiceProvider
         $this->app->bind(
             AuthenticatorSelectionCriteria::class,
             fn ($app) => new AuthenticatorSelectionCriteria(
-                authenticatorAttachment: $app['config']->get('webauthn.attachment_mode', 'null'),
+                authenticatorAttachment: $app['config']->get('webauthn.attachment_mode'),
                 userVerification: $app['config']->get('webauthn.user_verification', 'preferred'),
-                residentKey: $app['config']->get('webauthn.userless')
+                residentKey: $app['config']->get('webauthn.resident_key', 'preferred')
             )
         );
         $this->app->bind(

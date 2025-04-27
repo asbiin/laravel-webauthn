@@ -5,14 +5,13 @@ namespace LaravelWebauthn\Tests\Unit\Models;
 use LaravelWebauthn\Models\Casts\Base64;
 use LaravelWebauthn\Models\WebauthnKey;
 use LaravelWebauthn\Tests\FeatureTestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 
 class Base64Test extends FeatureTestCase
 {
-    /**
-     * @test
-     *
-     * @dataProvider dataProvider
-     */
+    #[Test]
+    #[DataProvider('dataProvider')]
     public function it_deserialize_credential_id($credentialId, $expected)
     {
         $webauthnKey = new WebauthnKey;

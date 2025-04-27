@@ -7,14 +7,13 @@ use Illuminate\Foundation\Testing\DatabaseTransactions;
 use LaravelWebauthn\Actions\UpdateKey;
 use LaravelWebauthn\Models\WebauthnKey;
 use LaravelWebauthn\Tests\FeatureTestCase;
+use PHPUnit\Framework\Attributes\Test;
 
 class UpdateKeyTest extends FeatureTestCase
 {
     use DatabaseTransactions;
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_update_key()
     {
         $user = $this->user();
@@ -31,9 +30,7 @@ class UpdateKeyTest extends FeatureTestCase
         ]);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_fails_if_wrong_user()
     {
         $user = $this->user();
@@ -43,9 +40,7 @@ class UpdateKeyTest extends FeatureTestCase
         app(UpdateKey::class)($user, $webauthnKey->id, 'new-name');
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_fails_if_wrong_id()
     {
         $user = $this->user();
