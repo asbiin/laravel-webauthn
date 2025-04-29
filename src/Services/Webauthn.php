@@ -35,6 +35,13 @@ class Webauthn extends WebauthnRepository
     public static $authenticateUsingCallback;
 
     /**
+     * The callback that is responsible for confirming a passkey without login, if applicable.
+     *
+     * @var callable|null
+     */
+    public static $confirmKeyUsingCallback;
+
+    /**
      * Indicates if Webauthn routes will be registered.
      */
     public static bool $registersRoutes = true;
@@ -203,6 +210,14 @@ class Webauthn extends WebauthnRepository
     public static function authenticateUsing(callable $callback): void
     {
         static::$authenticateUsingCallback = $callback;
+    }
+
+    /**
+     * Register a callback that is responsible for confirming a passkey without login.
+     */
+    public static function confirmKeyUsing(callable $callback): void
+    {
+        static::$confirmKeyUsingCallback = $callback;
     }
 
     /**
