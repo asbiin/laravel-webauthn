@@ -40,5 +40,5 @@ Route::group([
     Route::delete('keys/{id}', [WebauthnKeyController::class, 'destroy'])->name('webauthn.destroy');
     Route::put('keys/{id}', [WebauthnKeyController::class, 'update'])->name('webauthn.update');
 
-    Route::post('user/confirm-key', [ConfirmableKeyController::class, 'store'])->name('webauthn.key.confirm');
+    Route::post('confirm-key', [ConfirmableKeyController::class, 'store'])->name('webauthn.key.confirm');
 });

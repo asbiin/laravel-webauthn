@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\Facade;
  * @method static bool enabled(\Illuminate\Contracts\Auth\Authenticatable $user)
  * @method static bool canRegister(\Illuminate\Contracts\Auth\Authenticatable $user)
  * @method static bool hasKey(\Illuminate\Contracts\Auth\Authenticatable $user)
- * @method static string redirects(string $redirect, $default = null)
+ * @method static ?string redirects(string $redirect, $default = null)
  * @method static string model()
  * @method static bool userless()
  *
