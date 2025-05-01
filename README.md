@@ -102,10 +102,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        Event::listen(
-            \Illuminate\Auth\Events\Login::class,
-            \LaravelWebauthn\Listeners\LoginViaRemember::class
-        );
+        Event::subscribe(LoginViaRemember::class);
     }
 }
 ```
@@ -278,6 +275,7 @@ These routes are defined:
 | POST `/webauthn/keys`         | `webauthn.store`         | Post data after a WebAuthn register check.                            |
 | DELETE `/webauthn/keys/{id}`  | `webauthn.destroy`       | Delete an existing key.                                               |
 | PUT `/webauthn/keys/{id}`     | `webauthn.update`        | Update key properties (name, ...).                                    |
+| POST `/webauthn/confirm-key`  | `webauthn.key.confirm`   | Post data to test a WebAuthn authentication without login.            |
 
 
 You can customize the first part of the url by setting `prefix` value in the config file.
@@ -445,6 +443,7 @@ However, your browser will refuse to negotiate a relay to your security device w
 - connected HTTPS on port 443 (ports other than 443 will be rejected)
 
 ### Homestead
+
 If you are a Laravel Homestead user, the default is to forward ports. You can switch from NAT/port forwarding to a private network with similar `Homestead.yaml` options:
 
 ```yaml

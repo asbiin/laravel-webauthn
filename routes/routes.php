@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use LaravelWebauthn\Http\Controllers\AuthenticateController;
+use LaravelWebauthn\Http\Controllers\ConfirmableKeyController;
 use LaravelWebauthn\Http\Controllers\WebauthnKeyController;
 
 $limiterMiddleware = ($limiter = config('webauthn.limiters.login')) !== null
@@ -38,4 +39,6 @@ Route::group([
     Route::post('keys', [WebauthnKeyController::class, 'store'])->name('webauthn.store');
     Route::delete('keys/{id}', [WebauthnKeyController::class, 'destroy'])->name('webauthn.destroy');
     Route::put('keys/{id}', [WebauthnKeyController::class, 'update'])->name('webauthn.update');
+
+    Route::post('confirm-key', [ConfirmableKeyController::class, 'store'])->name('webauthn.key.confirm');
 });

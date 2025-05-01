@@ -17,6 +17,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\ServiceProvider;
 use LaravelWebauthn\Auth\EloquentWebAuthnProvider;
 use LaravelWebauthn\Contracts\DestroyResponse as DestroyResponseContract;
+use LaravelWebauthn\Contracts\FailedKeyConfirmedResponse as FailedKeyConfirmedResponseContract;
+use LaravelWebauthn\Contracts\KeyConfirmedResponse as KeyConfirmedResponseContract;
 use LaravelWebauthn\Contracts\LoginSuccessResponse as LoginSuccessResponseContract;
 use LaravelWebauthn\Contracts\LoginViewResponse as LoginViewResponseContract;
 use LaravelWebauthn\Contracts\RegisterSuccessResponse as RegisterSuccessResponseContract;
@@ -24,6 +26,8 @@ use LaravelWebauthn\Contracts\RegisterViewResponse as RegisterViewResponseContra
 use LaravelWebauthn\Contracts\UpdateResponse as UpdateResponseContract;
 use LaravelWebauthn\Facades\Webauthn as WebauthnFacade;
 use LaravelWebauthn\Http\Responses\DestroyResponse;
+use LaravelWebauthn\Http\Responses\FailedKeyConfirmedResponse;
+use LaravelWebauthn\Http\Responses\KeyConfirmedResponse;
 use LaravelWebauthn\Http\Responses\LoginSuccessResponse;
 use LaravelWebauthn\Http\Responses\LoginViewResponse;
 use LaravelWebauthn\Http\Responses\RegisterSuccessResponse;
@@ -120,6 +124,8 @@ class WebauthnServiceProvider extends ServiceProvider
         $this->app->singleton(RegisterSuccessResponseContract::class, RegisterSuccessResponse::class);
         $this->app->singleton(RegisterViewResponseContract::class, RegisterViewResponse::class);
         $this->app->singleton(UpdateResponseContract::class, UpdateResponse::class);
+        $this->app->singleton(KeyConfirmedResponseContract::class, KeyConfirmedResponse::class);
+        $this->app->singleton(FailedKeyConfirmedResponseContract::class, FailedKeyConfirmedResponse::class);
     }
 
     /**

@@ -103,6 +103,7 @@ return [
     | When using navigation, redirects to these url on success:
     | - login: after a successful login.
     | - register: after a successful Webauthn key creation.
+    | - key-confirmation: after a successful Webauthn key confirmation.
     |
     | Redirects are not used in case of application/json requests.
     |
@@ -111,6 +112,7 @@ return [
     'redirects' => [
         'login' => null,
         'register' => null,
+        'key-confirmation' => null,
     ],
 
     /*

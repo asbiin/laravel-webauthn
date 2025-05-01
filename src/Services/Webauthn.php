@@ -35,6 +35,13 @@ class Webauthn extends WebauthnRepository
     public static $authenticateUsingCallback;
 
     /**
+     * The callback that is responsible for confirming a passkey without login, if applicable.
+     *
+     * @var callable|null
+     */
+    public static $confirmKeyUsingCallback;
+
+    /**
      * Indicates if Webauthn routes will be registered.
      */
     public static bool $registersRoutes = true;
@@ -50,9 +57,9 @@ class Webauthn extends WebauthnRepository
     /**
      * Get a completion redirect path for a specific feature.
      */
-    public static function redirects(string $redirect, ?string $default = null): string
+    public static function redirects(string $redirect, ?string $default = null): ?string
     {
-        return config('webauthn.redirects.'.$redirect) ?? $default ?? config('webauthn.home');
+        return config('webauthn.redirects.'.$redirect) ?? $default ?? '/home';
     }
 
     /**
@@ -203,6 +210,14 @@ class Webauthn extends WebauthnRepository
     public static function authenticateUsing(callable $callback): void
     {
         static::$authenticateUsingCallback = $callback;
+    }
+
+    /**
+     * Register a callback that is responsible for confirming a passkey without login.
+     */
+    public static function confirmKeyUsing(callable $callback): void
+    {
+        static::$confirmKeyUsingCallback = $callback;
     }
 
     /**
