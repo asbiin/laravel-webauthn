@@ -85,7 +85,6 @@ class WebauthnServiceProvider extends ServiceProvider
         $this->app->singleton(WebauthnFacade::class, Webauthn::class);
 
         $this->registerResponseBindings();
-        $this->overrideConfiguration();
         $this->bindWebAuthnPackage();
         $this->bindPsrInterfaces();
 
@@ -126,17 +125,6 @@ class WebauthnServiceProvider extends ServiceProvider
         $this->app->singleton(UpdateResponseContract::class, UpdateResponse::class);
         $this->app->singleton(KeyConfirmedResponseContract::class, KeyConfirmedResponse::class);
         $this->app->singleton(FailedKeyConfirmedResponseContract::class, FailedKeyConfirmedResponse::class);
-    }
-
-    /**
-     * Override the configuration for userless WebAuthn.
-     */
-    protected function overrideConfiguration(): void
-    {
-        if (Webauthn::userless()) {
-            $this->app['config']->set('webauthn.user_verification', 'required');
-            $this->app['config']->set('webauthn.resident_key', 'required');
-        }
     }
 
     /**
