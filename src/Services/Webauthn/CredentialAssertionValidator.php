@@ -5,6 +5,7 @@ namespace LaravelWebauthn\Services\Webauthn;
 use Illuminate\Contracts\Auth\Authenticatable as User;
 use Illuminate\Contracts\Cache\Repository as Cache;
 use Illuminate\Http\Request;
+use LaravelWebauthn\Events\WebauthnAuthenticate;
 use LaravelWebauthn\Exceptions\ResponseMismatchException;
 use LaravelWebauthn\Services\Webauthn;
 use ParagonIE\ConstantTime\Base64UrlSafe;
@@ -36,14 +37,18 @@ class CredentialAssertionValidator extends CredentialValidator
         $content = json_encode($data, flags: JSON_THROW_ON_ERROR);
         $publicKeyCredential = $this->loader->deserialize($content, PublicKeyCredential::class, 'json');
 
+        $webauthnKey = $this->getKey($user, $publicKeyCredential);
+
         // Check the response against the request
         $this->validator->check(
-            $this->getCredentialSource($user, $publicKeyCredential),
+            $webauthnKey->publicKeyCredentialSource,
             $this->getResponse($publicKeyCredential),
             $this->pullPublicKey($user),
             $this->request->host(),
             optional($user)->getAuthIdentifier()
         );
+
+        WebauthnAuthenticate::dispatch($webauthnKey);
 
         return true;
     }
@@ -87,7 +92,7 @@ class CredentialAssertionValidator extends CredentialValidator
     /**
      * Get credential source from user and public key.
      */
-    protected function getCredentialSource(?User $user, PublicKeyCredential $publicKeyCredential)
+    protected function getKey(?User $user, PublicKeyCredential $publicKeyCredential)
     {
         $credentialId = $publicKeyCredential->rawId;
 
@@ -97,7 +102,6 @@ class CredentialAssertionValidator extends CredentialValidator
         )->where(
             fn ($query) => $user !== null ? $query->where('user_id', $user->getAuthIdentifier()) : $query
         )
-            ->firstOrFail()
-            ->publicKeyCredentialSource;
+            ->firstOrFail();
     }
 }
