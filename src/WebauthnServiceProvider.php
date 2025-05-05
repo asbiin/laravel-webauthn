@@ -35,6 +35,7 @@ use LaravelWebauthn\Http\Responses\RegisterSuccessResponse;
 use LaravelWebauthn\Http\Responses\RegisterViewResponse;
 use LaravelWebauthn\Http\Responses\UpdateResponse;
 use LaravelWebauthn\Services\Webauthn;
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestFactoryInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
@@ -46,7 +47,6 @@ use Symfony\Bridge\PsrHttpMessage\Factory\PsrHttpFactory;
 use Symfony\Component\Serializer\SerializerInterface;
 use Webauthn\AttestationStatement\AndroidKeyAttestationStatementSupport;
 use Webauthn\AttestationStatement\AppleAttestationStatementSupport;
-use Webauthn\AttestationStatement\AttestationObjectLoader;
 use Webauthn\AttestationStatement\AttestationStatementSupportManager;
 use Webauthn\AttestationStatement\FidoU2FAttestationStatementSupport;
 use Webauthn\AttestationStatement\NoneAttestationStatementSupport;
@@ -69,6 +69,24 @@ use Webauthn\PublicKeyCredentialRpEntity;
 class WebauthnServiceProvider extends ServiceProvider
 {
     /**
+     * All of the container singletons that should be registered.
+     *
+     * @var array
+     */
+    public $singletons = [
+        WebauthnFacade::class => Webauthn::class,
+        DestroyResponseContract::class => DestroyResponse::class,
+        LoginSuccessResponseContract::class => LoginSuccessResponse::class,
+        LoginViewResponseContract::class => LoginViewResponse::class,
+        RegisterSuccessResponseContract::class => RegisterSuccessResponse::class,
+        RegisterViewResponseContract::class => RegisterViewResponse::class,
+        UpdateResponseContract::class => UpdateResponse::class,
+        KeyConfirmedResponseContract::class => KeyConfirmedResponse::class,
+        FailedKeyConfirmedResponseContract::class => FailedKeyConfirmedResponse::class,
+        EventDispatcherInterface::class => EventDispatcher::class,
+    ];
+
+    /**
      * Bootstrap any application services.
      */
     public function boot(): void
@@ -85,11 +103,6 @@ class WebauthnServiceProvider extends ServiceProvider
     #[\Override]
     public function register(): void
     {
-        $this->app->bind('webauthn.log', fn ($app) => $app['log']->channel(config('webauthn.log', config('logging.default'))));
-
-        $this->app->singleton(WebauthnFacade::class, Webauthn::class);
-
-        $this->registerResponseBindings();
         $this->bindWebAuthnPackage();
         $this->bindPsrInterfaces();
 
@@ -97,6 +110,7 @@ class WebauthnServiceProvider extends ServiceProvider
             __DIR__.'/../config/webauthn.php', 'webauthn'
         );
 
+        $this->app->bind('webauthn.log', fn ($app) => $app['log']->channel(config('webauthn.log', config('logging.default'))));
         $this->app->bind(StatefulGuard::class, fn () => Auth::guard(config('webauthn.guard', null)));
     }
 
@@ -117,35 +131,13 @@ class WebauthnServiceProvider extends ServiceProvider
     }
 
     /**
-     * Register the response bindings.
-     */
-    public function registerResponseBindings(): void
-    {
-        $this->app->singleton(DestroyResponseContract::class, DestroyResponse::class);
-        $this->app->singleton(LoginSuccessResponseContract::class, LoginSuccessResponse::class);
-        $this->app->singleton(LoginViewResponseContract::class, LoginViewResponse::class);
-        $this->app->singleton(RegisterSuccessResponseContract::class, RegisterSuccessResponse::class);
-        $this->app->singleton(RegisterViewResponseContract::class, RegisterViewResponse::class);
-        $this->app->singleton(UpdateResponseContract::class, UpdateResponse::class);
-        $this->app->singleton(KeyConfirmedResponseContract::class, KeyConfirmedResponse::class);
-        $this->app->singleton(FailedKeyConfirmedResponseContract::class, FailedKeyConfirmedResponse::class);
-    }
-
-    /**
      * Bind all the WebAuthn package services to the Service Container.
      */
     protected function bindWebAuthnPackage(): void
     {
-        $this->app->singleton(EventDispatcher::class);
-        $this->app->resolving(CanDispatchEvents::class, fn (CanDispatchEvents $object) => $object->setEventDispatcher($this->app[EventDispatcher::class]));
+        $this->app->resolving(CanDispatchEvents::class, fn (CanDispatchEvents $object) => $object->setEventDispatcher($this->app[EventDispatcherInterface::class]));
         $this->app->resolving(CanLogData::class, fn (CanLogData $object) => $object->setLogger($this->app['webauthn.log']));
 
-        $this->app->bind(
-            PackedAttestationStatementSupport::class,
-            fn ($app) => new PackedAttestationStatementSupport(
-                algorithmManager: $app[CoseAlgorithmManager::class]
-            )
-        );
         $this->app->bind(
             AttestationStatementSupportManager::class,
             fn ($app) => tap(new AttestationStatementSupportManager, function ($manager) use ($app) {
@@ -167,12 +159,6 @@ class WebauthnServiceProvider extends ServiceProvider
                     $manager->add($app[$support]);
                 }
             })
-        );
-        $this->app->bind(
-            AttestationObjectLoader::class,
-            fn ($app) => new AttestationObjectLoader(
-                attestationStatementSupportManager: $app[AttestationStatementSupportManager::class]
-            )
         );
         $this->app->bind(
             SerializerInterface::class,

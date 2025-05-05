@@ -19,6 +19,7 @@ final class EventDispatcher implements EventDispatcherInterface
      *
      * @return object
      */
+    #[\Override]
     public function dispatch(object $event)
     {
         $this->dispatcher->dispatch($event);
