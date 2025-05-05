@@ -363,12 +363,14 @@ Then use this new custom rate limiter in your `webauthn.limiters.login` configur
 
 Events are dispatched by LaravelWebauthn:
 
+* `\Illuminate\Auth\Events\Failed` on a failed login check.
 * `\LaravelWebauthn\Events\WebauthnLogin` on login with Webauthn check.
 * `\LaravelWebauthn\Events\WebauthnLoginData` on preparing authentication data challenge.
-* `\Illuminate\Auth\Events\Failed` on a failed login check.
 * `\LaravelWebauthn\Events\WebauthnRegister` on registering a new key.
 * `\LaravelWebauthn\Events\WebauthnRegisterData` on preparing register data challenge.
 * `\LaravelWebauthn\Events\WebauthnRegisterFailed` on failing registering a new key.
+* `\LaravelWebauthn\Events\WebauthnAuthenticate` when a key has been authenticated.
+
 
 ## View response
 

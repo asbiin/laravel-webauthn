@@ -24,6 +24,7 @@ use LaravelWebauthn\Contracts\LoginViewResponse as LoginViewResponseContract;
 use LaravelWebauthn\Contracts\RegisterSuccessResponse as RegisterSuccessResponseContract;
 use LaravelWebauthn\Contracts\RegisterViewResponse as RegisterViewResponseContract;
 use LaravelWebauthn\Contracts\UpdateResponse as UpdateResponseContract;
+use LaravelWebauthn\Events\EventDispatcher;
 use LaravelWebauthn\Facades\Webauthn as WebauthnFacade;
 use LaravelWebauthn\Http\Responses\DestroyResponse;
 use LaravelWebauthn\Http\Responses\FailedKeyConfirmedResponse;
@@ -34,6 +35,7 @@ use LaravelWebauthn\Http\Responses\RegisterSuccessResponse;
 use LaravelWebauthn\Http\Responses\RegisterViewResponse;
 use LaravelWebauthn\Http\Responses\UpdateResponse;
 use LaravelWebauthn\Services\Webauthn;
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestFactoryInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
@@ -45,7 +47,6 @@ use Symfony\Bridge\PsrHttpMessage\Factory\PsrHttpFactory;
 use Symfony\Component\Serializer\SerializerInterface;
 use Webauthn\AttestationStatement\AndroidKeyAttestationStatementSupport;
 use Webauthn\AttestationStatement\AppleAttestationStatementSupport;
-use Webauthn\AttestationStatement\AttestationObjectLoader;
 use Webauthn\AttestationStatement\AttestationStatementSupportManager;
 use Webauthn\AttestationStatement\FidoU2FAttestationStatementSupport;
 use Webauthn\AttestationStatement\NoneAttestationStatementSupport;
@@ -58,6 +59,8 @@ use Webauthn\AuthenticatorSelectionCriteria;
 use Webauthn\CeremonyStep\CeremonyStepManagerFactory;
 use Webauthn\Counter\CounterChecker;
 use Webauthn\Counter\ThrowExceptionIfInvalid;
+use Webauthn\Event\CanDispatchEvents;
+use Webauthn\MetadataService\CanLogData;
 use Webauthn\PublicKeyCredentialRpEntity;
 
 /**
@@ -65,6 +68,24 @@ use Webauthn\PublicKeyCredentialRpEntity;
  */
 class WebauthnServiceProvider extends ServiceProvider
 {
+    /**
+     * All of the container singletons that should be registered.
+     *
+     * @var array
+     */
+    public $singletons = [
+        WebauthnFacade::class => Webauthn::class,
+        DestroyResponseContract::class => DestroyResponse::class,
+        LoginSuccessResponseContract::class => LoginSuccessResponse::class,
+        LoginViewResponseContract::class => LoginViewResponse::class,
+        RegisterSuccessResponseContract::class => RegisterSuccessResponse::class,
+        RegisterViewResponseContract::class => RegisterViewResponse::class,
+        UpdateResponseContract::class => UpdateResponse::class,
+        KeyConfirmedResponseContract::class => KeyConfirmedResponse::class,
+        FailedKeyConfirmedResponseContract::class => FailedKeyConfirmedResponse::class,
+        EventDispatcherInterface::class => EventDispatcher::class,
+    ];
+
     /**
      * Bootstrap any application services.
      */
@@ -82,9 +103,6 @@ class WebauthnServiceProvider extends ServiceProvider
     #[\Override]
     public function register(): void
     {
-        $this->app->singleton(WebauthnFacade::class, Webauthn::class);
-
-        $this->registerResponseBindings();
         $this->bindWebAuthnPackage();
         $this->bindPsrInterfaces();
 
@@ -92,8 +110,8 @@ class WebauthnServiceProvider extends ServiceProvider
             __DIR__.'/../config/webauthn.php', 'webauthn'
         );
 
-        $this->app->bind(StatefulGuard::class, fn () => Auth::guard(config('webauthn.guard', null)));
         $this->app->bind('webauthn.log', fn ($app) => $app['log']->channel(config('webauthn.log', config('logging.default'))));
+        $this->app->bind(StatefulGuard::class, fn () => Auth::guard(config('webauthn.guard', null)));
     }
 
     /**
@@ -113,88 +131,73 @@ class WebauthnServiceProvider extends ServiceProvider
     }
 
     /**
-     * Register the response bindings.
-     */
-    public function registerResponseBindings(): void
-    {
-        $this->app->singleton(DestroyResponseContract::class, DestroyResponse::class);
-        $this->app->singleton(LoginSuccessResponseContract::class, LoginSuccessResponse::class);
-        $this->app->singleton(LoginViewResponseContract::class, LoginViewResponse::class);
-        $this->app->singleton(RegisterSuccessResponseContract::class, RegisterSuccessResponse::class);
-        $this->app->singleton(RegisterViewResponseContract::class, RegisterViewResponse::class);
-        $this->app->singleton(UpdateResponseContract::class, UpdateResponse::class);
-        $this->app->singleton(KeyConfirmedResponseContract::class, KeyConfirmedResponse::class);
-        $this->app->singleton(FailedKeyConfirmedResponseContract::class, FailedKeyConfirmedResponse::class);
-    }
-
-    /**
      * Bind all the WebAuthn package services to the Service Container.
      */
     protected function bindWebAuthnPackage(): void
     {
-        $this->app->bind(
-            PackedAttestationStatementSupport::class,
-            fn ($app) => new PackedAttestationStatementSupport(
-                algorithmManager: $app[CoseAlgorithmManager::class]
-            )
-        );
+        $this->app->resolving(CanDispatchEvents::class, fn (CanDispatchEvents $object) => $object->setEventDispatcher($this->app[EventDispatcherInterface::class]));
+        $this->app->resolving(CanLogData::class, fn (CanLogData $object) => $object->setLogger($this->app['webauthn.log']));
+
         $this->app->bind(
             AttestationStatementSupportManager::class,
             fn ($app) => tap(new AttestationStatementSupportManager, function ($manager) use ($app) {
-                // https://www.w3.org/TR/webauthn/#sctn-none-attestation
-                $manager->add($app[NoneAttestationStatementSupport::class]);
-
-                // https://www.w3.org/TR/webauthn/#sctn-fido-u2f-attestation
-                $manager->add($app[FidoU2FAttestationStatementSupport::class]);
-
-                // https://www.w3.org/TR/webauthn/#sctn-android-key-attestation
-                $manager->add($app[AndroidKeyAttestationStatementSupport::class]);
-
-                // https://www.w3.org/TR/webauthn/#sctn-tpm-attestation
-                $manager->add($app[TPMAttestationStatementSupport::class]);
-
-                // https://www.w3.org/TR/webauthn/#sctn-packed-attestation
-                $manager->add($app[PackedAttestationStatementSupport::class]);
-
-                // https://www.w3.org/TR/webauthn/#sctn-apple-anonymous-attestation
-                $manager->add($app[AppleAttestationStatementSupport::class]);
+                $supports = [
+                    // https://www.w3.org/TR/webauthn/#sctn-packed-attestation
+                    PackedAttestationStatementSupport::class,
+                    // https://www.w3.org/TR/webauthn/#sctn-tpm-attestation
+                    TPMAttestationStatementSupport::class,
+                    // https://www.w3.org/TR/webauthn/#sctn-android-key-attestation
+                    AndroidKeyAttestationStatementSupport::class,
+                    // https://www.w3.org/TR/webauthn/#sctn-fido-u2f-attestation
+                    FidoU2FAttestationStatementSupport::class,
+                    // https://www.w3.org/TR/webauthn/#sctn-none-attestation
+                    NoneAttestationStatementSupport::class,
+                    // https://www.w3.org/TR/webauthn/#sctn-apple-anonymous-attestation
+                    AppleAttestationStatementSupport::class,
+                ];
+                foreach ($supports as $support) {
+                    $manager->add($app[$support]);
+                }
             })
         );
         $this->app->bind(
-            AttestationObjectLoader::class,
-            fn ($app) => tap(new AttestationObjectLoader(
-                $app[AttestationStatementSupportManager::class]
-            ), fn (AttestationObjectLoader $loader) => $loader->setLogger($app['webauthn.log'])
-            )
+            SerializerInterface::class,
+            fn ($app) => (new \Webauthn\Denormalizer\WebauthnSerializerFactory($app[AttestationStatementSupportManager::class]))->create()
         );
 
         $this->app->bind(
             CounterChecker::class,
-            fn ($app) => new ThrowExceptionIfInvalid($app['webauthn.log'])
-        );
-
-        $this->app->bind(
-            AuthenticatorAttestationResponseValidator::class,
-            fn ($app) => tap(new AuthenticatorAttestationResponseValidator(
-                ceremonyStepManager: ($app[CeremonyStepManagerFactory::class])->creationCeremony(),
-            ), fn (AuthenticatorAttestationResponseValidator $responseValidator) => $responseValidator->setLogger($app['webauthn.log'])
+            fn ($app) => new ThrowExceptionIfInvalid(
+                logger: $app['webauthn.log']
             )
         );
+
         $this->app->bind(
             CeremonyStepManagerFactory::class,
             fn ($app) => tap(new CeremonyStepManagerFactory, function (CeremonyStepManagerFactory $factory) use ($app) {
                 $factory->setExtensionOutputCheckerHandler($app[ExtensionOutputCheckerHandler::class]);
                 $factory->setAlgorithmManager($app[CoseAlgorithmManager::class]);
                 $factory->setCounterChecker($app[CounterChecker::class]);
+                $factory->setAttestationStatementSupportManager($app[AttestationStatementSupportManager::class]);
+                // $factory->setAllowedOrigins(
+                //     allowedOrigins: $app['config']->get('webauthn.allowed_origins'),
+                //     allowSubdomains: $app['config']->get('webauthn.allow_subdomains')
+                // );
             })
         );
         $this->app->bind(
-            AuthenticatorAssertionResponseValidator::class,
-            fn ($app) => tap((new AuthenticatorAssertionResponseValidator(
-                ceremonyStepManager: ($app[CeremonyStepManagerFactory::class])->requestCeremony()
-            )), fn (AuthenticatorAssertionResponseValidator $responseValidator) => $responseValidator->setLogger($app['webauthn.log'])
+            AuthenticatorAttestationResponseValidator::class,
+            fn ($app) => new AuthenticatorAttestationResponseValidator(
+                ceremonyStepManager: ($app[CeremonyStepManagerFactory::class])->creationCeremony(),
             )
         );
+        $this->app->bind(
+            AuthenticatorAssertionResponseValidator::class,
+            fn ($app) => (new AuthenticatorAssertionResponseValidator(
+                ceremonyStepManager: ($app[CeremonyStepManagerFactory::class])->requestCeremony()
+            ))
+        );
+
         $this->app->bind(
             AuthenticatorSelectionCriteria::class,
             fn ($app) => new AuthenticatorSelectionCriteria(
@@ -203,6 +206,7 @@ class WebauthnServiceProvider extends ServiceProvider
                 residentKey: $app['config']->get('webauthn.resident_key', 'preferred')
             )
         );
+
         $this->app->bind(
             PublicKeyCredentialRpEntity::class,
             fn ($app) => new PublicKeyCredentialRpEntity(
@@ -211,6 +215,7 @@ class WebauthnServiceProvider extends ServiceProvider
                 icon: $app['config']->get('webauthn.icon')
             )
         );
+
         $this->app->bind(
             CoseAlgorithmManager::class,
             fn ($app) => $app[CoseAlgorithmManagerFactory::class]
@@ -242,10 +247,6 @@ class WebauthnServiceProvider extends ServiceProvider
                     $factory->add((string) $algorithm::identifier(), new $algorithm);
                 }
             })
-        );
-        $this->app->bind(
-            SerializerInterface::class,
-            fn ($app) => (new \Webauthn\Denormalizer\WebauthnSerializerFactory($app[AttestationStatementSupportManager::class]))->create()
         );
     }
 

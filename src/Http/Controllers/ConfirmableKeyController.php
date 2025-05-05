@@ -14,19 +14,10 @@ use LaravelWebauthn\Contracts\KeyConfirmedResponse;
 class ConfirmableKeyController extends Controller
 {
     /**
-     * The guard implementation.
-     *
-     * @var \Illuminate\Contracts\Auth\StatefulGuard
-     */
-    protected $guard;
-
-    /**
      * Create a new controller instance.
      */
-    public function __construct(StatefulGuard $guard)
-    {
-        $this->guard = $guard;
-    }
+    public function __construct(
+        protected StatefulGuard $guard) {}
 
     /**
      * Confirm the user's key.

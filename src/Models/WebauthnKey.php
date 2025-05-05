@@ -39,7 +39,6 @@ class WebauthnKey extends Model
         'aaguid',
         'credentialPublicKey',
         'counter',
-        'timestamp',
     ];
 
     /**

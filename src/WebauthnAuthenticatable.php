@@ -3,7 +3,7 @@
 namespace LaravelWebauthn;
 
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use LaravelWebauthn\Models\WebauthnKey;
+use LaravelWebauthn\Facades\Webauthn;
 
 /**
  * Trait to add Webauthn authenticatable to a user model.
@@ -17,6 +17,6 @@ trait WebauthnAuthenticatable
      */
     public function webauthnKeys(): HasMany
     {
-        return $this->hasMany(WebauthnKey::class);
+        return $this->hasMany(Webauthn::model());
     }
 }

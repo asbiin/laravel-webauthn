@@ -266,7 +266,7 @@ return [
     | See https://www.w3.org/TR/webauthn/#enum-userVerificationRequirement
     |
     | Supported: "required", "preferred", "discouraged".
-    | Forced to "required" when userless is true.
+    | This should be set to "required" when userless is true.
     |
     */
 
@@ -283,7 +283,7 @@ return [
     | See https://www.w3.org/TR/webauthn/#enum-residentKeyRequirement
     |
     | Supported: "null", "required", "preferred", "discouraged".
-    | Forced to "required" when userless is true.
+    | This should be set to "required" when userless is true.
     |
     */
 
