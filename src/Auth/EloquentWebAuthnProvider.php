@@ -3,7 +3,6 @@
 namespace LaravelWebauthn\Auth;
 
 use Illuminate\Auth\EloquentUserProvider;
-use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\Authenticatable as User;
 use Illuminate\Contracts\Config\Repository as Config;
 use Illuminate\Contracts\Hashing\Hasher;
@@ -83,9 +82,11 @@ class EloquentWebAuthnProvider extends EloquentUserProvider
 
     /**
      * Rehash the user's password if required and supported.
+     *
+     * @phpstan-ignore method.childParameterType
      */
     #[\Override]
-    public function rehashPasswordIfRequired(Authenticatable $user, array $credentials, bool $force = false): void
+    public function rehashPasswordIfRequired(User $user, array $credentials, bool $force = false): void
     {
         if ($this->isSignedChallenge($credentials)) {
             // We don't need to rehash the password for WebAuthn credentials.
