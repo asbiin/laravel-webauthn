@@ -35,7 +35,7 @@ Webauthn adapter for Laravel <!-- omit in toc -->
 
 **LaravelWebauthn** is the adapter to use Webauthn as [2FA](https://en.wikipedia.org/wiki/Multi-factor_authentication) (two-factor authentication) or as passwordless authentication on Laravel.
 
-**Try this now on the [demo application](https://webauthn.asbin.net/).**
+**Try this now on the [demo application](https://webauthn.laravel.cloud/).**
 
 
 # Features
