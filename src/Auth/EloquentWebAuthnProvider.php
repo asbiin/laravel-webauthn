@@ -82,6 +82,8 @@ class EloquentWebAuthnProvider extends EloquentUserProvider
 
     /**
      * Rehash the user's password if required and supported.
+     *
+     * @phpstan-ignore method.childParameterType
      */
     #[\Override]
     public function rehashPasswordIfRequired(User $user, array $credentials, bool $force = false): void
