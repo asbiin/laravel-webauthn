@@ -27,7 +27,8 @@ final class CreationOptionsFactory extends OptionsFactory
         Config $config,
         protected PublicKeyCredentialRpEntity $publicKeyCredentialRpEntity,
         protected AuthenticatorSelectionCriteria $authenticatorSelectionCriteria,
-        protected CoseAlgorithmManager $algorithmManager
+        protected CoseAlgorithmManager $algorithmManager,
+        protected CredentialRepository $repository
     ) {
         parent::__construct($request, $cache, $config);
         $this->attestationConveyance = $config->get('webauthn.attestation_conveyance', 'none');
@@ -82,6 +83,6 @@ final class CreationOptionsFactory extends OptionsFactory
      */
     protected function getExcludedCredentials(User $user): array
     {
-        return CredentialRepository::getRegisteredKeys($user);
+        return $this->repository->getRegisteredKeys($user);
     }
 }

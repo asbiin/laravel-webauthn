@@ -19,7 +19,7 @@ class CredentialRepositoryTest extends FeatureTestCase
 
         $this->assertEmpty(WebauthnKey::all());
 
-        $this->assertEquals([], CredentialRepository::getRegisteredKeys($user));
+        $this->assertEquals([], (new CredentialRepository)->getRegisteredKeys($user));
     }
 
     #[Test]
@@ -34,7 +34,7 @@ class CredentialRepositoryTest extends FeatureTestCase
             'credentialId' => '1',
         ]);
 
-        $keys = CredentialRepository::getRegisteredKeys($user);
+        $keys = (new CredentialRepository)->getRegisteredKeys($user);
         $this->assertCount(1, $keys);
         $this->assertEquals('{"type":"public-key","id":"1","transports":[]}', json_encode($keys[0], JSON_THROW_ON_ERROR));
     }

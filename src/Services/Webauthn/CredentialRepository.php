@@ -15,7 +15,7 @@ class CredentialRepository
      *
      * @return Collection<array-key,PublicKeyCredentialSource>
      */
-    protected static function getAllRegisteredKeys(int|string $userId): Collection
+    protected function getAllRegisteredKeys(int|string $userId): Collection
     {
         return (Webauthn::model())::where('user_id', $userId)
             ->get()
@@ -28,9 +28,9 @@ class CredentialRepository
      *
      * @return array<array-key,PublicKeyCredentialDescriptor>
      */
-    public static function getRegisteredKeys(User $user): array
+    public function getRegisteredKeys(User $user): array
     {
-        return static::getAllRegisteredKeys($user->getAuthIdentifier())
+        return $this->getAllRegisteredKeys($user->getAuthIdentifier())
             ->map
             ->getPublicKeyCredentialDescriptor()
             ->toArray();
