@@ -180,6 +180,8 @@ class Webauthn extends WebauthnRepository
 
     /**
      * Test if the user can register a new key.
+     *
+     * @psalm-suppress PossiblyUnusedParam
      */
     public static function canRegister(User $user): bool
     {
