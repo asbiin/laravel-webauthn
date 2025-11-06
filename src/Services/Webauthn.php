@@ -183,7 +183,7 @@ class Webauthn extends WebauthnRepository
      */
     public static function canRegister(User $user): bool
     {
-        return static::webauthnEnabled() && (! static::enabled($user) || static::check());
+        return static::webauthnEnabled();
     }
 
     /**
