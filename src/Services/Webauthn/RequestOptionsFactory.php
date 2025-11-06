@@ -21,7 +21,8 @@ final class RequestOptionsFactory extends OptionsFactory
         Request $request,
         Cache $cache,
         Config $config,
-        protected PublicKeyCredentialRpEntity $publicKeyCredentialRpEntity
+        protected PublicKeyCredentialRpEntity $publicKeyCredentialRpEntity,
+        protected CredentialRepository $repository
     ) {
         parent::__construct($request, $cache, $config);
         $this->userVerification = self::getUserVerification($config);
@@ -60,7 +61,7 @@ final class RequestOptionsFactory extends OptionsFactory
      */
     private function getAllowedCredentials(?User $user): array
     {
-        return $user !== null ? CredentialRepository::getRegisteredKeys($user) : [];
+        return $user !== null ? $this->repository->getRegisteredKeys($user) : [];
     }
 
     /**
