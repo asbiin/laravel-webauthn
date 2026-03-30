@@ -6,7 +6,7 @@ use Illuminate\Contracts\Auth\Authenticatable as User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use LaravelWebauthn\Models\WebauthnKey;
-use Webauthn\CredentialRecord;
+use Webauthn\PublicKeyCredentialSource;
 
 abstract class WebauthnRepository
 {
@@ -20,17 +20,17 @@ abstract class WebauthnRepository
     /**
      * Create a new key.
      */
-    public static function create(User $user, string $keyName, CredentialRecord $credentialRecord): Model
+    public static function create(User $user, string $keyName, PublicKeyCredentialSource $publicKeyCredentialSource): Model
     {
         if (static::$createWebauthnkeyUsingCallback !== null) {
-            return call_user_func(static::$createWebauthnkeyUsingCallback, [$user, $keyName, $credentialRecord]);
+            return call_user_func(static::$createWebauthnkeyUsingCallback, [$user, $keyName, $publicKeyCredentialSource]);
         }
 
         $webauthnKey = static::createModel();
         $webauthnKey->forceFill([
             'user_id' => $user->getAuthIdentifier(),
             'name' => $keyName,
-            'publicKeyCredentialSource' => $credentialRecord,
+            'publicKeyCredentialSource' => $publicKeyCredentialSource,
         ]);
         $webauthnKey->save();
 

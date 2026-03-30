@@ -5,15 +5,15 @@ namespace LaravelWebauthn\Services\Webauthn;
 use Illuminate\Contracts\Auth\Authenticatable as User;
 use Illuminate\Support\Collection;
 use LaravelWebauthn\Facades\Webauthn;
-use Webauthn\CredentialRecord;
 use Webauthn\PublicKeyCredentialDescriptor;
+use Webauthn\PublicKeyCredentialSource;
 
 class CredentialRepository
 {
     /**
-     * List of CredentialRecord associated to the user.
+     * List of PublicKeyCredentialSource associated to the user.
      *
-     * @return Collection<array-key,CredentialRecord>
+     * @return Collection<array-key,PublicKeyCredentialSource>
      */
     protected function getAllRegisteredKeys(int|string $userId): Collection
     {

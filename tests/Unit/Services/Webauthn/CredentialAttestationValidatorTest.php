@@ -12,9 +12,9 @@ use Webauthn\AttestationStatement\AttestationObject;
 use Webauthn\AuthenticatorAttestationResponse;
 use Webauthn\AuthenticatorAttestationResponseValidator;
 use Webauthn\CollectedClientData;
-use Webauthn\CredentialRecord;
 use Webauthn\PublicKeyCredential;
 use Webauthn\PublicKeyCredentialCreationOptions;
+use Webauthn\PublicKeyCredentialSource;
 use Webauthn\TrustPath\EmptyTrustPath;
 use Webauthn\TrustPath\TrustPath;
 
@@ -32,7 +32,7 @@ class CredentialAttestationValidatorTest extends FeatureTestCase
             $this->mock(CollectedClientData::class),
             $this->mock(AttestationObject::class)
         ));
-        $response = $this->mock(CredentialRecord::class);
+        $response = $this->mock(PublicKeyCredentialSource::class);
 
         $this->mock(SerializerInterface::class, function ($mock) use ($option, $creds) {
             $mock->shouldReceive('deserialize')

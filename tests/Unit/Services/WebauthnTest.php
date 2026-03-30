@@ -24,7 +24,7 @@ use Symfony\Component\Uid\AbstractUid;
 use Symfony\Component\Uid\NilUuid;
 use Symfony\Component\Uid\Uuid;
 use Webauthn\AuthenticatorData;
-use Webauthn\CredentialRecord;
+use Webauthn\PublicKeyCredentialSource;
 use Webauthn\PublicKeyCredentialUserEntity;
 use Webauthn\TrustPath\EmptyTrustPath;
 
@@ -233,7 +233,7 @@ class WebauthnTest extends FeatureTestCase
 
         $user = $this->user();
 
-        $source = new CredentialRecord(
+        $source = new PublicKeyCredentialSource(
             'test',
             'type',
             [],
@@ -257,7 +257,7 @@ class WebauthnTest extends FeatureTestCase
 
         $user = $this->user();
 
-        $source = new CredentialRecord(
+        $source = new PublicKeyCredentialSource(
             'test',
             'type',
             [],

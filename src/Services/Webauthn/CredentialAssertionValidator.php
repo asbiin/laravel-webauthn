@@ -17,6 +17,9 @@ use Webauthn\PublicKeyCredentialRequestOptions;
 
 class CredentialAssertionValidator extends CredentialValidator
 {
+    /**
+     * @psalm-mutation-free
+     */
     public function __construct(
         Request $request,
         Cache $cache,
