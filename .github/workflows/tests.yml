@@ -118,8 +118,7 @@ jobs:
           composer require "illuminate/support:^${{ matrix.laravel-version }}" --no-update
 
       - name: Update dependencies with webauthn-lib ${{ matrix.webauthn-lib-version }}
-        run: |
-          composer require "web-auth/webauthn-lib:^${{ matrix.webauthn-lib-version }}" --no-update
+        run: composer require "web-auth/webauthn-lib:${{ matrix.webauthn-lib-version }}" --no-update
 
       - name: Use psr7 variant (nyholm)
         if: matrix.psr7 == 'nyholm'
@@ -136,8 +135,7 @@ jobs:
           composer require --dev symfony/psr-http-message-bridge php-http/discovery laminas/laminas-diactoros php-http/curl-client --no-update
 
       - name: Install dependencies
-        run: |
-          composer update --no-interaction --no-progress --prefer-dist
+        run: composer update --no-interaction --no-progress --prefer-dist
 
       - name: Set results artifact name
         id: artifact
