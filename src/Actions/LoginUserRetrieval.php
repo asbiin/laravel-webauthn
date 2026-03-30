@@ -15,6 +15,8 @@ class LoginUserRetrieval
 {
     /**
      * Create a new controller instance.
+     *
+     * @psalm-mutation-free
      */
     public function __construct(
         protected LoginRateLimiter $limiter

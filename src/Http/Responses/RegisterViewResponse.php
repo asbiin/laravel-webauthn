@@ -34,6 +34,8 @@ class RegisterViewResponse implements RegisterViewResponseContract
 
     /**
      * Set public key request data.
+     *
+     * @psalm-external-mutation-free
      */
     #[\Override]
     public function setPublicKey(Request $request, PublicKeyCredentialCreationOptions $publicKey): self

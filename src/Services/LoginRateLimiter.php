@@ -10,6 +10,8 @@ class LoginRateLimiter
 {
     /**
      * Create a new login rate limiter instance.
+     *
+     * @psalm-mutation-free
      */
     public function __construct(
         protected RateLimiter $limiter

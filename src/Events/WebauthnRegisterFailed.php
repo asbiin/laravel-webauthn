@@ -22,6 +22,8 @@ class WebauthnRegisterFailed
      * @param  Exception|null  $exception  Exception throwned.
      *
      * @psalm-suppress PossiblyUnusedProperty
+     *
+     * @psalm-mutation-free
      */
     public function __construct(
         public User $user,

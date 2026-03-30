@@ -17,6 +17,8 @@ class WebauthnAuthenticate
      * Create a new event instance.
      *
      * @param  Model  $webauthnKey  The WebauthnKey used to authenticate.
+     *
+     * @psalm-mutation-free
      */
     public function __construct(
         public Model $webauthnKey,

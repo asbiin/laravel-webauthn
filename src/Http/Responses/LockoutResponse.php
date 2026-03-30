@@ -16,6 +16,8 @@ class LockoutResponse implements LockoutResponseContract
 {
     /**
      * Create a new response instance.
+     *
+     * @psalm-mutation-free
      */
     public function __construct(
         protected LoginRateLimiter $limiter

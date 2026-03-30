@@ -27,6 +27,8 @@ class Webauthn extends Facade
 {
     /**
      * Get the registered name of the component.
+     *
+     * @psalm-pure
      */
     #[\Override]
     protected static function getFacadeAccessor(): string

@@ -206,6 +206,8 @@ class Webauthn extends WebauthnRepository
      * Register a callback that is responsible for building the authentication pipeline array.
      *
      * @codeCoverageIgnore
+     *
+     * @psalm-external-mutation-free
      */
     public static function authenticateThrough(callable $callback): void
     {
@@ -214,6 +216,8 @@ class Webauthn extends WebauthnRepository
 
     /**
      * Register a callback that is responsible for validating incoming authentication credentials.
+     *
+     * @psalm-external-mutation-free
      */
     public static function authenticateUsing(callable $callback): void
     {
@@ -222,6 +226,8 @@ class Webauthn extends WebauthnRepository
 
     /**
      * Register a callback that is responsible for confirming a passkey without login.
+     *
+     * @psalm-external-mutation-free
      */
     public static function confirmKeyUsing(callable $callback): void
     {
@@ -290,6 +296,8 @@ class Webauthn extends WebauthnRepository
 
     /**
      * Configure Webauthn to not register its routes.
+     *
+     * @psalm-external-mutation-free
      */
     public static function ignoreRoutes(): void
     {

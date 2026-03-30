@@ -16,6 +16,8 @@ class JsonWrapper implements JsonSerializable
      * Create a JsoWrapper
      *
      * @param  T  $data
+     *
+     * @psalm-mutation-free
      */
     public function __construct(
         public mixed $data
@@ -23,6 +25,8 @@ class JsonWrapper implements JsonSerializable
 
     /**
      * Convert the object to its JSON representation.
+     *
+     * @psalm-mutation-free
      */
     #[\Override]
     public function jsonSerialize(): array
@@ -46,6 +50,8 @@ class JsonWrapper implements JsonSerializable
      * Dynamically handle calls to the class.
      *
      * @throws \BadMethodCallException
+     *
+     * @psalm-mutation-free
      */
     public function __call(string $method, array $parameters): mixed
     {

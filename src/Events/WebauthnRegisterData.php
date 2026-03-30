@@ -22,6 +22,8 @@ class WebauthnRegisterData
      * @param  PublicKeyCredentialCreationOptions  $publicKey  The register data.
      *
      * @psalm-suppress PossiblyUnusedProperty
+     *
+     * @psalm-mutation-free
      */
     public function __construct(
         public User $user,

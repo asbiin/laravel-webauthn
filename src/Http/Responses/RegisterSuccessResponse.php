@@ -45,6 +45,8 @@ class RegisterSuccessResponse implements RegisterSuccessResponseContract
 
     /**
      * Set the new Webauthn key.
+     *
+     * @psalm-external-mutation-free
      */
     #[\Override]
     public function setWebauthnKey(Request $request, Model $webauthnKey): self

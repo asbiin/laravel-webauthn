@@ -39,6 +39,8 @@ class LoginViaRemember
      * @return array<string, string>
      *
      * @psalm-suppress PossiblyUnusedParam
+     *
+     * @psalm-pure
      */
     public function subscribe(Dispatcher $events): array
     {

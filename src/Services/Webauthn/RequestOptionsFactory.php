@@ -66,6 +66,8 @@ final class RequestOptionsFactory extends OptionsFactory
 
     /**
      * Get the rpEntity Id.
+     *
+     * @psalm-mutation-free
      */
     private function getRpId(): ?string
     {

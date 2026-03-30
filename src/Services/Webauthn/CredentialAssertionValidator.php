@@ -78,6 +78,8 @@ class CredentialAssertionValidator extends CredentialValidator
 
     /**
      * Get authenticator response.
+     *
+     * @psalm-mutation-free
      */
     protected function getResponse(PublicKeyCredential $publicKeyCredential): AuthenticatorAssertionResponse
     {

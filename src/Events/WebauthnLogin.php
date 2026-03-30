@@ -19,6 +19,8 @@ class WebauthnLogin
      *
      * @param  Authenticatable  $user  The authenticated user.
      * @param  bool  $eloquent  Login via eloquent webauthn provider.
+     *
+     * @psalm-mutation-free
      */
     public function __construct(
         public User $user,

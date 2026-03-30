@@ -12,6 +12,8 @@ class EnsureLoginIsNotThrottled
 {
     /**
      * Create a new class instance.
+     *
+     * @psalm-mutation-free
      */
     public function __construct(
         protected LoginRateLimiter $limiter

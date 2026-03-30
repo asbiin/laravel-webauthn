@@ -34,6 +34,8 @@ class LoginViewResponse implements LoginViewResponseContract
 
     /**
      * Set public key request data.
+     *
+     * @psalm-external-mutation-free
      */
     #[\Override]
     public function setPublicKey(Request $request, PublicKeyCredentialRequestOptions $publicKey): self

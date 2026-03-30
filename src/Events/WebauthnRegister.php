@@ -17,6 +17,8 @@ class WebauthnRegister
      * Create a new event instance.
      *
      * @param  Model  $webauthnKey  The new WebauthnKey.
+     *
+     * @psalm-mutation-free
      */
     public function __construct(
         /**

@@ -33,6 +33,8 @@ class Uuid implements CastsAttributes
      *
      * @param  Model  $model
      * @param  string|null  $value
+     *
+     * @psalm-pure
      */
     #[\Override]
     public function set($model, string $key, mixed $value, array $attributes): ?string

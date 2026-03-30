@@ -20,6 +20,8 @@ class WebauthnLoginData
      *
      * @param  Authenticatable  $user  The authenticated user.
      * @param  PublicKeyCredentialRequestOptions  $publicKey  The authentication data.
+     *
+     * @psalm-mutation-free
      */
     public function __construct(
         public ?User $user,
