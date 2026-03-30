@@ -5,6 +5,12 @@ namespace LaravelWebauthn\Services;
 use Illuminate\Contracts\Auth\Authenticatable as User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
+use LaravelWebauthn\Contracts\DestroyResponse;
+use LaravelWebauthn\Contracts\LoginSuccessResponse;
+use LaravelWebauthn\Contracts\LoginViewResponse;
+use LaravelWebauthn\Contracts\RegisterSuccessResponse;
+use LaravelWebauthn\Contracts\RegisterViewResponse;
+use LaravelWebauthn\Contracts\UpdateResponse;
 use LaravelWebauthn\Events\WebauthnLogin;
 use LaravelWebauthn\Events\WebauthnLoginData;
 use LaravelWebauthn\Events\WebauthnRegister;
@@ -229,7 +235,7 @@ class Webauthn extends WebauthnRepository
      */
     public static function destroyViewResponseUsing(\Closure|string $callback): void
     {
-        app()->singleton(\LaravelWebauthn\Contracts\DestroyResponse::class, $callback);
+        app()->singleton(DestroyResponse::class, $callback);
     }
 
     /**
@@ -239,7 +245,7 @@ class Webauthn extends WebauthnRepository
      */
     public static function updateViewResponseUsing(\Closure|string $callback): void
     {
-        app()->singleton(\LaravelWebauthn\Contracts\UpdateResponse::class, $callback);
+        app()->singleton(UpdateResponse::class, $callback);
     }
 
     /**
@@ -249,7 +255,7 @@ class Webauthn extends WebauthnRepository
      */
     public static function loginSuccessResponseUsing(\Closure|string $callback): void
     {
-        app()->singleton(\LaravelWebauthn\Contracts\LoginSuccessResponse::class, $callback);
+        app()->singleton(LoginSuccessResponse::class, $callback);
     }
 
     /**
@@ -259,7 +265,7 @@ class Webauthn extends WebauthnRepository
      */
     public static function loginViewResponseUsing(\Closure|string $callback): void
     {
-        app()->singleton(\LaravelWebauthn\Contracts\LoginViewResponse::class, $callback);
+        app()->singleton(LoginViewResponse::class, $callback);
     }
 
     /**
@@ -269,7 +275,7 @@ class Webauthn extends WebauthnRepository
      */
     public static function registerSuccessResponseUsing(\Closure|string $callback): void
     {
-        app()->singleton(\LaravelWebauthn\Contracts\RegisterSuccessResponse::class, $callback);
+        app()->singleton(RegisterSuccessResponse::class, $callback);
     }
 
     /**
@@ -279,7 +285,7 @@ class Webauthn extends WebauthnRepository
      */
     public static function registerViewResponseUsing(\Closure|string $callback): void
     {
-        app()->singleton(\LaravelWebauthn\Contracts\RegisterViewResponse::class, $callback);
+        app()->singleton(RegisterViewResponse::class, $callback);
     }
 
     /**

@@ -2,6 +2,7 @@
 
 namespace LaravelWebauthn\Http\Responses;
 
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Response;
 use LaravelWebauthn\Contracts\DestroyResponse as DestroyResponseContract;
 
@@ -10,7 +11,7 @@ class DestroyResponse implements DestroyResponseContract
     /**
      * Create an HTTP response that represents the object.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  Request  $request
      * @return \Symfony\Component\HttpFoundation\Response
      */
     #[\Override]

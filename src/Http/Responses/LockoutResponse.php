@@ -2,6 +2,7 @@
 
 namespace LaravelWebauthn\Http\Responses;
 
+use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Validation\ValidationException;
 use LaravelWebauthn\Contracts\LockoutResponse as LockoutResponseContract;
@@ -23,7 +24,7 @@ class LockoutResponse implements LockoutResponseContract
     /**
      * Create an HTTP response that represents the object.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  Request  $request
      * @return \Symfony\Component\HttpFoundation\Response
      */
     #[\Override]

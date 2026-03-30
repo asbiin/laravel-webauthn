@@ -3,6 +3,7 @@
 namespace LaravelWebauthn\Models\Casts;
 
 use Illuminate\Contracts\Database\Eloquent\CastsAttributes;
+use Illuminate\Database\Eloquent\Model;
 use Symfony\Component\Serializer\SerializerInterface;
 use Webauthn\TrustPath\TrustPath as TrustPathLib;
 
@@ -14,7 +15,7 @@ class TrustPath implements CastsAttributes
     /**
      * Cast the given value.
      *
-     * @param  \Illuminate\Database\Eloquent\Model  $model
+     * @param  Model  $model
      * @param  mixed  $value
      */
     #[\Override]
@@ -26,7 +27,7 @@ class TrustPath implements CastsAttributes
     /**
      * Prepare the given value for storage.
      *
-     * @param  \Illuminate\Database\Eloquent\Model  $model
+     * @param  Model  $model
      * @param  string|null  $value
      */
     #[\Override]

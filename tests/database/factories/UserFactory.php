@@ -1,6 +1,9 @@
 <?php
 
-$factory->define(\LaravelWebauthn\Tests\User::class, function (Faker\Generator $faker) {
+use Faker\Generator;
+use LaravelWebauthn\Tests\User;
+
+$factory->define(User::class, function (Generator $faker) {
     return [
         'name' => $faker->name,
         'email' => $faker->email,

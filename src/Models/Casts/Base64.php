@@ -3,6 +3,7 @@
 namespace LaravelWebauthn\Models\Casts;
 
 use Illuminate\Contracts\Database\Eloquent\CastsAttributes;
+use Illuminate\Database\Eloquent\Model;
 use ParagonIE\ConstantTime\Base64UrlSafe;
 use Webauthn\Util\Base64 as Base64Webauthn;
 
@@ -14,7 +15,7 @@ class Base64 implements CastsAttributes
     /**
      * Cast the given value.
      *
-     * @param  \Illuminate\Database\Eloquent\Model  $model
+     * @param  Model  $model
      * @param  mixed  $value
      */
     #[\Override]
@@ -26,7 +27,7 @@ class Base64 implements CastsAttributes
     /**
      * Prepare the given value for storage.
      *
-     * @param  \Illuminate\Database\Eloquent\Model  $model
+     * @param  Model  $model
      * @param  string|null  $value
      */
     #[\Override]

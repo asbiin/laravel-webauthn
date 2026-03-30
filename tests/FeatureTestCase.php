@@ -2,6 +2,9 @@
 
 namespace LaravelWebauthn\Tests;
 
+use Illuminate\Contracts\Http\Kernel;
+use Illuminate\Foundation\Application;
+use LaravelWebauthn\WebauthnServiceProvider;
 use Orchestra\Testbench\TestCase;
 
 class FeatureTestCase extends TestCase
@@ -9,7 +12,7 @@ class FeatureTestCase extends TestCase
     protected function getPackageProviders($app)
     {
         return [
-            \LaravelWebauthn\WebauthnServiceProvider::class,
+            WebauthnServiceProvider::class,
         ];
     }
 
@@ -34,7 +37,7 @@ class FeatureTestCase extends TestCase
     /**
      * Define environment setup.
      *
-     * @param  \Illuminate\Foundation\Application  $app
+     * @param  Application  $app
      * @return void
      */
     protected function getEnvironmentSetUp($app)
@@ -51,7 +54,7 @@ class FeatureTestCase extends TestCase
     /**
      * Resolve application Core implementation.
      *
-     * @param  \Illuminate\Foundation\Application  $app
+     * @param  Application  $app
      * @return void
      */
     protected function resolveApplicationCore($app)
@@ -64,13 +67,13 @@ class FeatureTestCase extends TestCase
     /**
      * Resolve application HTTP Kernel implementation.
      *
-     * @param  \Illuminate\Foundation\Application  $app
+     * @param  Application  $app
      * @return void
      */
     protected function resolveApplicationHttpKernel($app)
     {
         $app->singleton(
-            \Illuminate\Contracts\Http\Kernel::class,
+            Kernel::class,
             \Orchestra\Testbench\Http\Kernel::class
         );
     }

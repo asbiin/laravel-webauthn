@@ -2,6 +2,7 @@
 
 namespace LaravelWebauthn\Tests\Unit\Http\Controllers;
 
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use LaravelWebauthn\Actions\ValidateKeyCreation;
 use LaravelWebauthn\Facades\Webauthn;
@@ -181,7 +182,7 @@ class WebauthnControllerTest extends FeatureTestCase
             'user_id' => $user->getAuthIdentifier(),
         ]);
 
-        $this->expectException(\Illuminate\Database\Eloquent\ModelNotFoundException::class);
+        $this->expectException(ModelNotFoundException::class);
         $response = $this->delete('/webauthn/keys/0', ['accept' => 'application/json']);
 
         $response->assertStatus(404);
@@ -206,7 +207,7 @@ class WebauthnControllerTest extends FeatureTestCase
         ]);
         $otherWebauthnKey = factory(WebauthnKey::class)->create();
 
-        $this->expectException(\Illuminate\Database\Eloquent\ModelNotFoundException::class);
+        $this->expectException(ModelNotFoundException::class);
         $response = $this->delete('/webauthn/keys/'.$otherWebauthnKey->id, ['accept' => 'application/json']);
 
         $response->assertStatus(404);
@@ -251,7 +252,7 @@ class WebauthnControllerTest extends FeatureTestCase
             'name' => 'name',
         ]);
 
-        $this->expectException(\Illuminate\Database\Eloquent\ModelNotFoundException::class);
+        $this->expectException(ModelNotFoundException::class);
         $response = $this->put('/webauthn/keys/0', [
             'name' => 'new name',
         ]);
@@ -282,7 +283,7 @@ class WebauthnControllerTest extends FeatureTestCase
             'user_id' => $this->user()->getAuthIdentifier(),
         ]);
 
-        $this->expectException(\Illuminate\Database\Eloquent\ModelNotFoundException::class);
+        $this->expectException(ModelNotFoundException::class);
         $response = $this->put('/webauthn/keys/'.$otherWebauthnKey->id, [
             'name' => 'new name',
         ]);
