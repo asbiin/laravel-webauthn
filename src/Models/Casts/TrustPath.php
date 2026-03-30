@@ -35,6 +35,6 @@ class TrustPath implements CastsAttributes
     #[\Override]
     public function set($model, string $key, mixed $value, array $attributes): ?string
     {
-        return json_encode($value, flags: JSON_THROW_ON_ERROR);
+        return json_encode($value, flags: JSON_THROW_ON_ERROR); // @phpstan-ignore possiblyImpure.functionCall
     }
 }
