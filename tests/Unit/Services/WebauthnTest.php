@@ -12,15 +12,21 @@ use Illuminate\Foundation\Testing\DatabaseTransactions;
 use LaravelWebauthn\Actions\PrepareAssertionData;
 use LaravelWebauthn\Actions\PrepareCreationData;
 use LaravelWebauthn\Actions\ValidateKeyCreation;
+use LaravelWebauthn\Exceptions\ResponseMismatchException;
 use LaravelWebauthn\Models\WebauthnKey;
 use LaravelWebauthn\Services\Webauthn;
+use LaravelWebauthn\Services\Webauthn\PublicKeyCredentialCreationOptions;
+use LaravelWebauthn\Services\Webauthn\PublicKeyCredentialRequestOptions;
 use LaravelWebauthn\Tests\FeatureTestCase;
 use ParagonIE\ConstantTime\Base64UrlSafe;
 use PHPUnit\Framework\Attributes\Test;
+use Symfony\Component\Uid\AbstractUid;
 use Symfony\Component\Uid\NilUuid;
 use Symfony\Component\Uid\Uuid;
 use Webauthn\AuthenticatorData;
-use Webauthn\PublicKeyCredentialSource;
+use Webauthn\CredentialRecord;
+use Webauthn\PublicKeyCredentialUserEntity;
+use Webauthn\TrustPath\EmptyTrustPath;
 
 class WebauthnTest extends FeatureTestCase
 {
@@ -33,12 +39,12 @@ class WebauthnTest extends FeatureTestCase
 
         $publicKey = $this->app[PrepareCreationData::class]($user);
 
-        $this->assertInstanceOf(\LaravelWebauthn\Services\Webauthn\PublicKeyCredentialCreationOptions::class, $publicKey);
+        $this->assertInstanceOf(PublicKeyCredentialCreationOptions::class, $publicKey);
 
         $this->assertNotNull($publicKey->data->challenge);
         $this->assertEquals(32, strlen($publicKey->data->challenge));
 
-        $this->assertInstanceOf(\Webauthn\PublicKeyCredentialUserEntity::class, $publicKey->data->user);
+        $this->assertInstanceOf(PublicKeyCredentialUserEntity::class, $publicKey->data->user);
         $this->assertEquals($user->getAuthIdentifier(), $publicKey->data->user->id);
         $this->assertEquals($user->email, $publicKey->data->user->displayName);
     }
@@ -49,7 +55,7 @@ class WebauthnTest extends FeatureTestCase
         $user = $this->signIn();
 
         $publicKey = $this->app[PrepareCreationData::class]($user);
-        $this->assertInstanceOf(\LaravelWebauthn\Services\Webauthn\PublicKeyCredentialCreationOptions::class, $publicKey);
+        $this->assertInstanceOf(PublicKeyCredentialCreationOptions::class, $publicKey);
 
         $data = $this->getAttestationData($publicKey);
 
@@ -81,7 +87,7 @@ class WebauthnTest extends FeatureTestCase
 
         $publicKey = $this->app[PrepareAssertionData::class]($user);
 
-        $this->assertInstanceOf(\LaravelWebauthn\Services\Webauthn\PublicKeyCredentialRequestOptions::class, $publicKey);
+        $this->assertInstanceOf(PublicKeyCredentialRequestOptions::class, $publicKey);
 
         $this->assertNotNull($publicKey->data->challenge);
         $this->assertEquals(32, strlen($publicKey->data->challenge));
@@ -102,11 +108,11 @@ class WebauthnTest extends FeatureTestCase
         ]);
 
         $publicKey = $this->app[PrepareAssertionData::class]($user);
-        $this->assertInstanceOf(\LaravelWebauthn\Services\Webauthn\PublicKeyCredentialRequestOptions::class, $publicKey);
+        $this->assertInstanceOf(PublicKeyCredentialRequestOptions::class, $publicKey);
 
         $data = $this->getAttestationData($publicKey);
 
-        $this->expectException(\LaravelWebauthn\Exceptions\ResponseMismatchException::class);
+        $this->expectException(ResponseMismatchException::class);
         Webauthn::validateAssertion($user, $data);
     }
 
@@ -205,7 +211,7 @@ class WebauthnTest extends FeatureTestCase
         $webauthnKey->aaguid = '38195f59-0e5b-4ebf-be46-75664177eeee';
 
         $this->assertEquals('38195f59-0e5b-4ebf-be46-75664177eeee', $webauthnKey->getAttributeValue('aaguid'));
-        $this->assertInstanceOf(\Symfony\Component\Uid\AbstractUid::class, $webauthnKey->aaguid);
+        $this->assertInstanceOf(AbstractUid::class, $webauthnKey->aaguid);
         $this->assertEquals(Uuid::fromString('38195f59-0e5b-4ebf-be46-75664177eeee'), $webauthnKey->aaguid);
     }
 
@@ -216,7 +222,7 @@ class WebauthnTest extends FeatureTestCase
         $webauthnKey->aaguid = Uuid::fromString('38195f59-0e5b-4ebf-be46-75664177eeee');
 
         $this->assertEquals('38195f59-0e5b-4ebf-be46-75664177eeee', $webauthnKey->getAttributeValue('aaguid'));
-        $this->assertInstanceOf(\Symfony\Component\Uid\AbstractUid::class, $webauthnKey->aaguid);
+        $this->assertInstanceOf(AbstractUid::class, $webauthnKey->aaguid);
         $this->assertEquals(Uuid::fromString('38195f59-0e5b-4ebf-be46-75664177eeee'), $webauthnKey->aaguid);
     }
 
@@ -227,12 +233,12 @@ class WebauthnTest extends FeatureTestCase
 
         $user = $this->user();
 
-        $source = new PublicKeyCredentialSource(
+        $source = new CredentialRecord(
             'test',
             'type',
             [],
             'attestationType',
-            new \Webauthn\TrustPath\EmptyTrustPath,
+            new EmptyTrustPath,
             new NilUuid,
             'credentialPublicKey',
             $user->id,
@@ -251,12 +257,12 @@ class WebauthnTest extends FeatureTestCase
 
         $user = $this->user();
 
-        $source = new PublicKeyCredentialSource(
+        $source = new CredentialRecord(
             'test',
             'type',
             [],
             'attestationType',
-            new \Webauthn\TrustPath\EmptyTrustPath,
+            new EmptyTrustPath,
             new NilUuid,
             'credentialPublicKey',
             $user->id,

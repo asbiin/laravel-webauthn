@@ -6,7 +6,8 @@ use LaravelWebauthn\Models\WebauthnKey;
 use LaravelWebauthn\Tests\FeatureTestCase;
 use PHPUnit\Framework\Attributes\Test;
 use Symfony\Component\Uid\Uuid;
-use Webauthn\PublicKeyCredentialSource;
+use Webauthn\CredentialRecord;
+use Webauthn\TrustPath\EmptyTrustPath;
 
 class WebauthnKeyTest extends FeatureTestCase
 {
@@ -15,7 +16,7 @@ class WebauthnKeyTest extends FeatureTestCase
     {
         $webauthnKey = new WebauthnKey;
         $webauthnKey->user_id = 0;
-        $webauthnKey->publicKeyCredentialSource = new PublicKeyCredentialSource('a', 'b', [], 'c', new \Webauthn\TrustPath\EmptyTrustPath, Uuid::fromString('38195f59-0e5b-4ebf-be46-75664177eeee'), 'e', '0', 1);
+        $webauthnKey->publicKeyCredentialSource = new CredentialRecord('a', 'b', [], 'c', new EmptyTrustPath, Uuid::fromString('38195f59-0e5b-4ebf-be46-75664177eeee'), 'e', '0', 1);
 
         $this->assertEquals(0, $webauthnKey->user_id);
         $this->assertEquals('a', $webauthnKey->credentialId);
@@ -25,7 +26,7 @@ class WebauthnKeyTest extends FeatureTestCase
         $this->assertEquals('e', $webauthnKey->credentialPublicKey);
         $this->assertEquals(1, $webauthnKey->counter);
         $this->assertEquals('c', $webauthnKey->attestationType);
-        $this->assertInstanceOf(\Webauthn\TrustPath\EmptyTrustPath::class, $webauthnKey->trustPath);
+        $this->assertInstanceOf(EmptyTrustPath::class, $webauthnKey->trustPath);
     }
 
     #[Test]
@@ -41,7 +42,7 @@ class WebauthnKeyTest extends FeatureTestCase
         $webauthnKey->credentialPublicKey = 'e';
         $webauthnKey->counter = 0;
         $webauthnKey->attestationType = 'c';
-        $webauthnKey->trustPath = new \Webauthn\TrustPath\EmptyTrustPath;
+        $webauthnKey->trustPath = new EmptyTrustPath;
 
         $publicKeyCredentialSource = $webauthnKey->publicKeyCredentialSource;
 
@@ -53,6 +54,6 @@ class WebauthnKeyTest extends FeatureTestCase
         $this->assertEquals('0', $publicKeyCredentialSource->userHandle);
         $this->assertEquals(0, $publicKeyCredentialSource->counter);
         $this->assertEquals('c', $publicKeyCredentialSource->attestationType);
-        $this->assertInstanceOf(\Webauthn\TrustPath\EmptyTrustPath::class, $publicKeyCredentialSource->trustPath);
+        $this->assertInstanceOf(EmptyTrustPath::class, $publicKeyCredentialSource->trustPath);
     }
 }

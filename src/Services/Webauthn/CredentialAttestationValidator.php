@@ -9,9 +9,9 @@ use LaravelWebauthn\Exceptions\ResponseMismatchException;
 use Symfony\Component\Serializer\SerializerInterface;
 use Webauthn\AuthenticatorAttestationResponse;
 use Webauthn\AuthenticatorAttestationResponseValidator;
+use Webauthn\CredentialRecord;
 use Webauthn\PublicKeyCredential;
 use Webauthn\PublicKeyCredentialCreationOptions;
-use Webauthn\PublicKeyCredentialSource;
 
 class CredentialAttestationValidator extends CredentialValidator
 {
@@ -29,7 +29,7 @@ class CredentialAttestationValidator extends CredentialValidator
      *
      * @throws ResponseMismatchException
      */
-    public function __invoke(User $user, array $data): PublicKeyCredentialSource
+    public function __invoke(User $user, array $data): CredentialRecord
     {
         // Load the data
         $content = json_encode($data, flags: JSON_THROW_ON_ERROR);

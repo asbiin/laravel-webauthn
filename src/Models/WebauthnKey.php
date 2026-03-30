@@ -10,7 +10,7 @@ use LaravelWebauthn\Models\Casts\Base64;
 use LaravelWebauthn\Models\Casts\TrustPath;
 use LaravelWebauthn\Models\Casts\Uuid;
 use Symfony\Component\Uid\NilUuid;
-use Webauthn\PublicKeyCredentialSource;
+use Webauthn\CredentialRecord;
 
 class WebauthnKey extends Model
 {
@@ -70,14 +70,14 @@ class WebauthnKey extends Model
     ];
 
     /**
-     * Get PublicKeyCredentialSource object from WebauthnKey attributes.
+     * Get CredentialRecord object from WebauthnKey attributes.
      *
-     * @return Attribute<PublicKeyCredentialSource,PublicKeyCredentialSource>
+     * @return Attribute<CredentialRecord,CredentialRecord>
      */
     public function publicKeyCredentialSource(): Attribute
     {
         return Attribute::make(
-            get: fn (): PublicKeyCredentialSource => new PublicKeyCredentialSource(
+            get: fn (): CredentialRecord => new CredentialRecord(
                 $this->credentialId,
                 $this->type,
                 $this->transports,
@@ -88,7 +88,7 @@ class WebauthnKey extends Model
                 (string) $this->user_id,
                 $this->counter
             ),
-            set: function (PublicKeyCredentialSource $value, ?array $attributes = null): array {
+            set: function (CredentialRecord $value, ?array $attributes = null): array {
                 if (((string) Arr::get($attributes, 'user_id')) !== $value->userHandle) {
                     throw new WrongUserHandleException;
                 }
