@@ -33,7 +33,7 @@ jobs:
       fail-fast: false
       matrix:
         php-version: ['8.2', '8.3', '8.4']
-        laravel-version: ['11.0', '12.0']
+        laravel-version: ['11.0', '12.0', '13.0']
         psr7: ['guzzle']
         include:
           - php-version: '8.2'
@@ -54,6 +54,16 @@ jobs:
           - php-version: '8.4'
             laravel-version: '12.0'
             psr7: 'discovery'
+          - php-version: '8.4'
+            laravel-version: '13.0'
+            psr7: 'nyholm'
+          - php-version: '8.4'
+            laravel-version: '13.0'
+            psr7: 'discovery'
+        exclude:
+          - php-version: '8.2'
+            laravel-version: '13.0'
+            psr7: 'guzzle'
 
     steps:
       - name: Checkout sources
