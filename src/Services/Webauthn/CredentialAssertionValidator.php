@@ -17,6 +17,9 @@ use Webauthn\PublicKeyCredentialRequestOptions;
 
 class CredentialAssertionValidator extends CredentialValidator
 {
+    /**
+     * @psalm-mutation-free
+     */
     public function __construct(
         Request $request,
         Cache $cache,
@@ -78,6 +81,8 @@ class CredentialAssertionValidator extends CredentialValidator
 
     /**
      * Get authenticator response.
+     *
+     * @psalm-mutation-free
      */
     protected function getResponse(PublicKeyCredential $publicKeyCredential): AuthenticatorAssertionResponse
     {

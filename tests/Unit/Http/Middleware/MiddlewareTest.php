@@ -2,12 +2,14 @@
 
 namespace LaravelWebauthn\Tests\Unit\Http\Middleware;
 
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use LaravelWebauthn\Http\Middleware\WebauthnMiddleware;
 use LaravelWebauthn\Models\WebauthnKey;
 use LaravelWebauthn\Services\Webauthn;
 use LaravelWebauthn\Tests\FeatureTestCase;
 use PHPUnit\Framework\Attributes\Test;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class MiddlewareTest extends FeatureTestCase
 {
@@ -16,7 +18,7 @@ class MiddlewareTest extends FeatureTestCase
     {
         $request = new Request;
 
-        $this->expectException(\Symfony\Component\HttpKernel\Exception\HttpException::class);
+        $this->expectException(HttpException::class);
         $this->app[WebauthnMiddleware::class]->handle($request, fn () => null);
     }
 
@@ -56,7 +58,7 @@ class MiddlewareTest extends FeatureTestCase
 
         $result = $this->app[WebauthnMiddleware::class]->handle($request, fn () => 'next');
 
-        $this->assertInstanceOf(\Illuminate\Http\RedirectResponse::class, $result);
+        $this->assertInstanceOf(RedirectResponse::class, $result);
     }
 
     private function getRequest($user)

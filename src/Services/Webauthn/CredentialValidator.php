@@ -13,6 +13,9 @@ abstract class CredentialValidator
      */
     public const CACHE_PUBLICKEY_REQUEST = 'webauthn.publicKeyRequest';
 
+    /**
+     * @psalm-mutation-free
+     */
     public function __construct(
         protected Request $request,
         protected Cache $cache

@@ -9,6 +9,8 @@ final class EventDispatcher implements EventDispatcherInterface
 {
     /**
      * Create a new event dispatcher instance.
+     *
+     * @psalm-mutation-free
      */
     public function __construct(
         private readonly Dispatcher $dispatcher,

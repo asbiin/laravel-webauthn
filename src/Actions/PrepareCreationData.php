@@ -26,7 +26,7 @@ class PrepareCreationData
     /**
      * Throw a failed register validation exception.
      *
-     * @throws \Illuminate\Validation\ValidationException
+     * @throws ValidationException
      */
     protected function throwFailedRegisterException(User $user, ?Exception $e = null): void
     {

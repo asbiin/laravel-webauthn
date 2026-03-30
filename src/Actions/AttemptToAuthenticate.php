@@ -16,6 +16,8 @@ class AttemptToAuthenticate
 {
     /**
      * Create a new controller instance.
+     *
+     * @psalm-mutation-free
      */
     public function __construct(
         protected StatefulGuard $guard,
@@ -98,7 +100,7 @@ class AttemptToAuthenticate
     /**
      * Throw a failed authentication validation exception.
      *
-     * @throws \Illuminate\Validation\ValidationException
+     * @throws ValidationException
      */
     protected function throwFailedAuthenticationException(Request $request): void
     {

@@ -53,6 +53,8 @@ class EloquentWebAuthnProvider extends EloquentUserProvider
 
     /**
      * Check if the credentials are for a public key signed challenge.
+     *
+     * @psalm-pure
      */
     protected function isSignedChallenge(array $credentials): bool
     {

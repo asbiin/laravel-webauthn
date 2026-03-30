@@ -2,6 +2,7 @@
 
 namespace LaravelWebauthn\Tests\Unit\Services;
 
+use Http\Discovery\Psr17FactoryDiscovery;
 use LaravelWebauthn\Tests\FeatureTestCase;
 use PHPUnit\Framework\Attributes\Test;
 use Psr\Http\Client\ClientInterface;
@@ -13,7 +14,7 @@ class PsrHelpersTest extends FeatureTestCase
     #[Test]
     public function it_get_client()
     {
-        if (! class_exists(\Http\Discovery\Psr17FactoryDiscovery::class)) {
+        if (! class_exists(Psr17FactoryDiscovery::class)) {
             $this->markTestSkipped('PSR-17 Request Factory not found.');
 
             return;
@@ -27,7 +28,7 @@ class PsrHelpersTest extends FeatureTestCase
     #[Test]
     public function it_get_request_factory()
     {
-        if (! class_exists(\Http\Discovery\Psr17FactoryDiscovery::class)) {
+        if (! class_exists(Psr17FactoryDiscovery::class)) {
             $this->markTestSkipped('PSR-17 Request Factory not found.');
 
             return;

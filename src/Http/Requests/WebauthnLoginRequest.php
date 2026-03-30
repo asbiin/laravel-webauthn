@@ -8,6 +8,8 @@ class WebauthnLoginRequest extends FormRequest
 {
     /**
      * Get the validation rules that apply to the request.
+     *
+     * @psalm-pure
      */
     public function rules(): array
     {

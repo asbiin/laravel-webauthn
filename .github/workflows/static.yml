@@ -8,9 +8,81 @@ concurrency:
   group: Static ${{ github.ref }}
   cancel-in-progress: true
 
+env:
+  php-version: '8.4'
+  webauthn-lib-version: '5.2.*'
+
 jobs:
-  statics:
-    name: Static analysis
-    uses: monicahq/workflows/.github/workflows/static.yml@v2
-    with:
-      php-version: 8.4
+  psalm:
+    runs-on: ubuntu-latest
+    name: Psalm
+
+    steps:
+      - name: Checkout sources
+        uses: actions/checkout@v6
+
+      - name: Setup PHP ${{ env.php-version }}
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ env.php-version }}
+          coverage: none
+
+      # Composer
+      - name: Get Composer Cache Directory
+        id: composer-cache
+        run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
+      - name: Cache composer files
+        uses: actions/cache@v5
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ runner.os }}-composer-${{ env.php-version }}-${{ hashFiles('**/composer.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-composer-${{ env.php-version }}-${{ hashFiles('**/composer.lock') }}
+            ${{ runner.os }}-composer-${{ env.php-version }}
+            ${{ runner.os }}-composer-
+
+      - name: Update dependencies with webauthn-lib ${{ env.webauthn-lib-version }}
+        run: composer require "web-auth/webauthn-lib:${{ env.webauthn-lib-version }}" --no-update
+
+      - name: Install dependencies
+        run: composer install --no-progress --no-interaction --prefer-dist --optimize-autoloader
+
+      - name: Run psalm
+        run: vendor/bin/psalm --output-format=github --php-version=${{ env.php-version }}
+
+  phpstan:
+    runs-on: ubuntu-latest
+    name: PHPStan
+
+    steps:
+      - name: Checkout sources
+        uses: actions/checkout@v6
+
+      - name: Setup PHP ${{ env.php-version }}
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ env.php-version }}
+          coverage: none
+
+      # Composer
+      - name: Get Composer Cache Directory
+        id: composer-cache
+        run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
+      - name: Cache composer files
+        uses: actions/cache@v5
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ runner.os }}-composer-${{ env.php-version }}-${{ hashFiles('**/composer.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-composer-${{ env.php-version }}-${{ hashFiles('**/composer.lock') }}
+            ${{ runner.os }}-composer-${{ env.php-version }}
+            ${{ runner.os }}-composer-
+
+      - name: Update dependencies with webauthn-lib ${{ env.webauthn-lib-version }}
+        run: composer require "web-auth/webauthn-lib:${{ env.webauthn-lib-version }}" --no-update
+
+      - name: Install dependencies
+        run: composer install --no-progress --no-interaction --prefer-dist --optimize-autoloader
+
+      - name: Run phpstan
+        run: vendor/bin/phpstan analyse

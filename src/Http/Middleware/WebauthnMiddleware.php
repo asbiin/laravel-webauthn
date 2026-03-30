@@ -15,6 +15,8 @@ class WebauthnMiddleware
 {
     /**
      * Create a Webauthn middleware.
+     *
+     * @psalm-mutation-free
      */
     public function __construct(
         protected AuthFactory $auth

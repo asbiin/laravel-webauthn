@@ -39,6 +39,8 @@ abstract class WebauthnRepository
 
     /**
      * Register a callback that is responsible for creating a new webauthnkey.
+     *
+     * @psalm-external-mutation-free
      */
     public static function createWebauthnkeyUsing(callable $callback): void
     {

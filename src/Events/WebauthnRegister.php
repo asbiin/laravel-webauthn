@@ -16,7 +16,9 @@ class WebauthnRegister
     /**
      * Create a new event instance.
      *
-     * @param  \Illuminate\Database\Eloquent\Model  $webauthnKey  The new WebauthnKey.
+     * @param  Model  $webauthnKey  The new WebauthnKey.
+     *
+     * @psalm-mutation-free
      */
     public function __construct(
         /**

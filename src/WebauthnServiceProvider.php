@@ -7,6 +7,7 @@ use Cose\Algorithm\ManagerFactory as CoseAlgorithmManagerFactory;
 use Cose\Algorithm\Signature\ECDSA;
 use Cose\Algorithm\Signature\EdDSA;
 use Cose\Algorithm\Signature\RSA;
+use GuzzleHttp\Psr7\ServerRequest;
 use Http\Discovery\Exception\NotFoundException;
 use Http\Discovery\Psr17FactoryDiscovery;
 use Http\Discovery\Psr18ClientDiscovery;
@@ -35,6 +36,7 @@ use LaravelWebauthn\Http\Responses\RegisterSuccessResponse;
 use LaravelWebauthn\Http\Responses\RegisterViewResponse;
 use LaravelWebauthn\Http\Responses\UpdateResponse;
 use LaravelWebauthn\Services\Webauthn;
+use Nyholm\Psr7\Factory\Psr17Factory;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestFactoryInterface;
@@ -59,6 +61,7 @@ use Webauthn\AuthenticatorSelectionCriteria;
 use Webauthn\CeremonyStep\CeremonyStepManagerFactory;
 use Webauthn\Counter\CounterChecker;
 use Webauthn\Counter\ThrowExceptionIfInvalid;
+use Webauthn\Denormalizer\WebauthnSerializerFactory;
 use Webauthn\Event\CanDispatchEvents;
 use Webauthn\MetadataService\CanLogData;
 use Webauthn\PublicKeyCredentialRpEntity;
@@ -162,7 +165,7 @@ class WebauthnServiceProvider extends ServiceProvider
         );
         $this->app->bind(
             SerializerInterface::class,
-            fn ($app) => (new \Webauthn\Denormalizer\WebauthnSerializerFactory($app[AttestationStatementSupportManager::class]))->create()
+            fn ($app) => (new WebauthnSerializerFactory($app[AttestationStatementSupportManager::class]))->create()
         );
 
         $this->app->bind(
@@ -292,8 +295,8 @@ class WebauthnServiceProvider extends ServiceProvider
                     ->createRequest($app->make('request'));
             }
 
-            if (class_exists(\GuzzleHttp\Psr7\ServerRequest::class)) {
-                return \GuzzleHttp\Psr7\ServerRequest::fromGlobals();
+            if (class_exists(ServerRequest::class)) {
+                return ServerRequest::fromGlobals();
             }
 
             throw new BindingResolutionException('Unable to resolve PSR-7 Server Request. Please install the guzzlehttp/psr7 or symfony/psr-http-message-bridge, php-http/discovery and a psr/http-factory-implementation implementation.'); // @codeCoverageIgnore
@@ -301,13 +304,13 @@ class WebauthnServiceProvider extends ServiceProvider
 
         if (class_exists(PsrHttpFactory::class)) {
             $this->app->bind(PsrHttpFactory::class, function () {
-                if (class_exists(\Nyholm\Psr7\Factory\Psr17Factory::class) && class_exists(PsrHttpFactory::class)) {
+                if (class_exists(Psr17Factory::class) && class_exists(PsrHttpFactory::class)) {
                     /**
                      * @var ServerRequestFactoryInterface|StreamFactoryInterface|UploadedFileFactoryInterface|ResponseFactoryInterface
                      *
                      * @phpstan-ignore varTag.nativeType
                      */
-                    $psr17Factory = new \Nyholm\Psr7\Factory\Psr17Factory;
+                    $psr17Factory = new Psr17Factory;
 
                     return new PsrHttpFactory($psr17Factory, $psr17Factory, $psr17Factory, $psr17Factory);
                 } elseif (class_exists(Psr17FactoryDiscovery::class)

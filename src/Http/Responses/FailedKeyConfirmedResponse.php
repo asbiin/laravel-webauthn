@@ -2,16 +2,18 @@
 
 namespace LaravelWebauthn\Http\Responses;
 
+use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
 use LaravelWebauthn\Contracts\FailedKeyConfirmedResponse as FailedKeyConfirmedResponseContract;
+use Symfony\Component\HttpFoundation\Response;
 
 class FailedKeyConfirmedResponse implements FailedKeyConfirmedResponseContract
 {
     /**
      * Create an HTTP response that represents the object.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @param  Request  $request
+     * @return Response
      */
     #[\Override]
     public function toResponse($request)

@@ -19,7 +19,7 @@ class RegisterSuccessResponse implements RegisterSuccessResponseContract
     /**
      * Create an HTTP response that represents the object.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  Request  $request
      * @return \Symfony\Component\HttpFoundation\Response
      */
     #[\Override]
@@ -45,6 +45,8 @@ class RegisterSuccessResponse implements RegisterSuccessResponseContract
 
     /**
      * Set the new Webauthn key.
+     *
+     * @psalm-external-mutation-free
      */
     #[\Override]
     public function setWebauthnKey(Request $request, Model $webauthnKey): self

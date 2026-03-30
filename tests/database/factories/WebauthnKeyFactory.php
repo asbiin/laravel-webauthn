@@ -1,12 +1,16 @@
 <?php
 
+use Faker\Generator;
+use LaravelWebauthn\Models\WebauthnKey;
+use LaravelWebauthn\Tests\User;
 use ParagonIE\ConstantTime\Base64UrlSafe;
 use Symfony\Component\Uid\Uuid;
+use Webauthn\TrustPath\EmptyTrustPath;
 
-$factory->define(\LaravelWebauthn\Models\WebauthnKey::class, function (Faker\Generator $faker) {
+$factory->define(WebauthnKey::class, function (Generator $faker) {
     return [
         'user_id' => function (array $data) {
-            return factory(\LaravelWebauthn\Tests\User::class)->create()->id;
+            return factory(User::class)->create()->id;
         },
         'name' => $faker->word,
         'counter' => 0,
@@ -16,7 +20,7 @@ $factory->define(\LaravelWebauthn\Models\WebauthnKey::class, function (Faker\Gen
         'type' => 'public-key',
         'transports' => [],
         'attestationType' => 'none',
-        'trustPath' => new \Webauthn\TrustPath\EmptyTrustPath,
+        'trustPath' => new EmptyTrustPath,
         'aaguid' => Uuid::fromString('38195f59-0e5b-4ebf-be46-75664177eeee'),
         'credentialPublicKey' => 'oWNrZXlldmFsdWU=',
     ];

@@ -16,7 +16,9 @@ class WebauthnAuthenticate
     /**
      * Create a new event instance.
      *
-     * @param  \Illuminate\Database\Eloquent\Model  $webauthnKey  The WebauthnKey used to authenticate.
+     * @param  Model  $webauthnKey  The WebauthnKey used to authenticate.
+     *
+     * @psalm-mutation-free
      */
     public function __construct(
         public Model $webauthnKey,

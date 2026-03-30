@@ -15,6 +15,9 @@ use Webauthn\PublicKeyCredentialSource;
 
 class CredentialAttestationValidator extends CredentialValidator
 {
+    /**
+     * @psalm-mutation-free
+     */
     public function __construct(
         Request $request,
         Cache $cache,
@@ -64,6 +67,8 @@ class CredentialAttestationValidator extends CredentialValidator
 
     /**
      * Get authenticator response.
+     *
+     * @psalm-mutation-free
      */
     protected function getResponse(PublicKeyCredential $publicKeyCredential): AuthenticatorAttestationResponse
     {
