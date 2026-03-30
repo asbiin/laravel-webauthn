@@ -14,7 +14,7 @@ interface RegisterViewResponse extends Responsable
     /**
      * Set public key request data.
      *
-     * @psalm-pure
+     * @psalm-impure
      */
     public function setPublicKey(Request $request, PublicKeyCredentialCreationOptions $publicKey): self;
 }

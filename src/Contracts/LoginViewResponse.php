@@ -14,7 +14,7 @@ interface LoginViewResponse extends Responsable
     /**
      * Set public key request data.
      *
-     * @psalm-pure
+     * @psalm-impure
      */
     public function setPublicKey(Request $request, PublicKeyCredentialRequestOptions $publicKey): self;
 }

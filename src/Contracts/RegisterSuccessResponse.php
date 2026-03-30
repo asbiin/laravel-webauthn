@@ -14,7 +14,7 @@ interface RegisterSuccessResponse extends Responsable
     /**
      * Set the new webauthn key.
      *
-     * @psalm-pure
+     * @psalm-impure
      */
     public function setWebauthnKey(Request $request, Model $webauthnKey): self;
 }
