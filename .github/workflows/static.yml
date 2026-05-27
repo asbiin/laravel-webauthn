@@ -10,7 +10,7 @@ concurrency:
 
 env:
   php-version: '8.4'
-  webauthn-lib-version: '5.2.*'
+  webauthn-lib-version: '5.3.*'
 
 jobs:
   psalm:

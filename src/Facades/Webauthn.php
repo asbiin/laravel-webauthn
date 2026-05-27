@@ -5,7 +5,7 @@ namespace LaravelWebauthn\Facades;
 use Illuminate\Support\Facades\Facade;
 
 /**
- * @method static \Illuminate\Database\Eloquent\Model create(\Illuminate\Contracts\Auth\Authenticatable $user, string $keyName, \Webauthn\PublicKeyCredentialSource $publicKeyCredentialSource)
+ * @method static \Illuminate\Database\Eloquent\Model create(\Illuminate\Contracts\Auth\Authenticatable $user, string $keyName, \Webauthn\CredentialRecord $publicKeyCredentialSource)
  * @method static void login(?\Illuminate\Contracts\Auth\Authenticatable $user)
  * @method static void logout()
  * @method static bool check()

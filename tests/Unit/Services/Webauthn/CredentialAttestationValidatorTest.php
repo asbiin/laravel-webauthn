@@ -8,10 +8,12 @@ use LaravelWebauthn\Services\Webauthn\CredentialAttestationValidator;
 use LaravelWebauthn\Tests\FeatureTestCase;
 use PHPUnit\Framework\Attributes\Test;
 use Symfony\Component\Serializer\SerializerInterface;
+use Symfony\Component\Uid\Uuid;
 use Webauthn\AttestationStatement\AttestationObject;
 use Webauthn\AuthenticatorAttestationResponse;
 use Webauthn\AuthenticatorAttestationResponseValidator;
 use Webauthn\CollectedClientData;
+use Webauthn\CredentialRecord;
 use Webauthn\PublicKeyCredential;
 use Webauthn\PublicKeyCredentialCreationOptions;
 use Webauthn\PublicKeyCredentialSource;
@@ -55,6 +57,49 @@ class CredentialAttestationValidatorTest extends FeatureTestCase
         $result = $test($user, $data);
 
         $this->assertEquals($response, $result);
+    }
+
+    #[Test]
+    public function create_credential_attestation_validator_returns_credential_record()
+    {
+        // Regression: web-auth/webauthn-lib v5.3 widened AuthenticatorAttestationResponseValidator::check()
+        // to return CredentialRecord (the parent class) rather than the deprecated PublicKeyCredentialSource
+        // subclass. The validator must accept this widened return.
+        $user = $this->user();
+
+        $option = app(CreationOptionsFactory::class)($user);
+        $creds = new PublicKeyCredential('public-key', 'id', new AuthenticatorAttestationResponse(
+            $this->mock(CollectedClientData::class),
+            $this->mock(AttestationObject::class)
+        ));
+        $response = new CredentialRecord(
+            'a', 'public-key', [], 'b', new EmptyTrustPath,
+            Uuid::fromString('38195f59-0e5b-4ebf-be46-75664177eeee'),
+            'c', (string) $user->getAuthIdentifier(), 1
+        );
+
+        $this->mock(SerializerInterface::class, function ($mock) use ($option, $creds) {
+            $mock->shouldReceive('deserialize')
+                ->withSomeOfArgs(TrustPath::class)
+                ->andReturn(new EmptyTrustPath);
+            $mock->shouldReceive('deserialize')
+                ->withSomeOfArgs(PublicKeyCredential::class)
+                ->andReturn($creds);
+            $mock->shouldReceive('deserialize')
+                ->withSomeOfArgs(PublicKeyCredentialCreationOptions::class)
+                ->andReturn($option->data);
+        });
+        $this->mock(AuthenticatorAttestationResponseValidator::class, function ($mock) use ($response) {
+            $mock->shouldReceive('check')
+                ->andReturn($response);
+        });
+
+        $data = json_decode(json_encode($creds), true);
+        $test = app(CredentialAttestationValidator::class);
+        $result = $test($user, $data);
+
+        $this->assertInstanceOf(CredentialRecord::class, $result);
+        $this->assertSame($response, $result);
     }
 
     #[Test]
