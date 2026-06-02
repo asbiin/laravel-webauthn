@@ -30,9 +30,6 @@
         "web-auth/webauthn-lib": "^5.3",
         "web-token/jwt-library": "^3.0 || ^4.0"
     },
-    "conflict": {
-        "web-auth/webauthn-lib": "4.7.0"
-    },
     "require-dev": {
         "ext-sqlite3": "*",
         "brainmaestro/composer-git-hooks": "^3.0",
