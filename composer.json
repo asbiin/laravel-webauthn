@@ -23,9 +23,9 @@
         "php": ">=8.2",
         "illuminate/support": "^11.0 || ^12.0 || ^13.0",
         "psr/http-factory-implementation": "1.0",
-        "symfony/property-access": "^6.4 || ^7.0",
-        "symfony/property-info": "^6.4 || ^7.0",
-        "symfony/serializer": "^6.4 || ^7.0",
+        "symfony/property-access": "^6.4 || ^7.0 || ^8.0",
+        "symfony/property-info": "^6.4 || ^7.0 || ^8.0",
+        "symfony/serializer": "^6.4 || ^7.0 || ^8.0",
         "web-auth/cose-lib": "^4.0",
         "web-auth/webauthn-lib": "^5.3",
         "web-token/jwt-library": "^3.0 || ^4.0"
