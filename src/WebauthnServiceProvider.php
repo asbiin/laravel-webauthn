@@ -229,7 +229,6 @@ class WebauthnServiceProvider extends ServiceProvider
             fn () => tap(new CoseAlgorithmManagerFactory, function ($factory) {
                 // list of existing algorithms
                 $algorithms = [
-                    RSA\RS1::class,
                     RSA\RS256::class,
                     RSA\RS384::class,
                     RSA\RS512::class,
